@@ -11,7 +11,7 @@ class App extends Component {
           <h2>Welcome to CestaSNP.sk v4</h2>
         </div>
         <div className="App-message">
-        Stay tuned for fresh new CestaSNP.sk. In the mean time use <a src="https://cestasnp.sk">CestaSNP.sk v3</a>
+        Stay tuned for the fresh and new CestaSNP.sk. In the mean time use current version (v3) of <a href="https://cestasnp.sk">CestaSNP.sk</a>
         </div>
       </div>
     );
