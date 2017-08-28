@@ -7,7 +7,10 @@ class Navigation extends Component {
 
   render() {
     return (
-      <div id="navigation">
+      <div id="nav">
+        <MediaQuery query='(max-width: 700px)'>
+            <div>You also have a huge screen</div>
+        </MediaQuery>
         <ul>
           <li>Domov</li>
           <li>Pred cestou</li>

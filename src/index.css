@@ -11,7 +11,26 @@ ul {
   list-style-type: none;
 }
 
-/* NAVIGATION */
+/* PHONE */
+
+@media ( orientation: portrait ) and (max-width: 700px) {
+
+  body {
+    background-color: orange;
+  }
+
+}
+
+
+
+/** NAVIGATION **/
+
+.app-header {
+  background-color: #52e53b;
+  height: 100px;
+  padding: 10px;
+  color: white;
+}
 
 .app-logo {
   width: 200px;
@@ -19,6 +38,6 @@ ul {
   display: inline-block;
 }
 
-#navigation {
+#nav {
   display: inline-block;
 }
