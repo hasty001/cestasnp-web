@@ -6,21 +6,32 @@ class Navigation extends Component {
   }
 
   render() {
+
+    const navList =
+      <ul>
+        <li>Domov</li>
+        <li>Pred cestou</li>
+        <li>Na ceste</li>
+        <li>Kontakt</li>
+      </ul>
+
+    const phoneNav =
+      <div className="phone-nav">
+        <p>BurgerIconHere</p>
+      </div>
+
+    const desktopNav =
+      <div className="desktop-nav">
+        {navList}
+      </div>
+
     return (
       <div id="nav">
-        <MediaQuery query='(max-width: 700px)'>
-            <div>You also have a huge screen</div>
-        </MediaQuery>
-        <ul>
-          <li>Domov</li>
-          <li>Pred cestou</li>
-          <li>Na ceste</li>
-          <li>Kontakt</li>
-        </ul>
+        {phoneNav}
+        {desktopNav}
       </div>
-    ) 
+    )
   }
-
 }
 
 export default Navigation

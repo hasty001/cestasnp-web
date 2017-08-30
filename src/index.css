@@ -13,15 +13,29 @@ ul {
 
 /* PHONE */
 
-@media ( orientation: portrait ) and (max-width: 700px) {
+@media (max-width: 699px) {
 
-  body {
-    background-color: orange;
+  .phone-nav {
+    display: block;
+  }
+
+  .desktop-nav {
+    display: none;
   }
 
 }
 
+@media ( orientation: landscape ) and (min-width: 700px) {
 
+  .phone-nav {
+    display: none;
+  }
+
+  .desktop-nav {
+    display: block;
+  }
+
+}
 
 /** NAVIGATION **/
 
