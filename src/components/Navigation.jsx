@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import menu from '../img/menu.png';
 
 class Navigation extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class Navigation extends Component {
 
     const phoneNav =
       <div className="phone-nav">
-        <p>BurgerIconHere</p>
+        <img src={menu} className="menu-icon" alt="Menu logo"/>
       </div>
 
     const desktopNav =

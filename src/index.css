@@ -13,7 +13,7 @@ ul {
 
 /* PHONE */
 
-@media (max-width: 699px) {
+@media (max-width: 700px) {
 
   .phone-nav {
     display: block;
@@ -25,7 +25,7 @@ ul {
 
 }
 
-@media ( orientation: landscape ) and (min-width: 700px) {
+@media (min-width: 700px) {
 
   .phone-nav {
     display: none;
@@ -40,9 +40,10 @@ ul {
 /** NAVIGATION **/
 
 .app-header {
+  box-sizing: border-box;
   background-color: #52e53b;
   height: 100px;
-  padding: 10px;
+  padding: 10px; 
   color: white;
 }
 
@@ -50,6 +51,18 @@ ul {
   width: 200px;
   height: 80px;
   display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
+
+.menu-icon {
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  position: absolute;
+  top: 20px;
+  right: 30px;
 }
 
 #nav {
