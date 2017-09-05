@@ -8,22 +8,37 @@ class Navigation extends Component {
 
   render() {
 
-    const navList =
-      <ul className="desktop-nav-list">
-        <li>Domov</li>
-        <li>Pred cestou</li>
-        <li>Na ceste</li>
-        <li>Kontakt</li>
-      </ul>
+    // DESKTOP VIEW //
 
-    const phoneNav =
-      <div className="phone-nav">
-        <img src={menu} className="menu-icon" alt="Menu logo"/>
+    const desktopNavList =
+      <div className="desktop-nav-list">
+        <a href="">Domov</a>
+        <a href="">Pred cestou</a>
+        <a href="">Na ceste</a>
+        <a href="">Kontakt</a>
       </div>
 
     const desktopNav =
       <div className="desktop-nav">
-        {navList}
+        {desktopNavList}
+      </div>
+
+    // PHONE VIEW //
+
+    const phoneNavList = 
+      <div className={this.props.showHideSideNav}>
+        <div className="phone-nav-list">
+          <a href="">Domov</a>
+          <a href="">Pred cestou</a>
+          <a href="">Na ceste</a>
+          <a href="">Kontakt</a>
+        </div>
+      </div>
+      
+    const phoneNav =
+      <div className="phone-nav">
+        <img src={menu} className="menu-icon" alt="Menu logo" onClick={this.props.toggleSideNav}/>
+        {phoneNavList}
       </div>
 
     return (

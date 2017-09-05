@@ -4,28 +4,41 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  box-sizing: border-box;
-}
-
-ul {
-  list-style-type: none;
 }
 
 /* PHONE */
 
-@media (max-width: 700px) {
-
-  .phone-nav {
-    display: block;
-  }
+@media (max-width: 740px) {
 
   .desktop-nav {
     display: none;
   }
 
+  .phone-nav {
+    display: block;
+  }
+
+  .phone-nav-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .phone-nav-list a {
+    font-size: 25px;
+    margin: 10px 0 0 0;
+    text-decoration: none;
+    color: #FFFFFF;
+  }
+
+  .phone-nav-list a:hover {
+    color: #52e53b;
+  }
+
 }
 
-@media (min-width: 700px) {
+@media (min-width: 740px) {
 
   .phone-nav {
     display: none;
@@ -34,7 +47,8 @@ ul {
   .desktop-nav {
     display: block;
     position: absolute;
-    left: 200px;
+    top: 36px;
+    left: 240px;
   }
 
   .desktop-nav-list {
@@ -44,9 +58,15 @@ ul {
     align-items: center;
   }
 
-  .desktop-nav-list li {
-    font-size: 20px;
-    margin: 0 10px;
+  .desktop-nav-list a {
+    font-size: 24px;
+    margin: 0 12px;
+    text-decoration: none;
+    color: #FFFFFF;
+  }
+
+  .desktop-nav-list a:hover {
+    color: #61BC54;
   }
 
 }
@@ -56,15 +76,17 @@ ul {
 .app-header {
   box-sizing: border-box;
   background-color: #52e53b;
+  position: fixed;
+  width: 100%;
   height: 100px;
-  padding: 10px; 
   color: white;
+  z-index: 9999;
 }
 
 .app-logo {
   width: 200px;
   height: 80px;
-  display: inline-block;
+  display: block;
   position: absolute;
   top: 10px;
   left: 20px;
@@ -73,12 +95,42 @@ ul {
 .menu-icon {
   width: 60px;
   height: 60px;
-  display: inline-block;
+  display: block;
   position: absolute;
   top: 20px;
   right: 30px;
 }
 
 #nav {
-  display: inline-block;
+  display: block;
+}
+
+/** BODY  **/
+
+.app-body {
+  position: absolute;
+  top: 100px;
+}
+
+.shownSideNav {
+  display: block;
+  width: 100%;
+  height: 165px;
+  position: fixed;
+  background: #61bc54;  
+  top: 100px;
+  -webkit-transition: -webkit-transform 500ms ease-in-out;
+  transition: -webkit-transform 500ms ease-in-out;
+  transition: transform 500ms ease-in-out;
+  transition: transform 500ms ease-in-out, -webkit-transform 500ms ease-in-out;
+}
+
+.hiddenSideNav {
+  display: block;
+  width: 100%;
+  height: 165px;
+  position: fixed; 
+  top: 100px;    
+  -webkit-transform: translateX(100%);
+          transform: translateX(100%);
 }
