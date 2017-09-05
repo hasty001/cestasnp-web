@@ -9,7 +9,7 @@ class Navigation extends Component {
   render() {
 
     const navList =
-      <ul>
+      <ul className="desktop-nav-list">
         <li>Domov</li>
         <li>Pred cestou</li>
         <li>Na ceste</li>
