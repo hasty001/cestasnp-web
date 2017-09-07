@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import menu from '../img/menu.png';
 
 class Navigation extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   render() {
 
