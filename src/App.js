@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './img/logo.png';
 // import './App.css';
 import Navigation from './components/Navigation';
+import Map from './components/Map';
 
 class App extends Component {
   constructor(props){
@@ -27,6 +28,7 @@ class App extends Component {
           />
         </div>
         <div className="app-body">
+          <Map/>
           <p>Stay tuned for the fresh and new CestaSNP.sk. In the mean time use current version (v3) of <a href="https://cestasnp.sk">CestaSNP.sk</a></p>
           <p>Stay tuned for the fresh and new CestaSNP.sk. In the mean time use current version (v3) of <a href="https://cestasnp.sk">CestaSNP.sk</a></p>
           <p>Stay tuned for the fresh and new CestaSNP.sk. In the mean time use current version (v3) of <a href="https://cestasnp.sk">CestaSNP.sk</a></p>

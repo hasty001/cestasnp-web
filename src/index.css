@@ -81,6 +81,7 @@ body {
   height: 100px;
   color: white;
   z-index: 9999;
+  top: 0;
 }
 
 .app-logo {
