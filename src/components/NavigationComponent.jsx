@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import menu from '../img/menu.png';
 
-class Navigation extends Component {
+class NavigationComponent extends Component {
 
   render() {
 
@@ -47,4 +47,4 @@ class Navigation extends Component {
   }
 }
 
-export default Navigation
+export default NavigationComponent

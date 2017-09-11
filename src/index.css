@@ -111,6 +111,7 @@ body {
 .app-body {
   position: absolute;
   top: 100px;
+  width: 100%;
 }
 
 .shownSideNav {
@@ -134,4 +135,13 @@ body {
   top: 100px;    
   -webkit-transform: translateX(100%);
           transform: translateX(100%);
+}
+
+/** MAP **/
+
+#map {
+  display: block;
+  width: 100%;
+  height: 500px;
+  background: orange;
 }
