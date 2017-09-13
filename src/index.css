@@ -141,7 +141,7 @@ body {
 
 #map {
   display: block;
-  width: 100%;
+  width: 85%;
   height: 500px;
   background: orange;
 }

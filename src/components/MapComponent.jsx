@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
+// import Control from 'leaflet-filelayer';
 // postCSS import of Leaflet's CSS
 import 'leaflet/dist/leaflet.css';
+import devin_dukla from '../geojson/devin_dukla.json';
 // using webpack json loader we can import our geojson file like this
 // import geojson from 'json!./bk_subway_entrances.geojson';
 // // import local components Filter and ForkMe
@@ -12,20 +14,20 @@ import 'leaflet/dist/leaflet.css';
 // we could also move this to a separate file & import it if desired.
 let config = {};
 config.params = {
-  center: [48.85,19.96],
+  center: [48.73, 19.46],
   zoomControl: false,
   zoom: 8,
-  maxZoom: 20,
-  minZoom: 4,
+  maxZoom: 12,
+  minZoom: 7,
   scrollwheel: false,
   legends: true,
   infoControl: false,
-  attributionControl: true
+  attributionControl: true,
 };
 config.tileLayer = {
   uri: 'http://tiles.freemap.sk/T/{z}/{x}/{y}.png',
   params: {
-    minZoom: 4,
+    minZoom: 7,
     // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
     id: '',
     accessToken: ''
@@ -63,7 +65,44 @@ class MapComponent extends Component {
     if (!this.state.map) this.init("map");
   }
 
-  // componentDidUpdate(prevProps, prevState) {
+  
+
+  init(id) {
+    if (this.state.map) return;
+    // this function creates the Leaflet map object and is called after the Map component mounts
+    let map = L.map(id, config.params);
+    L.control.zoom({ position: "topright"}).addTo(map);
+    L.control.scale({ position: "topright"}).addTo(map);
+    L.geoJSON(devin_dukla, {
+      style: {
+         color: "#fe0000",
+         weight: 3,
+         opacity: 0.8
+
+      }
+    }).addTo(map);
+    
+    // a TileLayer is used as the "basemap"
+    const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
+    // set our state to include the tile layer
+    this.setState({ map, tileLayer });
+  }
+
+  render() {
+    // const { subwayLinesFilter } = this.state;
+    return (
+      <div  id="map">
+
+      </div>
+    );
+  }
+}
+
+// ref={(node) => this._mapNode = node}
+
+export default MapComponent;
+
+// componentDidUpdate(prevProps, prevState) {
   //   // code to run when the component receives new props or state
   //   // check to see if geojson is stored, map is created, and geojson overlay needs to be added
   //   // if (this.state.geojson && this.state.map && !this.state.geojsonLayer) {
@@ -193,31 +232,3 @@ class MapComponent extends Component {
   //     layer.bindPopup(popupContent);
   //   }
   // }
-
-  init(id) {
-    if (this.state.map) return;
-    // this function creates the Leaflet map object and is called after the Map component mounts
-    let map = L.map(id, config.params);
-    L.control.zoom({ position: "bottomleft"}).addTo(map);
-    L.control.scale({ position: "bottomleft"}).addTo(map);
-
-    // a TileLayer is used as the "basemap"
-    const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
-
-    // set our state to include the tile layer
-    this.setState({ map, tileLayer });
-  }
-
-  render() {
-    // const { subwayLinesFilter } = this.state;
-    return (
-      <div  id="map">
-
-      </div>
-    );
-  }
-}
-
-// ref={(node) => this._mapNode = node}
-
-export default MapComponent;
