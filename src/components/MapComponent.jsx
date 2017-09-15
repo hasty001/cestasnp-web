@@ -72,7 +72,10 @@ class MapComponent extends Component {
     // this function creates the Leaflet map object and is called after the Map component mounts
     let map = L.map(id, config.params);
     L.control.zoom({ position: "topright"}).addTo(map);
-    L.control.scale({ position: "topright"}).addTo(map);
+    L.control.scale({ 
+      position: "topright",
+      imperial: false
+    }).addTo(map);
     L.geoJSON(devin_dukla, {
       style: {
          color: "#fe0000",
