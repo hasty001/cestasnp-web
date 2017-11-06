@@ -1,4 +1,4 @@
-/db/mongo-uri.js
+db/mongo-uri.js
 node_modules/
 client/node_modules
 client/build/bundle.js
