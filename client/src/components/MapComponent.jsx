@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import L from 'leaflet';
-// import Control from 'leaflet-filelayer';
-// postCSS import of Leaflet's CSS
-import 'leaflet/dist/leaflet.css';
-import devin_dukla from '../geojson/devin_dukla.json';
+import React, { Component } from 'react'
+import L from 'leaflet'
+
+import 'leaflet/dist/leaflet.css'
+import devin_dukla from '../geojson/devin_dukla.json'
 // using webpack json loader we can import our geojson file like this
 // import geojson from 'json!./bk_subway_entrances.geojson';
 // // import local components Filter and ForkMe

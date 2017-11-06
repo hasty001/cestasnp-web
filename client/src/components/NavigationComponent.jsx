@@ -1,10 +1,8 @@
-import React, {Component} from 'react';
-import menu from '../img/menu.png';
+import React, { Component } from 'react'
+import menu from '../img/menu.png'
 
 class NavigationComponent extends Component {
-
-  render() {
-
+  render () {
     // DESKTOP VIEW //
 
     const desktopNavList =
