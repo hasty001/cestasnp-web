@@ -7,14 +7,12 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.html', '.css']
   },
   module: {
     rules: [
       {
         test: /\.(jsx?)$/,
-        exclude: /node_modules/,
-        include: path.join(__dirname, 'client'),
         loader: 'babel-loader'
       },
       {
@@ -23,7 +21,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        loaders: [
+          'style-loader',
+          'css-loader'
+        ]
       }
     ]
   }

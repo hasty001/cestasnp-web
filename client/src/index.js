@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
-import css from '../public/index.css'
+import CestaSNP from './CestaSNP'
+import '../public/index.css'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<CestaSNP />, document.getElementById('root'))
