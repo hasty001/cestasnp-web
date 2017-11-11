@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import L from 'leaflet'
-
 import 'leaflet/dist/leaflet.css'
-import devin_dukla from '../geojson/devin_dukla.json'
+import devinDukla from '../geojson/devin_dukla.json'
 // using webpack json loader we can import our geojson file like this
 // import geojson from 'json!./bk_subway_entrances.geojson';
 // // import local components Filter and ForkMe
@@ -11,7 +10,7 @@ import devin_dukla from '../geojson/devin_dukla.json'
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
-let config = {};
+let config = {}
 config.params = {
   center: [48.73, 19.46],
   zoomControl: false,
@@ -21,8 +20,8 @@ config.params = {
   scrollwheel: false,
   legends: true,
   infoControl: false,
-  attributionControl: true,
-};
+  attributionControl: true
+}
 config.tileLayer = {
   uri: 'http://tiles.freemap.sk/T/{z}/{x}/{y}.png',
   params: {
@@ -31,15 +30,15 @@ config.tileLayer = {
     id: '',
     accessToken: ''
   }
-};
+}
 
 // array to store unique names of Brooklyn subway lines,
 // this eventually gets passed down to the Filter component
 // let subwayLineNames = [];
 
-class MapComponent extends Component {
-  constructor(props) {
-    super(props);
+class Map extends Component {
+  constructor (props) {
+    super(props)
     this.state = {
       map: null,
       tileLayer: null,
@@ -47,7 +46,7 @@ class MapComponent extends Component {
       geojson: null,
       subwayLinesFilter: '*',
       numEntrances: null
-    };
+    }
     // this._mapNode = null;
     // this.updateMap = this.updateMap.bind(this);
     // this.onEachFeature = this.onEachFeature.bind(this);
@@ -56,53 +55,49 @@ class MapComponent extends Component {
     // this.filterGeoJSONLayer = this.filterGeoJSONLayer.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     // code to run just after the component "mounts" / DOM elements are created
     // we could make an AJAX request for the GeoJSON data here if it wasn't stored locally
     // this.getData();
     // create the Leaflet map object
-    if (!this.state.map) this.init("map");
+    if (!this.state.map) this.init('map')
   }
 
-  
-
-  init(id) {
-    if (this.state.map) return;
+  init (id) {
+    if (this.state.map) return
     // this function creates the Leaflet map object and is called after the Map component mounts
-    let map = L.map(id, config.params);
-    L.control.zoom({ position: "topright"}).addTo(map);
-    L.control.scale({ 
-      position: "topright",
+    let map = L.map(id, config.params)
+    L.control.zoom({position: 'topright'}).addTo(map)
+    L.control.scale({
+      position: 'topright',
       imperial: false
-    }).addTo(map);
-    L.geoJSON(devin_dukla, {
+    }).addTo(map)
+    L.geoJSON(devinDukla, {
       style: {
-         color: "#fe0000",
-         weight: 3,
-         opacity: 0.8
+        color: '#fe0000',
+        weight: 3,
+        opacity: 0.8
 
       }
-    }).addTo(map);
-    
+    }).addTo(map)
+
     // a TileLayer is used as the "basemap"
-    const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
+    const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map)
     // set our state to include the tile layer
-    this.setState({ map, tileLayer });
+    this.setState({ map, tileLayer })
   }
 
-  render() {
+  render () {
     // const { subwayLinesFilter } = this.state;
     return (
-      <div  id="map">
-
-      </div>
-    );
+      <div id='map' />
+    )
   }
 }
 
 // ref={(node) => this._mapNode = node}
 
-export default MapComponent;
+export default Map
 
 // componentDidUpdate(prevProps, prevState) {
   //   // code to run when the component receives new props or state
@@ -233,4 +228,4 @@ export default MapComponent;
   //     // add our popups
   //     layer.bindPopup(popupContent);
   //   }
-  // }
+  //  }

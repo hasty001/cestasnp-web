@@ -1,10 +1,10 @@
-var express = require('express')
-var app = express()
-var http = require('http').Server(app)
-var path = require('path')
+const express = require('express')
+const app = express()
+const http = require('http').Server(app)
+const path = require('path')
 
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '/client/public/index.html'))
+  res.sendFile(path.join(__dirname, '/client/build/index.html'))
 })
 
 http.listen(3000, function () {

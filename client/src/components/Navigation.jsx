@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import menu from '../img/menu.png'
+import menu from '../../public/img/menu.png'
 
-class NavigationComponent extends Component {
+class Navigation extends Component {
   render () {
     // DESKTOP VIEW //
 
@@ -45,4 +45,4 @@ class NavigationComponent extends Component {
   }
 }
 
-export default NavigationComponent
+export default Navigation

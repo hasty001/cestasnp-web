@@ -1,6 +1,6 @@
 {
   "name": "cestasnp-web",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "CestaSNP.sk in React, Node, Express and MongoDB.",
   "main": "server.js",
   "scripts": {
@@ -11,11 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/hasty001/cestasnp-web.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hasty001/cestasnp-web/issues"
-  },
+  "author": "Peter Trizuliak",
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
     "express": "^4.16.2"

@@ -3,7 +3,6 @@ node_modules/
 client/node_modules
 client/build/bundle.js
 client/build/bundle.js.map
-client/build/dist/bundle.js
-client/build/dist/bundle.js.map
+client/build/img
 package-lock.json
 client/package-lock.json
