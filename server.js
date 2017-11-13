@@ -1,7 +1,22 @@
+const mongodb = require('mongodb')
+const MONGO_URI = require('./mongo_uri')
 const express = require('express')
+const path = require('path')
+
 const app = express()
 const http = require('http').Server(app)
-const path = require('path')
+
+const DB = () => {
+  mongodb.MongoClient.connect(MONGO_URI.url, function (err, db) {
+    if (err) throw err
+    else {
+      console.log('connected')
+      db.close()
+    }
+  })
+}
+
+DB()
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/client/build/index.html'))

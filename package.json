@@ -13,6 +13,7 @@
   "author": "Peter Trizuliak",
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "mongodb": "^2.2.33"
   }
 }
