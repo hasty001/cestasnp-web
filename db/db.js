@@ -6,13 +6,13 @@ const DB = function () {
 }
 
 DB.prototype = {
-  all: function (collection) {
+  all: function (collection, callback) {
     mongodb.MongoClient.connect(this.url, function (err, db) {
       if (db) {
         const resCollection = db.collection(collection)
         resCollection.find().toArray(function (err, docs) {
           if (docs) {
-            console.log(docs)
+            callback(docs)
           } else {
             throw err
           }
