@@ -21,6 +21,22 @@ DB.prototype = {
         throw err
       }
     })
+  },
+  sorted: function (collection, sortedBy = {}, callback) {
+    mongodb.MongoClient.connect(this.url, function (err, db) {
+      if (db) {
+        const resCollection = db.collection(collection)
+        resCollection.find().limit(50).sort(sortedBy).toArray(function (err, docs) {
+          if (docs) {
+            callback(docs)
+          } else {
+            throw err
+          }
+        })
+      } else {
+        throw err
+      }
+    })
   }
 }
 

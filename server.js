@@ -9,6 +9,8 @@ app.get('/', function (req, res) {
 
 app.use('/pois', require('./controllers/pois'))
 
+app.use('/articles', require('./controllers/articles'))
+
 app.use(express.static('client/build'))
 
 http.listen(3000, function () {
