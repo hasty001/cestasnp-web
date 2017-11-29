@@ -7,9 +7,9 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/client/build/index.html'))
 })
 
-app.use('/pois', require('./controllers/pois'))
+app.use('/api/pois', require('./controllers/pois'))
 
-app.use('/articles', require('./controllers/articles'))
+app.use('/api/articles', require('./controllers/articles'))
 
 app.use(express.static('client/build'))
 
