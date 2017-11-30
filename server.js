@@ -7,6 +7,10 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/client/build/index.html'))
 })
 
+app.get('/api', function (req, res) {
+  res.json({ status: '200' })
+})
+
 app.use('/api/pois', require('./controllers/pois'))
 
 app.use('/api/articles', require('./controllers/articles'))
