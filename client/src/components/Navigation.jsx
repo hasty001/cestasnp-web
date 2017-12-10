@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import menu from '../../public/img/menu.png'
 
 const ROUTES = {
   domov: '/',
@@ -37,7 +36,9 @@ class Navigation extends Component {
 
     const phoneNav =
       <div className='phone-nav'>
-        <img src={menu} className='menu-icon' alt='Menu logo' onClick={this.props.toggleSideNav} />
+        <div className='menu-icon' onClick={this.props.toggleSideNav}>
+          <i className='fas fa-bars' alt='Menu logo' />
+        </div>
         {phoneNavList}
       </div>
 
