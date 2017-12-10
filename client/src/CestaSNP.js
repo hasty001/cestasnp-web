@@ -1,7 +1,18 @@
 import React, { Component } from 'react'
-import logo from '../public/img/logo.png'
+import { Router, Switch, Route } from 'react-router'
+import createHistory from 'history/createBrowserHistory'
+
 import Navigation from './components/Navigation'
-import Map from './components/Map'
+import Na from './components/Na'
+import Pred from './components/Pred'
+import Kontakt from './components/Kontakt'
+import NotFound from './components/NotFound'
+import Home from './components/Home'
+
+import '../public/index.css'
+import logo from '../public/img/logo.png'
+
+const history = createHistory()
 
 class CestaSNP extends Component {
   constructor (props) {
@@ -23,8 +34,15 @@ class CestaSNP extends Component {
           />
         </div>
         <div className='app-body'>
-          <Map />
-          <p>Stay tuned for the fresh and new CestaSNP.sk. In the mean time use current version (v3) of <a href='https://cestasnp.sk'>CestaSNP.sk</a></p>
+          <Router history={history}>
+            <Switch>
+              <Route exact path='/' component={Home} />
+              <Route exact path='/pred/' component={Pred} />
+              <Route exact path='/na' component={Na} />
+              <Route exact path='/kontakt' component={Kontakt} />
+              <Route component={NotFound} />
+            </Switch>
+          </Router>
         </div>
       </div>
     )

@@ -7,6 +7,18 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/client/build/index.html'))
 })
 
+app.get('/pred', function (req, res) {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'))
+})
+
+app.get('/na', function (req, res) {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'))
+})
+
+app.get('/kontakt', function (req, res) {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'))
+})
+
 app.get('/api', function (req, res) {
   res.json({ status: '200' })
 })
