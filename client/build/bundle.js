@@ -23380,7 +23380,6 @@ var CestaSNP = function (_Component) {
     key: 'toggleSideNav',
     value: function toggleSideNav() {
       var showHideSideNav = this.state.showHideSideNav === 'hiddenSideNav' ? 'shownSideNav' : 'hiddenSideNav';
-      console.log('click');
       this.setState({ showHideSideNav: showHideSideNav });
     }
   }]);

@@ -50,7 +50,6 @@ class CestaSNP extends Component {
 
   toggleSideNav () {
     const showHideSideNav = (this.state.showHideSideNav === 'hiddenSideNav') ? 'shownSideNav' : 'hiddenSideNav'
-    console.log('click')
     this.setState({ showHideSideNav: showHideSideNav })
   }
 }
