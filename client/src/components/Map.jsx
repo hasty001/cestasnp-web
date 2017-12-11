@@ -13,7 +13,6 @@ config.params = {
   maxZoom: 12,
   minZoom: 7,
   scrollwheel: false,
-  legends: true,
   infoControl: false,
   attributionControl: true
 }
@@ -21,7 +20,7 @@ config.tileLayer = {
   uri: 'http://tiles.freemap.sk/T/{z}/{x}/{y}.png',
   params: {
     minZoom: 7,
-    // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+    attribution: 'mapa © <a href="https://www.freemap.sk">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
     id: '',
     accessToken: ''
   }

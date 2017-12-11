@@ -1,0 +1,49 @@
+import React, { Component } from 'react'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import devinDukla from '../geojson/devin_dukla.json'
+import Map from './Map'
+
+class Pois extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      loading: true,
+      pois: []
+    }
+  }
+
+  componentDidMount () {
+    fetch('http://localhost:3000/api/pois')
+    .then((resp) => resp.json())
+    .then((data) => {
+      this.setState({
+        pois: data,
+        loading: false
+      })
+    })
+  }
+
+  render () {
+    return (
+      <div>
+        {this.state.loading && 
+        <div>
+          <i className='fas fa-spinner fa-spin fa-2x' />
+          <span className='sr-only'>Loading...</span>
+        </div>}
+        {!this.state.loading && 
+        <div>
+          {this.state.pois.map((poi, i) => {
+            return (
+              <p key={i}>{poi.name}</p>
+            )
+          })}
+        </div>}
+        {/* <Map /> */}
+      </div>
+    )
+  }
+}
+
+export default Pois

@@ -4,6 +4,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  box-sizing: border-box; 
 }
 
 .hidden {
@@ -119,7 +120,8 @@ body {
 .app-body {
   position: absolute;
   top: 96px;
-  width: 100%;
+  width: 96%;
+  left: 2%;
 }
 
 .shownSideNav {
