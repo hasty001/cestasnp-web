@@ -37,7 +37,7 @@ class Navigation extends Component {
     const phoneNav =
       <div className='phone-nav'>
         <div className='menu-icon' onClick={this.props.toggleSideNav}>
-          <i className='fas fa-bars' alt='Menu logo' />
+          <i className='fas fa-bars fa-2x' alt='Menu logo' />
         </div>
         {phoneNavList}
       </div>

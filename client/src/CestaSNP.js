@@ -27,7 +27,9 @@ class CestaSNP extends Component {
     return (
       <div className='app'>
         <div className='app-header'>
-          <img src={logo} className='app-logo' alt='Cesta SNP logo' />
+          <a href='/'>
+            <img src={logo} className='app-logo' alt='Cesta SNP logo' />
+          </a>
           <Navigation
             showHideSideNav={this.state.showHideSideNav}
             toggleSideNav={this.toggleSideNav}

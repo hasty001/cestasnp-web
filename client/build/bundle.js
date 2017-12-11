@@ -23351,7 +23351,11 @@ var CestaSNP = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'app-header' },
-          _react2.default.createElement('img', { src: _logo2.default, className: 'app-logo', alt: 'Cesta SNP logo' }),
+          _react2.default.createElement(
+            'a',
+            { href: '/' },
+            _react2.default.createElement('img', { src: _logo2.default, className: 'app-logo', alt: 'Cesta SNP logo' })
+          ),
           _react2.default.createElement(_Navigation2.default, {
             showHideSideNav: this.state.showHideSideNav,
             toggleSideNav: this.toggleSideNav
@@ -26379,7 +26383,7 @@ var Navigation = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'menu-icon', onClick: this.props.toggleSideNav },
-          _react2.default.createElement('i', { className: 'fas fa-bars', alt: 'Menu logo' })
+          _react2.default.createElement('i', { className: 'fas fa-bars fa-2x', alt: 'Menu logo' })
         ),
         phoneNavList
       );
@@ -26589,7 +26593,7 @@ exports = module.exports = __webpack_require__(226)(undefined);
 
 
 // module
-exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/* PHONE */\n\n@media (max-width: 740px) {\n\n  .desktop-nav {\n    display: none;\n  }\n\n  .phone-nav {\n    display: block;\n  }\n\n  .phone-nav-list {\n    display: flex;\n    flex-direction: column;\n    justify-content: flex-start;\n    align-items: center;\n  }\n\n  .phone-nav-list a {\n    font-size: 25px;\n    margin: 10px 0 0 0;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .phone-nav-list a:hover {\n    color: #52e53b;\n  }\n\n}\n\n@media (min-width: 740px) {\n\n  .phone-nav {\n    display: none;\n  }\n\n  .desktop-nav {\n    display: block;\n    position: absolute;\n    top: 36px;\n    left: 240px;\n  }\n\n  .desktop-nav-list {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-start;\n    align-items: center;\n  }\n\n  .desktop-nav-list a {\n    font-size: 24px;\n    margin: 0 12px;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .desktop-nav-list a:hover {\n    color: #61BC54;\n  }\n\n}\n\n/** NAVIGATION **/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 200px;\n  height: 80px;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 20px;\n}\n\n.menu-icon {\n  width: 60px;\n  height: 60px;\n  display: block;\n  position: absolute;\n  top: 20px;\n  right: 30px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n}\n\n.shownSideNav {\n  display: block;\n  width: 100%;\n  height: 165px;\n  position: fixed;\n  background: #61bc54;  \n  top: 100px;\n  -webkit-transition: -webkit-transform 500ms ease-in-out;\n  transition: -webkit-transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out, -webkit-transform 500ms ease-in-out;\n}\n\n.hiddenSideNav {\n  display: block;\n  width: 100%;\n  height: 165px;\n  position: fixed; \n  top: 100px;    \n  -webkit-transform: translateX(100%);\n          transform: translateX(100%);\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 500px;\n}", ""]);
+exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/* PHONE */\n\n@media (max-width: 740px) {\n\n  .desktop-nav {\n    display: none;\n  }\n\n  .phone-nav {\n    display: block;\n  }\n\n  .phone-nav-list {\n    display: flex;\n    flex-direction: column;\n    justify-content: flex-start;\n    align-items: center;\n  }\n\n  .phone-nav-list a {\n    font-size: 18px;\n    margin: 10px 0;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .phone-nav-list a:hover {\n    color: #52e53b;\n  }\n\n}\n\n@media (min-width: 740px) {\n\n  .phone-nav {\n    display: none;\n  }\n\n  .desktop-nav {\n    display: block;\n    position: absolute;\n    top: 36px;\n    right: 16px;\n  }\n\n  .desktop-nav-list {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-end;\n    align-items: center;\n  }\n\n  .desktop-nav-list a {\n    font-size: 24px;\n    margin: 0 12px;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .desktop-nav-list a:hover {\n    color: #61BC54;\n  }\n\n}\n\n/** NAVIGATION **/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 96px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n.menu-icon {\n  width: 32px;\n  height: 32px;\n  display: block;\n  position: absolute;\n  top: 30px;\n  right: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 100%;\n}\n\n.shownSideNav {\n  display: block;\n  width: 100%;\n  position: fixed;\n  background: #61bc54;  \n  top: 96px;\n  -webkit-transition: -webkit-transform 500ms ease-in-out;\n  transition: -webkit-transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out, -webkit-transform 500ms ease-in-out;\n}\n\n.hiddenSideNav {\n  display: block;\n  width: 100%;\n  position: fixed; \n  top: 96px;    \n  -webkit-transform: translateX(100%);\n          transform: translateX(100%);\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 500px;\n}", ""]);
 
 // exports
 

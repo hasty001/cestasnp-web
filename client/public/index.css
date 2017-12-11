@@ -34,8 +34,8 @@ body {
   }
 
   .phone-nav-list a {
-    font-size: 25px;
-    margin: 10px 0 0 0;
+    font-size: 18px;
+    margin: 10px 0;
     text-decoration: none;
     color: #FFFFFF;
   }
@@ -56,13 +56,13 @@ body {
     display: block;
     position: absolute;
     top: 36px;
-    left: 240px;
+    right: 16px;
   }
 
   .desktop-nav-list {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
   }
 
@@ -86,28 +86,28 @@ body {
   background-color: #479a3a;
   position: fixed;
   width: 100%;
-  height: 100px;
+  height: 96px;
   color: white;
   z-index: 9999;
   top: 0;
 }
 
 .app-logo {
-  width: 200px;
-  height: 80px;
+  width: 160px;
+  height: 64px;
   display: block;
   position: absolute;
-  top: 10px;
-  left: 20px;
+  top: 16px;
+  left: 16px;
 }
 
 .menu-icon {
-  width: 60px;
-  height: 60px;
+  width: 32px;
+  height: 32px;
   display: block;
   position: absolute;
-  top: 20px;
-  right: 30px;
+  top: 30px;
+  right: 16px;
 }
 
 #nav {
@@ -118,17 +118,16 @@ body {
 
 .app-body {
   position: absolute;
-  top: 100px;
+  top: 96px;
   width: 100%;
 }
 
 .shownSideNav {
   display: block;
   width: 100%;
-  height: 165px;
   position: fixed;
   background: #61bc54;  
-  top: 100px;
+  top: 96px;
   -webkit-transition: -webkit-transform 500ms ease-in-out;
   transition: -webkit-transform 500ms ease-in-out;
   transition: transform 500ms ease-in-out;
@@ -138,9 +137,8 @@ body {
 .hiddenSideNav {
   display: block;
   width: 100%;
-  height: 165px;
   position: fixed; 
-  top: 100px;    
+  top: 96px;    
   -webkit-transform: translateX(100%);
           transform: translateX(100%);
 }
