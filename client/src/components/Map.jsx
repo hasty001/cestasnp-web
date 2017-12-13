@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import devinDukla from '../geojson/devin_dukla.json'
+import pin from '../../public/img/pin.png'
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -61,6 +62,18 @@ class Map extends Component {
 
       }
     }).addTo(map)
+    /// DOLEZITE MIESTA
+    if (this.props.pois && this.props.pois.length > 0) {
+      this.props.pois.map((poi) => {
+        let icon = L.icon({
+          iconUrl: pin,
+          iconSize: [32, 32],
+          iconAnchor: [16, 32]
+        })
+        let marker = L.marker([poi.coordinates[1], poi.coordinates[0]], { icon: icon }).addTo(map)
+        marker.bindPopup(`<h2>${poi.name}</h2><p>${poi.text}</p>`)
+      })
+    }
     const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map)
     this.setState({ map, tileLayer })
   }

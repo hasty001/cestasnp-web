@@ -27,20 +27,22 @@ class Pois extends Component {
   render () {
     return (
       <div>
-        {this.state.loading && 
+        {this.state.loading &&
         <div>
           <i className='fas fa-spinner fa-spin fa-2x' />
           <span className='sr-only'>Loading...</span>
         </div>}
-        {!this.state.loading && 
+        {!this.state.loading &&
         <div>
+          <Map pois={this.state.pois} />
           {this.state.pois.map((poi, i) => {
             return (
-              <p key={i}>{poi.name}</p>
+              <div key={i}>
+                {console.log(poi)}
+              </div>
             )
           })}
         </div>}
-        {/* <Map /> */}
       </div>
     )
   }
