@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Pois from './Pois'
+import Articles from './Articles'
 
 export const RENDER_OPTIONS = {
   ARTICLES: 'articles',
@@ -31,6 +32,8 @@ class Pred extends Component {
         <button value={RENDER_OPTIONS.POIS} onClick={this.handleShowChoice}>pois</button>
         {this.state.show === RENDER_OPTIONS.POIS && 
         <Pois />}
+        {this.state.show === RENDER_OPTIONS.ARTICLES &&
+        <Articles />}
       </div>
     )
   }

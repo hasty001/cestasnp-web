@@ -40639,6 +40639,10 @@ var _Pois = __webpack_require__(227);
 
 var _Pois2 = _interopRequireDefault(_Pois);
 
+var _Articles = __webpack_require__(240);
+
+var _Articles2 = _interopRequireDefault(_Articles);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -40697,7 +40701,8 @@ var Pred = function (_Component) {
           { value: RENDER_OPTIONS.POIS, onClick: this.handleShowChoice },
           'pois'
         ),
-        this.state.show === RENDER_OPTIONS.POIS && _react2.default.createElement(_Pois2.default, null)
+        this.state.show === RENDER_OPTIONS.POIS && _react2.default.createElement(_Pois2.default, null),
+        this.state.show === RENDER_OPTIONS.ARTICLES && _react2.default.createElement(_Articles2.default, null)
       );
     }
   }]);
@@ -40723,16 +40728,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
-
-var _leaflet = __webpack_require__(98);
-
-var _leaflet2 = _interopRequireDefault(_leaflet);
-
-__webpack_require__(99);
-
-var _devin_dukla = __webpack_require__(102);
-
-var _devin_dukla2 = _interopRequireDefault(_devin_dukla);
 
 var _Map = __webpack_require__(233);
 
@@ -41032,11 +41027,11 @@ var Map = function (_Component) {
       if (this.state.map) return;
       // this function creates the Leaflet map object and is called after the Map component mounts
       var map = _leaflet2.default.map(id, config.params);
-      _leaflet2.default.control.zoom({ position: 'topright' }).addTo(map);
       _leaflet2.default.control.scale({
-        position: 'topright',
+        position: 'bottomright',
         imperial: false
       }).addTo(map);
+      _leaflet2.default.control.zoom({ position: 'bottomright' }).addTo(map);
       _leaflet2.default.geoJSON(_devin_dukla2.default, {
         style: {
           color: '#fe0000',
@@ -41045,6 +41040,7 @@ var Map = function (_Component) {
 
         }
       }).addTo(map);
+
       /// DOLEZITE MIESTA
       if (this.props.pois && this.props.pois.length > 0) {
         this.props.pois.map(function (poi) {
@@ -41314,6 +41310,101 @@ module.exports = __webpack_require__.p + "/img/ed0e36c1b39e31c207aa2c14f61babd7.
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "/img/98930f0bb073c0fa078eecf278c1b858.png";
+
+/***/ }),
+/* 240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(6);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Articles = function (_Component) {
+  _inherits(Articles, _Component);
+
+  function Articles(props) {
+    _classCallCheck(this, Articles);
+
+    var _this = _possibleConstructorReturn(this, (Articles.__proto__ || Object.getPrototypeOf(Articles)).call(this, props));
+
+    _this.state = {
+      loading: true,
+      articles: []
+    };
+    return _this;
+  }
+
+  _createClass(Articles, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      fetch('http://localhost:3000/api/articles').then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        _this2.setState({
+          articles: data,
+          loading: false
+        });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.state.loading && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement('i', { className: 'fas fa-spinner fa-spin fa-2x' }),
+          _react2.default.createElement(
+            'span',
+            { className: 'sr-only' },
+            'Loading...'
+          )
+        ),
+        !this.state.loading && _react2.default.createElement(
+          'div',
+          null,
+          this.state.articles.map(function (article, i) {
+            return _react2.default.createElement(
+              'div',
+              { key: i },
+              _react2.default.createElement(
+                'h2',
+                null,
+                article.title
+              ),
+              console.log(article)
+            );
+          })
+        )
+      );
+    }
+  }]);
+
+  return Articles;
+}(_react.Component);
+
+exports.default = Articles;
 
 /***/ })
 /******/ ]);

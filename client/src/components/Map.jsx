@@ -49,11 +49,11 @@ class Map extends Component {
     if (this.state.map) return
     // this function creates the Leaflet map object and is called after the Map component mounts
     let map = L.map(id, config.params)
-    L.control.zoom({position: 'topright'}).addTo(map)
     L.control.scale({
-      position: 'topright',
+      position: 'bottomright',
       imperial: false
     }).addTo(map)
+    L.control.zoom({position: 'bottomright'}).addTo(map)
     L.geoJSON(devinDukla, {
       style: {
         color: '#fe0000',
@@ -62,6 +62,7 @@ class Map extends Component {
 
       }
     }).addTo(map)
+
     /// DOLEZITE MIESTA
     if (this.props.pois && this.props.pois.length > 0) {
       this.props.pois.map((poi) => {

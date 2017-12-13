@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-import devinDukla from '../geojson/devin_dukla.json'
 import Map from './Map'
 
 class Pois extends Component {
