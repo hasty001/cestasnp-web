@@ -29,6 +29,6 @@ app.use('/api/articles', require('./controllers/articles'))
 
 app.use(express.static('client/build'))
 
-http.listen(3000, function () {
+http.listen(process.env.PORT || 3000, function () {
   console.log('listening on *:3000')
 })
