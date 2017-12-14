@@ -10,7 +10,7 @@ class Articles extends Component {
   }
 
   componentDidMount () {
-    fetch('http://localhost:3000/api/articles')
+    fetch('https://cestasnp-web.herokuapp.com/api/articles')
       .then((resp) => resp.json())
       .then((data) => {
         this.setState({

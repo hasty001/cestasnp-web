@@ -1,8 +1,8 @@
 const mongodb = require('mongodb')
-const MONGO_URI = require('../mongo_uri')
+require('dotenv').config()
 
 const DB = function () {
-  this.url = MONGO_URI.url
+  this.url = process.env.MONGO_URI
 }
 
 DB.prototype = {

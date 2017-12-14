@@ -27027,7 +27027,7 @@ var Pois = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('http://localhost:3000/api/pois').then(function (resp) {
+      fetch('https://cestasnp-web.herokuapp.com/api/pois').then(function (resp) {
         return resp.json();
       }).then(function (data) {
         _this2.setState({
@@ -41250,7 +41250,7 @@ var Articles = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('http://localhost:3000/api/articles').then(function (resp) {
+      fetch('https://cestasnp-web.herokuapp.com/api/articles').then(function (resp) {
         return resp.json();
       }).then(function (data) {
         _this2.setState({

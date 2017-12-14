@@ -1,6 +1,6 @@
-mongo_uri.js
 node_modules/
 client/node_modules
 .DS_Store
 client/.DS_Store
 migration_db/
+.env
