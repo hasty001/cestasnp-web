@@ -22,14 +22,14 @@ DB.prototype = {
       }
     })
   },
-  newestSorted: function (collection, sortedBy = {}, callback) {
+  newestSorted: function (collection, sortBy = {}, callback, filterBy = {}) {
     mongodb.MongoClient.connect(this.url, function (err, db) {
       if (db) {
         const resCollection = db.collection(collection)
         resCollection
-          .find()
+          .find(filterBy)
           .limit(10)
-          .sort(sortedBy)
+          .sort(sortBy)
           .toArray(function (err, docs) {
             if (docs) {
               callback(docs)
@@ -42,15 +42,15 @@ DB.prototype = {
       }
     })
   },
-  nextSorted: function (collection, sortedBy = {}, next = 0, callback) {
+  nextSorted: function (collection, sortBy = {}, next = 0, callback, filterBy = {}) {
     mongodb.MongoClient.connect(this.url, function (err, db) {
       if (db) {
         const resCollection = db.collection(collection)
         resCollection
-          .find()
+          .find(filterBy)
           .limit(10)
           .skip(10 * next)
-          .sort(sortedBy)
+          .sort(sortBy)
           .toArray(function (err, docs) {
             if (docs) {
               callback(docs)

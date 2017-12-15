@@ -6,15 +6,23 @@ const ORDER = {
   newestFirst: { created: -1 },
   oldestFirst: { created: 1 }
 }
+const filterBy = { tags: { $ne: 'spravy-z-terenu' } }
 
 router.get('/', function (req, res) {
   query.newestSorted('articles', ORDER.newestFirst, function (results) {
     res.json(results)
-  })
+  }, filterBy)
 })
 
 router.get('/:page', function (req, res) {
   query.nextSorted('articles', ORDER.newestFirst, req.params.page, function (results) {
+    res.json(results)
+  }, filterBy)
+})
+
+router.get('/article/:articleId', function (req, res) {
+  let articleId = parseInt(req.params.articleId)
+  query.findBy('articles', { sql_article_id: articleId }, function (results) {
     res.json(results)
   })
 })

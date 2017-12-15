@@ -11565,7 +11565,7 @@ module.exports = function(list, options) {
 
 	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
 	// tags it will allow on a page
-	if (!options.singleton) options.singleton = isOldIE();
+	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
 
 	// By default, add <style> tags to the <head> element
 	if (!options.insertInto) options.insertInto = "head";
@@ -41281,6 +41281,9 @@ var Articles = function (_Component) {
           'div',
           null,
           this.state.articles.map(function (article, i) {
+            var introtext = function introtext() {
+              return { __html: article.introtext };
+            };
             return _react2.default.createElement(
               'div',
               { key: i },
@@ -41288,6 +41291,12 @@ var Articles = function (_Component) {
                 'h2',
                 null,
                 article.title
+              ),
+              _react2.default.createElement('div', { dangerouslySetInnerHTML: introtext() }),
+              _react2.default.createElement(
+                'a',
+                { href: 'http://localhost:3000/api/articles/article/245' },
+                '\u010C\xEDtaj viac...'
               ),
               console.log(article)
             );

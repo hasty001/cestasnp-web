@@ -31,11 +31,12 @@ class Articles extends Component {
         {!this.state.loading &&
           <div>
             {this.state.articles.map((article, i) => {
+              let introtext = () => { return {__html: article.introtext} }
               return (
                 <div key={i}>
                   <h2>{article.title}</h2>
-                  {/* <div>{article.introtext}</div>
-                  {article.fulltext} */}
+                  <div dangerouslySetInnerHTML={introtext()} />
+                  <a href='http://localhost:3000/api/articles/article/245'>Čítaj viac...</a>
                   {console.log(article)}
                 </div>
               )
