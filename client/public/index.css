@@ -152,3 +152,9 @@ body {
   width: 100%;
   height: 500px;
 }
+
+#home {
+  width: 80%;
+  margin: 0 auto;
+  text-align: justify;
+}

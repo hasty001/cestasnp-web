@@ -41384,13 +41384,50 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Home = function Home() {
   return _react2.default.createElement(
-    'p',
-    null,
-    'Stay tuned for the fresh and new CestaSNP.sk. In the mean time use current version (v3) of ',
+    'div',
+    { id: 'home' },
     _react2.default.createElement(
-      'a',
-      { href: 'https://cestasnp.sk' },
-      'CestaSNP.sk'
+      'p',
+      null,
+      'Na CesteSNP.sk pracujeme d\u0148om a nocou, teda pokia\u013E nie sme akur\xE1t na hor\xE1ch, v pr\xE1ci, v kni\u017Enici, v divadle, u frajerky, \u010Di sa hr\xE1me s na\u0161imi de\u0165mi...'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Sekcia ',
+      _react2.default.createElement(
+        'a',
+        { target: '_blank', href: '/pred' },
+        'Pred Cestou'
+      ),
+      'je prv\xE1 kde m\xF4\u017Ee\u0161 vidie\u0165 v\xFDsledky na\u0161ej pr\xE1ce! T\xE1to sekcia m\xE1 hlavn\xFD cie\u013E zjednodu\u0161i\u0165 pl\xE1novanie tvojej Cesty hrdinov SNP. Pozri sa na to a daj n\xE1m vedie\u0165 ako ti to pomohlo s pl\xE1novan\xEDm. Ak chce\u0161 sledova\u0165 n\xE1\u0161 pokrok m\xF4\u017Ee\u0161 sem samozrejme pravidelne chodi\u0165 alebo sledova\u0165 na\u0161e novinky na ',
+      _react2.default.createElement(
+        'a',
+        { target: '_blank', href: 'https://www.facebook.com/CestaSNPsk-185536644838/' },
+        'Facebooku'
+      ),
+      '.'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Taktie\u017E sa k n\xE1m m\xF4\u017Ee\u0161 prida\u0165 a pomoc\u0165 s v\xFDvojom. Pou\u017E\xEDvame modern\xE9 technol\xF3gie ako React, JavaScript ES6, Node.js a NoSQL datab\xE1zu. To v\u0161etko be\u017E\xED na Heroku cloude a tak m\xE1\u0161 ve\u013Ek\xFA \u0161ancu sa nau\u010Di\u0165 \u010Dosi nov\xE9. Ak to ale u\u017E v\u0161etko pozn\xE1\u0161, v\xF4bec nev\xE1haj sa ozva\u0165 a naopak nau\u010Di\u0165 n\xE1s ako postavi\u0165 CestaSNP.sk na nohy r\xFDchlo a efekt\xEDvne. Kontakt na n\xE1s: ',
+      _react2.default.createElement(
+        'a',
+        { target: '_blank', href: 'mailto:info@cestasnp.sk' },
+        'info@cestasnp.sk'
+      )
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Projekt n\xE1jde\u0161 na ',
+      _react2.default.createElement(
+        'a',
+        { target: '_blank', href: 'https://github.com/hasty001/cestasnp-web' },
+        'Githube'
+      ),
+      '.'
     )
   );
 };
@@ -41406,7 +41443,7 @@ exports = module.exports = __webpack_require__(98)(undefined);
 
 
 // module
-exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/* PHONE */\n\n@media (max-width: 740px) {\n\n  .desktop-nav {\n    display: none;\n  }\n\n  .phone-nav {\n    display: block;\n  }\n\n  .phone-nav-list {\n    display: flex;\n    flex-direction: column;\n    justify-content: flex-start;\n    align-items: center;\n  }\n\n  .phone-nav-list a {\n    font-size: 18px;\n    margin: 10px 0;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .phone-nav-list a:hover {\n    color: #52e53b;\n  }\n\n}\n\n@media (min-width: 740px) {\n\n  .phone-nav {\n    display: none;\n  }\n\n  .desktop-nav {\n    display: block;\n    position: absolute;\n    top: 36px;\n    right: 16px;\n  }\n\n  .desktop-nav-list {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-end;\n    align-items: center;\n  }\n\n  .desktop-nav-list a {\n    font-size: 24px;\n    margin: 0 12px;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .desktop-nav-list a:hover {\n    color: #61BC54;\n  }\n\n}\n\n/** NAVIGATION **/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 96px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n.menu-icon {\n  width: 32px;\n  height: 32px;\n  display: block;\n  position: absolute;\n  top: 30px;\n  right: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n.shownSideNav {\n  display: block;\n  width: 100%;\n  position: fixed;\n  background: #61bc54;  \n  top: 96px;\n  -webkit-transition: -webkit-transform 500ms ease-in-out;\n  transition: -webkit-transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out, -webkit-transform 500ms ease-in-out;\n}\n\n.hiddenSideNav {\n  display: block;\n  width: 100%;\n  position: fixed; \n  top: 96px;    \n  -webkit-transform: translateX(100%);\n          transform: translateX(100%);\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 500px;\n}", ""]);
+exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/* PHONE */\n\n@media (max-width: 740px) {\n\n  .desktop-nav {\n    display: none;\n  }\n\n  .phone-nav {\n    display: block;\n  }\n\n  .phone-nav-list {\n    display: flex;\n    flex-direction: column;\n    justify-content: flex-start;\n    align-items: center;\n  }\n\n  .phone-nav-list a {\n    font-size: 18px;\n    margin: 10px 0;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .phone-nav-list a:hover {\n    color: #52e53b;\n  }\n\n}\n\n@media (min-width: 740px) {\n\n  .phone-nav {\n    display: none;\n  }\n\n  .desktop-nav {\n    display: block;\n    position: absolute;\n    top: 36px;\n    right: 16px;\n  }\n\n  .desktop-nav-list {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-end;\n    align-items: center;\n  }\n\n  .desktop-nav-list a {\n    font-size: 24px;\n    margin: 0 12px;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .desktop-nav-list a:hover {\n    color: #61BC54;\n  }\n\n}\n\n/** NAVIGATION **/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 96px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n.menu-icon {\n  width: 32px;\n  height: 32px;\n  display: block;\n  position: absolute;\n  top: 30px;\n  right: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n.shownSideNav {\n  display: block;\n  width: 100%;\n  position: fixed;\n  background: #61bc54;  \n  top: 96px;\n  -webkit-transition: -webkit-transform 500ms ease-in-out;\n  transition: -webkit-transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out, -webkit-transform 500ms ease-in-out;\n}\n\n.hiddenSideNav {\n  display: block;\n  width: 100%;\n  position: fixed; \n  top: 96px;    \n  -webkit-transform: translateX(100%);\n          transform: translateX(100%);\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 500px;\n}\n\n#home {\n  width: 80%;\n  margin: 0 auto;\n  text-align: justify;\n}", ""]);
 
 // exports
 
