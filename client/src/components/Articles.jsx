@@ -36,7 +36,7 @@ class Articles extends Component {
                 <div key={i}>
                   <h2>{article.title}</h2>
                   <div dangerouslySetInnerHTML={introtext()} />
-                  <a href='http://localhost:3000/api/articles/article/245'>Čítaj viac...</a>
+                  <a href={'http://localhost:3000/pred/articles/' + article.sql_article_id}>Čítaj viac...</a>
                   {console.log(article)}
                 </div>
               )

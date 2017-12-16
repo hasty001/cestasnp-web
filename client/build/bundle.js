@@ -23767,6 +23767,18 @@ var _Home = __webpack_require__(238);
 
 var _Home2 = _interopRequireDefault(_Home);
 
+var _Articles = __webpack_require__(235);
+
+var _Articles2 = _interopRequireDefault(_Articles);
+
+var _Article = __webpack_require__(242);
+
+var _Article2 = _interopRequireDefault(_Article);
+
+var _Pois = __webpack_require__(224);
+
+var _Pois2 = _interopRequireDefault(_Pois);
+
 __webpack_require__(100);
 
 var _logo = __webpack_require__(240);
@@ -23830,7 +23842,10 @@ var CestaSNP = function (_Component) {
               _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/', component: _Pred2.default }),
               _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/na', component: _Na2.default }),
               _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/kontakt', component: _Kontakt2.default }),
-              _react2.default.createElement(_reactRouter.Route, { component: _NotFound2.default })
+              _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/articles', component: _Articles2.default }),
+              _react2.default.createElement(_reactRouter.Route, { path: '/pred/articles/:articleId', component: _Article2.default }),
+              _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/pois', component: _Pois2.default }),
+              _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
             )
           )
         )
@@ -26877,9 +26892,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Na = function Na() {
   return _react2.default.createElement(
-    'h1',
-    null,
-    'Tu Pride info na ceste'
+    'div',
+    { id: 'na-container' },
+    _react2.default.createElement(
+      'h1',
+      null,
+      'Tu Pride info na ceste'
+    )
   );
 };
 
@@ -41295,7 +41314,7 @@ var Articles = function (_Component) {
               _react2.default.createElement('div', { dangerouslySetInnerHTML: introtext() }),
               _react2.default.createElement(
                 'a',
-                { href: 'http://localhost:3000/api/articles/article/245' },
+                { href: 'http://localhost:3000/pred/articles/' + article.sql_article_id },
                 '\u010C\xEDtaj viac...'
               ),
               console.log(article)
@@ -41330,9 +41349,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Kontakt = function Kontakt() {
   return _react2.default.createElement(
-    'h1',
-    null,
-    'Tu pride kontakt'
+    'div',
+    { id: 'kontakt-container' },
+    _react2.default.createElement(
+      'h1',
+      null,
+      'Tu pride kontakt'
+    )
   );
 };
 
@@ -41385,7 +41408,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Home = function Home() {
   return _react2.default.createElement(
     'div',
-    { id: 'home' },
+    { id: 'home-container' },
     _react2.default.createElement(
       'p',
       null,
@@ -41400,7 +41423,7 @@ var Home = function Home() {
         { target: '_blank', href: '/pred' },
         'Pred Cestou'
       ),
-      'je prv\xE1 kde m\xF4\u017Ee\u0161 vidie\u0165 v\xFDsledky na\u0161ej pr\xE1ce! T\xE1to sekcia m\xE1 hlavn\xFD cie\u013E zjednodu\u0161i\u0165 pl\xE1novanie tvojej Cesty hrdinov SNP. Pozri sa na to a daj n\xE1m vedie\u0165 ako ti to pomohlo s pl\xE1novan\xEDm. Ak chce\u0161 sledova\u0165 n\xE1\u0161 pokrok m\xF4\u017Ee\u0161 sem samozrejme pravidelne chodi\u0165 alebo sledova\u0165 na\u0161e novinky na ',
+      ' je prv\xE1 kde m\xF4\u017Ee\u0161 vidie\u0165 v\xFDsledky na\u0161ej pr\xE1ce! T\xE1to sekcia m\xE1 hlavn\xFD cie\u013E zjednodu\u0161i\u0165 pl\xE1novanie tvojej Cesty hrdinov SNP. Pozri sa na to a daj n\xE1m vedie\u0165 ako ti to pomohlo s pl\xE1novan\xEDm. Ak chce\u0161 sledova\u0165 n\xE1\u0161 pokrok m\xF4\u017Ee\u0161 sem samozrejme pravidelne chodi\u0165 alebo sledova\u0165 na\u0161e novinky na ',
       _react2.default.createElement(
         'a',
         { target: '_blank', href: 'https://www.facebook.com/CestaSNPsk-185536644838/' },
@@ -41421,7 +41444,7 @@ var Home = function Home() {
     _react2.default.createElement(
       'p',
       null,
-      'Projekt n\xE1jde\u0161 na ',
+      'CestuSNP.sk n\xE1jde\u0161 na ',
       _react2.default.createElement(
         'a',
         { target: '_blank', href: 'https://github.com/hasty001/cestasnp-web' },
@@ -41443,7 +41466,7 @@ exports = module.exports = __webpack_require__(98)(undefined);
 
 
 // module
-exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/* PHONE */\n\n@media (max-width: 740px) {\n\n  .desktop-nav {\n    display: none;\n  }\n\n  .phone-nav {\n    display: block;\n  }\n\n  .phone-nav-list {\n    display: flex;\n    flex-direction: column;\n    justify-content: flex-start;\n    align-items: center;\n  }\n\n  .phone-nav-list a {\n    font-size: 18px;\n    margin: 10px 0;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .phone-nav-list a:hover {\n    color: #52e53b;\n  }\n\n}\n\n@media (min-width: 740px) {\n\n  .phone-nav {\n    display: none;\n  }\n\n  .desktop-nav {\n    display: block;\n    position: absolute;\n    top: 36px;\n    right: 16px;\n  }\n\n  .desktop-nav-list {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-end;\n    align-items: center;\n  }\n\n  .desktop-nav-list a {\n    font-size: 24px;\n    margin: 0 12px;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .desktop-nav-list a:hover {\n    color: #61BC54;\n  }\n\n}\n\n/** NAVIGATION **/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 96px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n.menu-icon {\n  width: 32px;\n  height: 32px;\n  display: block;\n  position: absolute;\n  top: 30px;\n  right: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n.shownSideNav {\n  display: block;\n  width: 100%;\n  position: fixed;\n  background: #61bc54;  \n  top: 96px;\n  -webkit-transition: -webkit-transform 500ms ease-in-out;\n  transition: -webkit-transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out, -webkit-transform 500ms ease-in-out;\n}\n\n.hiddenSideNav {\n  display: block;\n  width: 100%;\n  position: fixed; \n  top: 96px;    \n  -webkit-transform: translateX(100%);\n          transform: translateX(100%);\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 500px;\n}\n\n#home {\n  width: 80%;\n  margin: 0 auto;\n  text-align: justify;\n}", ""]);
+exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/* PHONE */\n\n@media (max-width: 740px) {\n\n  .desktop-nav {\n    display: none;\n  }\n\n  .phone-nav {\n    display: block;\n  }\n\n  .phone-nav-list {\n    display: flex;\n    flex-direction: column;\n    justify-content: flex-start;\n    align-items: center;\n  }\n\n  .phone-nav-list a {\n    font-size: 18px;\n    margin: 10px 0;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .phone-nav-list a:hover {\n    color: #52e53b;\n  }\n\n}\n\n@media (min-width: 740px) {\n\n  .phone-nav {\n    display: none;\n  }\n\n  .desktop-nav {\n    display: block;\n    position: absolute;\n    top: 36px;\n    right: 16px;\n  }\n\n  .desktop-nav-list {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-end;\n    align-items: center;\n  }\n\n  .desktop-nav-list a {\n    font-size: 24px;\n    margin: 0 12px;\n    text-decoration: none;\n    color: #FFFFFF;\n  }\n\n  .desktop-nav-list a:hover {\n    color: #61BC54;\n  }\n\n}\n\n/** NAVIGATION **/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 96px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n.menu-icon {\n  width: 32px;\n  height: 32px;\n  display: block;\n  position: absolute;\n  top: 30px;\n  right: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n.shownSideNav {\n  display: block;\n  width: 100%;\n  position: fixed;\n  background: #61bc54;  \n  top: 96px;\n  -webkit-transition: -webkit-transform 500ms ease-in-out;\n  transition: -webkit-transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out;\n  transition: transform 500ms ease-in-out, -webkit-transform 500ms ease-in-out;\n}\n\n.hiddenSideNav {\n  display: block;\n  width: 100%;\n  position: fixed; \n  top: 96px;    \n  -webkit-transform: translateX(100%);\n          transform: translateX(100%);\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 500px;\n}\n\n#home-container, #pred-container, #na-container, #kontakt-container  {\n  width: 80%;\n  margin: 0 auto;\n  text-align: justify;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 0 auto;\n  text-align: justify;\n}", ""]);
 
 // exports
 
@@ -41459,6 +41482,115 @@ module.exports = __webpack_require__.p + "/img/ed0e36c1b39e31c207aa2c14f61babd7.
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "/img/ed0e36c1b39e31c207aa2c14f61babd7.ico";
+
+/***/ }),
+/* 242 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(6);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Article = function (_Component) {
+  _inherits(Article, _Component);
+
+  function Article(props) {
+    _classCallCheck(this, Article);
+
+    var _this = _possibleConstructorReturn(this, (Article.__proto__ || Object.getPrototypeOf(Article)).call(this, props));
+
+    _this.state = {
+      url: 'http://localhost:3000/api/articles/article/' + _this.props.match.params.articleId,
+      loading: true,
+      article: []
+    };
+    return _this;
+  }
+
+  _createClass(Article, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      fetch(this.state.url).then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        _this2.setState({
+          article: data,
+          loading: false
+        });
+      }).catch(function (err) {
+        console.log('error', err);
+        _this2.setState({
+          article: [{ title: '404', fulltext: 'Článok sme nenašli :(' }],
+          loading: false
+        });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      console.log('state', this.state);
+      console.log(this.props.match.params);
+      var header = '';
+      var text = '';
+      if (this.state.article.length > 0) {
+        header = this.state.article[0].title;
+        text = function text() {
+          return { __html: _this3.state.article[0].fulltext };
+        };
+      }
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.state.loading && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement('i', { className: 'fas fa-spinner fa-spin fa-2x' }),
+          _react2.default.createElement(
+            'span',
+            { className: 'sr-only' },
+            'Loading...'
+          )
+        ),
+        !this.state.loading && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'h2',
+            null,
+            header
+          ),
+          _react2.default.createElement('div', { dangerouslySetInnerHTML: text() }),
+          console.log('article', this.state.article)
+        )
+      );
+    }
+  }]);
+
+  return Article;
+}(_react.Component);
+
+exports.default = Article;
 
 /***/ })
 /******/ ]);

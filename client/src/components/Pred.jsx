@@ -30,7 +30,7 @@ class Pred extends Component {
         <h1>tu pride info pred cestou</h1>
         <button value={RENDER_OPTIONS.ARTICLES} onClick={this.handleShowChoice}>articles</button>
         <button value={RENDER_OPTIONS.POIS} onClick={this.handleShowChoice}>pois</button>
-        {this.state.show === RENDER_OPTIONS.POIS && 
+        {this.state.show === RENDER_OPTIONS.POIS &&
         <Pois />}
         {this.state.show === RENDER_OPTIONS.ARTICLES &&
         <Articles />}

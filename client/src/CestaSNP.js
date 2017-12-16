@@ -8,6 +8,9 @@ import Pred from './components/Pred'
 import Kontakt from './components/Kontakt'
 import NotFound from './components/NotFound'
 import Home from './components/Home'
+import Articles from './components/Articles'
+import Article from './components/Article'
+import Pois from './components/Pois'
 
 import '../public/index.css'
 import logo from '../public/img/logo.png'
@@ -42,7 +45,10 @@ class CestaSNP extends Component {
               <Route exact path='/pred/' component={Pred} />
               <Route exact path='/na' component={Na} />
               <Route exact path='/kontakt' component={Kontakt} />
-              <Route component={NotFound} />
+              <Route exact path='/pred/articles' component={Articles} />
+              <Route path='/pred/articles/:articleId' component={Article} />
+              <Route exact path='/pred/pois' component={Pois} />
+              <Route path='*' component={NotFound} />
             </Switch>
           </Router>
         </div>
