@@ -11,7 +11,7 @@ class Pois extends Component {
   }
 
   componentDidMount () {
-    fetch('http://localhost:3000/api/pois')
+    fetch('https://cestasnp-web.herokuapp.com/api/pois')
     .then((resp) => resp.json())
     .then((data) => {
       this.setState({

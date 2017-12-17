@@ -10,7 +10,7 @@ class Articles extends Component {
   }
 
   componentDidMount () {
-    fetch('http://localhost:3000/api/articles')
+    fetch('https://cestasnp-web.herokuapp.com/api/articles')
       .then((resp) => resp.json())
       .then((data) => {
         this.setState({
@@ -36,7 +36,7 @@ class Articles extends Component {
                 <div key={i}>
                   <h2>{article.title}</h2>
                   <div dangerouslySetInnerHTML={introtext()} />
-                  <a href={'http://localhost:3000/pred/articles/' + article.sql_article_id}>Čítaj viac...</a>
+                  <a href={'https://cestasnp-web.herokuapp.com/pred/articles/' + article.sql_article_id}>Čítaj viac...</a>
                   {console.log(article)}
                 </div>
               )

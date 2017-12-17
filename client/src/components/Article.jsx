@@ -4,7 +4,7 @@ class Article extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      url: 'http://localhost:3000/api/articles/article/' + this.props.match.params.articleId,
+      url: 'https://cestasnp-web.herokuapp.com/api/articles/article/' + this.props.match.params.articleId,
       loading: true,
       article: []
     }

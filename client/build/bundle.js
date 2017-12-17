@@ -11462,7 +11462,7 @@ var Pois = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('http://localhost:3000/api/pois').then(function (resp) {
+      fetch('https://cestasnp-web.herokuapp.com/api/pois').then(function (resp) {
         return resp.json();
       }).then(function (data) {
         _this2.setState({
@@ -12007,7 +12007,7 @@ var Articles = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('http://localhost:3000/api/articles').then(function (resp) {
+      fetch('https://cestasnp-web.herokuapp.com/api/articles').then(function (resp) {
         return resp.json();
       }).then(function (data) {
         _this2.setState({
@@ -12050,7 +12050,7 @@ var Articles = function (_Component) {
               _react2.default.createElement('div', { dangerouslySetInnerHTML: introtext() }),
               _react2.default.createElement(
                 'a',
-                { href: 'http://localhost:3000/pred/articles/' + article.sql_article_id },
+                { href: 'https://cestasnp-web.herokuapp.com/pred/articles/' + article.sql_article_id },
                 '\u010C\xEDtaj viac...'
               ),
               console.log(article)
@@ -41449,7 +41449,7 @@ var Article = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Article.__proto__ || Object.getPrototypeOf(Article)).call(this, props));
 
     _this.state = {
-      url: 'http://localhost:3000/api/articles/article/' + _this.props.match.params.articleId,
+      url: 'https://cestasnp-web.herokuapp.com/api/articles/article/' + _this.props.match.params.articleId,
       loading: true,
       article: []
     };
