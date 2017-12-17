@@ -14,11 +14,6 @@ const ROUTES = {
 class Navigation extends Component {
 
   render () {
-    let divStyle = {
-      backgroungColor: 'white',
-      color: 'white'
-    }
-
     return (
       <Navbar inverse collapseOnSelect>
         <Navbar.Header>
@@ -31,7 +26,7 @@ class Navigation extends Component {
         </Navbar.Header>
         <Navbar.Collapse className='navigacka'>
           <Nav pullRight>
-            <MenuItem eventKey={1} style={divStyle} title='Domov' href={ROUTES.domov}>Domov</MenuItem>
+            <MenuItem eventKey={1} title='Domov' href={ROUTES.domov}>Domov</MenuItem>
             <NavDropdown eventKey={2} title='Pred cestou' id='basic-nav-dropdown'>
               <MenuItem eventKey={2.1} href={ROUTES.clanky}>Články</MenuItem>
               <MenuItem eventKey={2.2} href={ROUTES.pois}>Dôležité miesta</MenuItem>

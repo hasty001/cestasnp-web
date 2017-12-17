@@ -26975,11 +26975,6 @@ var Navigation = function (_Component) {
   _createClass(Navigation, [{
     key: 'render',
     value: function render() {
-      var divStyle = {
-        backgroungColor: 'white',
-        color: 'white'
-      };
-
       return _react2.default.createElement(
         _reactBootstrap.Navbar,
         { inverse: true, collapseOnSelect: true },
@@ -27005,7 +27000,7 @@ var Navigation = function (_Component) {
             { pullRight: true },
             _react2.default.createElement(
               _reactBootstrap.MenuItem,
-              { eventKey: 1, style: divStyle, title: 'Domov', href: ROUTES.domov },
+              { eventKey: 1, title: 'Domov', href: ROUTES.domov },
               'Domov'
             ),
             _react2.default.createElement(
