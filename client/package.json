@@ -12,6 +12,7 @@
     "history": "^4.7.2",
     "leaflet": "^1.2.0",
     "react": "^15.6.1",
+    "react-bootstrap": "^0.31.5",
     "react-dom": "^15.6.1",
     "react-router": "^4.2.0",
     "style-loader": "^0.19.1",

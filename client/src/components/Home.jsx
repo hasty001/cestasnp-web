@@ -2,7 +2,7 @@ import React from 'react'
 
 const Home = () => {
   return (
-    <div id='home-container'>
+    <div className='screen-container'>
       <p>
         Na CesteSNP.sk pracujeme dňom a nocou, teda pokiaľ nie sme akurát na horách,
         v práci, v knižnici, v divadle, u frajerky, či sa hráme s našimi deťmi...

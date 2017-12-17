@@ -13,30 +13,19 @@ import Article from './components/Article'
 import Pois from './components/Pois'
 
 import '../public/index.css'
-import logo from '../public/img/logo.png'
 
 const history = createHistory()
 
 class CestaSNP extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      showHideSideNav: 'hiddenSideNav'
-    }
-    this.toggleSideNav = this.toggleSideNav.bind(this)
   }
 
   render () {
     return (
       <div className='app'>
         <div className='app-header'>
-          <a href='/'>
-            <img src={logo} className='app-logo' alt='Cesta SNP logo' />
-          </a>
-          <Navigation
-            showHideSideNav={this.state.showHideSideNav}
-            toggleSideNav={this.toggleSideNav}
-          />
+          <Navigation />
         </div>
         <div className='app-body'>
           <Router history={history}>

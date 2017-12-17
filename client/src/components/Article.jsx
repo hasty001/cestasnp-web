@@ -38,7 +38,7 @@ class Article extends Component {
       text = () => { return { __html: this.state.article[0].fulltext } }
     }
     return (
-      <div>
+      <div className='screen-container'>
         {this.state.loading &&
           <div>
             <i className='fas fa-spinner fa-spin fa-2x' />

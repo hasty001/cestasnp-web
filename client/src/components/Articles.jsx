@@ -22,7 +22,7 @@ class Articles extends Component {
 
   render () {
     return (
-      <div>
+      <div className='screen-container'>
         {this.state.loading &&
           <div>
             <i className='fas fa-spinner fa-spin fa-2x' />
