@@ -12,8 +12,6 @@ import Articles from './components/Articles'
 import Article from './components/Article'
 import Pois from './components/Pois'
 
-import '../public/index.css'
-
 const history = createHistory()
 
 class CestaSNP extends Component {
@@ -43,11 +41,6 @@ class CestaSNP extends Component {
         </div>
       </div>
     )
-  }
-
-  toggleSideNav () {
-    const showHideSideNav = (this.state.showHideSideNav === 'hiddenSideNav') ? 'shownSideNav' : 'hiddenSideNav'
-    this.setState({ showHideSideNav: showHideSideNav })
   }
 }
 

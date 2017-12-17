@@ -23978,8 +23978,6 @@ var _Pois = __webpack_require__(98);
 
 var _Pois2 = _interopRequireDefault(_Pois);
 
-__webpack_require__(102);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24031,12 +24029,6 @@ var CestaSNP = function (_Component) {
           )
         )
       );
-    }
-  }, {
-    key: 'toggleSideNav',
-    value: function toggleSideNav() {
-      var showHideSideNav = this.state.showHideSideNav === 'hiddenSideNav' ? 'shownSideNav' : 'hiddenSideNav';
-      this.setState({ showHideSideNav: showHideSideNav });
     }
   }]);
 
