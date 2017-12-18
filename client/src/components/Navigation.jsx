@@ -5,7 +5,7 @@ import logo from '../../public/img/logo.png'
 const ROUTES = {
   domov: '/',
   predCestou: '/pred',
-  clanky: '/pred/articles',
+  clanky: '/pred/articles/1',
   pois: '/pred/pois',
   naCeste: '/na',
   kontakt: '/kontakt'

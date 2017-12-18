@@ -20,7 +20,7 @@ const Home = () => {
         To všetko beží na Heroku cloude a tak máš veľkú šancu sa naučiť čosi nové.
         Ak to ale už všetko poznáš, vôbec neváhaj sa ozvať
         a naopak naučiť nás ako postaviť CestaSNP.sk na nohy rýchlo a efektívne.
-        Kontakt na nás: <a target='_blank' href='mailto:info@cestasnp.sk'>info@cestasnp.sk</a>
+        Kontakt na nás: <a target='_blank' href='mailto:info@cestasnp.sk'>info@cestasnp.sk</a>.
       </p>
       <p>
         CestuSNP.sk nájdeš na <a target='_blank' href='https://github.com/hasty001/cestasnp-web'>Githube</a>.

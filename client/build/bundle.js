@@ -19986,6 +19986,10 @@ var _Loader = __webpack_require__(500);
 
 var _Loader2 = _interopRequireDefault(_Loader);
 
+var _PaginationAdvanced = __webpack_require__(501);
+
+var _PaginationAdvanced2 = _interopRequireDefault(_PaginationAdvanced);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20004,8 +20008,12 @@ var Articles = function (_Component) {
 
     _this.state = {
       loading: true,
+      activePage: parseInt(_this.props.match.params.page) || 1,
+      totalArticles: 12,
       articles: []
     };
+
+    _this.handlePageSelect = _this.handlePageSelect.bind(_this);
     return _this;
   }
 
@@ -20014,7 +20022,15 @@ var Articles = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('http://localhost:3000/api/articles').then(function (resp) {
+      fetch('http://localhost:3000/api/articles/').then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        console.log(data);
+      }).catch(function (err) {
+        console.log(err);
+      });
+      var url = 'http://localhost:3000/api/articles/' + this.props.match.params.page;
+      fetch(url).then(function (resp) {
         return resp.json();
       }).then(function (data) {
         _this2.setState({
@@ -20022,6 +20038,11 @@ var Articles = function (_Component) {
           loading: false
         });
       });
+    }
+  }, {
+    key: 'handlePageSelect',
+    value: function handlePageSelect(eventKey) {
+      location.assign('http://localhost:3000/pred/articles/' + eventKey);
     }
   }, {
     key: 'render',
@@ -20033,6 +20054,10 @@ var Articles = function (_Component) {
         !this.state.loading && _react2.default.createElement(
           'div',
           null,
+          _react2.default.createElement(_PaginationAdvanced2.default, {
+            totalArticles: this.state.totalArticles,
+            activePage: this.state.activePage,
+            handlePageSelect: this.handlePageSelect }),
           this.state.articles.map(function (article, i) {
             var introtext = function introtext() {
               return { __html: article.introtext };
@@ -20048,7 +20073,7 @@ var Articles = function (_Component) {
               _react2.default.createElement('div', { dangerouslySetInnerHTML: introtext() }),
               _react2.default.createElement(
                 'a',
-                { href: 'http://localhost:3000/pred/articles/' + article.sql_article_id },
+                { href: 'http://localhost:3000/pred/articles/article/' + article.sql_article_id },
                 '\u010C\xEDtaj viac...'
               )
             );
@@ -31959,8 +31984,8 @@ var CestaSNP = function CestaSNP() {
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/', component: _Pred2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/na', component: _Na2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/kontakt', component: _Kontakt2.default }),
-          _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/articles', component: _Articles2.default }),
-          _react2.default.createElement(_reactRouter.Route, { path: '/pred/articles/:articleId', component: _Article2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: '/pred/articles/article/:articleId', component: _Article2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: '/pred/articles/:page', component: _Articles2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/pois', component: _Pois2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
         )
@@ -34883,7 +34908,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ROUTES = {
   domov: '/',
   predCestou: '/pred',
-  clanky: '/pred/articles',
+  clanky: '/pred/articles/1',
   pois: '/pred/pois',
   naCeste: '/na',
   kontakt: '/kontakt'
@@ -61859,7 +61884,8 @@ var Home = function Home() {
         'a',
         { target: '_blank', href: 'mailto:info@cestasnp.sk' },
         'info@cestasnp.sk'
-      )
+      ),
+      '.'
     ),
     _react2.default.createElement(
       'p',
@@ -62060,6 +62086,42 @@ var Loader = function Loader() {
 };
 
 exports.default = Loader;
+
+/***/ }),
+/* 501 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(340);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var PaginationAdvanced = function PaginationAdvanced(props) {
+  return _react2.default.createElement(_reactBootstrap.Pagination, {
+    prev: true,
+    next: true,
+    first: true,
+    last: true,
+    ellipsis: true,
+    boundaryLinks: true,
+    items: props.totalArticles,
+    maxButtons: 5,
+    activePage: props.activePage,
+    onSelect: props.handlePageSelect
+  });
+};
+
+exports.default = PaginationAdvanced;
 
 /***/ })
 /******/ ]);

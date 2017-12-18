@@ -9,9 +9,13 @@ const ORDER = {
 const filterBy = { tags: { $ne: 'spravy-z-terenu' } }
 
 router.get('/', function (req, res) {
-  query.newestSorted('articles', ORDER.newestFirst, function (results) {
-    res.json(results)
-  }, filterBy)
+  query.countCollection('articles', filterBy, function (count, error) {
+    if (count) {
+      res.json(count)
+    } else {
+      console.log(error)
+    }
+  })
 })
 
 router.get('/:page', function (req, res) {
