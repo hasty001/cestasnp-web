@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Map from './Map'
+import Loader from './Loader'
 
 class Pois extends Component {
   constructor (props) {
@@ -11,7 +12,7 @@ class Pois extends Component {
   }
 
   componentDidMount () {
-    fetch('https://cestasnp-web.herokuapp.com/api/pois')
+    fetch('http://localhost:3000/api/pois')
     .then((resp) => resp.json())
     .then((data) => {
       this.setState({
@@ -25,10 +26,7 @@ class Pois extends Component {
     return (
       <div className='screen-container'>
         {this.state.loading &&
-        <div>
-          <i className='fas fa-spinner fa-spin fa-2x' />
-          <span className='sr-only'>Loading...</span>
-        </div>}
+        <Loader />}
         {!this.state.loading &&
         <div>
           <Map pois={this.state.pois} />

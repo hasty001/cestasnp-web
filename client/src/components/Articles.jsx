@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Loader from './Loader'
 
 class Articles extends Component {
   constructor (props) {
@@ -10,7 +11,7 @@ class Articles extends Component {
   }
 
   componentDidMount () {
-    fetch('https://cestasnp-web.herokuapp.com/api/articles')
+    fetch('http://localhost:3000/api/articles')
       .then((resp) => resp.json())
       .then((data) => {
         this.setState({
@@ -24,10 +25,7 @@ class Articles extends Component {
     return (
       <div className='screen-container'>
         {this.state.loading &&
-          <div>
-            <i className='fas fa-spinner fa-spin fa-2x' />
-            <span className='sr-only'>Loading...</span>
-          </div>}
+          <Loader />}
         {!this.state.loading &&
           <div>
             {this.state.articles.map((article, i) => {
@@ -36,8 +34,7 @@ class Articles extends Component {
                 <div key={i}>
                   <h2>{article.title}</h2>
                   <div dangerouslySetInnerHTML={introtext()} />
-                  <a href={'https://cestasnp-web.herokuapp.com/pred/articles/' + article.sql_article_id}>Čítaj viac...</a>
-                  {console.log(article)}
+                  <a href={'http://localhost:3000/pred/articles/' + article.sql_article_id}>Čítaj viac...</a>
                 </div>
               )
             })}
