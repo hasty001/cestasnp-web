@@ -51,10 +51,6 @@ class Articles extends Component {
           <Loader />}
         {!this.state.loading &&
           <div>
-            <PaginationAdvanced
-              totalArticles={this.state.totalArticles}
-              activePage={this.state.activePage} 
-              handlePageSelect={this.handlePageSelect} />
             {this.state.articles.map((article, i) => {
               let introtext = () => { return {__html: article.introtext} }
               return (
@@ -65,6 +61,10 @@ class Articles extends Component {
                 </div>
               )
             })}
+            <PaginationAdvanced
+              totalArticles={this.state.totalArticles}
+              activePage={this.state.activePage}
+              handlePageSelect={this.handlePageSelect} />
           </div>}
       </div>
     )

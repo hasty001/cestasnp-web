@@ -10,7 +10,7 @@ const PaginationAdvanced = (props) => (
     ellipsis
     boundaryLinks
     items={props.totalArticles}
-    maxButtons={5}
+    maxButtons={3}
     activePage={props.activePage}
     onSelect={props.handlePageSelect}
   />
