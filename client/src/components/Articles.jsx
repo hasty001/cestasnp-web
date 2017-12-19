@@ -18,12 +18,14 @@ class Articles extends Component {
   componentDidMount () {
     fetch('http://localhost:3000/api/articles/')
       .then((resp) => resp.json())
-      .then((data) => {
-        console.log(data)
+      .then((count) => {
+        let pages = Math.round(count / 8)
+        this.setState({ totalArticles: pages })
       })
       .catch((err) => {
-        console.log(err)
+        console.log('error: ', err)
       })
+
     let url = 'http://localhost:3000/api/articles/' + this.props.match.params.page
     fetch(url)
       .then((resp) => resp.json())
@@ -32,6 +34,9 @@ class Articles extends Component {
           articles: data,
           loading: false
         })
+      })
+      .catch((err) => {
+        console.log('error: ', err)
       })
   }
 

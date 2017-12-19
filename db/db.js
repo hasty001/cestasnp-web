@@ -28,7 +28,7 @@ DB.prototype = {
         const resCollection = db.collection(collection)
         resCollection
           .find(filterBy)
-          .limit(10)
+          .limit(8)
           .sort(sortBy)
           .toArray(function (err, docs) {
             if (docs) {
@@ -50,8 +50,8 @@ DB.prototype = {
         const resCollection = db.collection(collection)
         resCollection
           .find(filterBy)
-          .limit(10)
-          .skip(10 * page)
+          .limit(8)
+          .skip(8 * page)
           .sort(sortBy)
           .toArray(function (err, docs) {
             if (docs) {
@@ -89,11 +89,11 @@ DB.prototype = {
         const resCollection = db.collection(collection)
         resCollection
           .count(findBy)
-          .then(function (err, count) {
-            if (count) {
-              callback(count)
-            } else {
-              throw err
+          .then((data) => {
+            try {
+              callback(data)
+            } catch (err) {
+              console.log('Error retrieving data: ', err)
             }
           })
       } else {

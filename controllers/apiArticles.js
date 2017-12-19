@@ -6,15 +6,15 @@ const ORDER = {
   newestFirst: { created: -1 },
   oldestFirst: { created: 1 }
 }
-const filterBy = { tags: { $ne: 'spravy-z-terenu' } }
+const filterBy = {
+  tags: {
+    $nin: [ 'akcie', 'spravy-z-terenu', 'spravy_z_terenu' ]
+  }
+}
 
 router.get('/', function (req, res) {
-  query.countCollection('articles', filterBy, function (count, error) {
-    if (count) {
-      res.json(count)
-    } else {
-      console.log(error)
-    }
+  query.countCollection('articles', filterBy, function (results) {
+    res.json(results)
   })
 })
 
