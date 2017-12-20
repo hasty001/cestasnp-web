@@ -72,7 +72,9 @@ class Map extends Component {
           iconAnchor: [16, 32]
         })
         let marker = L.marker([poi.coordinates[1], poi.coordinates[0]], { icon: icon }).addTo(map)
-        marker.bindPopup(`<h2>${poi.name}</h2><p>${poi.text}</p>`)
+        marker.bindPopup(`<h4>${poi.name}</h4>
+          <p>GPS: ${poi.coordinates[1]}, ${poi.coordinates[0]}</p>
+          <p>${poi.text}</p>`)
       })
     }
     const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map)

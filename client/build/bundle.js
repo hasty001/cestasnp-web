@@ -48346,7 +48346,7 @@ var Map = function (_Component) {
             iconAnchor: [16, 32]
           });
           var marker = _leaflet2.default.marker([poi.coordinates[1], poi.coordinates[0]], { icon: icon }).addTo(map);
-          marker.bindPopup('<h2>' + poi.name + '</h2><p>' + poi.text + '</p>');
+          marker.bindPopup('<h4>' + poi.name + '</h4>\n          <p>GPS: ' + poi.coordinates[1] + ', ' + poi.coordinates[0] + '</p>\n          <p>' + poi.text + '</p>');
         });
       }
       var tileLayer = _leaflet2.default.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
