@@ -61,7 +61,7 @@ class Articles extends Component {
 
   componentDidMount () {
     if (this.state.filter === '') {
-      fetch('http://localhost:3000/api/articles/')
+      fetch('/api/articles/')
         .then((resp) => resp.json())
         .then((count) => {
           let pages = Math.round(count / 8)
@@ -71,7 +71,7 @@ class Articles extends Component {
           console.log('error: ', err)
         })
 
-      let url = 'http://localhost:3000/api/articles/' + this.props.match.params.page
+      let url = '/api/articles/' + this.props.match.params.page
       fetch(url)
         .then((resp) => resp.json())
         .then((data) => {
@@ -84,7 +84,7 @@ class Articles extends Component {
           console.log('error: ', err)
         })
     } else {
-      fetch('http://localhost:3000/api/articles/category/' + this.state.filter)
+      fetch('/api/articles/category/' + this.state.filter)
         .then((resp) => resp.json())
         .then((count) => {
           let pages = Math.round(count / 8)
@@ -94,7 +94,7 @@ class Articles extends Component {
           console.log('error: ', err)
         })
 
-      let url = 'http://localhost:3000/api/articles/category/' + this.state.filter + '/1'
+      let url = '/api/articles/category/' + this.state.filter + '/1'
       fetch(url)
         .then((resp) => resp.json())
         .then((data) => {
@@ -111,22 +111,22 @@ class Articles extends Component {
 
   handlePageSelect (eventKey) {
     if (this.state.activeFilter === 0) {
-      location.assign('http://localhost:3000/pred/articles/' + eventKey)
+      location.assign('/pred/articles/' + eventKey)
     } else {
-      location.assign('http://localhost:3000/pred/filteredarticles/' + this.state.filter + '/' + eventKey)
+      location.assign('/pred/filteredarticles/' + this.state.filter + '/' + eventKey)
     }
   }
 
   handleCategorySelect (e) {
     if (articleCategories[e].tag === 'vsetky') {
-      location.assign('http://localhost:3000/pred/articles/1')
+      location.assign('/pred/articles/1')
     } else {
       this.setState({
         filter: articleCategories[e].tag,
         activeFilter: e,
         loading: true
       })
-      location.assign('http://localhost:3000/pred/filteredarticles/' + articleCategories[e].tag + '/1')
+      location.assign('/pred/filteredarticles/' + articleCategories[e].tag + '/1')
     }
   }
 
@@ -154,7 +154,7 @@ class Articles extends Component {
                 <div key={i}>
                   <h2>{article.title}</h2>
                   <div dangerouslySetInnerHTML={introtext()} />
-                  <a href={'http://localhost:3000/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
+                  <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
                 </div>
               )
             })}

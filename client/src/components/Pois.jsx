@@ -12,7 +12,7 @@ class Pois extends Component {
   }
 
   componentDidMount () {
-    fetch('http://localhost:3000/api/pois')
+    fetch('/api/pois')
     .then((resp) => resp.json())
     .then((data) => {
       this.setState({
