@@ -8,7 +8,7 @@ const Home = () => {
         v práci, v knižnici, v divadle, u frajerky, či sa hráme s našimi deťmi...
       </p>
       <p>
-        Sekcia <a target='_blank' href='/pred'>Pred Cestou</a> je prvá kde môžeš vidieť
+        Sekcia <a href='/pred/articles/1'>Pred Cestou</a> je prvá kde môžeš vidieť
         výsledky našej práce! Táto sekcia má hlavný cieľ zjednodušiť plánovanie tvojej
         Cesty hrdinov SNP. Pozri sa na to a daj nám vedieť ako ti to pomohlo s plánovaním.
         Ak chceš sledovať náš pokrok môžeš sem samozrejme pravidelne chodiť alebo sledovať

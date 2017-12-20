@@ -21048,8 +21048,6 @@ var _CestaSNP2 = _interopRequireDefault(_CestaSNP);
 
 __webpack_require__(502);
 
-__webpack_require__(504);
-
 var _promisePolyfill = __webpack_require__(505);
 
 var _promisePolyfill2 = _interopRequireDefault(_promisePolyfill);
@@ -62564,7 +62562,7 @@ var Home = function Home() {
       'Sekcia ',
       _react2.default.createElement(
         'a',
-        { target: '_blank', href: '/pred' },
+        { href: '/pred/articles/1' },
         'Pred Cestou'
       ),
       ' je prv\xE1 kde m\xF4\u017Ee\u0161 vidie\u0165 v\xFDsledky na\u0161ej pr\xE1ce! T\xE1to sekcia m\xE1 hlavn\xFD cie\u013E zjednodu\u0161i\u0165 pl\xE1novanie tvojej Cesty hrdinov SNP. Pozri sa na to a daj n\xE1m vedie\u0165 ako ti to pomohlo s pl\xE1novan\xEDm. Ak chce\u0161 sledova\u0165 n\xE1\u0161 pokrok m\xF4\u017Ee\u0161 sem samozrejme pravidelne chodi\u0165 alebo sledova\u0165 na\u0161e novinky na ',
@@ -62749,12 +62747,7 @@ exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n 
 
 
 /***/ }),
-/* 504 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "/img/ed0e36c1b39e31c207aa2c14f61babd7.ico";
-
-/***/ }),
+/* 504 */,
 /* 505 */
 /***/ (function(module, exports, __webpack_require__) {
 
