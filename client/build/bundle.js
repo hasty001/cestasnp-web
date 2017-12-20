@@ -20855,6 +20855,10 @@ var _PaginationAdvanced = __webpack_require__(496);
 
 var _PaginationAdvanced2 = _interopRequireDefault(_PaginationAdvanced);
 
+var _ArticleFilter = __webpack_require__(508);
+
+var _ArticleFilter2 = _interopRequireDefault(_ArticleFilter);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20862,6 +20866,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var articleCategories = [{ tag: 'vsetky', text: 'Všetky' }, { tag: 'faqs', text: 'FAQs' }, { tag: 'novinky', text: 'Novinky' }, { tag: 'ostatne', text: 'Ostatné' }, { tag: 'vybavenie', text: 'Vybavenie' }, { tag: 'odkazy', text: 'Odkazy' }, { tag: 'mapy', text: 'Mapy' }, { tag: 'dolezite_miesta', text: 'Dôležité miesta' }, { tag: 'stravovanie', text: 'Stravovanie' }, { tag: 'cestopisy', text: 'Cestopisy' }, { tag: 'spravy_z_terenu', text: 'Správy z terénu' }, { tag: 'zaujimavosti', text: 'Zaujímavosti' }, { tag: 'akcie', text: 'Akcie' }, { tag: 'obmedzenia', text: 'Obmedzenia' }, { tag: 'oznamy', text: 'Oznamy' }, { tag: 'cesta-hrdinov-snp', text: 'Cesta hrdinov SNP' }, { tag: 'akcie-snp', text: 'Akcie Cesta hrdinov SNP' }, { tag: 'akcie-ostatne', text: 'Ostatné akcie' }, { tag: 'oblecenie', text: 'Oblečenie' }, { tag: 'obuv', text: 'Obuv' }, { tag: 'o-cestesnpsk', text: 'O CesteSNP.sk' }, { tag: 'cela-trasa', text: 'Celá trasa' }, { tag: 'vku', text: 'VKU' }, { tag: 'shocart', text: 'Shocart' }, { tag: 'gps', text: 'GPS' }, { tag: 'batoh', text: 'Batoh' }, { tag: 'dukla-cergov-sarisska-vrchovina', text: 'Dukla, Čergov, Šarišská vrchovina' }, { tag: 'cierna-hora-volovske-vrchy', text: 'Čierna hora, Volovské vrchy' }, { tag: 'nizke-tatry', text: 'Nízke Tatry' }, { tag: 'velka-fatra-kremnicke-vrchy', text: 'Veľká Fatra, Kremnické vrchy' }, { tag: 'strazovske-vrchy-biele-karpaty', text: 'Strážovske vrchy, Biele Karpatu' }, { tag: 'male-karpaty', text: 'Malé Karpaty' }, { tag: 'recepty', text: 'Recepty' }, { tag: 'o-strave', text: 'Stravovanie' }, { tag: 'nezaradene', text: 'Nezaradené' }, { tag: 'spravy-z-terenu', text: 'Správy z terénu' }, { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' }, { tag: 'rozhovory', text: 'Rozhovory' }];
 
 var Articles = function (_Component) {
   _inherits(Articles, _Component);
@@ -20875,10 +20881,12 @@ var Articles = function (_Component) {
       loading: true,
       activePage: parseInt(_this.props.match.params.page) || 1,
       totalArticles: 12,
-      articles: []
+      articles: [],
+      activeFilter: 0,
+      filter: _this.props.match.params.category || ''
     };
-
     _this.handlePageSelect = _this.handlePageSelect.bind(_this);
+    _this.handleCategorySelect = _this.handleCategorySelect.bind(_this);
     return _this;
   }
 
@@ -20887,31 +20895,72 @@ var Articles = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('http://localhost:3000/api/articles/').then(function (resp) {
-        return resp.json();
-      }).then(function (count) {
-        var pages = Math.round(count / 8);
-        _this2.setState({ totalArticles: pages });
-      }).catch(function (err) {
-        console.log('error: ', err);
-      });
-
-      var url = 'http://localhost:3000/api/articles/' + this.props.match.params.page;
-      fetch(url).then(function (resp) {
-        return resp.json();
-      }).then(function (data) {
-        _this2.setState({
-          articles: data,
-          loading: false
+      if (this.state.filter === '') {
+        fetch('http://localhost:3000/api/articles/').then(function (resp) {
+          return resp.json();
+        }).then(function (count) {
+          var pages = Math.round(count / 8);
+          _this2.setState({ totalArticles: pages });
+        }).catch(function (err) {
+          console.log('error: ', err);
         });
-      }).catch(function (err) {
-        console.log('error: ', err);
-      });
+
+        var url = 'http://localhost:3000/api/articles/' + this.props.match.params.page;
+        fetch(url).then(function (resp) {
+          return resp.json();
+        }).then(function (data) {
+          _this2.setState({
+            articles: data,
+            loading: false
+          });
+        }).catch(function (err) {
+          console.log('error: ', err);
+        });
+      } else {
+        fetch('http://localhost:3000/api/articles/category/' + this.state.filter).then(function (resp) {
+          return resp.json();
+        }).then(function (count) {
+          var pages = Math.round(count / 8);
+          _this2.setState({ totalArticles: pages });
+        }).catch(function (err) {
+          console.log('error: ', err);
+        });
+
+        var _url = 'http://localhost:3000/api/articles/category/' + this.state.filter + '/1';
+        fetch(_url).then(function (resp) {
+          return resp.json();
+        }).then(function (data) {
+          _this2.setState({
+            articles: data,
+            loading: false
+          });
+        }).catch(function (err) {
+          console.log('error: ', err);
+        });
+      }
     }
   }, {
     key: 'handlePageSelect',
     value: function handlePageSelect(eventKey) {
-      location.assign('http://localhost:3000/pred/articles/' + eventKey);
+      if (this.state.activeFilter === 0) {
+        location.assign('http://localhost:3000/pred/articles/' + eventKey);
+      } else {
+        location.assign('http://localhost:3000/pred/filteredarticles/' + this.state.filter + '/' + eventKey);
+      }
+    }
+  }, {
+    key: 'handleCategorySelect',
+    value: function handleCategorySelect(e) {
+      if (articleCategories[e].tag === 'vsetky') {
+        location.assign('http://localhost:3000/pred/articles/1');
+      } else {
+        this.setState({
+          filter: articleCategories[e].tag,
+          activeFilter: e,
+          loading: true
+        });
+        location.assign('http://localhost:3000/pred/filteredarticles/' + articleCategories[e].tag + '/1');
+      }
     }
   }, {
     key: 'render',
@@ -20919,11 +20968,24 @@ var Articles = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'screen-container' },
-        this.state.loading && _react2.default.createElement(_Loader2.default, null),
+        this.state.loading && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(_ArticleFilter2.default, {
+            articleCategories: articleCategories,
+            activeFilter: this.state.activeFilter,
+            handleCategorySelect: this.handleCategorySelect }),
+          _react2.default.createElement(_Loader2.default, null)
+        ),
         !this.state.loading && _react2.default.createElement(
           'div',
           null,
+          _react2.default.createElement(_ArticleFilter2.default, {
+            articleCategories: articleCategories,
+            activeFilter: this.state.activeFilter,
+            handleCategorySelect: this.handleCategorySelect }),
           this.state.articles.map(function (article, i) {
+            console.log(article);
             var introtext = function introtext() {
               return { __html: article.introtext };
             };
@@ -32872,6 +32934,7 @@ var CestaSNP = function CestaSNP() {
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/kontakt', component: _Kontakt2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/pred/articles/article/:articleId', component: _Article2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/pred/articles/:page', component: _Articles2.default }),
+          _react2.default.createElement(_reactRouter.Route, { path: '/pred/filteredarticles/:category/:page', component: _Articles2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/pois', component: _Pois2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
         )
@@ -63128,6 +63191,49 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
+
+/***/ }),
+/* 508 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(173);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ArticleFilter = function ArticleFilter(props) {
+  return _react2.default.createElement(
+    _reactBootstrap.DropdownButton,
+    { title: 'Vyber si kateg\xF3riu', key: '1', id: 'dropdown-basic-1' },
+    props.articleCategories.map(function (category, i) {
+      if (i === props.activeFilter) {
+        return _react2.default.createElement(
+          _reactBootstrap.MenuItem,
+          { eventKey: i, key: i, active: true, onSelect: props.handleCategorySelect },
+          category.text
+        );
+      } else {
+        return _react2.default.createElement(
+          _reactBootstrap.MenuItem,
+          { eventKey: i, key: i, onSelect: props.handleCategorySelect },
+          category.text
+        );
+      }
+    })
+  );
+};
+
+exports.default = ArticleFilter;
 
 /***/ })
 /******/ ]);

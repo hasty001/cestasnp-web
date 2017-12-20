@@ -32,9 +32,15 @@ router.get('/article/:articleId', function (req, res) {
 })
 
 router.get('/category/:category', function (req, res) {
-  query.findBy('articles', { tags: req.params.category }, function (results) {
+  query.countCollection('articles', { tags: req.params.category }, function (results) {
     res.json(results)
   })
 })
 
+router.get('/category/:category/:page', function (req, res) {
+  let category = req.params.category
+  query.nextSorted('articles', ORDER.newestFirst, req.params.page, function (results) {
+    res.json(results)
+  }, {tags: category})
+})
 module.exports = router

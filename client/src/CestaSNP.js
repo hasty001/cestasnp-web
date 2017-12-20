@@ -28,6 +28,7 @@ const CestaSNP = () => (
           <Route exact path='/kontakt' component={Kontakt} />
           <Route path='/pred/articles/article/:articleId' component={Article} />
           <Route path='/pred/articles/:page' component={Articles} />
+          <Route path='/pred/filteredarticles/:category/:page' component={Articles} />
           <Route exact path='/pred/pois' component={Pois} />
           <Route path='*' component={NotFound} />
         </Switch>
