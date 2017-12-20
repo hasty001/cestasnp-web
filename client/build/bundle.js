@@ -21048,7 +21048,7 @@ var _CestaSNP2 = _interopRequireDefault(_CestaSNP);
 
 __webpack_require__(502);
 
-var _promisePolyfill = __webpack_require__(505);
+var _promisePolyfill = __webpack_require__(504);
 
 var _promisePolyfill2 = _interopRequireDefault(_promisePolyfill);
 
@@ -62747,8 +62747,7 @@ exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n 
 
 
 /***/ }),
-/* 504 */,
-/* 505 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62989,10 +62988,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     root.Promise = Promise;
   }
 })(undefined);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(506).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(505).setImmediate))
 
 /***/ }),
-/* 506 */
+/* 505 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63046,12 +63045,12 @@ exports._unrefActive = exports.active = function (item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(507);
+__webpack_require__(506);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 /***/ }),
-/* 507 */
+/* 506 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63239,10 +63238,10 @@ exports.clearImmediate = clearImmediate;
     attachTo.setImmediate = setImmediate;
     attachTo.clearImmediate = clearImmediate;
 })(typeof self === "undefined" ? typeof global === "undefined" ? undefined : global : self);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(508), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(507), __webpack_require__(1)))
 
 /***/ }),
-/* 508 */
+/* 507 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
