@@ -20417,7 +20417,9 @@ var Articles = function (_Component) {
       activePage: parseInt(_this.props.match.params.page) || 1,
       totalArticles: 12,
       articles: [],
-      activeFilter: 0,
+      activeFilter: articleCategories.findIndex(function (category) {
+        return category.tag === _this.props.match.params.category;
+      }) || 0,
       filter: _this.props.match.params.category || ''
     };
     _this.handlePageSelect = _this.handlePageSelect.bind(_this);
@@ -20461,7 +20463,7 @@ var Articles = function (_Component) {
           console.log('error: ', err);
         });
 
-        var _url = '/api/articles/category/' + this.state.filter + '/1';
+        var _url = '/api/articles/category/' + this.state.filter + '/' + this.props.match.params.page;
         fetch(_url).then(function (resp) {
           return resp.json();
         }).then(function (data) {
@@ -20477,7 +20479,7 @@ var Articles = function (_Component) {
   }, {
     key: 'handlePageSelect',
     value: function handlePageSelect(eventKey) {
-      if (this.state.activeFilter === 0) {
+      if (this.state.filter === '') {
         location.assign('/pred/articles/' + eventKey);
       } else {
         location.assign('/pred/filteredarticles/' + this.state.filter + '/' + eventKey);
@@ -20489,6 +20491,7 @@ var Articles = function (_Component) {
       if (articleCategories[e].tag === 'vsetky') {
         location.assign('/pred/articles/1');
       } else {
+        console.log('e', e);
         this.setState({
           filter: articleCategories[e].tag,
           activeFilter: e,

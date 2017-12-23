@@ -47,12 +47,13 @@ const articleCategories = [
 class Articles extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       loading: true,
       activePage: parseInt(this.props.match.params.page) || 1,
       totalArticles: 12,
       articles: [],
-      activeFilter: 0,
+      activeFilter: articleCategories.findIndex(category => (category.tag === this.props.match.params.category)) || 0,
       filter: this.props.match.params.category || ''
     }
     this.handlePageSelect = this.handlePageSelect.bind(this)
@@ -94,7 +95,7 @@ class Articles extends Component {
           console.log('error: ', err)
         })
 
-      let url = '/api/articles/category/' + this.state.filter + '/1'
+      let url = '/api/articles/category/' + this.state.filter + '/' + this.props.match.params.page
       fetch(url)
         .then((resp) => resp.json())
         .then((data) => {
@@ -110,7 +111,7 @@ class Articles extends Component {
   }
 
   handlePageSelect (eventKey) {
-    if (this.state.activeFilter === 0) {
+    if (this.state.filter === '') {
       location.assign('/pred/articles/' + eventKey)
     } else {
       location.assign('/pred/filteredarticles/' + this.state.filter + '/' + eventKey)
@@ -121,6 +122,7 @@ class Articles extends Component {
     if (articleCategories[e].tag === 'vsetky') {
       location.assign('/pred/articles/1')
     } else {
+      console.log('e', e)
       this.setState({
         filter: articleCategories[e].tag,
         activeFilter: e,
