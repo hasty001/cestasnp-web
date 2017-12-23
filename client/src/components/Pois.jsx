@@ -24,7 +24,7 @@ class Pois extends Component {
 
   render () {
     return (
-      <div className='screen-container'>
+      <div id='map-container'>
         {this.state.loading &&
         <Loader />}
         {!this.state.loading &&
