@@ -4,7 +4,7 @@
   "description": "CestaSNP.sk in React, Node, Express and MongoDB.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js --ext js,jsx"
+    "start": "nodemon server.js --ext js,jsx"
   },
   "repository": {
     "type": "git",

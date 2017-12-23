@@ -62671,10 +62671,14 @@ var Article = function (_Component) {
       var _this3 = this;
 
       var header = '';
-      var text = '';
+      var introText = '';
+      var fullText = '';
       if (this.state.article.length > 0) {
         header = this.state.article[0].title;
-        text = function text() {
+        introText = function introText() {
+          return { __html: _this3.state.article[0].introtext };
+        };
+        fullText = function fullText() {
           return { __html: _this3.state.article[0].fulltext };
         };
       }
@@ -62690,7 +62694,8 @@ var Article = function (_Component) {
             null,
             header
           ),
-          _react2.default.createElement('div', { dangerouslySetInnerHTML: text() })
+          _react2.default.createElement('div', { dangerouslySetInnerHTML: introText() }),
+          _react2.default.createElement('div', { dangerouslySetInnerHTML: fullText() })
         )
       );
     }

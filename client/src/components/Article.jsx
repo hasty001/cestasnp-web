@@ -31,10 +31,12 @@ class Article extends Component {
 
   render () {
     let header = ''
-    let text = ''
+    let introText = ''
+    let fullText = ''
     if (this.state.article.length > 0) {
       header = this.state.article[0].title
-      text = () => { return { __html: this.state.article[0].fulltext } }
+      introText = () => { return { __html: this.state.article[0].introtext } }
+      fullText = () => { return { __html: this.state.article[0].fulltext } }
     }
     return (
       <div className='screen-container'>
@@ -43,7 +45,8 @@ class Article extends Component {
         {!this.state.loading &&
           <div>
             <h2>{header}</h2>
-            <div dangerouslySetInnerHTML={text()} />
+            <div dangerouslySetInnerHTML={introText()} />
+            <div dangerouslySetInnerHTML={fullText()} />
           </div>}
       </div>
     )
