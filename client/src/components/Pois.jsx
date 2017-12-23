@@ -33,7 +33,7 @@ class Pois extends Component {
           {this.state.pois.map((poi, i) => {
             return (
               <div key={i}>
-                {/* {console.log(poi)} */}
+                {console.log(poi)}
               </div>
             )
           })}

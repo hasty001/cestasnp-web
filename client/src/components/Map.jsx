@@ -2,7 +2,13 @@ import React, { Component } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import devinDukla from '../geojson/devin_dukla.json'
-import pin from '../../public/img/pin.png'
+import chata from '../../public/img/chata.png'
+import potraviny from '../../public/img/potraviny.png'
+import pristresok from '../../public/img/pristresok.png'
+import utulna from '../../public/img/utulna.png'
+import pramen from '../../public/img/pramen.png'
+import krcma_jedlo from '../../public/img/krcma_jedlo.png'
+import posed from '../../public/img/posed.png'
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -66,8 +72,35 @@ class Map extends Component {
     /// DOLEZITE MIESTA
     if (this.props.pois && this.props.pois.length > 0) {
       this.props.pois.map((poi) => {
+        let iconUrl = ''
+        switch (poi.category) {
+          case 'chata':
+            iconUrl = chata
+            break
+          case 'pramen':
+            iconUrl = pramen
+            break
+          case 'potraviny':
+            iconUrl = potraviny
+            break
+          case 'pristresok':
+            iconUrl = pristresok
+            break
+          case 'utulna':
+            iconUrl = utulna
+            break
+          case 'posed':
+            iconUrl = posed
+            break
+          case 'krcma_jedlo':
+            iconUrl = krcma_jedlo
+            break
+          default:
+            iconUrl = posed
+            break
+        }
         let icon = L.icon({
-          iconUrl: pin,
+          iconUrl: iconUrl,
           iconSize: [32, 32],
           iconAnchor: [16, 32]
         })
