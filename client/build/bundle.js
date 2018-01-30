@@ -20526,7 +20526,7 @@ var Articles = function (_Component) {
             articleCategories: articleCategories,
             activeFilter: this.state.activeFilter,
             handleCategorySelect: this.handleCategorySelect }),
-          this.state.articles.map(function (article, i) {
+          this.state.articles.length > 0 && this.state.articles.map(function (article, i) {
             console.log(article);
             var introtext = function introtext() {
               return { __html: article.introtext };
@@ -20547,6 +20547,15 @@ var Articles = function (_Component) {
               )
             );
           }),
+          this.state.articles.length === 0 && _react2.default.createElement(
+            'div',
+            { style: { margin: '10px' } },
+            _react2.default.createElement(
+              'p',
+              { style: { margin: '0px' } },
+              'Bohu\u017Eia\u013E vo zvolenej kateg\xF3rii nie je \u017Eiaden \u010Dl\xE1nok.'
+            )
+          ),
           _react2.default.createElement(_PaginationAdvanced2.default, {
             totalArticles: this.state.totalArticles,
             activePage: this.state.activePage,
@@ -62486,7 +62495,9 @@ var PaginationAdvanced = function PaginationAdvanced(props) {
     items: props.totalArticles,
     maxButtons: 3,
     activePage: props.activePage,
-    onSelect: props.handlePageSelect
+    onSelect: props.handlePageSelect,
+    style: { display: 'block' },
+    className: 'pagination'
   });
 };
 
@@ -62514,7 +62525,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var ArticleFilter = function ArticleFilter(props) {
   return _react2.default.createElement(
     _reactBootstrap.DropdownButton,
-    { title: 'Vyber si kateg\xF3riu', key: '1', id: 'dropdown-basic-1' },
+    { title: 'Vyber si kateg\xF3riu',
+      key: '1',
+      id: 'dropdown-basic-1',
+      style: { display: 'block' } },
     props.articleCategories.map(function (category, i) {
       if (i === props.activeFilter) {
         return _react2.default.createElement(
@@ -62840,7 +62854,7 @@ exports = module.exports = __webpack_require__(219)(undefined);
 
 
 // module
-exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}", ""]);
+exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n.pagination {\n  margin: 0;\n}", ""]);
 
 // exports
 

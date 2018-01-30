@@ -13,6 +13,8 @@ const PaginationAdvanced = (props) => (
     maxButtons={3}
     activePage={props.activePage}
     onSelect={props.handlePageSelect}
+    style={{ display: 'block' }}
+    className='pagination'
   />
 )
 

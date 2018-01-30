@@ -149,17 +149,27 @@ class Articles extends Component {
               articleCategories={articleCategories}
               activeFilter={this.state.activeFilter}
               handleCategorySelect={this.handleCategorySelect} />
-            {this.state.articles.map((article, i) => {
-              console.log(article)
-              let introtext = () => { return {__html: article.introtext} }
-              return (
-                <div key={i}>
-                  <h2>{article.title}</h2>
-                  <div dangerouslySetInnerHTML={introtext()} />
-                  <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
-                </div>
-              )
-            })}
+            
+            {/* in case we have articles */}
+            {this.state.articles.length > 0 &&
+              this.state.articles.map((article, i) => {
+                console.log(article)
+                let introtext = () => { return { __html: article.introtext } }
+                return (
+                  <div key={i}>
+                    <h2>{article.title}</h2>
+                    <div dangerouslySetInnerHTML={introtext()} />
+                    <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
+                  </div>
+                )
+              })}
+            
+            {/* in case of 0 articles found */}
+            {this.state.articles.length === 0 &&
+              <div style={{ margin: '10px' }}>
+                <p style={{ margin: '0px' }}>Bohužiaľ vo zvolenej kategórii nie je žiaden článok.</p>
+              </div>}
+            
             <PaginationAdvanced
               totalArticles={this.state.totalArticles}
               activePage={this.state.activePage}
