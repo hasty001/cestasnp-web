@@ -149,7 +149,7 @@ class Articles extends Component {
               articleCategories={articleCategories}
               activeFilter={this.state.activeFilter}
               handleCategorySelect={this.handleCategorySelect} />
-            
+
             {/* in case we have articles */}
             {this.state.articles.length > 0 &&
               this.state.articles.map((article, i) => {
@@ -163,18 +163,19 @@ class Articles extends Component {
                   </div>
                 )
               })}
-            
+
             {/* in case of 0 articles found */}
             {this.state.articles.length === 0 &&
               <div style={{ margin: '10px' }}>
-                <p style={{ margin: '0px' }}>Bohužiaľ vo zvolenej kategórii nie je žiaden článok.</p>
+                <p style={{ margin: '0px' }}>
+                  Bohužiaľ vo zvolenej kategórii nie je žiaden článok.
+                </p>
               </div>}
-            
-            <PaginationAdvanced
-              totalArticles={this.state.totalArticles}
-              activePage={this.state.activePage}
-              handlePageSelect={this.handlePageSelect} />
           </div>}
+        <PaginationAdvanced
+          totalArticles={this.state.totalArticles}
+          activePage={this.state.activePage}
+          handlePageSelect={this.handlePageSelect} />
       </div>
     )
   }
