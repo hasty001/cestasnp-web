@@ -32,15 +32,16 @@ router.get('/article/:articleId', function (req, res) {
 })
 
 router.get('/category/:category', function (req, res) {
-  query.countCollection('articles', { tags: req.params.category }, function (results) {
+  let filters = { tags: { $in: req.params.category.split('+') } }
+  query.countCollection('articles', filters, function (results) {
     res.json(results)
   })
 })
 
 router.get('/category/:category/:page', function (req, res) {
-  let category = req.params.category
+  let filters = { tags: { $in: req.params.category.split('+') } }
   query.nextSorted('articles', ORDER.newestFirst, req.params.page, function (results) {
     res.json(results)
-  }, {tags: category})
+  }, filters)
 })
 module.exports = router

@@ -20386,6 +20386,8 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactBootstrap = __webpack_require__(109);
+
 var _Loader = __webpack_require__(134);
 
 var _Loader2 = _interopRequireDefault(_Loader);
@@ -20408,6 +20410,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var articleCategories = [{ tag: 'vsetky', text: 'Všetky' }, { tag: 'faqs', text: 'FAQs' }, { tag: 'novinky', text: 'Novinky' }, { tag: 'ostatne', text: 'Ostatné' }, { tag: 'vybavenie', text: 'Vybavenie' }, { tag: 'odkazy', text: 'Odkazy' }, { tag: 'mapy', text: 'Mapy' }, { tag: 'dolezite_miesta', text: 'Dôležité miesta' }, { tag: 'stravovanie', text: 'Stravovanie' }, { tag: 'cestopisy', text: 'Cestopisy' }, { tag: 'spravy_z_terenu', text: 'Správy z terénu' }, { tag: 'zaujimavosti', text: 'Zaujímavosti' }, { tag: 'akcie', text: 'Akcie' }, { tag: 'obmedzenia', text: 'Obmedzenia' }, { tag: 'oznamy', text: 'Oznamy' }, { tag: 'cesta-hrdinov-snp', text: 'Cesta hrdinov SNP' }, { tag: 'akcie-snp', text: 'Akcie Cesta hrdinov SNP' }, { tag: 'akcie-ostatne', text: 'Ostatné akcie' }, { tag: 'oblecenie', text: 'Oblečenie' }, { tag: 'obuv', text: 'Obuv' }, { tag: 'o-cestesnpsk', text: 'O CesteSNP.sk' }, { tag: 'cela-trasa', text: 'Celá trasa' }, { tag: 'vku', text: 'VKU' }, { tag: 'shocart', text: 'Shocart' }, { tag: 'gps', text: 'GPS' }, { tag: 'batoh', text: 'Batoh' }, { tag: 'dukla-cergov-sarisska-vrchovina', text: 'Dukla, Čergov, Šarišská vrchovina' }, { tag: 'cierna-hora-volovske-vrchy', text: 'Čierna hora, Volovské vrchy' }, { tag: 'nizke-tatry', text: 'Nízke Tatry' }, { tag: 'velka-fatra-kremnicke-vrchy', text: 'Veľká Fatra, Kremnické vrchy' }, { tag: 'strazovske-vrchy-biele-karpaty', text: 'Strážovske vrchy, Biele Karpatu' }, { tag: 'male-karpaty', text: 'Malé Karpaty' }, { tag: 'recepty', text: 'Recepty' }, { tag: 'o-strave', text: 'Stravovanie' }, { tag: 'nezaradene', text: 'Nezaradené' }, { tag: 'spravy-z-terenu', text: 'Správy z terénu' }, { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' }, { tag: 'rozhovory', text: 'Rozhovory' }];
 
+var categoryTags = articleCategories.map(function (category) {
+  return category.tag;
+});
+
 var Articles = function (_Component) {
   _inherits(Articles, _Component);
 
@@ -20421,13 +20427,14 @@ var Articles = function (_Component) {
       activePage: parseInt(_this.props.match.params.page) || 1,
       totalArticles: 12,
       articles: [],
-      activeFilter: articleCategories.findIndex(function (category) {
-        return category.tag === _this.props.match.params.category;
-      }) || 0,
-      filter: _this.props.match.params.category || ''
+      filters: _this.props.match.params.category ? _this.props.match.params.category.split('+') : [],
+      categories: articleCategories.map(function (category) {
+        return category;
+      })
     };
     _this.handlePageSelect = _this.handlePageSelect.bind(_this);
     _this.handleCategorySelect = _this.handleCategorySelect.bind(_this);
+    _this.handleFilterClick = _this.handleFilterClick.bind(_this);
     return _this;
   }
 
@@ -20436,7 +20443,12 @@ var Articles = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      if (this.state.filter === '') {
+      var _state = this.state,
+          filters = _state.filters,
+          categories = _state.categories;
+
+
+      if (filters.length === 0) {
         fetch('/api/articles/').then(function (resp) {
           return resp.json();
         }).then(function (count) {
@@ -20458,7 +20470,26 @@ var Articles = function (_Component) {
           console.log('error: ', err);
         });
       } else {
-        fetch('/api/articles/category/' + this.state.filter).then(function (resp) {
+        // get array of filter indeces
+        var filterIndeces = filters.map(function (filter) {
+          return categoryTags.indexOf(filter);
+        });
+        // sort the indeces from higher to lower
+        filterIndeces.sort(function (a, b) {
+          return b - a;
+        });
+        // remove filtered categories
+        filterIndeces.forEach(function (i) {
+          categories.splice(i, 1);
+        });
+        // update state
+        this.setState({
+          categories: categories
+        });
+
+        var filterUrl = filters.join('+');
+
+        fetch('/api/articles/category/' + filterUrl).then(function (resp) {
           return resp.json();
         }).then(function (count) {
           var pages = Math.round(count / 8);
@@ -20466,8 +20497,7 @@ var Articles = function (_Component) {
         }).catch(function (err) {
           console.log('error: ', err);
         });
-
-        var _url = '/api/articles/category/' + this.state.filter + '/' + this.props.match.params.page;
+        var _url = '/api/articles/category/' + filterUrl + '/' + this.props.match.params.page;
         fetch(_url).then(function (resp) {
           return resp.json();
         }).then(function (data) {
@@ -20483,39 +20513,74 @@ var Articles = function (_Component) {
   }, {
     key: 'handlePageSelect',
     value: function handlePageSelect(eventKey) {
-      if (this.state.filter === '') {
+      var filter = this.state.filters.join('+');
+      if (this.state.filters.length === 0) {
         location.assign('/pred/articles/' + eventKey);
       } else {
-        location.assign('/pred/filteredarticles/' + this.state.filter + '/' + eventKey);
+        location.assign('/pred/filteredarticles/' + filter + '/' + eventKey);
       }
     }
   }, {
     key: 'handleCategorySelect',
     value: function handleCategorySelect(e) {
-      if (articleCategories[e].tag === 'vsetky') {
+      var tag = this.state.categories[e].tag;
+      var filters = this.state.filters;
+
+      filters.splice(filters.length, 0, tag);
+      if (tag === 'vsetky') {
         location.assign('/pred/articles/1');
       } else {
-        console.log('e', e);
         this.setState({
-          filter: articleCategories[e].tag,
           activeFilter: e,
           loading: true
         });
-        location.assign('/pred/filteredarticles/' + articleCategories[e].tag + '/1');
+        location.assign('/pred/filteredarticles/' + filters.join('+') + '/1');
+      }
+    }
+  }, {
+    key: 'handleFilterClick',
+    value: function handleFilterClick(e) {
+      var filter = e.target.value;
+      var filters = this.state.filters;
+
+      if (filters.length > 1) {
+        filters.splice(filters.indexOf(filter), 1);
+        location.assign('/pred/filteredarticles/' + filters.join('+') + '/1');
+      } else {
+        location.assign('/pred/articles/1');
       }
     }
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       return _react2.default.createElement(
         'div',
         { className: 'screen-container' },
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'p',
+            null,
+            'filtre:'
+          ),
+          this.state.filters.map(function (filter, i) {
+            var filterIndex = categoryTags.indexOf(filter);
+            var filterText = articleCategories[filterIndex].text;
+            return _react2.default.createElement(
+              _reactBootstrap.Button,
+              { key: i, type: 'button', value: filter, onClick: _this3.handleFilterClick },
+              filterText
+            );
+          })
+        ),
         this.state.loading && _react2.default.createElement(
           'div',
           null,
           _react2.default.createElement(_ArticleFilter2.default, {
-            articleCategories: articleCategories,
-            activeFilter: this.state.activeFilter,
+            articleCategories: this.state.categories,
             handleCategorySelect: this.handleCategorySelect }),
           _react2.default.createElement(_Loader2.default, null)
         ),
@@ -20523,11 +20588,10 @@ var Articles = function (_Component) {
           'div',
           null,
           _react2.default.createElement(_ArticleFilter2.default, {
-            articleCategories: articleCategories,
-            activeFilter: this.state.activeFilter,
+            articleCategories: this.state.categories,
             handleCategorySelect: this.handleCategorySelect }),
           this.state.articles.length > 0 && this.state.articles.map(function (article, i) {
-            console.log(article);
+            // console.log(article)
             var introtext = function introtext() {
               return { __html: article.introtext };
             };
@@ -62514,6 +62578,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
@@ -62522,30 +62588,57 @@ var _reactBootstrap = __webpack_require__(109);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ArticleFilter = function ArticleFilter(props) {
-  return _react2.default.createElement(
-    _reactBootstrap.DropdownButton,
-    { title: 'Vyber si kateg\xF3riu',
-      key: '1',
-      id: 'dropdown-basic-1',
-      style: { display: 'block' } },
-    props.articleCategories.map(function (category, i) {
-      if (i === props.activeFilter) {
-        return _react2.default.createElement(
-          _reactBootstrap.MenuItem,
-          { eventKey: i, key: i, active: true, onSelect: props.handleCategorySelect },
-          category.text
-        );
-      } else {
-        return _react2.default.createElement(
-          _reactBootstrap.MenuItem,
-          { eventKey: i, key: i, onSelect: props.handleCategorySelect },
-          category.text
-        );
-      }
-    })
-  );
-};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ArticleFilter = function (_Component) {
+  _inherits(ArticleFilter, _Component);
+
+  function ArticleFilter(props) {
+    _classCallCheck(this, ArticleFilter);
+
+    var _this = _possibleConstructorReturn(this, (ArticleFilter.__proto__ || Object.getPrototypeOf(ArticleFilter)).call(this, props));
+
+    _this.state = {
+      articleCategories: _this.props.articleCategories
+    };
+    return _this;
+  }
+
+  _createClass(ArticleFilter, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      this.setState({
+        articleCategories: nextProps.articleCategories
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        _reactBootstrap.DropdownButton,
+        { title: 'Vyber si kateg\xF3riu',
+          key: '1',
+          id: 'dropdown-basic-1',
+          style: { display: 'block' } },
+        this.state.articleCategories.map(function (category, i) {
+          return _react2.default.createElement(
+            _reactBootstrap.MenuItem,
+            { eventKey: i, key: i, onSelect: _this2.props.handleCategorySelect },
+            category.text
+          );
+        })
+      );
+    }
+  }]);
+
+  return ArticleFilter;
+}(_react.Component);
 
 exports.default = ArticleFilter;
 
