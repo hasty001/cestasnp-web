@@ -177,21 +177,20 @@ class Articles extends Component {
   render () {
     return (
       <div className='screen-container'>
-        <div>
-          <p>filtre:</p>
-          {this.state.filters.map((filter, i) => {
-            let filterIndex = categoryTags.indexOf(filter)
-            let filterText = articleCategories[filterIndex].text
-            return (
-              <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>{filterText}</Button>
-            )
-          })}
-        </div>
         {this.state.loading &&
           <div>
             <ArticleFilter
               articleCategories={this.state.categories}
               handleCategorySelect={this.handleCategorySelect} />
+            <div>
+              {this.state.filters.map((filter, i) => {
+                let filterIndex = categoryTags.indexOf(filter)
+                let filterText = articleCategories[filterIndex].text
+                return (
+                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>{filterText}</Button>
+                )
+              })}
+            </div>
             <Loader />
           </div>}
         {!this.state.loading &&
@@ -199,7 +198,15 @@ class Articles extends Component {
             <ArticleFilter
               articleCategories={this.state.categories}
               handleCategorySelect={this.handleCategorySelect} />
-
+            <div>
+              {this.state.filters.map((filter, i) => {
+                let filterIndex = categoryTags.indexOf(filter)
+                let filterText = articleCategories[filterIndex].text
+                return (
+                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>{filterText}</Button>
+                )
+              })}
+            </div>
             {/* in case we have articles */}
             {this.state.articles.length > 0 &&
               this.state.articles.map((article, i) => {
