@@ -187,7 +187,9 @@ class Articles extends Component {
                 let filterIndex = categoryTags.indexOf(filter)
                 let filterText = articleCategories[filterIndex].text
                 return (
-                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>{filterText}</Button>
+                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>
+                    {filterText}
+                  </Button>
                 )
               })}
             </div>
@@ -203,7 +205,9 @@ class Articles extends Component {
                 let filterIndex = categoryTags.indexOf(filter)
                 let filterText = articleCategories[filterIndex].text
                 return (
-                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>{filterText}</Button>
+                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>
+                    {filterText}
+                  </Button>
                 )
               })}
             </div>
