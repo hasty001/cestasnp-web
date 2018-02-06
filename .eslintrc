@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "prettier",
+    "prettier/react"
+  ],
+  "parser": "babel-eslint",
+  "rules": {
+    "quotes": [
+      2,
+      "single",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es6",
+        "singleQuote": true,
+        "printWidth": 100
+      }
+    ]
+  },
+  "plugins": [
+    "prettier"
+  ]
+}

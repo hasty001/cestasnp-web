@@ -1,7 +1,7 @@
-import React from 'react'
-import { Pagination } from 'react-bootstrap'
+import React from 'react';
+import { Pagination } from 'react-bootstrap';
 
-const PaginationAdvanced = (props) => (
+const PaginationAdvanced = props => (
   <Pagination
     prev
     next
@@ -13,9 +13,7 @@ const PaginationAdvanced = (props) => (
     maxButtons={3}
     activePage={props.activePage}
     onSelect={props.handlePageSelect}
-    style={{ display: 'block' }}
-    className='pagination'
   />
-)
+);
 
-export default PaginationAdvanced
+export default PaginationAdvanced;

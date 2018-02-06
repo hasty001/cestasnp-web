@@ -20540,6 +20540,7 @@ var Articles = function (_Component) {
   }, {
     key: 'handleFilterClick',
     value: function handleFilterClick(e) {
+      console.log('click ', e.target.value);
       var filter = e.target.value;
       var filters = this.state.filters;
 
@@ -20558,54 +20559,50 @@ var Articles = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'screen-container' },
-        this.state.loading && _react2.default.createElement(
+        _react2.default.createElement(
           'div',
           null,
           _react2.default.createElement(_ArticleFilter2.default, {
             articleCategories: this.state.categories,
-            handleCategorySelect: this.handleCategorySelect }),
+            handleCategorySelect: this.handleCategorySelect
+          }),
           _react2.default.createElement(
             'div',
-            null,
+            { style: { display: 'inline-block' } },
             this.state.filters.map(function (filter, i) {
               var filterIndex = categoryTags.indexOf(filter);
               var filterText = articleCategories[filterIndex].text;
               return _react2.default.createElement(
                 _reactBootstrap.Button,
                 { key: i, type: 'button', value: filter, onClick: _this3.handleFilterClick },
-                filterText
+                filterText,
+                ' ',
+                _react2.default.createElement('i', {
+                  className: 'fa fa-times pointer',
+                  'aria-hidden': 'true',
+                  style: { color: 'darkgrey' }
+                })
               );
             })
           ),
-          _react2.default.createElement(_Loader2.default, null)
-        ),
-        !this.state.loading && _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(_ArticleFilter2.default, {
-            articleCategories: this.state.categories,
-            handleCategorySelect: this.handleCategorySelect }),
-          _react2.default.createElement(
+          window.innerWidth > 768 && _react2.default.createElement(
             'div',
-            null,
-            this.state.filters.map(function (filter, i) {
-              var filterIndex = categoryTags.indexOf(filter);
-              var filterText = articleCategories[filterIndex].text;
-              return _react2.default.createElement(
-                _reactBootstrap.Button,
-                { key: i, type: 'button', value: filter, onClick: _this3.handleFilterClick },
-                filterText
-              );
+            { style: { width: '100%', minHeight: '34px' } },
+            _react2.default.createElement(_PaginationAdvanced2.default, {
+              totalArticles: this.state.totalArticles,
+              activePage: this.state.activePage,
+              handlePageSelect: this.handlePageSelect
             })
           ),
-          this.state.articles.length > 0 && this.state.articles.map(function (article, i) {
+          this.state.loading && _react2.default.createElement(_Loader2.default, null),
+          !this.state.loading && this.state.articles.length > 0 && this.state.articles.map(function (article, i) {
             // console.log(article)
             var introtext = function introtext() {
               return { __html: article.introtext };
             };
             return _react2.default.createElement(
               'div',
-              { key: i },
+              { key: i, className: 'article-div' },
               _react2.default.createElement(
                 'h2',
                 null,
@@ -20619,20 +20616,25 @@ var Articles = function (_Component) {
               )
             );
           }),
-          this.state.articles.length === 0 && _react2.default.createElement(
+          !this.state.loading && this.state.articles.length === 0 && _react2.default.createElement(
             'div',
-            { style: { margin: '10px' } },
+            { className: 'no-article-div' },
             _react2.default.createElement(
               'p',
-              { style: { margin: '0px' } },
+              null,
               'Bohu\u017Eia\u013E vo zvolenej kateg\xF3rii nie je \u017Eiaden \u010Dl\xE1nok.'
             )
           )
         ),
-        _react2.default.createElement(_PaginationAdvanced2.default, {
-          totalArticles: this.state.totalArticles,
-          activePage: this.state.activePage,
-          handlePageSelect: this.handlePageSelect })
+        _react2.default.createElement(
+          'div',
+          { style: { width: '100%', minHeight: '34px' } },
+          _react2.default.createElement(_PaginationAdvanced2.default, {
+            totalArticles: this.state.totalArticles,
+            activePage: this.state.activePage,
+            handlePageSelect: this.handlePageSelect
+          })
+        )
       );
     }
   }]);
@@ -62788,9 +62790,7 @@ var PaginationAdvanced = function PaginationAdvanced(props) {
     items: props.totalArticles,
     maxButtons: 3,
     activePage: props.activePage,
-    onSelect: props.handlePageSelect,
-    style: { display: 'block' },
-    className: 'pagination'
+    onSelect: props.handlePageSelect
   });
 };
 
@@ -62979,51 +62979,54 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Home = function Home() {
   return _react2.default.createElement(
-    'div',
-    { className: 'screen-container' },
+    "div",
+    { className: "screen-container" },
     _react2.default.createElement(
-      'p',
+      "p",
       null,
-      'Na CesteSNP.sk pracujeme d\u0148om a nocou, teda pokia\u013E nie sme akur\xE1t na hor\xE1ch, v pr\xE1ci, v kni\u017Enici, v divadle, u frajerky, \u010Di sa hr\xE1me s na\u0161imi de\u0165mi...'
+      "Na CesteSNP.sk pracujeme d\u0148om a nocou, teda pokia\u013E nie sme akur\xE1t na hor\xE1ch, v pr\xE1ci, v kni\u017Enici, v divadle, u frajerky, \u010Di sa hr\xE1me s na\u0161imi de\u0165mi..."
     ),
     _react2.default.createElement(
-      'p',
+      "p",
       null,
-      'Sekcia ',
+      "Sekcia ",
       _react2.default.createElement(
-        'a',
-        { href: '/pred/articles/1' },
-        'Pred Cestou'
+        "a",
+        { href: "/pred/articles/1" },
+        "Pred Cestou"
       ),
-      ' je prv\xE1 kde m\xF4\u017Ee\u0161 vidie\u0165 v\xFDsledky na\u0161ej pr\xE1ce! T\xE1to sekcia m\xE1 hlavn\xFD cie\u013E zjednodu\u0161i\u0165 pl\xE1novanie tvojej Cesty hrdinov SNP. Pozri sa na to a daj n\xE1m vedie\u0165 ako ti to pomohlo s pl\xE1novan\xEDm. Ak chce\u0161 sledova\u0165 n\xE1\u0161 pokrok m\xF4\u017Ee\u0161 sem samozrejme pravidelne chodi\u0165 alebo sledova\u0165 na\u0161e novinky na ',
+      " je prv\xE1 kde m\xF4\u017Ee\u0161 vidie\u0165 v\xFDsledky na\u0161ej pr\xE1ce! T\xE1to sekcia m\xE1 hlavn\xFD cie\u013E zjednodu\u0161i\u0165 pl\xE1novanie tvojej Cesty hrdinov SNP. Pozri sa na to a daj n\xE1m vedie\u0165 ako ti to pomohlo s pl\xE1novan\xEDm. Ak chce\u0161 sledova\u0165 n\xE1\u0161 pokrok m\xF4\u017Ee\u0161 sem samozrejme pravidelne chodi\u0165 alebo sledova\u0165 na\u0161e novinky na",
+      ' ',
       _react2.default.createElement(
-        'a',
-        { target: '_blank', href: 'https://www.facebook.com/CestaSNPsk-185536644838/' },
-        'Facebooku'
+        "a",
+        { target: "_blank", href: "https://www.facebook.com/CestaSNPsk-185536644838/" },
+        "Facebooku"
       ),
-      '.'
+      "."
     ),
     _react2.default.createElement(
-      'p',
+      "p",
       null,
-      'Taktie\u017E sa k n\xE1m m\xF4\u017Ee\u0161 prida\u0165 a pomoc\u0165 s v\xFDvojom. Pou\u017E\xEDvame modern\xE9 technol\xF3gie ako React, JavaScript ES6, Node.js a NoSQL datab\xE1zu. To v\u0161etko be\u017E\xED na Heroku cloude a tak m\xE1\u0161 ve\u013Ek\xFA \u0161ancu sa nau\u010Di\u0165 \u010Dosi nov\xE9. Ak to ale u\u017E v\u0161etko pozn\xE1\u0161, v\xF4bec nev\xE1haj sa ozva\u0165 a naopak nau\u010Di\u0165 n\xE1s ako postavi\u0165 CestaSNP.sk na nohy r\xFDchlo a efekt\xEDvne. Kontakt na n\xE1s: ',
+      "Taktie\u017E sa k n\xE1m m\xF4\u017Ee\u0161 prida\u0165 a pomoc\u0165 s v\xFDvojom. Pou\u017E\xEDvame modern\xE9 technol\xF3gie ako React, JavaScript ES6, Node.js a NoSQL datab\xE1zu. To v\u0161etko be\u017E\xED na Heroku cloude a tak m\xE1\u0161 ve\u013Ek\xFA \u0161ancu sa nau\u010Di\u0165 \u010Dosi nov\xE9. Ak to ale u\u017E v\u0161etko pozn\xE1\u0161, v\xF4bec nev\xE1haj sa ozva\u0165 a naopak nau\u010Di\u0165 n\xE1s ako postavi\u0165 CestaSNP.sk na nohy r\xFDchlo a efekt\xEDvne. Kontakt na n\xE1s:",
+      ' ',
       _react2.default.createElement(
-        'a',
-        { target: '_blank', href: 'mailto:info@cestasnp.sk' },
-        'info@cestasnp.sk'
+        "a",
+        { target: "_blank", href: "mailto:info@cestasnp.sk" },
+        "info@cestasnp.sk"
       ),
-      '.'
+      "."
     ),
     _react2.default.createElement(
-      'p',
+      "p",
       null,
-      'CestuSNP.sk n\xE1jde\u0161 na ',
+      "CestuSNP.sk n\xE1jde\u0161 na",
+      ' ',
       _react2.default.createElement(
-        'a',
-        { target: '_blank', href: 'https://github.com/hasty001/cestasnp-web' },
-        'Githube'
+        "a",
+        { target: "_blank", href: "https://github.com/hasty001/cestasnp-web" },
+        "Githube"
       ),
-      '.'
+      "."
     )
   );
 };
@@ -63176,7 +63179,7 @@ exports = module.exports = __webpack_require__(219)(false);
 
 
 // module
-exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n/* .pagination {\n  margin: 0 0 10px 0;\n} */", ""]);
+exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n.pagination {\n  display: block;\n}\n", ""]);
 
 // exports
 

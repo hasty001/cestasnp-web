@@ -121,6 +121,15 @@ body {
   background-color: #60bd53;
 }
 
-/* .pagination {
-  margin: 0 0 10px 0;
-} */
+.article-div {
+  display: block;
+}
+
+.no-article-div {
+  display: block;
+  margin-top: 15px;
+}
+
+.pagination {
+  display: block;
+}

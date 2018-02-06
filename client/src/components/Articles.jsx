@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { Button } from 'react-bootstrap'
+import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
 
-import Loader from './Loader'
-import PaginationAdvanced from './PaginationAdvanced'
-import ArticleFilter from './ArticleFilter'
+import Loader from './Loader';
+import PaginationAdvanced from './PaginationAdvanced';
+import ArticleFilter from './ArticleFilter';
 
 const articleCategories = [
   { tag: 'vsetky', text: 'Všetky' },
@@ -44,202 +44,206 @@ const articleCategories = [
   { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
   { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' },
   { tag: 'rozhovory', text: 'Rozhovory' }
-]
+];
 
 const categoryTags = articleCategories.map(category => {
-  return category.tag
-})
+  return category.tag;
+});
 
 class Articles extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
       loading: true,
       activePage: parseInt(this.props.match.params.page) || 1,
       totalArticles: 12,
       articles: [],
-      filters: (this.props.match.params.category ? this.props.match.params.category.split('+') : []),
+      filters: this.props.match.params.category ? this.props.match.params.category.split('+') : [],
       categories: articleCategories.map(category => {
-        return category
+        return category;
       })
-    }
-    this.handlePageSelect = this.handlePageSelect.bind(this)
-    this.handleCategorySelect = this.handleCategorySelect.bind(this)
-    this.handleFilterClick = this.handleFilterClick.bind(this)
+    };
+    this.handlePageSelect = this.handlePageSelect.bind(this);
+    this.handleCategorySelect = this.handleCategorySelect.bind(this);
+    this.handleFilterClick = this.handleFilterClick.bind(this);
   }
 
-  componentDidMount () {
-    let { filters, categories } = this.state
+  componentDidMount() {
+    let { filters, categories } = this.state;
 
     if (filters.length === 0) {
       fetch('/api/articles/')
-        .then((resp) => resp.json())
-        .then((count) => {
-          let pages = Math.round(count / 8)
-          this.setState({ totalArticles: pages })
+        .then(resp => resp.json())
+        .then(count => {
+          let pages = Math.round(count / 8);
+          this.setState({ totalArticles: pages });
         })
-        .catch((err) => {
-          console.log('error: ', err)
-        })
+        .catch(err => {
+          console.log('error: ', err);
+        });
 
-      let url = '/api/articles/' + this.props.match.params.page
+      let url = '/api/articles/' + this.props.match.params.page;
       fetch(url)
-        .then((resp) => resp.json())
-        .then((data) => {
+        .then(resp => resp.json())
+        .then(data => {
           this.setState({
             articles: data,
             loading: false
-          })
+          });
         })
-        .catch((err) => {
-          console.log('error: ', err)
-        })
+        .catch(err => {
+          console.log('error: ', err);
+        });
     } else {
       // get array of filter indeces
       let filterIndeces = filters.map(filter => {
-        return categoryTags.indexOf(filter)
-      })
+        return categoryTags.indexOf(filter);
+      });
       // sort the indeces from higher to lower
       filterIndeces.sort((a, b) => {
-        return b - a
-      })
+        return b - a;
+      });
       // remove filtered categories
-      filterIndeces.forEach((i) => {
-        categories.splice(i, 1)
-      })
+      filterIndeces.forEach(i => {
+        categories.splice(i, 1);
+      });
       // update state
       this.setState({
         categories
-      })
+      });
 
-      let filterUrl = filters.join('+')
+      let filterUrl = filters.join('+');
 
       fetch('/api/articles/category/' + filterUrl)
-        .then((resp) => resp.json())
-        .then((count) => {
-          let pages = Math.round(count / 8)
-          this.setState({ totalArticles: pages })
+        .then(resp => resp.json())
+        .then(count => {
+          let pages = Math.round(count / 8);
+          this.setState({ totalArticles: pages });
         })
-        .catch((err) => {
-          console.log('error: ', err)
-        })
-      let url = '/api/articles/category/' + filterUrl + '/' + this.props.match.params.page
+        .catch(err => {
+          console.log('error: ', err);
+        });
+      let url = '/api/articles/category/' + filterUrl + '/' + this.props.match.params.page;
       fetch(url)
-        .then((resp) => resp.json())
-        .then((data) => {
+        .then(resp => resp.json())
+        .then(data => {
           this.setState({
             articles: data,
             loading: false
-          })
+          });
         })
-        .catch((err) => {
-          console.log('error: ', err)
-        })
+        .catch(err => {
+          console.log('error: ', err);
+        });
     }
   }
 
-  handlePageSelect (eventKey) {
-    let filter = this.state.filters.join('+')
+  handlePageSelect(eventKey) {
+    let filter = this.state.filters.join('+');
     if (this.state.filters.length === 0) {
-      location.assign('/pred/articles/' + eventKey)
+      location.assign('/pred/articles/' + eventKey);
     } else {
-      location.assign('/pred/filteredarticles/' + filter + '/' + eventKey)
+      location.assign('/pred/filteredarticles/' + filter + '/' + eventKey);
     }
   }
 
-  handleCategorySelect (e) {
-    let tag = this.state.categories[e].tag
-    let { filters } = this.state
-    filters.splice(filters.length, 0, tag)
+  handleCategorySelect(e) {
+    let tag = this.state.categories[e].tag;
+    let { filters } = this.state;
+    filters.splice(filters.length, 0, tag);
     if (tag === 'vsetky') {
-      location.assign('/pred/articles/1')
+      location.assign('/pred/articles/1');
     } else {
       this.setState({
         activeFilter: e,
         loading: true
-      })
-      location.assign('/pred/filteredarticles/' + filters.join('+') + '/1')
+      });
+      location.assign('/pred/filteredarticles/' + filters.join('+') + '/1');
     }
   }
 
-  handleFilterClick (e) {
-    let filter = e.target.value
-    let { filters } = this.state
+  handleFilterClick(e) {
+    console.log('click ', e.target.value);
+    let filter = e.target.value;
+    let { filters } = this.state;
     if (filters.length > 1) {
-      filters.splice(filters.indexOf(filter), 1)
-      location.assign('/pred/filteredarticles/' + filters.join('+') + '/1')
+      filters.splice(filters.indexOf(filter), 1);
+      location.assign('/pred/filteredarticles/' + filters.join('+') + '/1');
     } else {
-      location.assign('/pred/articles/1')
+      location.assign('/pred/articles/1');
     }
   }
 
-  render () {
+  render() {
     return (
-      <div className='screen-container'>
-        {this.state.loading &&
-          <div>
-            <ArticleFilter
-              articleCategories={this.state.categories}
-              handleCategorySelect={this.handleCategorySelect} />
-            <div>
-              {this.state.filters.map((filter, i) => {
-                let filterIndex = categoryTags.indexOf(filter)
-                let filterText = articleCategories[filterIndex].text
-                return (
-                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>
-                    {filterText}
-                  </Button>
-                )
-              })}
+      <div className="screen-container">
+        <div>
+          <ArticleFilter
+            articleCategories={this.state.categories}
+            handleCategorySelect={this.handleCategorySelect}
+          />
+          <div style={{ display: 'inline-block' }}>
+            {this.state.filters.map((filter, i) => {
+              let filterIndex = categoryTags.indexOf(filter);
+              let filterText = articleCategories[filterIndex].text;
+              return (
+                <Button key={i} type="button" value={filter} onClick={this.handleFilterClick}>
+                  {filterText}{' '}
+                  <i
+                    className="fa fa-times pointer"
+                    aria-hidden="true"
+                    style={{ color: 'darkgrey' }}
+                  />
+                </Button>
+              );
+            })}
+          </div>
+          {window.innerWidth > 768 && (
+            <div style={{ width: '100%', minHeight: '34px' }}>
+              <PaginationAdvanced
+                totalArticles={this.state.totalArticles}
+                activePage={this.state.activePage}
+                handlePageSelect={this.handlePageSelect}
+              />
             </div>
-            <Loader />
-          </div>}
-        {!this.state.loading &&
-          <div>
-            <ArticleFilter
-              articleCategories={this.state.categories}
-              handleCategorySelect={this.handleCategorySelect} />
-            <div>
-              {this.state.filters.map((filter, i) => {
-                let filterIndex = categoryTags.indexOf(filter)
-                let filterText = articleCategories[filterIndex].text
-                return (
-                  <Button key={i} type='button' value={filter} onClick={this.handleFilterClick}>
-                    {filterText}
-                  </Button>
-                )
-              })}
-            </div>
-            {/* in case we have articles */}
-            {this.state.articles.length > 0 &&
-              this.state.articles.map((article, i) => {
-                // console.log(article)
-                let introtext = () => { return { __html: article.introtext } }
-                return (
-                  <div key={i}>
-                    <h2>{article.title}</h2>
-                    <div dangerouslySetInnerHTML={introtext()} />
-                    <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
-                  </div>
-                )
-              })}
-
-            {/* in case of 0 articles found */}
-            {this.state.articles.length === 0 &&
-              <div style={{ margin: '10px' }}>
-                <p style={{ margin: '0px' }}>
-                  Bohužiaľ vo zvolenej kategórii nie je žiaden článok.
-                </p>
-              </div>}
-          </div>}
-        <PaginationAdvanced
-          totalArticles={this.state.totalArticles}
-          activePage={this.state.activePage}
-          handlePageSelect={this.handlePageSelect} />
+          )}
+          {/* loading articles */}
+          {this.state.loading && <Loader />}
+          {/* in case we have articles */}
+          {!this.state.loading &&
+            this.state.articles.length > 0 &&
+            this.state.articles.map((article, i) => {
+              // console.log(article)
+              let introtext = () => {
+                return { __html: article.introtext };
+              };
+              return (
+                <div key={i} className="article-div">
+                  <h2>{article.title}</h2>
+                  <div dangerouslySetInnerHTML={introtext()} />
+                  <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
+                </div>
+              );
+            })}
+          {/* in case of 0 articles found */}
+          {!this.state.loading &&
+            this.state.articles.length === 0 && (
+              <div className="no-article-div">
+                <p>Bohužiaľ vo zvolenej kategórii nie je žiaden článok.</p>
+              </div>
+            )}
+        </div>
+        <div style={{ width: '100%', minHeight: '34px' }}>
+          <PaginationAdvanced
+            totalArticles={this.state.totalArticles}
+            activePage={this.state.activePage}
+            handlePageSelect={this.handlePageSelect}
+          />
+        </div>
       </div>
-    )
+    );
   }
 }
 
-export default Articles
+export default Articles;

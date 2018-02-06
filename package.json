@@ -4,7 +4,7 @@
   "description": "CestaSNP.sk in React, Node, Express and MongoDB.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js --ext js,jsx"
+    "start": "nodemon server.js --ext js,jsx"
   },
   "repository": {
     "type": "git",
@@ -13,9 +13,14 @@
   "author": "Peter Trizuliak",
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
+    "babel-eslint": "^8.2.1",
     "dotenv": "^4.0.0",
+    "eslint": "^4.17.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
     "express": "^4.16.2",
     "mongodb": "^2.2.33",
-    "nodemon": "^1.12.7"
+    "nodemon": "^1.12.7",
+    "prettier": "^1.10.2"
   }
 }
