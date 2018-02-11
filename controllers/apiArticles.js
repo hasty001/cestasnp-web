@@ -12,25 +12,29 @@ const filterBy = {
   }
 }
 
+// count the entire article collection
 router.get('/', function (req, res) {
-  query.countCollection('articles', filterBy, function (results) {
+  query.countCollection('TEST_articles', filterBy, function (results) {
     res.json(results)
   })
 })
 
+// operates pagination for all articles
 router.get('/:page', function (req, res) {
-  query.nextSorted('articles', ORDER.newestFirst, req.params.page, function (results) {
+  query.nextSorted('TEST_articles', ORDER.newestFirst, req.params.page, function (results) {
     res.json(results)
   }, filterBy)
 })
 
+// returns single article by ID
 router.get('/article/:articleId', function (req, res) {
   let articleId = parseInt(req.params.articleId)
-  query.findBy('articles', { sql_article_id: articleId }, function (results) {
+  query.findBy('TEST_articles', { sql_article_id: articleId }, function (results) {
     res.json(results)
   })
 })
 
+// returns all articles matching category
 router.get('/category/:category', function (req, res) {
   let filters = req.params.category.split('+').map(filter => {
     let newFilter = {}
@@ -39,11 +43,12 @@ router.get('/category/:category', function (req, res) {
   })
   let finalFilter = {}
   finalFilter.$and = filters
-  query.countCollection('articles', finalFilter, function (results) {
+  query.countCollection('TEST_articles', finalFilter, function (results) {
     res.json(results)
   })
 })
 
+// returns articles matching category on certain page
 router.get('/category/:category/:page', function (req, res) {
   let filters = req.params.category.split('+').map(filter => {
     let newFilter = {}
@@ -52,8 +57,9 @@ router.get('/category/:category/:page', function (req, res) {
   })
   let finalFilter = {}
   finalFilter.$and = filters
-  query.nextSorted('articles', ORDER.newestFirst, req.params.page, function (results) {
+  query.nextSorted('TEST_articles', ORDER.newestFirst, req.params.page, function (results) {
     res.json(results)
   }, finalFilter)
 })
+
 module.exports = router

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Loader from './Loader'
 
 class Article extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       url: '/api/articles/article/' + this.props.match.params.articleId,
@@ -11,7 +11,7 @@ class Article extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     fetch(this.state.url)
       .then((resp) => resp.json())
       .then((data) => {
@@ -20,6 +20,12 @@ class Article extends Component {
           loading: false
         })
       })
+      // .then((data) => {
+      //   fetch(url, {
+      //     method:'POST',
+
+      //   })
+      // })
       .catch((err) => {
         console.log('error', err)
         this.setState({
@@ -29,7 +35,7 @@ class Article extends Component {
       })
   }
 
-  render () {
+  render() {
     let header = ''
     let introText = ''
     let fullText = ''

@@ -220,7 +220,9 @@ class Articles extends Component {
               };
               return (
                 <div key={i} className="article-div">
-                  <h2>{article.title}</h2>
+                  <a className="no-decoration" href={'/pred/articles/article/' + article.sql_article_id}>
+                    <h2 className="no-decoration">{article.title}</h2>
+                  </a>
                   <div dangerouslySetInnerHTML={introtext()} />
                   <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
                 </div>

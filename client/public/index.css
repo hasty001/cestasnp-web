@@ -133,3 +133,8 @@ body {
 .pagination {
   display: block;
 }
+
+.no-decoration, .no-decoration:hover {
+  text-decoration: none;
+  color: #333;
+}
