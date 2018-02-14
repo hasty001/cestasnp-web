@@ -39,7 +39,7 @@ const articleCategories = [
   { tag: 'strazovske-vrchy-biele-karpaty', text: 'Strážovske vrchy, Biele Karpatu' },
   { tag: 'male-karpaty', text: 'Malé Karpaty' },
   { tag: 'recepty', text: 'Recepty' },
-  { tag: 'o-strave', text: 'Stravovanie' },
+  { tag: 'o-strave', text: 'O strave' },
   { tag: 'nezaradene', text: 'Nezaradené' },
   { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
   { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' },
@@ -220,7 +220,10 @@ class Articles extends Component {
               };
               return (
                 <div key={i} className="article-div">
-                  <a className="no-decoration" href={'/pred/articles/article/' + article.sql_article_id}>
+                  <a
+                    className="no-decoration"
+                    href={'/pred/articles/article/' + article.sql_article_id}
+                  >
                     <h2 className="no-decoration">{article.title}</h2>
                   </a>
                   <div dangerouslySetInnerHTML={introtext()} />

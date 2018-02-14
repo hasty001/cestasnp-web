@@ -20408,7 +20408,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var articleCategories = [{ tag: 'vsetky', text: 'Všetky' }, { tag: 'faqs', text: 'FAQs' }, { tag: 'novinky', text: 'Novinky' }, { tag: 'ostatne', text: 'Ostatné' }, { tag: 'vybavenie', text: 'Vybavenie' }, { tag: 'odkazy', text: 'Odkazy' }, { tag: 'mapy', text: 'Mapy' }, { tag: 'dolezite_miesta', text: 'Dôležité miesta' }, { tag: 'stravovanie', text: 'Stravovanie' }, { tag: 'cestopisy', text: 'Cestopisy' }, { tag: 'spravy_z_terenu', text: 'Správy z terénu' }, { tag: 'zaujimavosti', text: 'Zaujímavosti' }, { tag: 'akcie', text: 'Akcie' }, { tag: 'obmedzenia', text: 'Obmedzenia' }, { tag: 'oznamy', text: 'Oznamy' }, { tag: 'cesta-hrdinov-snp', text: 'Cesta hrdinov SNP' }, { tag: 'akcie-snp', text: 'Akcie Cesta hrdinov SNP' }, { tag: 'akcie-ostatne', text: 'Ostatné akcie' }, { tag: 'oblecenie', text: 'Oblečenie' }, { tag: 'obuv', text: 'Obuv' }, { tag: 'o-cestesnpsk', text: 'O CesteSNP.sk' }, { tag: 'cela-trasa', text: 'Celá trasa' }, { tag: 'vku', text: 'VKU' }, { tag: 'shocart', text: 'Shocart' }, { tag: 'gps', text: 'GPS' }, { tag: 'batoh', text: 'Batoh' }, { tag: 'dukla-cergov-sarisska-vrchovina', text: 'Dukla, Čergov, Šarišská vrchovina' }, { tag: 'cierna-hora-volovske-vrchy', text: 'Čierna hora, Volovské vrchy' }, { tag: 'nizke-tatry', text: 'Nízke Tatry' }, { tag: 'velka-fatra-kremnicke-vrchy', text: 'Veľká Fatra, Kremnické vrchy' }, { tag: 'strazovske-vrchy-biele-karpaty', text: 'Strážovske vrchy, Biele Karpatu' }, { tag: 'male-karpaty', text: 'Malé Karpaty' }, { tag: 'recepty', text: 'Recepty' }, { tag: 'o-strave', text: 'Stravovanie' }, { tag: 'nezaradene', text: 'Nezaradené' }, { tag: 'spravy-z-terenu', text: 'Správy z terénu' }, { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' }, { tag: 'rozhovory', text: 'Rozhovory' }];
+var articleCategories = [{ tag: 'vsetky', text: 'Všetky' }, { tag: 'faqs', text: 'FAQs' }, { tag: 'novinky', text: 'Novinky' }, { tag: 'ostatne', text: 'Ostatné' }, { tag: 'vybavenie', text: 'Vybavenie' }, { tag: 'odkazy', text: 'Odkazy' }, { tag: 'mapy', text: 'Mapy' }, { tag: 'dolezite_miesta', text: 'Dôležité miesta' }, { tag: 'stravovanie', text: 'Stravovanie' }, { tag: 'cestopisy', text: 'Cestopisy' }, { tag: 'spravy_z_terenu', text: 'Správy z terénu' }, { tag: 'zaujimavosti', text: 'Zaujímavosti' }, { tag: 'akcie', text: 'Akcie' }, { tag: 'obmedzenia', text: 'Obmedzenia' }, { tag: 'oznamy', text: 'Oznamy' }, { tag: 'cesta-hrdinov-snp', text: 'Cesta hrdinov SNP' }, { tag: 'akcie-snp', text: 'Akcie Cesta hrdinov SNP' }, { tag: 'akcie-ostatne', text: 'Ostatné akcie' }, { tag: 'oblecenie', text: 'Oblečenie' }, { tag: 'obuv', text: 'Obuv' }, { tag: 'o-cestesnpsk', text: 'O CesteSNP.sk' }, { tag: 'cela-trasa', text: 'Celá trasa' }, { tag: 'vku', text: 'VKU' }, { tag: 'shocart', text: 'Shocart' }, { tag: 'gps', text: 'GPS' }, { tag: 'batoh', text: 'Batoh' }, { tag: 'dukla-cergov-sarisska-vrchovina', text: 'Dukla, Čergov, Šarišská vrchovina' }, { tag: 'cierna-hora-volovske-vrchy', text: 'Čierna hora, Volovské vrchy' }, { tag: 'nizke-tatry', text: 'Nízke Tatry' }, { tag: 'velka-fatra-kremnicke-vrchy', text: 'Veľká Fatra, Kremnické vrchy' }, { tag: 'strazovske-vrchy-biele-karpaty', text: 'Strážovske vrchy, Biele Karpatu' }, { tag: 'male-karpaty', text: 'Malé Karpaty' }, { tag: 'recepty', text: 'Recepty' }, { tag: 'o-strave', text: 'O strave' }, { tag: 'nezaradene', text: 'Nezaradené' }, { tag: 'spravy-z-terenu', text: 'Správy z terénu' }, { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' }, { tag: 'rozhovory', text: 'Rozhovory' }];
 
 var categoryTags = articleCategories.map(function (category) {
   return category.tag;
@@ -20605,7 +20605,10 @@ var Articles = function (_Component) {
               { key: i, className: 'article-div' },
               _react2.default.createElement(
                 'a',
-                { className: 'no-decoration', href: '/pred/articles/article/' + article.sql_article_id },
+                {
+                  className: 'no-decoration',
+                  href: '/pred/articles/article/' + article.sql_article_id
+                },
                 _react2.default.createElement(
                   'h2',
                   { className: 'no-decoration' },
@@ -63084,6 +63087,7 @@ var Article = function (_Component) {
       loading: true,
       article: []
     };
+    _this.updateArticleViews = _this.updateArticleViews.bind(_this);
     return _this;
   }
 
@@ -63099,20 +63103,37 @@ var Article = function (_Component) {
           article: data,
           loading: false
         });
-      })
-      // .then((data) => {
-      //   fetch(url, {
-      //     method:'POST',
-
-      //   })
-      // })
-      .catch(function (err) {
-        console.log('error', err);
+        //increase article count
+        _this2.updateArticleViews('/api/articles/increase_article_count', {
+          id: data[0]['_id']
+        }).then({}).catch(function (err) {
+          return console.log(err);
+        });
+      }).catch(function (err) {
         _this2.setState({
           article: [{ title: '404', fulltext: 'Článok sme nenašli :(' }],
           loading: false
         });
       });
+    }
+  }, {
+    key: 'updateArticleViews',
+    value: function updateArticleViews(url, data) {
+      // Default options are marked with *
+      return fetch(url, {
+        body: JSON.stringify(data), // must match 'Content-Type' header
+        cache: 'no-cache', // *default, cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *omit
+        headers: {
+          'content-type': 'application/json'
+        },
+        method: 'PUT', // *GET, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *same-origin
+        redirect: 'follow', // *manual, error
+        referrer: 'no-referrer' // *client
+      }).then(function (response) {
+        return response.json();
+      }); // parses response to JSON
     }
   }, {
     key: 'render',

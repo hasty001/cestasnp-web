@@ -1,17 +1,17 @@
-const express = require('express')
-const DB = require('../db/db')
-const query = new DB()
+const express = require('express');
+const DB = require('../db/db');
+const query = new DB();
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', function (req, res) {
-  query.all('TEST_pois', function (results, error) {
+router.get('/', function(req, res) {
+  query.all('TEST_pois', function(results, error) {
     if (results) {
-      res.json(results)
+      res.json(results);
     } else {
-      console.log(error)
+      console.log(error);
     }
-  })
-})
+  });
+});
 
-module.exports = router
+module.exports = router;

@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
+const bodyParser = require('body-parser');
+
 const app = express();
 const http = require('http').Server(app);
 const root = path.join(__dirname, '/client/build');
 
 app.use(express.static(root));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // api controllers
 app.get('/api', function(req, res) {

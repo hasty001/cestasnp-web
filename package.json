@@ -16,6 +16,7 @@
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
     "babel-eslint": "^8.2.1",
+    "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
     "eslint": "^4.17.0",
     "eslint-config-prettier": "^2.9.0",
