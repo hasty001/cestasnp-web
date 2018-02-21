@@ -1,59 +1,92 @@
-const express = require('express')
-const DB = require('../db/db')
-const query = new DB()
-const router = express.Router()
+const express = require('express');
+const DB = require('../db/db');
+const bodyParser = require('body-parser');
+
+const query = new DB();
+const router = express.Router();
 const ORDER = {
   newestFirst: { created: -1 },
   oldestFirst: { created: 1 }
-}
+};
 const filterBy = {
   tags: {
-    $nin: [ 'akcie', 'spravy-z-terenu', 'spravy_z_terenu' ]
+    $nin: ['akcie', 'spravy-z-terenu', 'spravy_z_terenu']
   }
-}
+};
 
-router.get('/', function (req, res) {
-  query.countCollection('articles', filterBy, function (results) {
-    res.json(results)
-  })
-})
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
 
-router.get('/:page', function (req, res) {
-  query.nextSorted('articles', ORDER.newestFirst, req.params.page, function (results) {
-    res.json(results)
-  }, filterBy)
-})
+// count the entire article collection
+router.get('/', function(req, res) {
+  query.countCollection('TEST_articles', filterBy, function(results) {
+    res.json(results);
+  });
+});
 
-router.get('/article/:articleId', function (req, res) {
-  let articleId = parseInt(req.params.articleId)
-  query.findBy('articles', { sql_article_id: articleId }, function (results) {
-    res.json(results)
-  })
-})
+// operates pagination for all articles
+router.get('/:page', function(req, res) {
+  query.nextSorted(
+    'TEST_articles',
+    ORDER.newestFirst,
+    req.params.page,
+    function(results) {
+      res.json(results);
+    },
+    filterBy
+  );
+});
 
-router.get('/category/:category', function (req, res) {
+// returns single article by ID
+router.get('/article/:articleId', function(req, res) {
+  let articleId = parseInt(req.params.articleId);
+  query.findBy('TEST_articles', { sql_article_id: articleId }, function(results) {
+    res.json(results);
+  });
+});
+
+// returns all articles matching category
+router.get('/category/:category', function(req, res) {
   let filters = req.params.category.split('+').map(filter => {
-    let newFilter = {}
-    newFilter.tags = filter
-    return newFilter
-  })
-  let finalFilter = {}
-  finalFilter.$and = filters
-  query.countCollection('articles', finalFilter, function (results) {
-    res.json(results)
-  })
-})
+    let newFilter = {};
+    newFilter.tags = filter;
+    return newFilter;
+  });
+  let finalFilter = {};
+  finalFilter.$and = filters;
+  query.countCollection('TEST_articles', finalFilter, function(results) {
+    res.json(results);
+  });
+});
 
-router.get('/category/:category/:page', function (req, res) {
+// returns articles matching category on certain page
+router.get('/category/:category/:page', function(req, res) {
   let filters = req.params.category.split('+').map(filter => {
-    let newFilter = {}
-    newFilter.tags = filter
-    return newFilter
-  })
-  let finalFilter = {}
-  finalFilter.$and = filters
-  query.nextSorted('articles', ORDER.newestFirst, req.params.page, function (results) {
-    res.json(results)
-  }, finalFilter)
-})
-module.exports = router
+    let newFilter = {};
+    newFilter.tags = filter;
+    return newFilter;
+  });
+  let finalFilter = {};
+  finalFilter.$and = filters;
+  query.nextSorted(
+    'TEST_articles',
+    ORDER.newestFirst,
+    req.params.page,
+    function(results) {
+      res.json(results);
+    },
+    finalFilter
+  );
+});
+
+router.put('/increase_article_count', function(req, res) {
+  query.increaseArticleCount(req.body.id, function(results) {
+    res.json(results);
+  });
+});
+
+router.post('/add_article', function(req, res) {
+  query.addArticle(req.body, 'TEST_articles');
+});
+
+module.exports = router;
