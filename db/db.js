@@ -140,7 +140,7 @@ DB.prototype = {
         let oid = new ObjectId(articleId);
         resCollection.findOneAndUpdate({ _id: oid }, { $inc: { article_views: 1 } }).then(res => {
           try {
-            console.log('article _id: ' + articleId + 'count updated');
+            console.log('article _id: ' + articleId + ' views increased');
             callback(res);
             db.close();
           } catch (err) {
