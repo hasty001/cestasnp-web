@@ -48394,6 +48394,10 @@ var _Map = __webpack_require__(218);
 
 var _Map2 = _interopRequireDefault(_Map);
 
+var _Loader = __webpack_require__(134);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -48413,7 +48417,15 @@ var Na = function (_Component) {
     _this.state = {
       loading: true,
       travellerId: parseInt(_this.props.match.params.traveller),
-      travellerData: []
+      travellerData: {
+        meno: '',
+        text: '',
+        articleID: '',
+        start_miesto: '',
+        start_date: '',
+        end_date: '',
+        completed: ''
+      }
     };
     return _this;
   }
@@ -48421,11 +48433,35 @@ var Na = function (_Component) {
   _createClass(Na, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('hi');
+      var _this2 = this;
+
+      fetch('/api/traveller/' + this.state.travellerId).then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        var travellerData = {};
+        travellerData.meno = data[0].meno;
+        travellerData.text = data[0].text;
+        travellerData.articleID = data[0].articleID;
+        travellerData.start_miesto = data[0].start_miesto;
+        travellerData.start_date = data[0].start_date;
+        travellerData.end_date = data[0].end_date;
+        travellerData.completed = data[0].completed;
+        _this2.setState({
+          travellerData: travellerData
+        });
+      }).then(function () {
+        _this2.setState({
+          loading: false
+        });
+      }).catch(function (e) {
+        throw e;
+      });
     }
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       return _react2.default.createElement(
         'div',
         { className: 'na-container' },
@@ -48460,50 +48496,16 @@ var Na = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'na-data-container' },
-          _react2.default.createElement(
-            'ul',
-            null,
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            ),
-            _react2.default.createElement(
-              'li',
-              null,
-              'blablabla'
-            )
-          )
+          this.state.loading && _react2.default.createElement(_Loader2.default, null),
+          !this.state.loading && Object.keys(this.state.travellerData).map(function (key, i) {
+            return _react2.default.createElement(
+              'p',
+              { key: i },
+              key,
+              ': ',
+              _this3.state.travellerData[key]
+            );
+          })
         )
       );
     }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Map from './Map';
+import Loader from './Loader';
 
 class Na extends Component {
   constructor(props) {
@@ -8,12 +9,42 @@ class Na extends Component {
     this.state = {
       loading: true,
       travellerId: parseInt(this.props.match.params.traveller),
-      travellerData: []
+      travellerData: {
+        meno: '',
+        text: '',
+        articleID: '',
+        start_miesto: '',
+        start_date: '',
+        end_date: '',
+        completed: ''
+      }
     };
   }
 
   componentDidMount() {
-    console.log('hi');
+    fetch('/api/traveller/' + this.state.travellerId)
+      .then(resp => resp.json())
+      .then(data => {
+        let travellerData = {};
+        travellerData.meno = data[0].meno;
+        travellerData.text = data[0].text;
+        travellerData.articleID = data[0].articleID;
+        travellerData.start_miesto = data[0].start_miesto;
+        travellerData.start_date = data[0].start_date;
+        travellerData.end_date = data[0].end_date;
+        travellerData.completed = data[0].completed;
+        this.setState({
+          travellerData
+        });
+      })
+      .then(() => {
+        this.setState({
+          loading: false
+        });
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
   render() {
@@ -38,16 +69,17 @@ class Na extends Component {
           <Map use="na-ceste" />
         </div>
         <div className="na-data-container">
-          <ul>
-            <li>blablabla</li>
-            <li>blablabla</li>
-            <li>blablabla</li>
-            <li>blablabla</li>
-            <li>blablabla</li>
-            <li>blablabla</li>
-            <li>blablabla</li>
-            <li>blablabla</li>
-          </ul>
+          {this.state.loading && <Loader />}
+          {!this.state.loading &&
+            Object.keys(this.state.travellerData).map((key, i) => {
+              return (
+                <p key={i}>
+                  {key}
+                  {': '}
+                  {this.state.travellerData[key]}
+                </p>
+              );
+            })}
         </div>
       </div>
     );

@@ -153,7 +153,31 @@ DB.prototype = {
         throw err;
       }
     });
+  },
+
+  // traveller related
+
+  getTravellerDetails: function(travellerId, callback) {
+    mongodb.MongoClient.connect(this.url, function (err, db) {
+      if (db) {
+        const resCollection = db.collection('TEST_traveler_details');
+        resCollection
+          .find({ user_id: travellerId })
+          .toArray(function (err, docs) {
+            if (docs) {
+              callback(docs);
+              db.close();
+            } else {
+              throw err;
+              db.close();
+            }
+          });
+      } else {
+        throw err;
+      }
+    });
   }
+
 };
 
 module.exports = DB;
