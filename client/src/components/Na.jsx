@@ -17,12 +17,13 @@ class Na extends Component {
         start_date: '',
         end_date: '',
         completed: ''
-      }
+      },
+      travellerMessages: ''
     };
   }
 
   componentDidMount() {
-    fetch('/api/traveller/' + this.state.travellerId)
+    fetch('/api/traveller/details/' + this.state.travellerId)
       .then(resp => resp.json())
       .then(data => {
         let travellerData = {};
@@ -38,9 +39,52 @@ class Na extends Component {
         });
       })
       .then(() => {
-        this.setState({
-          loading: false
-        });
+        fetch('/api/traveller/messages/' + this.state.travellerId)
+          .then(resp => resp.json())
+          .then(data => {
+            let travellerMessages = data.map(message => {
+              let newMessage = {};
+              newMessage.type = 'message';
+              newMessage.date = message.pub_date;
+              newMessage.img = message.img;
+              newMessage.lat = message.lat;
+              newMessage.lon = message.lon;
+              newMessage.text = message.text;
+              newMessage.username = this.state.travellerData.meno;
+              return newMessage;
+            });
+            this.setState({
+              travellerMessages
+            });
+          })
+          .then(() => {
+            fetch('/api/traveller/comments/' + this.state.travellerData.articleID)
+              .then(resp => resp.json())
+              .then(data => {
+                let travellerMessages = this.state.travellerMessages;
+                data.forEach(comment => {
+                  let newComment = {};
+                  newComment.type = 'comment';
+                  newComment.date = comment.date;
+                  newComment.username = comment.username;
+                  newComment.text = comment.comment;
+                  travellerMessages.push(newComment);
+                });
+                travellerMessages.sort((a, b) => {
+                  return new Date(b.date) - new Date(a.date);
+                });
+                this.setState({
+                  travellerMessages,
+                  loading: false
+                });
+              })
+              .catch(e => {
+                throw e;
+              });
+          })
+          .catch(e => {
+            throw e;
+          });
       })
       .catch(e => {
         throw e;
@@ -49,36 +93,43 @@ class Na extends Component {
 
   render() {
     return (
-      <div className="na-container">
-        {/* <p>
-        Na sekcii "Na ceste" momentálne pracujeme. Ale keď ju dokončíme, toto bude to miesto kde
-        budeš môcť sledovať a povzbudiť svojich kamarátov, ktorí sa vydajú na cestu a zapoja do LIVE
-        sledovania. Tí čo sa pripravujete na cestu v sezóne 2018, svoje prípravy môžete začať v
-        sekcii <a href="/pred/articles/1">Články</a> kde nájdete kopec užitočných informácií, ktoré
-        sme doteraz zozbierali. Prípadne ti s plánovaním môže pomôcť naša zbierka{' '}
-        <a href="/pred/pois">dôležitých miest</a>. Čím skôr si nahlás dovolenku. Máj sa blíži! ;)
-      </p> */}
-        <div className="na-details-container">
-          <ul>
-            <li>bla</li>
-            <li>bla</li>
-            <li>bla</li>
-          </ul>
-        </div>
-        <div className="na-map-container">
+      <div className="na-ceste-container">
+        <div>
           <Map use="na-ceste" />
         </div>
-        <div className="na-data-container">
+
+        {this.state.loading && <Loader />}
+        {!this.state.loading &&
+          this.state.travellerData && (
+            <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
+              <p>{this.state.travellerData.meno}</p>
+              <p>{this.state.travellerData.text}</p>
+              <p>Začiatok: {this.state.travellerData.start_miesto}</p>
+            </div>
+          )}
+
+        <div>
           {this.state.loading && <Loader />}
           {!this.state.loading &&
-            Object.keys(this.state.travellerData).map((key, i) => {
-              return (
-                <p key={i}>
-                  {key}
-                  {': '}
-                  {this.state.travellerData[key]}
-                </p>
-              );
+            this.state.travellerMessages.map((message, i) => {
+              if (message.type === 'message') {
+                return (
+                  <div key={i} style={{ backgroundColor: 'lightGrey' }}>
+                    <img src={message.img} alt="fotka z putovania" />
+                    <p>{message.date + ' ' + message.username}</p>
+                    <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                    <hr />
+                  </div>
+                );
+              } else {
+                return (
+                  <div key={i} style={{ backgroundColor: 'lightBlue' }}>
+                    <p>{message.date + ' ' + message.username}</p>
+                    <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                    <hr />
+                  </div>
+                );
+              }
             })}
         </div>
       </div>

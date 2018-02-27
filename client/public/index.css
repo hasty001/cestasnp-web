@@ -147,33 +147,23 @@ body {
   left: -2%;
 }
 
+.na-ceste-container {
+  display: block;
+  width: 90%;
+  position: absolute;
+  margin-left: 5%;
+}
+
 #na-ceste-map {
   display: block;
   width: 100%;
-  height: 500px;
+  height: 70vh;
 }
 
-.na-map-container {
+.na-ceste-traveller {
   display: block;
-  position: absolute;
-  width: 80%;
-  height: 500px;
-  right: 0;
-}
-
-.na-details-container {
-  display: block;
-  position: absolute;
-  width: 20%;
-  height: 500px;
-  left: 0;
+  width: 100%;
+  min-height: 16vh;
   overflow: scroll;
-}
-
-.na-data-container {
-  display: block;
-  width: 80%;
-  position: absolute;
-  margin-left: 10%;
-  top: 500px;
+  padding: 10px;
 }
