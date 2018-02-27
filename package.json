@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js & npm run dev --prefix ./client/ ",
+    "dev": "browser-refresh server.js & npm run dev --prefix ./client/ ",
     "build": "npm run build --prefix ./client/"
   },
   "repository": {
@@ -23,7 +23,9 @@
     "eslint-plugin-prettier": "^2.6.0",
     "express": "^4.16.2",
     "mongodb": "^2.2.33",
-    "nodemon": "^1.12.7",
     "prettier": "^1.10.2"
+  },
+  "devDependencies": {
+    "browser-refresh": "^1.7.2"
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const NotFound = () => {
   return (
@@ -6,7 +6,7 @@ const NotFound = () => {
       <h2>404</h2>
       <p>Článok sme nenašli :(</p>
     </div>
-  )
-}
+  );
+};
 
-export default NotFound
+export default NotFound;

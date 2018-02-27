@@ -25,6 +25,7 @@ const CestaSNP = () => (
           <Route exact path="/" component={Home} />
           <Route exact path="/pred/" component={Pred} />
           <Route exact path="/na" component={Na} />
+          <Route path="/na/:traveller" component={Na} />
           <Route exact path="/kontakt" component={Kontakt} />
           <Route path="/pred/articles/article/:articleId" component={Article} />
           <Route path="/pred/articles/:page" component={Articles} />

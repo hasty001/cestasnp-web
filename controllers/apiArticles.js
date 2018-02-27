@@ -79,12 +79,14 @@ router.get('/category/:category/:page', function(req, res) {
   );
 });
 
+// increases article count
 router.put('/increase_article_count', function(req, res) {
   query.increaseArticleCount(req.body.id, function(results) {
     res.json(results);
   });
 });
 
+// not in use
 router.post('/add_article', function(req, res) {
   query.addArticle(req.body, 'TEST_articles');
 });

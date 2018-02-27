@@ -18,6 +18,8 @@ app.use('/api/pois', require('./controllers/apiPois'));
 
 app.use('/api/articles', require('./controllers/apiArticles'));
 
+app.use('/api/traveller', require('./controllers/apiTraveller'));
+
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });
 });
