@@ -37,4 +37,11 @@ router.get('/comments/:articleId', function(req, res) {
   });
 });
 
+router.get('/finishedTravellers', function(req, res) {
+  let findBy = { completed: 1 };
+  query.findBy('TEST_traveler_details', findBy, function(results) {
+    res.json(results);
+  });
+});
+
 module.exports = router;

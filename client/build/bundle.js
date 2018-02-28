@@ -19842,6 +19842,89 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _Map = __webpack_require__(219);
+
+var _Map2 = _interopRequireDefault(_Map);
+
+var _Loader = __webpack_require__(89);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Pois = function (_Component) {
+  _inherits(Pois, _Component);
+
+  function Pois(props) {
+    _classCallCheck(this, Pois);
+
+    var _this = _possibleConstructorReturn(this, (Pois.__proto__ || Object.getPrototypeOf(Pois)).call(this, props));
+
+    _this.state = {
+      loading: true,
+      pois: []
+    };
+    return _this;
+  }
+
+  _createClass(Pois, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      fetch('/api/pois').then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        _this2.setState({
+          pois: data,
+          loading: false
+        });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { id: 'map-container' },
+        this.state.loading && _react2.default.createElement(_Loader2.default, null),
+        !this.state.loading && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(_Map2.default, { pois: this.state.pois, use: 'pois' })
+        )
+      );
+    }
+  }]);
+
+  return Pois;
+}(_react.Component);
+
+exports.default = Pois;
+
+/***/ }),
+/* 219 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
 var _leaflet = __webpack_require__(486);
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
@@ -20030,7 +20113,7 @@ var Map = function (_Component) {
 exports.default = Map;
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20112,7 +20195,7 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -20484,89 +20567,6 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 221 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Map = __webpack_require__(218);
-
-var _Map2 = _interopRequireDefault(_Map);
-
-var _Loader = __webpack_require__(89);
-
-var _Loader2 = _interopRequireDefault(_Loader);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Pois = function (_Component) {
-  _inherits(Pois, _Component);
-
-  function Pois(props) {
-    _classCallCheck(this, Pois);
-
-    var _this = _possibleConstructorReturn(this, (Pois.__proto__ || Object.getPrototypeOf(Pois)).call(this, props));
-
-    _this.state = {
-      loading: true,
-      pois: []
-    };
-    return _this;
-  }
-
-  _createClass(Pois, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      fetch('/api/pois').then(function (resp) {
-        return resp.json();
-      }).then(function (data) {
-        _this2.setState({
-          pois: data,
-          loading: false
-        });
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { id: 'map-container' },
-        this.state.loading && _react2.default.createElement(_Loader2.default, null),
-        !this.state.loading && _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(_Map2.default, { pois: this.state.pois, use: 'pois' })
-        )
-      );
-    }
-  }]);
-
-  return Pois;
-}(_react.Component);
-
-exports.default = Pois;
-
-/***/ }),
 /* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20589,11 +20589,11 @@ var _Loader = __webpack_require__(89);
 
 var _Loader2 = _interopRequireDefault(_Loader);
 
-var _PaginationAdvanced = __webpack_require__(503);
+var _PaginationAdvanced = __webpack_require__(502);
 
 var _PaginationAdvanced2 = _interopRequireDefault(_PaginationAdvanced);
 
-var _ArticleFilter = __webpack_require__(504);
+var _ArticleFilter = __webpack_require__(503);
 
 var _ArticleFilter2 = _interopRequireDefault(_ArticleFilter);
 
@@ -33171,19 +33171,23 @@ var _Navigation = __webpack_require__(344);
 
 var _Navigation2 = _interopRequireDefault(_Navigation);
 
-var _Pred = __webpack_require__(502);
+var _Archive = __webpack_require__(516);
+
+var _Archive2 = _interopRequireDefault(_Archive);
+
+var _Pred = __webpack_require__(485);
 
 var _Pred2 = _interopRequireDefault(_Pred);
 
-var _Kontakt = __webpack_require__(505);
+var _Kontakt = __webpack_require__(504);
 
 var _Kontakt2 = _interopRequireDefault(_Kontakt);
 
-var _NotFound = __webpack_require__(506);
+var _NotFound = __webpack_require__(505);
 
 var _NotFound2 = _interopRequireDefault(_NotFound);
 
-var _Home = __webpack_require__(507);
+var _Home = __webpack_require__(506);
 
 var _Home2 = _interopRequireDefault(_Home);
 
@@ -33191,21 +33195,20 @@ var _Articles = __webpack_require__(222);
 
 var _Articles2 = _interopRequireDefault(_Articles);
 
-var _Article = __webpack_require__(508);
+var _Article = __webpack_require__(507);
 
 var _Article2 = _interopRequireDefault(_Article);
 
-var _Pois = __webpack_require__(221);
+var _Pois = __webpack_require__(218);
 
 var _Pois2 = _interopRequireDefault(_Pois);
 
-var _Traveller = __webpack_require__(515);
+var _Traveller = __webpack_require__(508);
 
 var _Traveller2 = _interopRequireDefault(_Traveller);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import Na from './components/Na';
 var history = (0, _createBrowserHistory2.default)();
 
 var CestaSNP = function CestaSNP() {
@@ -33228,6 +33231,7 @@ var CestaSNP = function CestaSNP() {
           null,
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/', component: _Home2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/', component: _Pred2.default }),
+          _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/na/archive', component: _Archive2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/na/:traveller', component: _Traveller2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/kontakt', component: _Kontakt2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/pred/articles/article/:articleId', component: _Article2.default }),
@@ -36158,7 +36162,7 @@ var ROUTES = {
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
   naCeste: '/na',
-  archiv: '/na/archiv',
+  archiv: '/na/archive',
   kontakt: '/kontakt'
 };
 
@@ -48403,7 +48407,101 @@ exports.ValidComponentChildren = _ValidComponentChildren3.default;
 module.exports = __webpack_require__.p + "/img/ed0e36c1b39e31c207aa2c14f61babd7.png";
 
 /***/ }),
-/* 485 */,
+/* 485 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.RENDER_OPTIONS = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Pois = __webpack_require__(218);
+
+var _Pois2 = _interopRequireDefault(_Pois);
+
+var _Articles = __webpack_require__(222);
+
+var _Articles2 = _interopRequireDefault(_Articles);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RENDER_OPTIONS = exports.RENDER_OPTIONS = {
+  ARTICLES: 'articles',
+  POIS: 'pois',
+  NONE: 'none'
+};
+
+var Pred = function (_Component) {
+  _inherits(Pred, _Component);
+
+  function Pred(props) {
+    _classCallCheck(this, Pred);
+
+    var _this = _possibleConstructorReturn(this, (Pred.__proto__ || Object.getPrototypeOf(Pred)).call(this, props));
+
+    _this.state = {
+      show: RENDER_OPTIONS.NONE
+    };
+
+    _this.handleShowChoice = _this.handleShowChoice.bind(_this);
+    return _this;
+  }
+
+  _createClass(Pred, [{
+    key: 'handleShowChoice',
+    value: function handleShowChoice(e) {
+      e.preventDefault();
+      var showChoice = e.target.value;
+      this.setState({ show: showChoice });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { id: 'pred-container' },
+        _react2.default.createElement(
+          'h1',
+          null,
+          'tu pride info pred cestou'
+        ),
+        _react2.default.createElement(
+          'button',
+          { value: RENDER_OPTIONS.ARTICLES, onClick: this.handleShowChoice },
+          'articles'
+        ),
+        _react2.default.createElement(
+          'button',
+          { value: RENDER_OPTIONS.POIS, onClick: this.handleShowChoice },
+          'pois'
+        ),
+        this.state.show === RENDER_OPTIONS.POIS && _react2.default.createElement(_Pois2.default, null),
+        this.state.show === RENDER_OPTIONS.ARTICLES && _react2.default.createElement(_Articles2.default, null)
+      );
+    }
+  }]);
+
+  return Pred;
+}(_react.Component);
+
+exports.default = Pred;
+
+/***/ }),
 /* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -62311,7 +62409,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(220)(content, options);
+var update = __webpack_require__(221)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -62332,7 +62430,7 @@ if(false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var escape = __webpack_require__(489);
-exports = module.exports = __webpack_require__(219)(false);
+exports = module.exports = __webpack_require__(220)(false);
 // imports
 
 
@@ -62537,101 +62635,6 @@ module.exports = __webpack_require__.p + "/img/98930f0bb073c0fa078eecf278c1b858.
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.RENDER_OPTIONS = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Pois = __webpack_require__(221);
-
-var _Pois2 = _interopRequireDefault(_Pois);
-
-var _Articles = __webpack_require__(222);
-
-var _Articles2 = _interopRequireDefault(_Articles);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RENDER_OPTIONS = exports.RENDER_OPTIONS = {
-  ARTICLES: 'articles',
-  POIS: 'pois',
-  NONE: 'none'
-};
-
-var Pred = function (_Component) {
-  _inherits(Pred, _Component);
-
-  function Pred(props) {
-    _classCallCheck(this, Pred);
-
-    var _this = _possibleConstructorReturn(this, (Pred.__proto__ || Object.getPrototypeOf(Pred)).call(this, props));
-
-    _this.state = {
-      show: RENDER_OPTIONS.NONE
-    };
-
-    _this.handleShowChoice = _this.handleShowChoice.bind(_this);
-    return _this;
-  }
-
-  _createClass(Pred, [{
-    key: 'handleShowChoice',
-    value: function handleShowChoice(e) {
-      e.preventDefault();
-      var showChoice = e.target.value;
-      this.setState({ show: showChoice });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { id: 'pred-container' },
-        _react2.default.createElement(
-          'h1',
-          null,
-          'tu pride info pred cestou'
-        ),
-        _react2.default.createElement(
-          'button',
-          { value: RENDER_OPTIONS.ARTICLES, onClick: this.handleShowChoice },
-          'articles'
-        ),
-        _react2.default.createElement(
-          'button',
-          { value: RENDER_OPTIONS.POIS, onClick: this.handleShowChoice },
-          'pois'
-        ),
-        this.state.show === RENDER_OPTIONS.POIS && _react2.default.createElement(_Pois2.default, null),
-        this.state.show === RENDER_OPTIONS.ARTICLES && _react2.default.createElement(_Articles2.default, null)
-      );
-    }
-  }]);
-
-  return Pred;
-}(_react.Component);
-
-exports.default = Pred;
-
-/***/ }),
-/* 503 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _react = __webpack_require__(0);
 
@@ -62659,7 +62662,7 @@ var PaginationAdvanced = function PaginationAdvanced(props) {
 exports.default = PaginationAdvanced;
 
 /***/ }),
-/* 504 */
+/* 503 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62736,7 +62739,7 @@ var ArticleFilter = function (_Component) {
 exports.default = ArticleFilter;
 
 /***/ }),
-/* 505 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62791,7 +62794,7 @@ var Kontakt = function Kontakt() {
 exports.default = Kontakt;
 
 /***/ }),
-/* 506 */
+/* 505 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62827,7 +62830,7 @@ var NotFound = function NotFound() {
 exports.default = NotFound;
 
 /***/ }),
-/* 507 */
+/* 506 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62900,7 +62903,7 @@ var Home = function Home() {
 exports.default = Home;
 
 /***/ }),
-/* 508 */
+/* 507 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63031,6 +63034,227 @@ var Article = function (_Component) {
 exports.default = Article;
 
 /***/ }),
+/* 508 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Map = __webpack_require__(219);
+
+var _Map2 = _interopRequireDefault(_Map);
+
+var _Loader = __webpack_require__(89);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Traveller = function (_Component) {
+  _inherits(Traveller, _Component);
+
+  function Traveller(props) {
+    _classCallCheck(this, Traveller);
+
+    var _this = _possibleConstructorReturn(this, (Traveller.__proto__ || Object.getPrototypeOf(Traveller)).call(this, props));
+
+    _this.state = {
+      loading: true,
+      error: false,
+      travellerId: parseInt(_this.props.match.params.traveller),
+      travellerData: {
+        meno: '',
+        text: '',
+        articleID: '',
+        start_miesto: '',
+        start_date: '',
+        end_date: '',
+        completed: ''
+      },
+      travellerMessages: ''
+    };
+    return _this;
+  }
+
+  _createClass(Traveller, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      fetch('/api/traveller/details/' + this.state.travellerId).then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        var travellerData = {};
+        travellerData.meno = data[0].meno;
+        travellerData.text = data[0].text;
+        travellerData.articleID = data[0].articleID;
+        travellerData.start_miesto = data[0].start_miesto;
+        travellerData.start_date = data[0].start_date;
+        travellerData.end_date = data[0].end_date;
+        travellerData.completed = data[0].completed;
+        _this2.setState({
+          travellerData: travellerData
+        });
+      }).then(function () {
+        fetch('/api/traveller/messages/' + _this2.state.travellerId).then(function (resp) {
+          return resp.json();
+        }).then(function (data) {
+          var travellerMessages = data.map(function (message) {
+            var newMessage = {};
+            newMessage.type = 'message';
+            newMessage.date = message.pub_date;
+            newMessage.img = message.img;
+            newMessage.lat = message.lat;
+            newMessage.lon = message.lon;
+            newMessage.text = message.text;
+            newMessage.username = _this2.state.travellerData.meno;
+            return newMessage;
+          });
+          _this2.setState({
+            travellerMessages: travellerMessages
+          });
+        }).then(function () {
+          fetch('/api/traveller/comments/' + _this2.state.travellerData.articleID).then(function (resp) {
+            return resp.json();
+          }).then(function (data) {
+            var travellerMessages = _this2.state.travellerMessages;
+            data.forEach(function (comment) {
+              var newComment = {};
+              newComment.type = 'comment';
+              newComment.date = comment.date;
+              newComment.username = comment.username;
+              newComment.text = comment.comment;
+              travellerMessages.push(newComment);
+            });
+            travellerMessages.sort(function (a, b) {
+              return new Date(b.date) - new Date(a.date);
+            });
+            _this2.setState({
+              travellerMessages: travellerMessages,
+              loading: false
+            });
+          }).catch(function (e) {
+            _this2.setState({
+              error: true
+            });
+            throw e;
+          });
+        }).catch(function (e) {
+          _this2.setState({
+            error: true
+          });
+          throw e;
+        });
+      }).catch(function (e) {
+        _this2.setState({
+          error: true
+        });
+        throw e;
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'na-ceste-container' },
+        this.state.loading && !this.state.error && _react2.default.createElement(_Loader2.default, null),
+        !this.state.loading && !this.state.error && this.state.travellerData && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(_Map2.default, {
+              use: 'na-ceste',
+              start: this.state.travellerData.start_miesto,
+              stops: this.state.travellerMessages
+            })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'na-ceste-traveller', style: { textAlign: 'center' } },
+            _react2.default.createElement(
+              'p',
+              null,
+              this.state.travellerData.meno
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              this.state.travellerData.text
+            ),
+            _react2.default.createElement(
+              'p',
+              null,
+              'Za\u010Diatok: ',
+              this.state.travellerData.start_miesto
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            null,
+            this.state.travellerMessages.map(function (message, i) {
+              if (message.type === 'message') {
+                return _react2.default.createElement(
+                  'div',
+                  { key: i, style: { backgroundColor: 'lightGrey' } },
+                  _react2.default.createElement('img', { src: message.img, alt: 'fotka z putovania' }),
+                  _react2.default.createElement(
+                    'p',
+                    null,
+                    message.date + ' ' + message.username
+                  ),
+                  _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: message.text } }),
+                  _react2.default.createElement('hr', null)
+                );
+              } else {
+                return _react2.default.createElement(
+                  'div',
+                  { key: i, style: { backgroundColor: 'lightBlue' } },
+                  _react2.default.createElement(
+                    'p',
+                    null,
+                    message.date + ' ' + message.username
+                  ),
+                  _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: message.text } }),
+                  _react2.default.createElement('hr', null)
+                );
+              }
+            })
+          )
+        ),
+        this.state.error && _react2.default.createElement(
+          'p',
+          null,
+          '\u013Dutujeme ale nikoho sme na ceste nena\u0161li.'
+        )
+      );
+    }
+  }]);
+
+  return Traveller;
+}(_react.Component);
+
+exports.default = Traveller;
+
+/***/ }),
 /* 509 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -63045,7 +63269,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(220)(content, options);
+var update = __webpack_require__(221)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -63065,7 +63289,7 @@ if(false) {
 /* 510 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(219)(false);
+exports = module.exports = __webpack_require__(220)(false);
 // imports
 
 
@@ -63600,7 +63824,8 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 515 */
+/* 515 */,
+/* 516 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63616,7 +63841,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Map = __webpack_require__(218);
+var _Map = __webpack_require__(219);
 
 var _Map2 = _interopRequireDefault(_Map);
 
@@ -63632,100 +63857,45 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Traveller = function (_Component) {
-  _inherits(Traveller, _Component);
+var Archive = function (_Component) {
+  _inherits(Archive, _Component);
 
-  function Traveller(props) {
-    _classCallCheck(this, Traveller);
+  function Archive(props) {
+    _classCallCheck(this, Archive);
 
-    var _this = _possibleConstructorReturn(this, (Traveller.__proto__ || Object.getPrototypeOf(Traveller)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Archive.__proto__ || Object.getPrototypeOf(Archive)).call(this, props));
 
     _this.state = {
       loading: true,
       error: false,
-      travellerId: parseInt(_this.props.match.params.traveller),
-      travellerData: {
-        meno: '',
-        text: '',
-        articleID: '',
-        start_miesto: '',
-        start_date: '',
-        end_date: '',
-        completed: ''
-      },
-      travellerMessages: ''
+      archivedTravellers: []
     };
     return _this;
   }
 
-  _createClass(Traveller, [{
+  _createClass(Archive, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('/api/traveller/details/' + this.state.travellerId).then(function (resp) {
+      fetch('/api/traveller/finishedTravellers').then(function (resp) {
         return resp.json();
       }).then(function (data) {
-        var travellerData = {};
-        travellerData.meno = data[0].meno;
-        travellerData.text = data[0].text;
-        travellerData.articleID = data[0].articleID;
-        travellerData.start_miesto = data[0].start_miesto;
-        travellerData.start_date = data[0].start_date;
-        travellerData.end_date = data[0].end_date;
-        travellerData.completed = data[0].completed;
-        _this2.setState({
-          travellerData: travellerData
+        console.log('data: ', data);
+        var archivedTravellers = [];
+        data.forEach(function (traveller) {
+          var travellerData = {};
+          travellerData.meno = traveller.meno;
+          travellerData.text = traveller.text;
+          travellerData.userId = traveller.user_id;
+          travellerData.startMiesto = traveller.start_miesto;
+          travellerData.startDate = traveller.start_date;
+          travellerData.endDate = traveller.end_date;
+          archivedTravellers.push(travellerData);
         });
-      }).then(function () {
-        fetch('/api/traveller/messages/' + _this2.state.travellerId).then(function (resp) {
-          return resp.json();
-        }).then(function (data) {
-          var travellerMessages = data.map(function (message) {
-            var newMessage = {};
-            newMessage.type = 'message';
-            newMessage.date = message.pub_date;
-            newMessage.img = message.img;
-            newMessage.lat = message.lat;
-            newMessage.lon = message.lon;
-            newMessage.text = message.text;
-            newMessage.username = _this2.state.travellerData.meno;
-            return newMessage;
-          });
-          _this2.setState({
-            travellerMessages: travellerMessages
-          });
-        }).then(function () {
-          fetch('/api/traveller/comments/' + _this2.state.travellerData.articleID).then(function (resp) {
-            return resp.json();
-          }).then(function (data) {
-            var travellerMessages = _this2.state.travellerMessages;
-            data.forEach(function (comment) {
-              var newComment = {};
-              newComment.type = 'comment';
-              newComment.date = comment.date;
-              newComment.username = comment.username;
-              newComment.text = comment.comment;
-              travellerMessages.push(newComment);
-            });
-            travellerMessages.sort(function (a, b) {
-              return new Date(b.date) - new Date(a.date);
-            });
-            _this2.setState({
-              travellerMessages: travellerMessages,
-              loading: false
-            });
-          }).catch(function (e) {
-            _this2.setState({
-              error: true
-            });
-            throw e;
-          });
-        }).catch(function (e) {
-          _this2.setState({
-            error: true
-          });
-          throw e;
+        _this2.setState({
+          archivedTravellers: archivedTravellers,
+          loading: false
         });
       }).catch(function (e) {
         _this2.setState({
@@ -63739,83 +63909,57 @@ var Traveller = function (_Component) {
     value: function render() {
       return _react2.default.createElement(
         'div',
-        { className: 'na-ceste-container' },
+        { className: 'archive-container' },
         this.state.loading && !this.state.error && _react2.default.createElement(_Loader2.default, null),
-        !this.state.loading && !this.state.error && this.state.travellerData && _react2.default.createElement(
+        !this.state.loading && !this.state.error && this.state.archivedTravellers && _react2.default.createElement(
           'div',
           null,
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(_Map2.default, { use: 'na-ceste', start: this.state.travellerData.start_miesto,
-              stops: this.state.travellerMessages })
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'na-ceste-traveller', style: { textAlign: 'center' } },
-            _react2.default.createElement(
-              'p',
-              null,
-              this.state.travellerData.meno
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              this.state.travellerData.text
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              'Za\u010Diatok: ',
-              this.state.travellerData.start_miesto
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            this.state.travellerMessages.map(function (message, i) {
-              if (message.type === 'message') {
-                return _react2.default.createElement(
-                  'div',
-                  { key: i, style: { backgroundColor: 'lightGrey' } },
-                  _react2.default.createElement('img', { src: message.img, alt: 'fotka z putovania' }),
-                  _react2.default.createElement(
-                    'p',
-                    null,
-                    message.date + ' ' + message.username
-                  ),
-                  _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: message.text } }),
-                  _react2.default.createElement('hr', null)
-                );
-              } else {
-                return _react2.default.createElement(
-                  'div',
-                  { key: i, style: { backgroundColor: 'lightBlue' } },
-                  _react2.default.createElement(
-                    'p',
-                    null,
-                    message.date + ' ' + message.username
-                  ),
-                  _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: message.text } }),
-                  _react2.default.createElement('hr', null)
-                );
-              }
-            })
-          )
+          this.state.archivedTravellers.map(function (traveller, i) {
+            return _react2.default.createElement(
+              'div',
+              { key: i, style: { backgroundColor: 'lightGreen' } },
+              _react2.default.createElement(
+                'p',
+                null,
+                traveller.meno
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                'Za\u010Diatok: ',
+                traveller.startDate,
+                ' na ',
+                traveller.startMiesto
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                'Koniec: ',
+                traveller.endDate
+              ),
+              _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: traveller.text } }),
+              _react2.default.createElement(
+                'a',
+                { href: '/na/' + traveller.userId },
+                'Sleduj cel\xE9 putovanie...'
+              ),
+              _react2.default.createElement('hr', null)
+            );
+          })
         ),
         this.state.error && _react2.default.createElement(
           'p',
           null,
-          '\u013Dutujeme ale nikoho sme na ceste nena\u0161li.'
+          '\u013Dutujeme ale arch\xEDv je pr\xE1zdny.'
         )
       );
     }
   }]);
 
-  return Traveller;
+  return Archive;
 }(_react.Component);
 
-exports.default = Traveller;
+exports.default = Archive;
 
 /***/ })
 /******/ ]);

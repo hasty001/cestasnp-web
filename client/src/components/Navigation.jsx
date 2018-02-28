@@ -8,7 +8,7 @@ const ROUTES = {
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
   naCeste: '/na',
-  archiv: '/na/archiv',
+  archiv: '/na/archive',
   kontakt: '/kontakt'
 };
 
@@ -26,7 +26,6 @@ class Navigation extends Component {
         </Navbar.Header>
         <Navbar.Collapse className="navigacka">
           <Nav pullRight>
-
             <MenuItem eventKey={1} title="Domov" href={ROUTES.domov}>
               Domov
             </MenuItem>
@@ -46,16 +45,15 @@ class Navigation extends Component {
               </MenuItem>
               <MenuItem eventKey={3.2} href={ROUTES.archiv}>
                 Archív
-              </ MenuItem>
-            </ NavDropdown>
+              </MenuItem>
+            </NavDropdown>
 
             <MenuItem eventKey={4} href={ROUTES.kontakt}>
               Kontakt
             </MenuItem>
-
           </Nav>
         </Navbar.Collapse>
-      </Navbar >
+      </Navbar>
     );
   }
 }

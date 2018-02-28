@@ -74,14 +74,6 @@ class Article extends Component {
             <div dangerouslySetInnerHTML={fullText()} />
           </div>
         )}
-        {/* <button
-          type="text"
-          onClick={() => {
-            
-          }}
-        >
-          submit
-        </button> */}
       </div>
     );
   }
