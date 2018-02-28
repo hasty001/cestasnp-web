@@ -113,6 +113,27 @@ class Map extends Component {
           <p>${poi.text}</p>`);
       });
     }
+
+    // TRAVELLER MSGs
+    if (this.props.stops && this.props.stops.length > 0) {
+      let iconUrl = this.props.start == 'Dukla' ? '<i class="fas fa-caret-left fa-3x arrow-color" />' : '<i class="fas fa-caret-right fa-3x arrow-color"></i>'
+
+      this.props.stops.map(stop => {
+
+        if (stop.type === 'message') {
+          let icon = L.divIcon({
+            html: iconUrl,
+            iconSize: [14, 36],
+            iconAnchor: [7, 18]
+          });
+          let marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
+          marker.bindPopup(`<p>${stop.date}</p>
+          <p>${stop.text}</p>`);
+        }
+
+      });
+    }
+
     const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
     this.setState({ map, tileLayer });
   }

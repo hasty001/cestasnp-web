@@ -8,6 +8,7 @@ const ROUTES = {
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
   naCeste: '/na',
+  archiv: '/na/archiv',
   kontakt: '/kontakt'
 };
 
@@ -25,9 +26,11 @@ class Navigation extends Component {
         </Navbar.Header>
         <Navbar.Collapse className="navigacka">
           <Nav pullRight>
+
             <MenuItem eventKey={1} title="Domov" href={ROUTES.domov}>
               Domov
             </MenuItem>
+
             <NavDropdown eventKey={2} title="Pred cestou" id="basic-nav-dropdown">
               <MenuItem eventKey={2.1} href={ROUTES.clanky}>
                 Články
@@ -36,15 +39,23 @@ class Navigation extends Component {
                 Dôležité miesta
               </MenuItem>
             </NavDropdown>
-            <MenuItem eventKey={3} href={ROUTES.naCeste}>
-              Na ceste
-            </MenuItem>
+
+            <NavDropdown eventKey={3} title="Na ceste" id="basic-nav-dropdown">
+              <MenuItem eventKey={3.1} href={ROUTES.naCeste}>
+                Aktuálne
+              </MenuItem>
+              <MenuItem eventKey={3.2} href={ROUTES.archiv}>
+                Archív
+              </ MenuItem>
+            </ NavDropdown>
+
             <MenuItem eventKey={4} href={ROUTES.kontakt}>
               Kontakt
             </MenuItem>
+
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
+      </Navbar >
     );
   }
 }
