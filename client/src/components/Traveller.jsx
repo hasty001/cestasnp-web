@@ -19,7 +19,7 @@ class Traveller extends Component {
         end_date: '',
         completed: ''
       },
-      travellerMessages: '',
+      travellerMessages: ''
     };
   }
 
@@ -82,21 +82,21 @@ class Traveller extends Component {
               .catch(e => {
                 this.setState({
                   error: true
-                })
+                });
                 throw e;
               });
           })
           .catch(e => {
             this.setState({
               error: true
-            })
+            });
             throw e;
           });
       })
       .catch(e => {
         this.setState({
           error: true
-        })
+        });
         throw e;
       });
   }
@@ -107,48 +107,49 @@ class Traveller extends Component {
         {this.state.loading && !this.state.error && <Loader />}
         {!this.state.loading &&
           !this.state.error &&
-          this.state.travellerData &&
-          <div>
-
+          this.state.travellerData && (
             <div>
-              <Map use="na-ceste" start={this.state.travellerData.start_miesto}
-                stops={this.state.travellerMessages} />
-            </div>
+              <div>
+                <Map
+                  use="na-ceste"
+                  start={this.state.travellerData.start_miesto}
+                  stops={this.state.travellerMessages}
+                />
+              </div>
 
-            <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
-              <p>{this.state.travellerData.meno}</p>
-              <p>{this.state.travellerData.text}</p>
-              <p>Začiatok: {this.state.travellerData.start_miesto}</p>
-            </div>
+              <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
+                <p>{this.state.travellerData.meno}</p>
+                <p>{this.state.travellerData.text}</p>
+                <p>Začiatok: {this.state.travellerData.start_miesto}</p>
+              </div>
 
-            <div>
-              {this.state.travellerMessages.map((message, i) => {
-                if (message.type === 'message') {
-                  return (
-                    <div key={i} style={{ backgroundColor: 'lightGrey' }}>
-                      <img src={message.img} alt="fotka z putovania" />
-                      <p>{message.date + ' ' + message.username}</p>
-                      <p dangerouslySetInnerHTML={{ __html: message.text }} />
-                      <hr />
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={i} style={{ backgroundColor: 'lightBlue' }}>
-                      <p>{message.date + ' ' + message.username}</p>
-                      <p dangerouslySetInnerHTML={{ __html: message.text }} />
-                      <hr />
-                    </div>
-                  );
-                }
-              })}
+              <div>
+                {this.state.travellerMessages.map((message, i) => {
+                  if (message.type === 'message') {
+                    return (
+                      <div key={i} style={{ backgroundColor: 'lightGrey' }}>
+                        <img src={message.img} alt="fotka z putovania" />
+                        <p>{message.date + ' ' + message.username}</p>
+                        <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                        <hr />
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div key={i} style={{ backgroundColor: 'lightBlue' }}>
+                        <p>{message.date + ' ' + message.username}</p>
+                        <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                        <hr />
+                      </div>
+                    );
+                  }
+                })}
+              </div>
             </div>
-
-          </div>}
+          )}
 
         {this.state.error && <p>Ľutujeme ale nikoho sme na ceste nenašli.</p>}
-
-      </div >
+      </div>
     );
   }
 }
