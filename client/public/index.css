@@ -167,3 +167,14 @@ body {
   overflow: scroll;
   padding: 10px;
 }
+
+/* leaflet direction marker */
+
+.leaflet-div-icon {
+  background: transparent;
+  border: 0px;
+}
+
+.arrow-color {
+  color: #986507;
+}

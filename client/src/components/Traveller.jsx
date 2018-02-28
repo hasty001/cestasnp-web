@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import Map from './Map';
 import Loader from './Loader';
 
-class Na extends Component {
+class Traveller extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
+      error: false,
       travellerId: parseInt(this.props.match.params.traveller),
       travellerData: {
         meno: '',
@@ -18,7 +19,7 @@ class Na extends Component {
         end_date: '',
         completed: ''
       },
-      travellerMessages: ''
+      travellerMessages: '',
     };
   }
 
@@ -79,14 +80,23 @@ class Na extends Component {
                 });
               })
               .catch(e => {
+                this.setState({
+                  error: true
+                })
                 throw e;
               });
           })
           .catch(e => {
+            this.setState({
+              error: true
+            })
             throw e;
           });
       })
       .catch(e => {
+        this.setState({
+          error: true
+        })
         throw e;
       });
   }
@@ -94,47 +104,53 @@ class Na extends Component {
   render() {
     return (
       <div className="na-ceste-container">
-        <div>
-          <Map use="na-ceste" />
-        </div>
-
-        {this.state.loading && <Loader />}
+        {this.state.loading && !this.state.error && <Loader />}
         {!this.state.loading &&
-          this.state.travellerData && (
+          !this.state.error &&
+          this.state.travellerData &&
+          <div>
+
+            <div>
+              <Map use="na-ceste" start={this.state.travellerData.start_miesto}
+                stops={this.state.travellerMessages} />
+            </div>
+
             <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
               <p>{this.state.travellerData.meno}</p>
               <p>{this.state.travellerData.text}</p>
               <p>Začiatok: {this.state.travellerData.start_miesto}</p>
             </div>
-          )}
 
-        <div>
-          {this.state.loading && <Loader />}
-          {!this.state.loading &&
-            this.state.travellerMessages.map((message, i) => {
-              if (message.type === 'message') {
-                return (
-                  <div key={i} style={{ backgroundColor: 'lightGrey' }}>
-                    <img src={message.img} alt="fotka z putovania" />
-                    <p>{message.date + ' ' + message.username}</p>
-                    <p dangerouslySetInnerHTML={{ __html: message.text }} />
-                    <hr />
-                  </div>
-                );
-              } else {
-                return (
-                  <div key={i} style={{ backgroundColor: 'lightBlue' }}>
-                    <p>{message.date + ' ' + message.username}</p>
-                    <p dangerouslySetInnerHTML={{ __html: message.text }} />
-                    <hr />
-                  </div>
-                );
-              }
-            })}
-        </div>
-      </div>
+            <div>
+              {this.state.travellerMessages.map((message, i) => {
+                if (message.type === 'message') {
+                  return (
+                    <div key={i} style={{ backgroundColor: 'lightGrey' }}>
+                      <img src={message.img} alt="fotka z putovania" />
+                      <p>{message.date + ' ' + message.username}</p>
+                      <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                      <hr />
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div key={i} style={{ backgroundColor: 'lightBlue' }}>
+                      <p>{message.date + ' ' + message.username}</p>
+                      <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                      <hr />
+                    </div>
+                  );
+                }
+              })}
+            </div>
+
+          </div>}
+
+        {this.state.error && <p>Ľutujeme ale nikoho sme na ceste nenašli.</p>}
+
+      </div >
     );
   }
 }
 
-export default Na;
+export default Traveller;
