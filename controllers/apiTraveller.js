@@ -44,4 +44,11 @@ router.get('/finishedTravellers', function(req, res) {
   });
 });
 
+router.get('/activeTravellers', function(req, res) {
+  let findBy = { completed: 0 };
+  query.findBy('TEST_traveler_details', findBy, function(results) {
+    res.json(results);
+  });
+});
+
 module.exports = router;

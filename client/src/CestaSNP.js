@@ -12,6 +12,7 @@ import Articles from './components/Articles';
 import Article from './components/Article';
 import Pois from './components/Pois';
 import Traveller from './components/Traveller';
+import Active from './components/Active';
 
 const history = createHistory();
 
@@ -25,6 +26,7 @@ const CestaSNP = () => (
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/pred/" component={Pred} />
+          <Route exact path="/na/ceste" component={Active} />
           <Route exact path="/na/archive" component={Archive} />
           <Route path="/na/:traveller" component={Traveller} />
           <Route exact path="/kontakt" component={Kontakt} />

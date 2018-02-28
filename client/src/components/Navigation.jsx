@@ -7,7 +7,7 @@ const ROUTES = {
   predCestou: '/pred',
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
-  naCeste: '/na',
+  naCeste: '/na/ceste',
   archiv: '/na/archive',
   kontakt: '/kontakt'
 };

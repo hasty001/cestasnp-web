@@ -2,22 +2,22 @@ import React, { Component } from 'react';
 import Map from './Map';
 import Loader from './Loader';
 
-class Archive extends Component {
+class Active extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
       error: false,
-      archivedTravellers: []
+      travellers: []
     };
   }
 
   componentDidMount() {
-    fetch('/api/traveller/finishedTravellers')
+    fetch('/api/traveller/activeTravellers')
       .then(resp => resp.json())
       .then(data => {
-        let archivedTravellers = [];
+        let travellers = [];
         data.forEach(traveller => {
           let travellerData = {};
           travellerData.meno = traveller.meno;
@@ -26,10 +26,10 @@ class Archive extends Component {
           travellerData.startMiesto = traveller.start_miesto;
           travellerData.startDate = traveller.start_date;
           travellerData.endDate = traveller.end_date;
-          archivedTravellers.push(travellerData);
+          travellers.push(travellerData);
         });
         this.setState({
-          archivedTravellers,
+          travellers,
           loading: false
         });
       })
@@ -43,33 +43,33 @@ class Archive extends Component {
 
   render() {
     return (
-      <div className="archive-container">
+      <div className="na-ceste-container">
         {this.state.loading && !this.state.error && <Loader />}
         {!this.state.loading &&
           !this.state.error &&
-          this.state.archivedTravellers && (
+          this.state.travellers && (
             <div>
-              {this.state.archivedTravellers.map((traveller, i) => {
-                return (
-                  <div key={i} style={{ backgroundColor: 'lightGreen' }}>
-                    <p>{traveller.meno}</p>
-                    <p>
-                      Začiatok: {traveller.startDate} na {traveller.startMiesto}
-                    </p>
-                    <p>Koniec: {traveller.endDate}</p>
-                    <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
-                    <a href={`/na/${traveller.userId}`}>Sleduj celé putovanie...</a>
-                    <hr />
-                  </div>
-                );
-              })}
+              <div>
+                <Map use="na-ceste" />
+              </div>
+
+              <div className="na-ceste-active" style={{ textAlign: 'center' }}>
+                {this.state.travellers.map((traveller, i) => {
+                  return (
+                    <div key={i} className="na-ceste-active-single">
+                      <p>{traveller.meno}</p>
+                      <a href={`/na/${traveller.userId}`}>Sleduj putovanie...</a>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 
-        {this.state.error && <p>Ľutujeme ale archív je prázdny.</p>}
+        {this.state.error && <p>Ľutujeme ale momentálne nie je nikto na ceste.</p>}
       </div>
     );
   }
 }
 
-export default Archive;
+export default Active;

@@ -33207,6 +33207,10 @@ var _Traveller = __webpack_require__(508);
 
 var _Traveller2 = _interopRequireDefault(_Traveller);
 
+var _Active = __webpack_require__(517);
+
+var _Active2 = _interopRequireDefault(_Active);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var history = (0, _createBrowserHistory2.default)();
@@ -33231,6 +33235,7 @@ var CestaSNP = function CestaSNP() {
           null,
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/', component: _Home2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/', component: _Pred2.default }),
+          _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/na/ceste', component: _Active2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/na/archive', component: _Archive2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/na/:traveller', component: _Traveller2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/kontakt', component: _Kontakt2.default }),
@@ -36161,7 +36166,7 @@ var ROUTES = {
   predCestou: '/pred',
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
-  naCeste: '/na',
+  naCeste: '/na/ceste',
   archiv: '/na/archive',
   kontakt: '/kontakt'
 };
@@ -63294,7 +63299,7 @@ exports = module.exports = __webpack_require__(220)(false);
 
 
 // module
-exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n/* NA CESTE */\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.na-ceste-container {\n  display: block;\n  width: 90%;\n  position: absolute;\n  margin-left: 5%;\n}\n\n#na-ceste-map {\n  display: block;\n  width: 100%;\n  height: 70vh;\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  min-height: 16vh;\n  overflow: scroll;\n  padding: 10px;\n}\n\n/* leaflet direction marker */\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.arrow-color {\n  color: #986507;\n}\n", ""]);
+exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n/* NA CESTE */\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.na-ceste-container {\n  display: block;\n  width: 90%;\n  position: absolute;\n  margin-left: 5%;\n}\n\n#na-ceste-map {\n  display: block;\n  width: 100%;\n  height: 70vh;\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  min-height: 16vh;\n  overflow: scroll;\n  padding: 10px;\n}\n\n/* leaflet direction marker */\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.arrow-color {\n  color: #986507;\n}\n\n.na-ceste-active {\n  display: block;\n  width: 100%;\n  height: 16vh;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n  padding: 10px;\n}\n\n.na-ceste-active-single {\n  display: inline-block;\n  background-color: lightcyan;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n}", ""]);
 
 // exports
 
@@ -63881,7 +63886,6 @@ var Archive = function (_Component) {
       fetch('/api/traveller/finishedTravellers').then(function (resp) {
         return resp.json();
       }).then(function (data) {
-        console.log('data: ', data);
         var archivedTravellers = [];
         data.forEach(function (traveller) {
           var travellerData = {};
@@ -63960,6 +63964,135 @@ var Archive = function (_Component) {
 }(_react.Component);
 
 exports.default = Archive;
+
+/***/ }),
+/* 517 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Map = __webpack_require__(219);
+
+var _Map2 = _interopRequireDefault(_Map);
+
+var _Loader = __webpack_require__(89);
+
+var _Loader2 = _interopRequireDefault(_Loader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Active = function (_Component) {
+  _inherits(Active, _Component);
+
+  function Active(props) {
+    _classCallCheck(this, Active);
+
+    var _this = _possibleConstructorReturn(this, (Active.__proto__ || Object.getPrototypeOf(Active)).call(this, props));
+
+    _this.state = {
+      loading: true,
+      error: false,
+      travellers: []
+    };
+    return _this;
+  }
+
+  _createClass(Active, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      fetch('/api/traveller/activeTravellers').then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        var travellers = [];
+        data.forEach(function (traveller) {
+          var travellerData = {};
+          travellerData.meno = traveller.meno;
+          travellerData.text = traveller.text;
+          travellerData.userId = traveller.user_id;
+          travellerData.startMiesto = traveller.start_miesto;
+          travellerData.startDate = traveller.start_date;
+          travellerData.endDate = traveller.end_date;
+          travellers.push(travellerData);
+        });
+        _this2.setState({
+          travellers: travellers,
+          loading: false
+        });
+      }).catch(function (e) {
+        _this2.setState({
+          error: true
+        });
+        throw e;
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'na-ceste-container' },
+        this.state.loading && !this.state.error && _react2.default.createElement(_Loader2.default, null),
+        !this.state.loading && !this.state.error && this.state.travellers && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(_Map2.default, { use: 'na-ceste' })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'na-ceste-active', style: { textAlign: 'center' } },
+            this.state.travellers.map(function (traveller, i) {
+              return _react2.default.createElement(
+                'div',
+                { key: i, className: 'na-ceste-active-single' },
+                _react2.default.createElement(
+                  'p',
+                  null,
+                  traveller.meno
+                ),
+                _react2.default.createElement(
+                  'a',
+                  { href: '/na/' + traveller.userId },
+                  'Sleduj putovanie...'
+                )
+              );
+            })
+          )
+        ),
+        this.state.error && _react2.default.createElement(
+          'p',
+          null,
+          '\u013Dutujeme ale moment\xE1lne nie je nikto na ceste.'
+        )
+      );
+    }
+  }]);
+
+  return Active;
+}(_react.Component);
+
+exports.default = Active;
 
 /***/ })
 /******/ ]);
