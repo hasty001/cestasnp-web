@@ -3,7 +3,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   box-sizing: border-box; 
 }
 
@@ -154,9 +154,15 @@ body {
   margin-left: 5%;
 }
 
-#na-ceste-map {
+#na-ceste-map-active,
+#na-ceste-map-archive {
   display: block;
-  width: 100%;
+  width: 115%;
+  left: -7.5%;
+  height: 55vh;
+}
+
+#na-ceste-map-active {
   height: 70vh;
 }
 
@@ -164,7 +170,6 @@ body {
   display: block;
   width: 100%;
   min-height: 16vh;
-  overflow: scroll;
   padding: 10px;
 }
 
@@ -196,3 +201,23 @@ body {
   margin: 10px;
   padding: 10px;
 }
+
+.traveller-message, 
+.traveller-comment {
+    display: block;
+    width: 90%;
+    padding: 15px;
+    margin: 4px 0;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    float: right;
+    text-align: justify;
+    background-color: #6ed1f1;
+  }
+
+.traveller-comment {
+    float: left;
+    text-align: justify;
+    background-color: #caf2ff;
+}
+    

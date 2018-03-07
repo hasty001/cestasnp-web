@@ -28,7 +28,7 @@ class Pois extends Component {
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <div>
-            <Map pois={this.state.pois} use={'pois'} />
+            <Map pois={this.state.pois} use="pois-map" />
             {/* {this.state.pois.map((poi, i) => {
               return <div key={i}>{console.log(poi)}</div>;
             })} */}
