@@ -9,6 +9,8 @@ import utulna from '../../public/img/utulna.png';
 import pramen from '../../public/img/pramen.png';
 import krcma_jedlo from '../../public/img/krcma_jedlo.png';
 import posed from '../../public/img/posed.png';
+import vlavo from '../../public/img/vlavo.png';
+import vpravo from '../../public/img/vpravo.png';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -44,7 +46,7 @@ class Map extends Component {
       geojson: null,
       subwayLinesFilter: '*',
       numEntrances: null,
-      use: this.props.use === 'pois' ? 'pois-map' : 'na-ceste-map'
+      use: this.props.use
     };
   }
 
@@ -116,21 +118,19 @@ class Map extends Component {
 
     // TRAVELLER MSGs
     if (this.props.stops && this.props.stops.length > 0) {
-      let iconUrl = this.props.start == 'Dukla' ? '<i class="fas fa-caret-left fa-3x arrow-color" />' : '<i class="fas fa-caret-right fa-3x arrow-color"></i>'
+      let iconUrl = this.props.start == 'Dukla' ? vlavo : vpravo;
 
       this.props.stops.map(stop => {
-
         if (stop.type === 'message') {
-          let icon = L.divIcon({
-            html: iconUrl,
-            iconSize: [14, 36],
-            iconAnchor: [7, 18]
+          let icon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [36, 36],
+            iconAnchor: [18, 36]
           });
           let marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
           marker.bindPopup(`<p>${stop.date}</p>
           <p>${stop.text}</p>`);
         }
-
       });
     }
 

@@ -111,7 +111,7 @@ class Traveller extends Component {
             <div>
               <div>
                 <Map
-                  use="na-ceste"
+                  use="na-ceste-map-archive"
                   start={this.state.travellerData.start_miesto}
                   stops={this.state.travellerMessages}
                 />
@@ -127,19 +127,19 @@ class Traveller extends Component {
                 {this.state.travellerMessages.map((message, i) => {
                   if (message.type === 'message') {
                     return (
-                      <div key={i} style={{ backgroundColor: 'lightGrey' }}>
-                        <img src={message.img} alt="fotka z putovania" />
+                      <div key={i} className="traveller-message">
+                        {message.img !== 'None' && (
+                          <img src={message.img} alt="fotka z putovania" />
+                        )}
                         <p>{message.date + ' ' + message.username}</p>
                         <p dangerouslySetInnerHTML={{ __html: message.text }} />
-                        <hr />
                       </div>
                     );
                   } else {
                     return (
-                      <div key={i} style={{ backgroundColor: 'lightBlue' }}>
+                      <div key={i} className="traveller-comment">
                         <p>{message.date + ' ' + message.username}</p>
                         <p dangerouslySetInnerHTML={{ __html: message.text }} />
-                        <hr />
                       </div>
                     );
                   }

@@ -50,7 +50,7 @@ class Active extends Component {
           this.state.travellers && (
             <div>
               <div>
-                <Map use="na-ceste" />
+                <Map use="na-ceste-map-active" />
               </div>
 
               <div className="na-ceste-active" style={{ textAlign: 'center' }}>

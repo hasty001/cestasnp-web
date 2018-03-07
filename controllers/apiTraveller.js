@@ -45,7 +45,7 @@ router.get('/finishedTravellers', function(req, res) {
 });
 
 router.get('/activeTravellers', function(req, res) {
-  let findBy = { completed: 0 };
+  let findBy = { end_date: '0000-00-00 00:00:00' };
   query.findBy('TEST_traveler_details', findBy, function(results) {
     res.json(results);
   });
