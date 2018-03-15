@@ -118,14 +118,14 @@ class Map extends Component {
 
     // TRAVELLER MSGs
     if (this.props.stops && this.props.stops.length > 0) {
-      let iconUrl = this.props.start == 'Dukla' ? vlavo : vpravo;
+      // let iconUrl = this.props.start == 'Dukla' ? vlavo : vpravo;
 
       this.props.stops.map(stop => {
         if (stop.type === 'message') {
-          let icon = L.icon({
-            iconUrl: iconUrl,
-            iconSize: [36, 36],
-            iconAnchor: [18, 36]
+          let icon = L.divIcon({
+            html: '<i class="fas fa-map-marker-alt fa-2x" style="color: #733a07"></i>',
+            iconSize: [18, 24],
+            iconAnchor: [9, 24]
           });
           let marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
           marker.bindPopup(`<p>${stop.date}</p>
