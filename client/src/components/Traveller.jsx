@@ -129,7 +129,18 @@ class Traveller extends Component {
                     return (
                       <div key={i} className="traveller-message">
                         {message.img !== 'None' && (
-                          <img src={message.img} alt="fotka z putovania" />
+                          <img
+                            src={
+                              'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
+                              message.img
+                            }
+                            style={{
+                              width: '100%',
+                              display: 'box',
+                              margin: '0px auto 15px'
+                            }}
+                            alt="fotka z putovania"
+                          />
                         )}
                         <p>{message.date + ' ' + message.username}</p>
                         <p dangerouslySetInnerHTML={{ __html: message.text }} />
