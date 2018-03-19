@@ -38,7 +38,7 @@ router.get('/comments/:articleId', function(req, res) {
 });
 
 router.get('/finishedTravellers', function(req, res) {
-  let findBy = { completed: 1 };
+  let findBy = { end_date: { $ne: '0000-00-00 00:00:00' } };
   query.findBy('TEST_traveler_details', findBy, function(results) {
     res.json(results);
   });

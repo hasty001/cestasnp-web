@@ -48462,7 +48462,8 @@ var Archive = function (_Component) {
     _this.state = {
       loading: true,
       error: false,
-      archivedTravellers: []
+      fullyCompleted: [],
+      partiallyCompleted: []
     };
     return _this;
   }
@@ -48475,7 +48476,8 @@ var Archive = function (_Component) {
       fetch('/api/traveller/finishedTravellers').then(function (resp) {
         return resp.json();
       }).then(function (data) {
-        var archivedTravellers = [];
+        var fully = [];
+        var partially = [];
         data.forEach(function (traveller) {
           var travellerData = {};
           travellerData.meno = traveller.meno;
@@ -48484,10 +48486,16 @@ var Archive = function (_Component) {
           travellerData.startMiesto = traveller.start_miesto;
           travellerData.startDate = traveller.start_date;
           travellerData.endDate = traveller.end_date;
-          archivedTravellers.push(travellerData);
+          travellerData.completed = traveller.completed;
+          if (travellerData.completed) {
+            fully.push(travellerData);
+          } else {
+            partially.push(travellerData);
+          }
         });
         _this2.setState({
-          archivedTravellers: archivedTravellers,
+          fullyCompleted: fully,
+          partiallyCompleted: partially,
           loading: false
         });
       }).catch(function (e) {
@@ -48504,41 +48512,153 @@ var Archive = function (_Component) {
         'div',
         { className: 'archive-container' },
         this.state.loading && !this.state.error && _react2.default.createElement(_Loader2.default, null),
-        !this.state.loading && !this.state.error && this.state.archivedTravellers && _react2.default.createElement(
+        !this.state.loading && !this.state.error && this.state.fullyCompleted && _react2.default.createElement(
           'div',
           null,
-          this.state.archivedTravellers.map(function (traveller, i) {
-            return _react2.default.createElement(
-              'div',
-              { key: i, style: { backgroundColor: 'lightGreen' } },
-              _react2.default.createElement(
-                'p',
-                null,
-                traveller.meno
-              ),
-              _react2.default.createElement(
-                'p',
-                null,
-                'Za\u010Diatok: ',
-                traveller.startDate,
-                ' na ',
-                traveller.startMiesto
-              ),
-              _react2.default.createElement(
-                'p',
-                null,
-                'Koniec: ',
-                traveller.endDate
-              ),
-              _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: traveller.text } }),
-              _react2.default.createElement(
-                'a',
-                { href: '/na/' + traveller.userId },
-                'Sleduj cel\xE9 putovanie...'
-              ),
-              _react2.default.createElement('hr', null)
-            );
-          })
+          _react2.default.createElement(
+            'h2',
+            null,
+            'Cestu pre\u0161li cel\xFA:'
+          ),
+          _react2.default.createElement(
+            'div',
+            {
+              style: {
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap'
+              }
+            },
+            this.state.fullyCompleted.map(function (traveller, i) {
+              return _react2.default.createElement(
+                'div',
+                {
+                  key: i,
+                  style: {
+                    display: 'inline-block',
+                    position: 'relative',
+                    backgroundColor: 'lightGreen',
+                    width: '23%',
+                    height: '360px',
+                    padding: '10px',
+                    marginRight: '2%',
+                    marginBottom: '10px'
+                  }
+                },
+                _react2.default.createElement(
+                  'p',
+                  { style: { fontWeight: '800' } },
+                  traveller.meno
+                ),
+                _react2.default.createElement(
+                  'p',
+                  { style: { fontWeight: '600' } },
+                  traveller.startMiesto
+                ),
+                _react2.default.createElement(
+                  'p',
+                  null,
+                  'Za\u010Diatok: ',
+                  traveller.startDate.substring(0, 11)
+                ),
+                _react2.default.createElement(
+                  'p',
+                  null,
+                  'Koniec: ',
+                  traveller.endDate.substring(0, 11)
+                ),
+                _react2.default.createElement(
+                  'div',
+                  {
+                    style: {
+                      overflow: 'scroll',
+                      height: '200px'
+                    }
+                  },
+                  _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: traveller.text } })
+                ),
+                _react2.default.createElement(
+                  'a',
+                  { href: '/na/' + traveller.userId },
+                  'Sleduj cel\xE9 putovanie...'
+                )
+              );
+            })
+          )
+        ),
+        !this.state.loading && !this.state.error && this.state.partiallyCompleted && _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'h2',
+            null,
+            'Cestu pre\u0161li \u010Diasto\u010Dne:'
+          ),
+          _react2.default.createElement(
+            'div',
+            {
+              style: {
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap'
+              }
+            },
+            this.state.partiallyCompleted.map(function (traveller, i) {
+              return _react2.default.createElement(
+                'div',
+                {
+                  key: i,
+                  style: {
+                    display: 'inline-block',
+                    position: 'relative',
+                    backgroundColor: 'lightBlue',
+                    width: '23%',
+                    height: '360px',
+                    padding: '10px',
+                    marginRight: '2%',
+                    marginBottom: '10px'
+                  }
+                },
+                _react2.default.createElement(
+                  'p',
+                  { style: { fontWeight: '800' } },
+                  traveller.meno
+                ),
+                _react2.default.createElement(
+                  'p',
+                  { style: { fontWeight: '600' } },
+                  traveller.startMiesto
+                ),
+                _react2.default.createElement(
+                  'p',
+                  null,
+                  'Za\u010Diatok: ',
+                  traveller.startDate.substring(0, 11)
+                ),
+                _react2.default.createElement(
+                  'p',
+                  null,
+                  'Koniec: ',
+                  traveller.endDate.substring(0, 11)
+                ),
+                _react2.default.createElement(
+                  'div',
+                  {
+                    style: {
+                      overflow: 'scroll',
+                      height: '200px'
+                    }
+                  },
+                  _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: traveller.text } })
+                ),
+                _react2.default.createElement(
+                  'a',
+                  { href: '/na/' + traveller.userId },
+                  'Sleduj cel\xE9 putovanie...'
+                )
+              );
+            })
+          )
         ),
         this.state.error && _react2.default.createElement(
           'p',
@@ -63378,9 +63498,11 @@ var Traveller = function (_Component) {
                   message.img !== 'None' && _react2.default.createElement('img', {
                     src: 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' + message.img,
                     style: {
-                      width: '100%',
-                      display: 'box',
-                      margin: '0px auto 15px'
+                      display: '-webkit-box',
+                      margin: '0px auto 15px',
+                      minWidth: '80px',
+                      maxWidth: '100%',
+                      maxHeight: '80vh'
                     },
                     alt: 'fotka z putovania'
                   }),
@@ -63589,7 +63711,7 @@ exports = module.exports = __webpack_require__(219)(false);
 
 
 // module
-exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n/* NA CESTE */\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.na-ceste-container {\n  display: block;\n  width: 90%;\n  position: absolute;\n  margin-left: 5%;\n}\n\n#na-ceste-map-active,\n#na-ceste-map-archive {\n  display: block;\n  width: 115%;\n  left: -7.5%;\n  height: 55vh;\n}\n\n#na-ceste-map-active {\n  height: 70vh;\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  min-height: 16vh;\n  padding: 10px;\n}\n\n/* leaflet direction marker */\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.arrow-color {\n  color: #986507;\n}\n\n.na-ceste-active {\n  display: block;\n  width: 100%;\n  height: 16vh;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n  padding: 10px;\n}\n\n.na-ceste-active-single {\n  display: inline-block;\n  background-color: lightcyan;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n    display: block;\n    width: 90%;\n    padding: 15px;\n    margin: 4px 0;\n    border-radius: 5px;\n    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n    float: right;\n    text-align: justify;\n    background-color: #6ed1f1;\n  }\n\n.traveller-comment {\n    float: left;\n    text-align: justify;\n    background-color: #caf2ff;\n}\n    ", ""]);
+exports.push([module.i, "/* GENERAL */\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n.app-header {\n  box-sizing: border-box;\n  background-color: #479a3a;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: white;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 160px;\n  height: 64px;\n  display: block;\n  position: absolute;\n  top: 16px;\n  left: 16px;\n}\n\n#nav {\n  display: block;\n}\n\n/** BODY  **/\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/** MAP **/\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n/* NA CESTE */\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.na-ceste-container {\n  display: block;\n  width: 90%;\n  position: absolute;\n  margin-left: 5%;\n}\n\n#na-ceste-map-active,\n#na-ceste-map-archive {\n  display: block;\n  width: 115%;\n  left: -7.5%;\n  height: 55vh;\n}\n\n#na-ceste-map-active {\n  height: 70vh;\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  min-height: 16vh;\n  padding: 10px;\n}\n\n/* leaflet direction marker */\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.arrow-color {\n  color: #986507;\n}\n\n.na-ceste-active {\n  display: block;\n  position: relative;\n  left: -10%;\n  width: 120%;\n  height: 16vh;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n  padding: 10px;\n}\n\n.na-ceste-active-single {\n  display: inline-block;\n  background-color: lightcyan;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n    display: block;\n    width: 90%;\n    padding: 15px;\n    margin: 4px 0;\n    border-radius: 5px;\n    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n    float: right;\n    text-align: justify;\n    background-color: #6ed1f1;\n  }\n\n.traveller-comment {\n    float: left;\n    text-align: justify;\n    background-color: #caf2ff;\n}\n    ", ""]);
 
 // exports
 
