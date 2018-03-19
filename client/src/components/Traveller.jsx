@@ -135,9 +135,11 @@ class Traveller extends Component {
                               message.img
                             }
                             style={{
-                              width: '100%',
-                              display: 'box',
-                              margin: '0px auto 15px'
+                              display: '-webkit-box',
+                              margin: '0px auto 15px',
+                              minWidth: '80px',
+                              maxWidth: '100%',
+                              maxHeight: '80vh'
                             }}
                             alt="fotka z putovania"
                           />

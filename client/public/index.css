@@ -186,7 +186,9 @@ body {
 
 .na-ceste-active {
   display: block;
-  width: 100%;
+  position: relative;
+  left: -10%;
+  width: 120%;
   height: 16vh;
   overflow-x: scroll;
   overflow-y: hidden;
