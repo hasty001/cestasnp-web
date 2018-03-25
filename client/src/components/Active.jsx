@@ -31,6 +31,7 @@ class Active extends Component {
       .then(resp => resp.json())
       .then(data => {
         let travellers = [];
+        let colorCount = 0;
         data.forEach(traveller => {
           let travellerData = {};
           travellerData.meno = traveller.meno;
@@ -39,11 +40,15 @@ class Active extends Component {
           travellerData.startMiesto = traveller.start_miesto;
           travellerData.startDate = traveller.start_date;
           travellerData.endDate = traveller.end_date;
+          travellerData.color = colors[colorCount];
           travellers.push(travellerData);
+          colorCount += 1;
+          if (colorCount >= colors.length - 1) {
+            colorCount = 0;
+          }
         });
         this.setState({
-          travellers,
-          loading: false
+          travellers
         });
         let travellerIds = [];
         travellers.forEach(traveller => {
@@ -85,7 +90,8 @@ class Active extends Component {
               });
 
               this.setState({
-                travellers
+                travellers,
+                loading: false
               });
             })
             .catch(err => {
@@ -110,13 +116,17 @@ class Active extends Component {
           this.state.travellers && (
             <div>
               <div>
-                <Map use="na-ceste-map-active" />
+                <Map use="na-ceste-map-active" travellers={this.state.travellers} />
               </div>
 
               <div className="na-ceste-active" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
-                    <div key={i} className="na-ceste-active-single">
+                    <div
+                      key={i}
+                      className="na-ceste-active-single"
+                      style={{ backgroundColor: traveller.color }}
+                    >
                       <p>{traveller.meno}</p>
                       <a href={`/na/${traveller.userId}`}>Sleduj putovanie...</a>
                     </div>

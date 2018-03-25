@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Map from './Map';
 import Loader from './Loader';
 
 class Archive extends Component {

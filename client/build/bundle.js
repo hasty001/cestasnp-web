@@ -8136,7 +8136,6 @@ var Map = function (_Component) {
       // TRAVELLER MSGs
       if (this.props.stops && this.props.stops.length > 0) {
         // let iconUrl = this.props.start == 'Dukla' ? vlavo : vpravo;
-
         this.props.stops.map(function (stop) {
           if (stop.type === 'message') {
             var icon = _leaflet2.default.divIcon({
@@ -8146,6 +8145,24 @@ var Map = function (_Component) {
             });
             var marker = _leaflet2.default.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
             marker.bindPopup('<p>' + stop.date + '</p>\n          <p>' + stop.text + '</p>');
+          }
+        });
+      }
+
+      //ACTIVE TRAVELLERS
+      if (this.props.use === 'na-ceste-map-active' && this.props.travellers.length > 0) {
+        this.props.travellers.forEach(function (trvlr) {
+          if (trvlr.lastMessage) {
+            var icon = _leaflet2.default.divIcon({
+              html: '<i class="fas fa-map-marker-alt fa-2x" style="color: ' + trvlr.color + '"></i>',
+              iconSize: [18, 24],
+              iconAnchor: [9, 24]
+            });
+            console.log('yay');
+            var marker = _leaflet2.default.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
+              icon: icon
+            }).addTo(map);
+            marker.bindPopup('\n          <p><b>' + trvlr.meno + '</b></p>\n          <p>' + trvlr.lastMessage.pub_date + '</p>\n          <p>' + trvlr.lastMessage.text + '</p>');
           }
         });
       }
@@ -48435,10 +48452,6 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Map = __webpack_require__(90);
-
-var _Map2 = _interopRequireDefault(_Map);
-
 var _Loader = __webpack_require__(52);
 
 var _Loader2 = _interopRequireDefault(_Loader);
@@ -63602,6 +63615,7 @@ var Active = function (_Component) {
         return resp.json();
       }).then(function (data) {
         var travellers = [];
+        var colorCount = 0;
         data.forEach(function (traveller) {
           var travellerData = {};
           travellerData.meno = traveller.meno;
@@ -63610,11 +63624,15 @@ var Active = function (_Component) {
           travellerData.startMiesto = traveller.start_miesto;
           travellerData.startDate = traveller.start_date;
           travellerData.endDate = traveller.end_date;
+          travellerData.color = colors[colorCount];
           travellers.push(travellerData);
+          colorCount += 1;
+          if (colorCount >= colors.length - 1) {
+            colorCount = 0;
+          }
         });
         _this2.setState({
-          travellers: travellers,
-          loading: false
+          travellers: travellers
         });
         var travellerIds = [];
         travellers.forEach(function (traveller) {
@@ -63655,7 +63673,8 @@ var Active = function (_Component) {
             });
 
             _this2.setState({
-              travellers: travellers
+              travellers: travellers,
+              loading: false
             });
           }).catch(function (err) {
             console.log(err);
@@ -63681,7 +63700,7 @@ var Active = function (_Component) {
           _react2.default.createElement(
             'div',
             null,
-            _react2.default.createElement(_Map2.default, { use: 'na-ceste-map-active' })
+            _react2.default.createElement(_Map2.default, { use: 'na-ceste-map-active', travellers: this.state.travellers })
           ),
           _react2.default.createElement(
             'div',
@@ -63689,7 +63708,11 @@ var Active = function (_Component) {
             this.state.travellers.map(function (traveller, i) {
               return _react2.default.createElement(
                 'div',
-                { key: i, className: 'na-ceste-active-single' },
+                {
+                  key: i,
+                  className: 'na-ceste-active-single',
+                  style: { backgroundColor: traveller.color }
+                },
                 _react2.default.createElement(
                   'p',
                   null,
