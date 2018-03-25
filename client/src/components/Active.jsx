@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import Map from './Map';
 import Loader from './Loader';
 
+const colors = [
+  '#f6d046',
+  '#f646b0',
+  '#f6465e',
+  '#7146f6',
+  '#466cf6',
+  '#46def6',
+  '#46f69d',
+  '#61f646',
+  '#f67746',
+  '#e3f646'
+];
+
 class Active extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +45,53 @@ class Active extends Component {
           travellers,
           loading: false
         });
+        let travellerIds = [];
+        travellers.forEach(traveller => {
+          travellerIds.push(traveller.userId);
+        });
+        return travellerIds;
+      })
+      .then(travellerIds => {
+        let data = {
+          travellerIds: travellerIds
+        };
+        if (travellerIds.length > 0) {
+          fetch('/api/traveller/lastMessages/', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: new Headers({
+              'Content-Type': 'application/json'
+            })
+          })
+            .then(resp => resp.json())
+            .then(messages => {
+              let ids = [];
+              let lastMessages = [];
+
+              messages.forEach(msg => {
+                if (!ids.includes(msg.user_id)) {
+                  ids.push(msg.user_id);
+                  lastMessages.push(msg);
+                }
+              });
+
+              let travellers = this.state.travellers.map(trvlr => {
+                lastMessages.forEach(msg => {
+                  if (msg.user_id == trvlr.userId) {
+                    trvlr.lastMessage = msg;
+                  }
+                });
+                return trvlr;
+              });
+
+              this.setState({
+                travellers
+              });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
       })
       .catch(e => {
         this.setState({

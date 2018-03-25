@@ -30,6 +30,12 @@ router.get('/messages/:travellerId', function(req, res) {
   });
 });
 
+router.post('/lastMessages', function(req, res) {
+  query.getTravellerLastMessage(req.body.travellerIds, function(results) {
+    res.json(results);
+  });
+});
+
 router.get('/comments/:articleId', function(req, res) {
   let articleId = parseInt(req.params.articleId);
   query.getTravellerComments(articleId, function(results) {
