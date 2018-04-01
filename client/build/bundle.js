@@ -64149,7 +64149,7 @@ var Loader = function Loader() {
   return _react2.default.createElement(
     'div',
     null,
-    _react2.default.createElement('i', { style: { margin: '20px auto' }, className: 'fas fa-compass fa-spin fa-2x' }),
+    _react2.default.createElement('i', { style: { margin: '20px auto' }, className: 'fa fa-compass fa-spin fa-2x' }),
     _react2.default.createElement(
       'span',
       { className: 'sr-only' },
