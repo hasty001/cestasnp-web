@@ -265,6 +265,25 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
+.active-travellers {
+  display: block;
+  width: 100%;
+  height: 100px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.active-traveller {
+  display: inline-block;
+  font-size: 16px;
+  width: 200px;
+  margin: 10px;
+  padding: 10px;
+  height: 80px;
+  border-radius: 10px;
+}
+
 /*** TRAVELLER ***/
 
 #na-ceste-map-traveller {
@@ -302,7 +321,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .traveller-comment {
   float: left;
   text-align: justify;
-  background-color: #ffdbdb;
+  background-color: #ff7373;
 }
 
 .red-stripe {
@@ -317,24 +336,54 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 /*** ARCHIVE ***/
 
-.active-travellers {
-  display: block;
-  width: 100%;
-  height: 100px;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
+#NaCesteArchive {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #NaCesteArchive {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
 }
 
-.active-traveller {
-  display: inline-block;
-  font-size: 16px;
-  width: 200px;
-  margin: 10px;
-  padding: 10px;
-  height: 80px;
-  border-radius: 10px;
+#NaCesteArchive h2 {
+  margin-top: 0px;
+  text-align: left;
 }
+
+.archived-travellers {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.archived-traveller {
+  display: inline-block;
+  position: relative;
+  background-color: #ececec70;
+  width: 30%;
+  height: 360px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+} @media (max-width: 767px) {
+  .archived-traveller {
+    width: 100%;
+    height: 260px;
+  }
+}
+
+.archived-traveller-text {
+  overflow: scroll;
+  height: 200px;
+} @media (max-width: 767px) {
+  .archived-traveller-text {
+    height: 100px;
+  }
+}
+
 
 /***    NA CESTE    ***/
 /**********************/

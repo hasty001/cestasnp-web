@@ -48081,6 +48081,10 @@ var _Loader = __webpack_require__(52);
 
 var _Loader2 = _interopRequireDefault(_Loader);
 
+var _NotFound = __webpack_require__(485);
+
+var _NotFound2 = _interopRequireDefault(_NotFound);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -48148,7 +48152,7 @@ var Archive = function (_Component) {
     value: function render() {
       return _react2.default.createElement(
         'div',
-        { className: 'archive-container' },
+        { id: 'NaCesteArchive' },
         this.state.loading && !this.state.error && _react2.default.createElement(_Loader2.default, null),
         !this.state.loading && !this.state.error && this.state.fullyCompleted && _react2.default.createElement(
           'div',
@@ -48160,29 +48164,11 @@ var Archive = function (_Component) {
           ),
           _react2.default.createElement(
             'div',
-            {
-              style: {
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'wrap'
-              }
-            },
+            { className: 'archived-travellers' },
             this.state.fullyCompleted.map(function (traveller, i) {
               return _react2.default.createElement(
                 'div',
-                {
-                  key: i,
-                  style: {
-                    display: 'inline-block',
-                    position: 'relative',
-                    backgroundColor: 'lightGreen',
-                    width: '23%',
-                    height: '360px',
-                    padding: '10px',
-                    marginRight: '2%',
-                    marginBottom: '10px'
-                  }
-                },
+                { key: i, className: 'archived-traveller' },
                 _react2.default.createElement(
                   'p',
                   { style: { fontWeight: '800' } },
@@ -48190,7 +48176,7 @@ var Archive = function (_Component) {
                 ),
                 _react2.default.createElement(
                   'p',
-                  { style: { fontWeight: '600' } },
+                  { style: { fontWeight: '400' } },
                   traveller.startMiesto
                 ),
                 _react2.default.createElement(
@@ -48207,12 +48193,7 @@ var Archive = function (_Component) {
                 ),
                 _react2.default.createElement(
                   'div',
-                  {
-                    style: {
-                      overflow: 'scroll',
-                      height: '200px'
-                    }
-                  },
+                  { className: 'archived-traveller-text' },
                   _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: traveller.text } })
                 ),
                 _react2.default.createElement(
@@ -48234,29 +48215,11 @@ var Archive = function (_Component) {
           ),
           _react2.default.createElement(
             'div',
-            {
-              style: {
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'wrap'
-              }
-            },
+            { className: 'archived-travellers' },
             this.state.partiallyCompleted.map(function (traveller, i) {
               return _react2.default.createElement(
                 'div',
-                {
-                  key: i,
-                  style: {
-                    display: 'inline-block',
-                    position: 'relative',
-                    backgroundColor: 'lightBlue',
-                    width: '23%',
-                    height: '360px',
-                    padding: '10px',
-                    marginRight: '2%',
-                    marginBottom: '10px'
-                  }
-                },
+                { key: i, className: 'archived-traveller' },
                 _react2.default.createElement(
                   'p',
                   { style: { fontWeight: '800' } },
@@ -48281,12 +48244,7 @@ var Archive = function (_Component) {
                 ),
                 _react2.default.createElement(
                   'div',
-                  {
-                    style: {
-                      overflow: 'scroll',
-                      height: '200px'
-                    }
-                  },
+                  { className: 'archived-traveller-text' },
                   _react2.default.createElement('p', { dangerouslySetInnerHTML: { __html: traveller.text } })
                 ),
                 _react2.default.createElement(
@@ -48298,11 +48256,7 @@ var Archive = function (_Component) {
             })
           )
         ),
-        this.state.error && _react2.default.createElement(
-          'p',
-          null,
-          '\u013Dutujeme ale arch\xEDv je pr\xE1zdny.'
-        )
+        this.state.error && _react2.default.createElement(_NotFound2.default, null)
       );
     }
   }]);
@@ -63664,7 +63618,7 @@ exports = module.exports = __webpack_require__(219)(false);
 
 
 // module
-exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n  border-bottom: solid red;\n}\n\n.app-logo {\n  width: 100px;\n  height: 76px;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 10px; \n} \n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar {\n  border-radius: 0px;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse, .navbar-collapse {\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar, \n.navbar-inverse, \n.navbar-nav>li>a, \n.navbar-nav .open .dropdown-menu>li>a, \n.navbar-inverse .navbar-nav>.open>a, \n.navbar-inverse .navbar-nav>.open>a:focus, \n.navbar-inverse .navbar-nav>.open>a:hover \n {\n  color: #505050 !important;\n  font-size: 18px;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar-inverse .navbar-toggle:focus, \n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle {\n  background-color: #ffffff;\n  border-color: #ffffff;  \n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\nnav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #ffb8b8;\n}\n\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #ff2730;\n}\n\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n      padding-bottom: 10px;\n      padding-top: 10px;\n  }\n\n  .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {\n    border-color: #505050;\n    border-bottom: #ff2730 solid;\n  }\n}\n\n/***   NAVIGATION   ***/\n/**********************/\n/***     HOME       ***/\n\n#Home {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Home {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***     HOME       ***/\n/**********************/\n/***    KONTAKT     ***/\n\n#Kontakt {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Kontakt {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***    KONTAKT     ***/\n/**********************/\n/***     POIS       ***/\n\n#Pois  {\n  width: 100%;\n}\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 600px;\n} @media (max-width: 767px) {\n  #pois-map {\n    max-height: 500px;\n  }\n}\n\n/***     POIS       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n#Articles,\n#Article {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Articles, \n  #Article {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n.pagination>.active>a, \n.pagination>.active>a:focus, \n.pagination>.active>a:hover, \n.pagination>.active>span, \n.pagination>.active>span:focus, \n.pagination>.active>span:hover {\n  color: #fff;\n  background-color: #ff2730;\n  border-color: #ff2730;\n}\n\n.pagination>li>a, .pagination>li>span {\n  color: #ff2730;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    MAP         ***/\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n/***    MAP         ***/\n/**********************/\n/***    NA CESTE    ***/\n\n#NaCesteActive {\n  display: block;\n  width: 100%;\n}\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n/*** ACTIVE ***/\n\n#na-ceste-map-active {\n  width: 100%;\n  height: 480px;\n} @media (max-width: 767px) {\n  #na-ceste-map-active {\n    height: 400px;\n  }\n}\n\n/*** TRAVELLER ***/\n\n#na-ceste-map-traveller {\n  width: 100%;\n  height: 450px;\n} @media (max-width: 767px) {\n  #na-ceste-map-traveller {\n    height: 400px;\n  }\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  padding: 10px;\n}\n\n.na-ceste-traveller-msgs {\n  padding: 0 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n  display: block;\n  width: 90%;\n  padding: 15px;\n  margin: 4px 0;\n  border-radius: 5px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n  float: right;\n  text-align: justify;\n  background-color: #ffdbdb;\n}\n\n.traveller-comment {\n  float: left;\n  text-align: justify;\n  background-color: #ffdbdb;\n}\n\n.red-stripe {\n  display: inline-block;\n  height: 12px;\n  background-color: red;\n  width: 14px;\n  border-bottom: solid 4px white;\n  border-top: solid 4px white;\n  margin-right: 5px;\n}\n\n/*** ARCHIVE ***/\n\n.active-travellers {\n  display: block;\n  width: 100%;\n  height: 100px;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n}\n\n.active-traveller {\n  display: inline-block;\n  font-size: 16px;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n  height: 80px;\n  border-radius: 10px;\n}\n\n/***    NA CESTE    ***/\n/**********************/", ""]);
+exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n  border-bottom: solid red;\n}\n\n.app-logo {\n  width: 100px;\n  height: 76px;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 10px; \n} \n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar {\n  border-radius: 0px;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse, .navbar-collapse {\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar, \n.navbar-inverse, \n.navbar-nav>li>a, \n.navbar-nav .open .dropdown-menu>li>a, \n.navbar-inverse .navbar-nav>.open>a, \n.navbar-inverse .navbar-nav>.open>a:focus, \n.navbar-inverse .navbar-nav>.open>a:hover \n {\n  color: #505050 !important;\n  font-size: 18px;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar-inverse .navbar-toggle:focus, \n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle {\n  background-color: #ffffff;\n  border-color: #ffffff;  \n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\nnav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #ffb8b8;\n}\n\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #ff2730;\n}\n\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n      padding-bottom: 10px;\n      padding-top: 10px;\n  }\n\n  .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {\n    border-color: #505050;\n    border-bottom: #ff2730 solid;\n  }\n}\n\n/***   NAVIGATION   ***/\n/**********************/\n/***     HOME       ***/\n\n#Home {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Home {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***     HOME       ***/\n/**********************/\n/***    KONTAKT     ***/\n\n#Kontakt {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Kontakt {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***    KONTAKT     ***/\n/**********************/\n/***     POIS       ***/\n\n#Pois  {\n  width: 100%;\n}\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 600px;\n} @media (max-width: 767px) {\n  #pois-map {\n    max-height: 500px;\n  }\n}\n\n/***     POIS       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n#Articles,\n#Article {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Articles, \n  #Article {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n.pagination>.active>a, \n.pagination>.active>a:focus, \n.pagination>.active>a:hover, \n.pagination>.active>span, \n.pagination>.active>span:focus, \n.pagination>.active>span:hover {\n  color: #fff;\n  background-color: #ff2730;\n  border-color: #ff2730;\n}\n\n.pagination>li>a, .pagination>li>span {\n  color: #ff2730;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    MAP         ***/\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n/***    MAP         ***/\n/**********************/\n/***    NA CESTE    ***/\n\n#NaCesteActive {\n  display: block;\n  width: 100%;\n}\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n/*** ACTIVE ***/\n\n#na-ceste-map-active {\n  width: 100%;\n  height: 480px;\n} @media (max-width: 767px) {\n  #na-ceste-map-active {\n    height: 400px;\n  }\n}\n\n.active-travellers {\n  display: block;\n  width: 100%;\n  height: 100px;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n}\n\n.active-traveller {\n  display: inline-block;\n  font-size: 16px;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n  height: 80px;\n  border-radius: 10px;\n}\n\n/*** TRAVELLER ***/\n\n#na-ceste-map-traveller {\n  width: 100%;\n  height: 450px;\n} @media (max-width: 767px) {\n  #na-ceste-map-traveller {\n    height: 400px;\n  }\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  padding: 10px;\n}\n\n.na-ceste-traveller-msgs {\n  padding: 0 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n  display: block;\n  width: 90%;\n  padding: 15px;\n  margin: 4px 0;\n  border-radius: 5px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n  float: right;\n  text-align: justify;\n  background-color: #ffdbdb;\n}\n\n.traveller-comment {\n  float: left;\n  text-align: justify;\n  background-color: #ff7373;\n}\n\n.red-stripe {\n  display: inline-block;\n  height: 12px;\n  background-color: red;\n  width: 14px;\n  border-bottom: solid 4px white;\n  border-top: solid 4px white;\n  margin-right: 5px;\n}\n\n/*** ARCHIVE ***/\n\n#NaCesteArchive {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #NaCesteArchive {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n#NaCesteArchive h2 {\n  margin-top: 0px;\n  text-align: left;\n}\n\n.archived-travellers {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n\n.archived-traveller {\n  display: inline-block;\n  position: relative;\n  background-color: #ececec70;\n  width: 30%;\n  height: 360px;\n  padding: 10px;\n  margin: 10px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n} @media (max-width: 767px) {\n  .archived-traveller {\n    width: 100%;\n    height: 260px;\n  }\n}\n\n.archived-traveller-text {\n  overflow: scroll;\n  height: 200px;\n} @media (max-width: 767px) {\n  .archived-traveller-text {\n    height: 100px;\n  }\n}\n\n\n/***    NA CESTE    ***/\n/**********************/", ""]);
 
 // exports
 

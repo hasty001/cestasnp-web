@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Loader from '../reusable_components/Loader';
+import NotFound from '../reusable_components/NotFound';
 
 class Archive extends Component {
   constructor(props) {
@@ -50,91 +51,23 @@ class Archive extends Component {
 
   render() {
     return (
-      <div className="archive-container">
+      <div id="NaCesteArchive">
         {this.state.loading && !this.state.error && <Loader />}
+
         {!this.state.loading &&
           !this.state.error &&
           this.state.fullyCompleted && (
             <div>
               <h2>Cestu prešli celú:</h2>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flexWrap: 'wrap'
-                }}
-              >
+              <div className="archived-travellers">
                 {this.state.fullyCompleted.map((traveller, i) => {
                   return (
-                    <div
-                      key={i}
-                      style={{
-                        display: 'inline-block',
-                        position: 'relative',
-                        backgroundColor: 'lightGreen',
-                        width: '23%',
-                        height: '360px',
-                        padding: '10px',
-                        marginRight: '2%',
-                        marginBottom: '10px'
-                      }}
-                    >
+                    <div key={i} className="archived-traveller">
                       <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
-                      <p style={{ fontWeight: '600' }}>{traveller.startMiesto}</p>
+                      <p style={{ fontWeight: '400' }}>{traveller.startMiesto}</p>
                       <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
                       <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
-                      <div
-                        style={{
-                          overflow: 'scroll',
-                          height: '200px'
-                        }}
-                      >
-                        <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
-                      </div>
-                      <a href={`/na/${traveller.userId}`}>Sleduj celé putovanie...</a>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        {!this.state.loading &&
-          !this.state.error &&
-          this.state.partiallyCompleted && (
-            <div>
-              <h2>Cestu prešli čiastočne:</h2>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flexWrap: 'wrap'
-                }}
-              >
-                {this.state.partiallyCompleted.map((traveller, i) => {
-                  return (
-                    <div
-                      key={i}
-                      style={{
-                        display: 'inline-block',
-                        position: 'relative',
-                        backgroundColor: 'lightBlue',
-                        width: '23%',
-                        height: '360px',
-                        padding: '10px',
-                        marginRight: '2%',
-                        marginBottom: '10px'
-                      }}
-                    >
-                      <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
-                      <p style={{ fontWeight: '600' }}>{traveller.startMiesto}</p>
-                      <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
-                      <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
-                      <div
-                        style={{
-                          overflow: 'scroll',
-                          height: '200px'
-                        }}
-                      >
+                      <div className="archived-traveller-text">
                         <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
                       </div>
                       <a href={`/na/${traveller.userId}`}>Sleduj celé putovanie...</a>
@@ -145,7 +78,31 @@ class Archive extends Component {
             </div>
           )}
 
-        {this.state.error && <p>Ľutujeme ale archív je prázdny.</p>}
+        {!this.state.loading &&
+          !this.state.error &&
+          this.state.partiallyCompleted && (
+            <div>
+              <h2>Cestu prešli čiastočne:</h2>
+              <div className="archived-travellers">
+                {this.state.partiallyCompleted.map((traveller, i) => {
+                  return (
+                    <div key={i} className="archived-traveller">
+                      <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
+                      <p style={{ fontWeight: '600' }}>{traveller.startMiesto}</p>
+                      <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
+                      <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
+                      <div className="archived-traveller-text">
+                        <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
+                      </div>
+                      <a href={`/na/${traveller.userId}`}>Sleduj celé putovanie...</a>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+        {this.state.error && <NotFound />}
       </div>
     );
   }
