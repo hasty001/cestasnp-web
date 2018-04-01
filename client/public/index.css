@@ -202,8 +202,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-top: 15px;
 }
 
-
-
 /***    ARTICLES    ***/
 /**********************/
 /***   PAGINATION   ***/
@@ -234,7 +232,21 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 /***   PAGINATION   ***/
 /**********************/
+/***    MAP         ***/
+
+.leaflet-div-icon {
+  background: transparent;
+  border: 0px;
+}
+
+/***    MAP         ***/
+/**********************/
 /***    NA CESTE    ***/
+
+#NaCesteActive {
+  display: block;
+  width: 100%;
+}
 
 .na-container {
   position: absolute;
@@ -242,77 +254,87 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   left: -2%;
 }
 
-.na-ceste-container {
-  display: block;
-  width: 90%;
-  position: absolute;
-  margin-left: 5%;
-}
-
-#na-ceste-map-active,
-#na-ceste-map-archive {
-  display: block;
-  width: 115%;
-  left: -7.5%;
-  height: 55vh;
-}
+/*** ACTIVE ***/
 
 #na-ceste-map-active {
-  height: 70vh;
+  width: 100%;
+  height: 480px;
+} @media (max-width: 767px) {
+  #na-ceste-map-active {
+    height: 400px;
+  }
+}
+
+/*** TRAVELLER ***/
+
+#na-ceste-map-traveller {
+  width: 100%;
+  height: 450px;
+} @media (max-width: 767px) {
+  #na-ceste-map-traveller {
+    height: 400px;
+  }
 }
 
 .na-ceste-traveller {
   display: block;
   width: 100%;
-  min-height: 16vh;
   padding: 10px;
 }
 
-.leaflet-div-icon {
-  background: transparent;
-  border: 0px;
-}
-
-.arrow-color {
-  color: #986507;
-}
-
-.na-ceste-active {
-  display: block;
-  position: relative;
-  left: -10%;
-  width: 120%;
-  height: 16vh;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  padding: 10px;
-}
-
-.na-ceste-active-single {
-  display: inline-block;
-  background-color: lightcyan;
-  width: 200px;
-  margin: 10px;
-  padding: 10px;
+.na-ceste-traveller-msgs {
+  padding: 0 10px;
 }
 
 .traveller-message, 
 .traveller-comment {
-    display: block;
-    width: 90%;
-    padding: 15px;
-    margin: 4px 0;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    float: right;
-    text-align: justify;
-    background-color: #6ed1f1;
-  }
+  display: block;
+  width: 90%;
+  padding: 15px;
+  margin: 4px 0;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  float: right;
+  text-align: justify;
+  background-color: #ffdbdb;
+}
 
 .traveller-comment {
-    float: left;
-    text-align: justify;
-    background-color: #caf2ff;
+  float: left;
+  text-align: justify;
+  background-color: #ffdbdb;
 }
-    
+
+.red-stripe {
+  display: inline-block;
+  height: 12px;
+  background-color: red;
+  width: 14px;
+  border-bottom: solid 4px white;
+  border-top: solid 4px white;
+  margin-right: 5px;
+}
+
+/*** ARCHIVE ***/
+
+.active-travellers {
+  display: block;
+  width: 100%;
+  height: 100px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.active-traveller {
+  display: inline-block;
+  font-size: 16px;
+  width: 200px;
+  margin: 10px;
+  padding: 10px;
+  height: 80px;
+  border-radius: 10px;
+}
+
+/***    NA CESTE    ***/
+/**********************/

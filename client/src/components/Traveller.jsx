@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Map from './Map';
 import Loader from '../reusable_components/Loader';
+import NotFound from '../reusable_components/NotFound';
 
 class Traveller extends Component {
   constructor(props) {
@@ -103,7 +104,7 @@ class Traveller extends Component {
 
   render() {
     return (
-      <div className="na-ceste-container">
+      <div id="Traveller">
         {this.state.loading && !this.state.error && <Loader />}
         {!this.state.loading &&
           !this.state.error &&
@@ -111,7 +112,7 @@ class Traveller extends Component {
             <div>
               <div>
                 <Map
-                  use="na-ceste-map-archive"
+                  use="na-ceste-map-traveller"
                   start={this.state.travellerData.start_miesto}
                   stops={this.state.travellerMessages}
                 />
@@ -123,7 +124,7 @@ class Traveller extends Component {
                 <p>Začiatok: {this.state.travellerData.start_miesto}</p>
               </div>
 
-              <div>
+              <div className="na-ceste-traveller-msgs">
                 {this.state.travellerMessages.map((message, i) => {
                   if (message.type === 'message') {
                     return (
@@ -144,7 +145,10 @@ class Traveller extends Component {
                             alt="fotka z putovania"
                           />
                         )}
-                        <p>{message.date + ' ' + message.username}</p>
+                        <div className="red-stripe" />
+                        <p style={{ display: 'inline-block' }}>
+                          {message.date + ' ' + message.username}
+                        </p>
                         <p dangerouslySetInnerHTML={{ __html: message.text }} />
                       </div>
                     );
@@ -161,7 +165,7 @@ class Traveller extends Component {
             </div>
           )}
 
-        {this.state.error && <p>Ľutujeme ale nikoho sme na ceste nenašli.</p>}
+        {this.state.error && <NotFound />}
       </div>
     );
   }

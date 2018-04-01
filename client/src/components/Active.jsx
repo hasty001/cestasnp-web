@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Map from './Map';
 import Loader from '../reusable_components/Loader';
+import NotFound from '../reusable_components/NotFound';
 
 const colors = [
   '#f6d046',
@@ -109,23 +110,29 @@ class Active extends Component {
 
   render() {
     return (
-      <div className="na-ceste-container">
+      <div id="NaCesteActive">
         {this.state.loading && !this.state.error && <Loader />}
+
         {!this.state.loading &&
           !this.state.error &&
           this.state.travellers && (
             <div>
-              <div>
-                <Map use="na-ceste-map-active" travellers={this.state.travellers} />
-              </div>
-
-              <div className="na-ceste-active" style={{ textAlign: 'center' }}>
+              <Map use="na-ceste-map-active" travellers={this.state.travellers} />
+              <div className="active-travellers" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
                     <div
                       key={i}
-                      className="na-ceste-active-single"
-                      style={{ backgroundColor: traveller.color }}
+                      className="active-traveller"
+                      style={{
+                        border: '3px solid ' + traveller.color,
+                        boxShadow:
+                          '5px 5px 10px 0 ' +
+                          traveller.color +
+                          '94, 5px 5px 10px 0 ' +
+                          traveller.color +
+                          '94'
+                      }}
                     >
                       <p>{traveller.meno}</p>
                       <a href={`/na/${traveller.userId}`}>Sleduj putovanie...</a>
@@ -136,7 +143,7 @@ class Active extends Component {
             </div>
           )}
 
-        {this.state.error && <p>Ľutujeme ale momentálne nie je nikto na ceste.</p>}
+        {this.state.error && <NotFound />}
       </div>
     );
   }

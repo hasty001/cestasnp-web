@@ -116,7 +116,6 @@ class Map extends Component {
 
     // TRAVELLER MSGs
     if (this.props.stops && this.props.stops.length > 0) {
-      // let iconUrl = this.props.start == 'Dukla' ? vlavo : vpravo;
       this.props.stops.map(stop => {
         if (stop.type === 'message') {
           let icon = L.divIcon({

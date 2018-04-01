@@ -4,9 +4,9 @@ const Loader = () => (
   <div style={{
     display: 'block',
     width: '40px',
-    margin: '20px auto'
+    margin: '50px auto'
   }}>
-    <i className="fa fa-compass fa-spin fa-2x" />
+    <i className="fa fa-compass fa-spin fa-3x" />
     <span className="sr-only">Loading...</span>
   </div>
 );
