@@ -33160,10 +33160,6 @@ var _Archive = __webpack_require__(485);
 
 var _Archive2 = _interopRequireDefault(_Archive);
 
-var _Pred = __webpack_require__(486);
-
-var _Pred2 = _interopRequireDefault(_Pred);
-
 var _Kontakt = __webpack_require__(507);
 
 var _Kontakt2 = _interopRequireDefault(_Kontakt);
@@ -33219,7 +33215,6 @@ var CestaSNP = function CestaSNP() {
           _reactRouter.Switch,
           null,
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/', component: _Home2.default }),
-          _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/pred/', component: _Pred2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/na/ceste', component: _Active2.default }),
           _react2.default.createElement(_reactRouter.Route, { exact: true, path: '/na/archive', component: _Archive2.default }),
           _react2.default.createElement(_reactRouter.Route, { path: '/na/:traveller', component: _Traveller2.default }),
@@ -48644,101 +48639,7 @@ var Archive = function (_Component) {
 exports.default = Archive;
 
 /***/ }),
-/* 486 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.RENDER_OPTIONS = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Pois = __webpack_require__(219);
-
-var _Pois2 = _interopRequireDefault(_Pois);
-
-var _Articles = __webpack_require__(222);
-
-var _Articles2 = _interopRequireDefault(_Articles);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RENDER_OPTIONS = exports.RENDER_OPTIONS = {
-  ARTICLES: 'articles',
-  POIS: 'pois',
-  NONE: 'none'
-};
-
-var Pred = function (_Component) {
-  _inherits(Pred, _Component);
-
-  function Pred(props) {
-    _classCallCheck(this, Pred);
-
-    var _this = _possibleConstructorReturn(this, (Pred.__proto__ || Object.getPrototypeOf(Pred)).call(this, props));
-
-    _this.state = {
-      show: RENDER_OPTIONS.NONE
-    };
-
-    _this.handleShowChoice = _this.handleShowChoice.bind(_this);
-    return _this;
-  }
-
-  _createClass(Pred, [{
-    key: 'handleShowChoice',
-    value: function handleShowChoice(e) {
-      e.preventDefault();
-      var showChoice = e.target.value;
-      this.setState({ show: showChoice });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'div',
-        { id: 'pred-container' },
-        _react2.default.createElement(
-          'h1',
-          null,
-          'tu pride info pred cestou'
-        ),
-        _react2.default.createElement(
-          'button',
-          { value: RENDER_OPTIONS.ARTICLES, onClick: this.handleShowChoice },
-          'articles'
-        ),
-        _react2.default.createElement(
-          'button',
-          { value: RENDER_OPTIONS.POIS, onClick: this.handleShowChoice },
-          'pois'
-        ),
-        this.state.show === RENDER_OPTIONS.POIS && _react2.default.createElement(_Pois2.default, null),
-        this.state.show === RENDER_OPTIONS.ARTICLES && _react2.default.createElement(_Articles2.default, null)
-      );
-    }
-  }]);
-
-  return Pred;
-}(_react.Component);
-
-exports.default = Pred;
-
-/***/ }),
+/* 486 */,
 /* 487 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -63692,7 +63593,7 @@ exports = module.exports = __webpack_require__(220)(false);
 
 
 // module
-exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 96px;\n  width: 96%;\n  left: 2%;\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 50px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n}\n\n.app-logo {\n  width: 100px;\n  height: 76px;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 10px; } \n\n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse .navbar-collapse, .navbar-inverse {\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar-inverse, .navbar-nav>li>a {\n  color: white !important;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #479a3a;\n  border-color: #479a3a;\n}\n\n.navbar {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n  color: white !important;\n  font-size: 18px;\n}\n\n.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #479a3a;\n}\n\n.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {\n  background-color: #5cb44d;  \n}\n\n.navbar-inverse .navbar-toggle {\n  border-color: #479a3a;\n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\n.dropdown-menu {\n  background-color: #60bd53;\n}\n\n/***   NAVIGATION   ***/\n/**********************/\n/***      MAP       ***/\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n/***      MAP       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    NA CESTE    ***/\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.na-ceste-container {\n  display: block;\n  width: 90%;\n  position: absolute;\n  margin-left: 5%;\n}\n\n#na-ceste-map-active,\n#na-ceste-map-archive {\n  display: block;\n  width: 115%;\n  left: -7.5%;\n  height: 55vh;\n}\n\n#na-ceste-map-active {\n  height: 70vh;\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  min-height: 16vh;\n  padding: 10px;\n}\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.arrow-color {\n  color: #986507;\n}\n\n.na-ceste-active {\n  display: block;\n  position: relative;\n  left: -10%;\n  width: 120%;\n  height: 16vh;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n  padding: 10px;\n}\n\n.na-ceste-active-single {\n  display: inline-block;\n  background-color: lightcyan;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n    display: block;\n    width: 90%;\n    padding: 15px;\n    margin: 4px 0;\n    border-radius: 5px;\n    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n    float: right;\n    text-align: justify;\n    background-color: #6ed1f1;\n  }\n\n.traveller-comment {\n    float: left;\n    text-align: justify;\n    background-color: #caf2ff;\n}\n    ", ""]);
+exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n  border-bottom: solid red;\n}\n\n.app-logo {\n  width: 100px;\n  height: 76px;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 10px; \n} \n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar {\n  border-radius: 0px;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse, .navbar-collapse {\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar, \n.navbar-inverse, \n.navbar-nav>li>a, \n.navbar-nav .open .dropdown-menu>li>a, \n.navbar-inverse .navbar-nav>.open>a, \n.navbar-inverse .navbar-nav>.open>a:focus, \n.navbar-inverse .navbar-nav>.open>a:hover \n {\n  color: #505050 !important;\n  font-size: 18px;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar-inverse .navbar-toggle:focus, \n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle {\n  background-color: #ffffff;\n  border-color: #ffffff;  \n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\nnav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #ffb8b8;\n}\n\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #ff2730;\n}\n\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n      padding-bottom: 10px;\n      padding-top: 10px;\n  }\n\n  .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {\n    border-color: #505050;\n    border-bottom: red solid;\n  }\n}\n\n\n\n/***   NAVIGATION   ***/\n/**********************/\n/***      MAP       ***/\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 86vh;\n}\n\n#map-container  {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.screen-container {\n  width: 80%;\n  margin: 15px auto 0;\n  text-align: justify;\n}\n\n/***      MAP       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    NA CESTE    ***/\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n.na-ceste-container {\n  display: block;\n  width: 90%;\n  position: absolute;\n  margin-left: 5%;\n}\n\n#na-ceste-map-active,\n#na-ceste-map-archive {\n  display: block;\n  width: 115%;\n  left: -7.5%;\n  height: 55vh;\n}\n\n#na-ceste-map-active {\n  height: 70vh;\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  min-height: 16vh;\n  padding: 10px;\n}\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.arrow-color {\n  color: #986507;\n}\n\n.na-ceste-active {\n  display: block;\n  position: relative;\n  left: -10%;\n  width: 120%;\n  height: 16vh;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n  padding: 10px;\n}\n\n.na-ceste-active-single {\n  display: inline-block;\n  background-color: lightcyan;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n    display: block;\n    width: 90%;\n    padding: 15px;\n    margin: 4px 0;\n    border-radius: 5px;\n    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n    float: right;\n    text-align: justify;\n    background-color: #6ed1f1;\n  }\n\n.traveller-comment {\n    float: left;\n    text-align: justify;\n    background-color: #caf2ff;\n}\n    ", ""]);
 
 // exports
 
