@@ -9,8 +9,6 @@ import utulna from '../../public/img/utulna.png';
 import pramen from '../../public/img/pramen.png';
 import krcma_jedlo from '../../public/img/krcma_jedlo.png';
 import posed from '../../public/img/posed.png';
-import vlavo from '../../public/img/vlavo.png';
-import vpravo from '../../public/img/vpravo.png';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.

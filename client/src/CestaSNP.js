@@ -6,7 +6,7 @@ import Navigation from './components/Navigation';
 import Archive from './components/Archive';
 import Pred from './components/Pred';
 import Kontakt from './components/Kontakt';
-import NotFound from './components/NotFound';
+import NotFound from './reusable_components/NotFound';
 import Home from './components/Home';
 import Articles from './components/Articles';
 import Article from './components/Article';

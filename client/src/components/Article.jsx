@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Loader from './Loader';
+import Loader from '../reusable_components/Loader';
 
 class Article extends Component {
   constructor(props) {

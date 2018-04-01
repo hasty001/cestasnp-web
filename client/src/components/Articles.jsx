@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 
-import Loader from './Loader';
+import Loader from '../reusable_components/Loader';
 import PaginationAdvanced from './PaginationAdvanced';
 import ArticleFilter from './ArticleFilter';
 

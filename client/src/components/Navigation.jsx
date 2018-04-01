@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
-import logo from '../../public/img/logo.png';
+import logo from '../../public/img/logo.jpg';
 
 const ROUTES = {
   domov: '/',
