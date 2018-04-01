@@ -65,7 +65,7 @@ class Article extends Component {
       };
     }
     return (
-      <div className="screen-container">
+      <div id="Article">
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <div>

@@ -177,7 +177,7 @@ class Articles extends Component {
 
   render() {
     return (
-      <div className="screen-container">
+      <div id="Articles">
         <div>
           <ArticleFilter
             articleCategories={this.state.categories}

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Kontakt = () => {
   return (
-    <div className="screen-container">
+    <div id="Kontakt">
       <p>
         Ak by si sa k nám chcel pridať a pomocť s vývojom, neváhaj a daj o sebe vedieť. Používame
         moderné technológie ako React, JavaScript ES6, Node.js a NoSQL databázu. To všetko beží na

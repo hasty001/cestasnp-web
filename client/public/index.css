@@ -22,7 +22,7 @@ body {
 
 .app-body {
   position: absolute;
-  top: 16vh;
+  top: 100px;
   width: 100%;
 }
 
@@ -35,7 +35,7 @@ body {
   background-color: white;
   position: fixed;
   width: 100%;
-  height: 16vh;
+  height: 100px;
   color: #545454;
   z-index: 9999;
   top: 0;
@@ -121,34 +121,77 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
   .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
     border-color: #505050;
-    border-bottom: red solid;
+    border-bottom: #ff2730 solid;
   }
 }
 
 /***   NAVIGATION   ***/
 /**********************/
+/***     HOME       ***/
+
+#Home {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #Home {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+/***     HOME       ***/
+/**********************/
+/***    KONTAKT     ***/
+
+#Kontakt {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #Kontakt {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+/***    KONTAKT     ***/
+/**********************/
 /***     POIS       ***/
 
 #Pois  {
-  position: absolute;
   width: 100%;
 }
 
 #pois-map {
   display: block;
   width: 100%;
-  height: 84vh;
-}
-
-.screen-container {
-  width: 80%;
-  margin: 15px auto 0;
-  text-align: justify;
+  height: 600px;
+} @media (max-width: 767px) {
+  #pois-map {
+    max-height: 500px;
+  }
 }
 
 /***     POIS       ***/
 /**********************/
 /***    ARTICLES    ***/
+
+#Articles,
+#Article {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #Articles, 
+  #Article {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
 
 .article-div {
   display: block;
@@ -172,9 +215,38 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   color: #333;
 }
 
+.pagination>.active>a, 
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover {
+  color: #fff;
+  background-color: #ff2730;
+  border-color: #ff2730;
+}
+
+.pagination>li>a, .pagination>li>span {
+  color: #ff2730;
+}
+
 /***   PAGINATION   ***/
 /**********************/
+/***    MAP         ***/
+
+.leaflet-div-icon {
+  background: transparent;
+  border: 0px;
+}
+
+/***    MAP         ***/
+/**********************/
 /***    NA CESTE    ***/
+
+#NaCesteActive {
+  display: block;
+  width: 100%;
+}
 
 .na-container {
   position: absolute;
@@ -182,77 +254,136 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   left: -2%;
 }
 
-.na-ceste-container {
-  display: block;
-  width: 90%;
-  position: absolute;
-  margin-left: 5%;
-}
-
-#na-ceste-map-active,
-#na-ceste-map-archive {
-  display: block;
-  width: 115%;
-  left: -7.5%;
-  height: 55vh;
-}
+/*** ACTIVE ***/
 
 #na-ceste-map-active {
-  height: 70vh;
+  width: 100%;
+  height: 480px;
+} @media (max-width: 767px) {
+  #na-ceste-map-active {
+    height: 400px;
+  }
+}
+
+.active-travellers {
+  display: block;
+  width: 100%;
+  height: 100px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.active-traveller {
+  display: inline-block;
+  font-size: 16px;
+  width: 200px;
+  margin: 10px;
+  padding: 10px;
+  height: 80px;
+  border-radius: 10px;
+}
+
+/*** TRAVELLER ***/
+
+#na-ceste-map-traveller {
+  width: 100%;
+  height: 450px;
+} @media (max-width: 767px) {
+  #na-ceste-map-traveller {
+    height: 400px;
+  }
 }
 
 .na-ceste-traveller {
   display: block;
   width: 100%;
-  min-height: 16vh;
   padding: 10px;
 }
 
-.leaflet-div-icon {
-  background: transparent;
-  border: 0px;
-}
-
-.arrow-color {
-  color: #986507;
-}
-
-.na-ceste-active {
-  display: block;
-  position: relative;
-  left: -10%;
-  width: 120%;
-  height: 16vh;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  padding: 10px;
-}
-
-.na-ceste-active-single {
-  display: inline-block;
-  background-color: lightcyan;
-  width: 200px;
-  margin: 10px;
-  padding: 10px;
+.na-ceste-traveller-msgs {
+  padding: 0 10px;
 }
 
 .traveller-message, 
 .traveller-comment {
-    display: block;
-    width: 90%;
-    padding: 15px;
-    margin: 4px 0;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    float: right;
-    text-align: justify;
-    background-color: #6ed1f1;
-  }
+  display: block;
+  width: 90%;
+  padding: 15px;
+  margin: 4px 0;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  float: right;
+  text-align: justify;
+  background-color: #ffdbdb;
+}
 
 .traveller-comment {
-    float: left;
-    text-align: justify;
-    background-color: #caf2ff;
+  float: left;
+  text-align: justify;
+  background-color: #ff7373;
 }
-    
+
+.red-stripe {
+  display: inline-block;
+  height: 12px;
+  background-color: red;
+  width: 14px;
+  border-bottom: solid 4px white;
+  border-top: solid 4px white;
+  margin-right: 5px;
+}
+
+/*** ARCHIVE ***/
+
+#NaCesteArchive {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #NaCesteArchive {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+#NaCesteArchive h2 {
+  margin-top: 0px;
+  text-align: left;
+}
+
+.archived-travellers {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.archived-traveller {
+  display: inline-block;
+  position: relative;
+  background-color: #ececec70;
+  width: 30%;
+  height: 360px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+} @media (max-width: 767px) {
+  .archived-traveller {
+    width: 100%;
+    height: 260px;
+  }
+}
+
+.archived-traveller-text {
+  overflow: scroll;
+  height: 200px;
+} @media (max-width: 767px) {
+  .archived-traveller-text {
+    height: 100px;
+  }
+}
+
+
+/***    NA CESTE    ***/
+/**********************/
