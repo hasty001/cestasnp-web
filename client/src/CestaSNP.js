@@ -24,14 +24,14 @@ const CestaSNP = () => (
       <Router history={history}>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/pred/articles/:page" component={Articles} />
+          <Route path="/pred/articles/article/:articleId" component={Article} />
+          <Route path="/pred/filteredarticles/:category/:page" component={Articles} />
+          <Route exact path="/pred/pois" component={Pois} />
           <Route exact path="/na/ceste" component={Active} />
           <Route exact path="/na/archive" component={Archive} />
           <Route path="/na/:traveller" component={Traveller} />
           <Route exact path="/kontakt" component={Kontakt} />
-          <Route path="/pred/articles/article/:articleId" component={Article} />
-          <Route path="/pred/articles/:page" component={Articles} />
-          <Route path="/pred/filteredarticles/:category/:page" component={Articles} />
-          <Route exact path="/pred/pois" component={Pois} />
           <Route path="*" component={NotFound} />
         </Switch>
       </Router>

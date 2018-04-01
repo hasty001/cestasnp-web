@@ -22,7 +22,7 @@ body {
 
 .app-body {
   position: absolute;
-  top: 100px;
+  top: 16vh;
   width: 100%;
 }
 
@@ -35,7 +35,7 @@ body {
   background-color: white;
   position: fixed;
   width: 100%;
-  height: 100px;
+  height: 16vh;
   color: #545454;
   z-index: 9999;
   top: 0;
@@ -125,22 +125,19 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
-
-
 /***   NAVIGATION   ***/
 /**********************/
-/***      MAP       ***/
+/***     POIS       ***/
+
+#Pois  {
+  position: absolute;
+  width: 100%;
+}
 
 #pois-map {
   display: block;
   width: 100%;
-  height: 86vh;
-}
-
-#map-container  {
-  position: absolute;
-  width: 104%;
-  left: -2%;
+  height: 84vh;
 }
 
 .screen-container {
@@ -149,7 +146,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   text-align: justify;
 }
 
-/***      MAP       ***/
+/***     POIS       ***/
 /**********************/
 /***    ARTICLES    ***/
 
