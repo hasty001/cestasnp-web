@@ -22,7 +22,7 @@ body {
 
 .app-body {
   position: absolute;
-  top: 16vh;
+  top: 100px;
   width: 100%;
 }
 
@@ -35,7 +35,7 @@ body {
   background-color: white;
   position: fixed;
   width: 100%;
-  height: 16vh;
+  height: 100px;
   color: #545454;
   z-index: 9999;
   top: 0;
@@ -121,34 +121,77 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
   .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
     border-color: #505050;
-    border-bottom: red solid;
+    border-bottom: #ff2730 solid;
   }
 }
 
 /***   NAVIGATION   ***/
 /**********************/
+/***     HOME       ***/
+
+#Home {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #Home {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+/***     HOME       ***/
+/**********************/
+/***    KONTAKT     ***/
+
+#Kontakt {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #Kontakt {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+/***    KONTAKT     ***/
+/**********************/
 /***     POIS       ***/
 
 #Pois  {
-  position: absolute;
   width: 100%;
 }
 
 #pois-map {
   display: block;
   width: 100%;
-  height: 84vh;
-}
-
-.screen-container {
-  width: 80%;
-  margin: 15px auto 0;
-  text-align: justify;
+  height: 600px;
+} @media (max-width: 767px) {
+  #pois-map {
+    max-height: 500px;
+  }
 }
 
 /***     POIS       ***/
 /**********************/
 /***    ARTICLES    ***/
+
+#Articles,
+#Article {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #Articles, 
+  #Article {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
 
 .article-div {
   display: block;
@@ -158,6 +201,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   display: block;
   margin-top: 15px;
 }
+
+
 
 /***    ARTICLES    ***/
 /**********************/
@@ -170,6 +215,21 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .no-decoration, .no-decoration:hover {
   text-decoration: none;
   color: #333;
+}
+
+.pagination>.active>a, 
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover {
+  color: #fff;
+  background-color: #ff2730;
+  border-color: #ff2730;
+}
+
+.pagination>li>a, .pagination>li>span {
+  color: #ff2730;
 }
 
 /***   PAGINATION   ***/
