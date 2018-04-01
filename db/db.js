@@ -231,6 +231,28 @@ DB.prototype = {
         throw err;
       }
     });
+  },
+
+  getTravellerLastMessage: function(travellerIds, callback) {
+    mongodb.MongoClient.connect(this.url, function(err, db) {
+      if (db) {
+        const resCollection = db.collection('TEST_traveler_messages');
+        resCollection.find({ user_id: { $in: travellerIds } }).toArray(function(err, docs) {
+          if (docs) {
+            docs.sort(function(a, b) {
+              return new Date(b.pub_date) - new Date(a.pub_date);
+            });
+            callback(docs);
+            db.close();
+          } else {
+            throw err;
+            db.close();
+          }
+        });
+      } else {
+        throw err;
+      }
+    });
   }
 };
 

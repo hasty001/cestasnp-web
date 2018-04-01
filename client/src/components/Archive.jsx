@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Map from './Map';
-import Loader from './Loader';
+import Loader from '../reusable_components/Loader';
 
 class Archive extends Component {
   constructor(props) {

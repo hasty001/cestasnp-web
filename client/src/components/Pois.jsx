@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Map from './Map';
-import Loader from './Loader';
+import Loader from '../reusable_components/Loader';
 
 class Pois extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class Pois extends Component {
 
   render() {
     return (
-      <div id="map-container">
+      <div id="Pois">
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <div>

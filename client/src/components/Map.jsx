@@ -9,8 +9,6 @@ import utulna from '../../public/img/utulna.png';
 import pramen from '../../public/img/pramen.png';
 import krcma_jedlo from '../../public/img/krcma_jedlo.png';
 import posed from '../../public/img/posed.png';
-import vlavo from '../../public/img/vlavo.png';
-import vpravo from '../../public/img/vpravo.png';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -119,7 +117,6 @@ class Map extends Component {
     // TRAVELLER MSGs
     if (this.props.stops && this.props.stops.length > 0) {
       // let iconUrl = this.props.start == 'Dukla' ? vlavo : vpravo;
-
       this.props.stops.map(stop => {
         if (stop.type === 'message') {
           let icon = L.divIcon({
@@ -130,6 +127,27 @@ class Map extends Component {
           let marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
           marker.bindPopup(`<p>${stop.date}</p>
           <p>${stop.text}</p>`);
+        }
+      });
+    }
+
+    //ACTIVE TRAVELLERS
+    if (this.props.use === 'na-ceste-map-active' && this.props.travellers.length > 0) {
+      this.props.travellers.forEach(trvlr => {
+        if (trvlr.lastMessage) {
+          let icon = L.divIcon({
+            html: `<i class="fas fa-map-marker-alt fa-2x" style="color: ${trvlr.color}"></i>`,
+            iconSize: [18, 24],
+            iconAnchor: [9, 24]
+          });
+          console.log('yay');
+          let marker = L.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
+            icon: icon
+          }).addTo(map);
+          marker.bindPopup(`
+          <p><b>${trvlr.meno}</b></p>
+          <p>${trvlr.lastMessage.pub_date}</p>
+          <p>${trvlr.lastMessage.text}</p>`);
         }
       });
     }

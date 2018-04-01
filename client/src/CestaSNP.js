@@ -4,9 +4,8 @@ import createHistory from 'history/createBrowserHistory';
 
 import Navigation from './components/Navigation';
 import Archive from './components/Archive';
-import Pred from './components/Pred';
 import Kontakt from './components/Kontakt';
-import NotFound from './components/NotFound';
+import NotFound from './reusable_components/NotFound';
 import Home from './components/Home';
 import Articles from './components/Articles';
 import Article from './components/Article';
@@ -25,15 +24,14 @@ const CestaSNP = () => (
       <Router history={history}>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/pred/" component={Pred} />
+          <Route path="/pred/articles/article/:articleId" component={Article} />
+          <Route path="/pred/filteredarticles/:category/:page" component={Articles} />
+          <Route path="/pred/articles/:page" component={Articles} />
+          <Route exact path="/pred/pois" component={Pois} />
           <Route exact path="/na/ceste" component={Active} />
           <Route exact path="/na/archive" component={Archive} />
           <Route path="/na/:traveller" component={Traveller} />
           <Route exact path="/kontakt" component={Kontakt} />
-          <Route path="/pred/articles/article/:articleId" component={Article} />
-          <Route path="/pred/articles/:page" component={Articles} />
-          <Route path="/pred/filteredarticles/:category/:page" component={Articles} />
-          <Route exact path="/pred/pois" component={Pois} />
           <Route path="*" component={NotFound} />
         </Switch>
       </Router>
