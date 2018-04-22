@@ -63287,6 +63287,8 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactBootstrap = __webpack_require__(76);
+
 var _Map = __webpack_require__(136);
 
 var _Map2 = _interopRequireDefault(_Map);
@@ -63298,6 +63300,10 @@ var _Loader2 = _interopRequireDefault(_Loader);
 var _NotFound = __webpack_require__(90);
 
 var _NotFound2 = _interopRequireDefault(_NotFound);
+
+var _CommentBox = __webpack_require__(517);
+
+var _CommentBox2 = _interopRequireDefault(_CommentBox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -63328,8 +63334,12 @@ var Traveller = function (_Component) {
         end_date: '',
         completed: ''
       },
-      travellerMessages: ''
+      travellerMessages: '',
+      showCommentBtn: false,
+      showCommentBox: false
     };
+
+    _this.handleCommentBox = _this.handleCommentBox.bind(_this);
     return _this;
   }
 
@@ -63408,10 +63418,30 @@ var Traveller = function (_Component) {
         });
         throw e;
       });
+
+      window.addEventListener('scroll', function () {
+        if (!_this2.state.showCommentBtn && window.scrollY > 300) {
+          _this2.setState({
+            showCommentBtn: true
+          });
+        } else if (_this2.state.showCommentBtn && window.scrollY <= 300) {
+          _this2.setState({
+            showCommentBtn: false
+          });
+        }
+      });
+    }
+  }, {
+    key: 'handleCommentBox',
+    value: function handleCommentBox(open) {
+      console.log(open);
+      this.setState({ showCommentBox: open });
     }
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       return _react2.default.createElement(
         'div',
         { id: 'Traveller' },
@@ -63419,15 +63449,11 @@ var Traveller = function (_Component) {
         !this.state.loading && !this.state.error && this.state.travellerData && _react2.default.createElement(
           'div',
           null,
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(_Map2.default, {
-              use: 'na-ceste-map-traveller',
-              start: this.state.travellerData.start_miesto,
-              stops: this.state.travellerMessages
-            })
-          ),
+          _react2.default.createElement(_Map2.default, {
+            use: 'na-ceste-map-traveller',
+            start: this.state.travellerData.start_miesto,
+            stops: this.state.travellerMessages
+          }),
           _react2.default.createElement(
             'div',
             { className: 'na-ceste-traveller', style: { textAlign: 'center' } },
@@ -63488,7 +63514,21 @@ var Traveller = function (_Component) {
                 );
               }
             })
-          )
+          ),
+          this.state.showCommentBtn && _react2.default.createElement(
+            _reactBootstrap.Button,
+            { className: 'comment-box-btn', onClick: function onClick() {
+                return _this3.handleCommentBox(true);
+              } },
+            'Komentuj'
+          ),
+          _react2.default.createElement(_CommentBox2.default, {
+            show: this.state.showCommentBox,
+            onHide: function onHide() {
+              return _this3.handleCommentBox(false);
+            },
+            dialogClassName: 'comment-box'
+          })
         ),
         this.state.error && _react2.default.createElement(_NotFound2.default, null)
       );
@@ -63725,7 +63765,7 @@ exports = module.exports = __webpack_require__(220)(false);
 
 
 // module
-exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n} @media(max-width: 767px) {\n  .app-body {\n    top: 70px;\n  }\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n  border-bottom: 2px solid red;\n} @media (max-width: 767px) {\n  .app-header {\n    height: 70px;\n  }\n}\n\n.logo-screen {\n  width: 100px;\n  height: 76px;\n  display: block;\n}\n\n.logo-mobile {\n  width: 50px;\n  height: 50px;\n  display: block;\n}\n\n.logo-position-screen {\n  display: block;\n} @media (max-width: 767px ) {\n  .logo-position-screen {\n    display: none;\n  }\n}\n\n.logo-position-mobile {\n  display: none;\n} @media (max-width: 767px ) {\n  .logo-position-mobile {\n    display: block;\n  }\n}\n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar {\n  border-radius: 0px;\n}\n\n.navbar-header {\n  height: 96px;\n} @media (max-width: 767px) {\n  .navbar-header {\n    height: 66px;\n  }\n}\n\n.navbar, .navbar-inverse, .navbar-collapse {\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar-inverse {\n  border: 0px;\n}\n\n.navbar, \n.navbar-inverse, \n.navbar-nav>li>a, \n.navbar-nav .open .dropdown-menu>li>a, \n.navbar-inverse .navbar-nav>.open>a, \n.navbar-inverse .navbar-nav>.open>a:focus, \n.navbar-inverse .navbar-nav>.open>a:hover \n {\n  color: #505050 !important;\n  font-size: 18px;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #ffffff;\n  border-color: #ffffff;\n} @media(max-width: 767px) {\n  .navbar-toggle {\n    top: 10px;\n    right: 0px;\n  }\n}\n\n.navbar-inverse .navbar-toggle:focus, \n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle {\n  background-color: #ffffff;\n  border-color: #ffffff;  \n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\nnav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #ffb8b8;\n}\n\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #ff2730;\n}\n\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n      padding-bottom: 10px;\n      padding-top: 10px;\n  }\n\n  .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {\n    border-color: #505050;\n    border-bottom: #ff2730 solid;\n  }\n}\n\n.navbar .container {\n  padding-right: 0px;\n  padding-left: 0px;\n  width: 80%;\n} @media (max-width: 767px) {\n  .navbar .container {\n    width: 100%;\n    padding: 0 15px;\n  }\n}\n\n/***   NAVIGATION   ***/\n/**********************/\n/***     HOME       ***/\n\n#Home {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Home {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n#home1 {\n  display: block;\n  width: 100%;\n  padding: 5px;\n  min-height: 300px;\n}\n\n#home2,\n#home3 {\n  display: inline-block;\n  width: 50%;\n  padding: 10px;\n  min-height: 300px;\n  vertical-align: top;\n} @media(max-width: 767px) {\n  #home2,\n  #home3 {\n    width: 100%;\n  }\n}\n\n.home2 > p > img, \n.home3 > p > img {\n  display: none;\n}\n\n/***     HOME       ***/\n/**********************/\n/***    KONTAKT     ***/\n\n#Kontakt {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Kontakt {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***    KONTAKT     ***/\n/**********************/\n/***     POIS       ***/\n\n#Pois  {\n  width: 100%;\n}\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 600px;\n} @media (max-width: 767px) {\n  #pois-map {\n    max-height: 500px;\n  }\n}\n\n/***     POIS       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n#Articles,\n#Article {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Articles, \n  #Article {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n.article-div {\n  display: block;\n  min-height: 250px;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n.pagination>.active>a, \n.pagination>.active>a:focus, \n.pagination>.active>a:hover, \n.pagination>.active>span, \n.pagination>.active>span:focus, \n.pagination>.active>span:hover {\n  color: #fff;\n  background-color: #ff2730;\n  border-color: #ff2730;\n}\n\n.pagination>li>a, .pagination>li>span {\n  color: #ff2730;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    MAP         ***/\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.leaflet-popup-content-wrapper {\n  border-radius: 0px;\n}\n\n/***    MAP         ***/\n/**********************/\n/***    NA CESTE    ***/\n\n#NaCesteActive {\n  display: block;\n  width: 100%;\n}\n\n/*** ACTIVE ***/\n\n#na-ceste-map-active {\n  width: 100%;\n  height: 480px;\n} @media (max-width: 767px) {\n  #na-ceste-map-active {\n    height: 400px;\n  }\n}\n\n.active-travellers {\n  display: block;\n  width: 100%;\n  height: 100px;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n}\n\n.active-traveller {\n  display: inline-block;\n  font-size: 16px;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n  height: 80px;\n  border: 1px solid #ff0002;\n}\n\n/*** TRAVELLER ***/\n\n#na-ceste-map-traveller {\n  width: 100%;\n  height: 450px;\n} @media (max-width: 767px) {\n  #na-ceste-map-traveller {\n    height: 400px;\n  }\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  padding: 10px;\n}\n\n.na-ceste-traveller-msgs {\n  padding: 0 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n  display: block;\n  width: 90%;\n  padding: 15px;\n  margin: 4px 0;\n  float: right;\n  text-align: justify;\n  background-color: #ffdbdb;\n}\n\n.traveller-comment {\n  float: left;\n  text-align: justify;\n  background-color: #ff7373;\n}\n\n.red-stripe {\n  display: inline-block;\n  height: 12px;\n  background-color: red;\n  width: 14px;\n  border-bottom: solid 4px white;\n  border-top: solid 4px white;\n  margin-right: 5px;\n}\n\n/*** ARCHIVE ***/\n\n#NaCesteArchive {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #NaCesteArchive {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n#NaCesteArchive h2 {\n  margin-top: 0px;\n  text-align: left;\n}\n\n.archived-travellers {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n\n.archived-traveller {\n  display: inline-block;\n  position: relative;\n  background-color: #ececec70;\n  width: 30%;\n  height: 360px;\n  padding: 10px;\n  margin: 10px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n} @media (max-width: 767px) {\n  .archived-traveller {\n    width: 100%;\n    height: 260px;\n  }\n}\n\n.archived-traveller-text {\n  overflow: scroll;\n  height: 200px;\n} @media (max-width: 767px) {\n  .archived-traveller-text {\n    height: 100px;\n  }\n}\n\n\n/***    NA CESTE    ***/\n/**********************/", ""]);
+exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n} @media(max-width: 767px) {\n  .app-body {\n    top: 70px;\n  }\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n  border-bottom: 2px solid red;\n} @media (max-width: 767px) {\n  .app-header {\n    height: 70px;\n  }\n}\n\n.logo-screen {\n  width: 100px;\n  height: 76px;\n  display: block;\n}\n\n.logo-mobile {\n  width: 50px;\n  height: 50px;\n  display: block;\n}\n\n.logo-position-screen {\n  display: block;\n} @media (max-width: 767px ) {\n  .logo-position-screen {\n    display: none;\n  }\n}\n\n.logo-position-mobile {\n  display: none;\n} @media (max-width: 767px ) {\n  .logo-position-mobile {\n    display: block;\n  }\n}\n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar {\n  border-radius: 0px;\n}\n\n.navbar-header {\n  height: 96px;\n} @media (max-width: 767px) {\n  .navbar-header {\n    height: 66px;\n  }\n}\n\n.navbar, .navbar-inverse, .navbar-collapse {\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar-inverse {\n  border: 0px;\n}\n\n.navbar, \n.navbar-inverse, \n.navbar-nav>li>a, \n.navbar-nav .open .dropdown-menu>li>a, \n.navbar-inverse .navbar-nav>.open>a, \n.navbar-inverse .navbar-nav>.open>a:focus, \n.navbar-inverse .navbar-nav>.open>a:hover \n {\n  color: #505050 !important;\n  font-size: 18px;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #ffffff;\n  border-color: #ffffff;\n} @media(max-width: 767px) {\n  .navbar-toggle {\n    top: 10px;\n    right: 0px;\n  }\n}\n\n.navbar-inverse .navbar-toggle:focus, \n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle {\n  background-color: #ffffff;\n  border-color: #ffffff;  \n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\nnav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #ffb8b8;\n}\n\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #ff2730;\n}\n\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n      padding-bottom: 10px;\n      padding-top: 10px;\n  }\n\n  .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {\n    border-color: #505050;\n    border-bottom: #ff2730 solid;\n  }\n}\n\n.navbar .container {\n  padding-right: 0px;\n  padding-left: 0px;\n  width: 80%;\n} @media (max-width: 767px) {\n  .navbar .container {\n    width: 100%;\n    padding: 0 15px;\n  }\n}\n\n/***   NAVIGATION   ***/\n/**********************/\n/***     HOME       ***/\n\n#Home {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Home {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n#home1 {\n  display: block;\n  width: 100%;\n  padding: 5px;\n  min-height: 300px;\n}\n\n#home2,\n#home3 {\n  display: inline-block;\n  width: 50%;\n  padding: 10px;\n  min-height: 300px;\n  vertical-align: top;\n} @media(max-width: 767px) {\n  #home2,\n  #home3 {\n    width: 100%;\n  }\n}\n\n.home2 > p > img, \n.home3 > p > img {\n  display: none;\n}\n\n/***     HOME       ***/\n/**********************/\n/***    KONTAKT     ***/\n\n#Kontakt {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Kontakt {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***    KONTAKT     ***/\n/**********************/\n/***     POIS       ***/\n\n#Pois  {\n  width: 100%;\n}\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 600px;\n} @media (max-width: 767px) {\n  #pois-map {\n    max-height: 500px;\n  }\n}\n\n/***     POIS       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n#Articles,\n#Article {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Articles, \n  #Article {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n.article-div {\n  display: block;\n  min-height: 250px;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n.pagination>.active>a, \n.pagination>.active>a:focus, \n.pagination>.active>a:hover, \n.pagination>.active>span, \n.pagination>.active>span:focus, \n.pagination>.active>span:hover {\n  color: #fff;\n  background-color: #ff2730;\n  border-color: #ff2730;\n}\n\n.pagination>li>a, .pagination>li>span {\n  color: #ff2730;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    MAP         ***/\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.leaflet-popup-content-wrapper {\n  border-radius: 0px;\n}\n\n/***    MAP         ***/\n/**********************/\n/***    NA CESTE    ***/\n\n#NaCesteActive {\n  display: block;\n  width: 100%;\n}\n\n/*** ACTIVE ***/\n\n#na-ceste-map-active {\n  width: 100%;\n  height: 480px;\n} @media (max-width: 767px) {\n  #na-ceste-map-active {\n    height: 400px;\n  }\n}\n\n.active-travellers {\n  display: block;\n  width: 100%;\n  height: 100px;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n}\n\n.active-traveller {\n  display: inline-block;\n  font-size: 16px;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n  height: 80px;\n  border: 1px solid #ff0002;\n}\n\n/*** TRAVELLER ***/\n\n#Traveller {\n  min-height: 1000px;\n}\n\n#na-ceste-map-traveller {\n  width: 100%;\n  height: 450px;\n} @media (max-width: 767px) {\n  #na-ceste-map-traveller {\n    height: 400px;\n  }\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  padding: 10px;\n}\n\n.na-ceste-traveller-msgs {\n  padding: 0 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n  display: block;\n  width: 90%;\n  padding: 15px;\n  margin: 4px 0;\n  float: right;\n  text-align: justify;\n  background-color: #ffdbdb;\n}\n\n.traveller-comment {\n  float: left;\n  text-align: justify;\n  background-color: #ff7373;\n}\n\n.red-stripe {\n  display: inline-block;\n  height: 12px;\n  background-color: red;\n  width: 14px;\n  border-bottom: solid 4px white;\n  border-top: solid 4px white;\n  margin-right: 5px;\n}\n\n.comment-box-btn {\n  position: fixed;\n  bottom: 0px;\n  left: 45%;\n  width: 10%;\n  min-width: 120px;\n  background: #f39493;\n  border-radius: 0px;\n  border: 0px;\n  text-align: center;\n}\n\n.modal-content {\n  border-radius: 0px;\n  border: 0px;\n}\n\n.modal-header {\n  border-bottom: 0px;\n}\n\n.modal-footer {\n  border-top: 0px;\n}\n\n.comment-box {\n  width: 90%;\n  background: orange;\n  color: black;\n}\n\n/*** ARCHIVE ***/\n\n#NaCesteArchive {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #NaCesteArchive {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n#NaCesteArchive h2 {\n  margin-top: 0px;\n  text-align: left;\n}\n\n.archived-travellers {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n\n.archived-traveller {\n  display: inline-block;\n  position: relative;\n  background-color: #ececec70;\n  width: 30%;\n  height: 360px;\n  padding: 10px;\n  margin: 10px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n} @media (max-width: 767px) {\n  .archived-traveller {\n    width: 100%;\n    height: 260px;\n  }\n}\n\n.archived-traveller-text {\n  overflow: scroll;\n  height: 200px;\n} @media (max-width: 767px) {\n  .archived-traveller-text {\n    height: 100px;\n  }\n}\n\n\n/***    NA CESTE    ***/\n/**********************/", ""]);
 
 // exports
 
@@ -64253,6 +64293,96 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
+
+/***/ }),
+/* 517 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(76);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CommentBox = function (_React$Component) {
+  _inherits(CommentBox, _React$Component);
+
+  function CommentBox(props) {
+    _classCallCheck(this, CommentBox);
+
+    return _possibleConstructorReturn(this, (CommentBox.__proto__ || Object.getPrototypeOf(CommentBox)).call(this, props));
+  }
+
+  _createClass(CommentBox, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _reactBootstrap.Modal,
+        _extends({}, this.props, {
+          show: this.props.show,
+          onHide: this.props.onHide,
+          dialogClassName: 'comment-box',
+          style: { marginTop: '100px' }
+        }),
+        _react2.default.createElement(
+          _reactBootstrap.Modal.Header,
+          { closeButton: true },
+          _react2.default.createElement(
+            _reactBootstrap.Modal.Title,
+            { id: 'contained-modal-title-lg' },
+            'Tvoj koment'
+          )
+        ),
+        _react2.default.createElement(
+          _reactBootstrap.Modal.Body,
+          null,
+          _react2.default.createElement(
+            'p',
+            null,
+            'Modal'
+          )
+        ),
+        _react2.default.createElement(
+          _reactBootstrap.Modal.Footer,
+          null,
+          _react2.default.createElement(
+            _reactBootstrap.Button,
+            { onClick: this.handleHide },
+            'Pridaj koment'
+          ),
+          _react2.default.createElement(
+            _reactBootstrap.Button,
+            { onClick: this.props.onHide },
+            'Zavri'
+          )
+        )
+      );
+    }
+  }]);
+
+  return CommentBox;
+}(_react2.default.Component);
+
+exports.default = CommentBox;
 
 /***/ })
 /******/ ]);

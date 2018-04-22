@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
+
 import Map from './Map';
 import Loader from '../reusable_components/Loader';
 import NotFound from '../reusable_components/NotFound';
+import CommentBox from '../reusable_components/CommentBox';
 
 class Traveller extends Component {
   constructor(props) {
@@ -20,8 +23,12 @@ class Traveller extends Component {
         end_date: '',
         completed: ''
       },
-      travellerMessages: ''
+      travellerMessages: '',
+      showCommentBtn: false,
+      showCommentBox: false
     };
+
+    this.handleCommentBox = this.handleCommentBox.bind(this);
   }
 
   componentDidMount() {
@@ -100,23 +107,39 @@ class Traveller extends Component {
         });
         throw e;
       });
+
+    window.addEventListener('scroll', () => {
+      if (!this.state.showCommentBtn && window.scrollY > 300) {
+        this.setState({
+          showCommentBtn: true
+        });
+      } else if (this.state.showCommentBtn && window.scrollY <= 300) {
+        this.setState({
+          showCommentBtn: false
+        });
+      }
+    });
+  }
+
+  handleCommentBox(open) {
+    console.log(open);
+    this.setState({ showCommentBox: open });
   }
 
   render() {
     return (
       <div id="Traveller">
         {this.state.loading && !this.state.error && <Loader />}
+
         {!this.state.loading &&
           !this.state.error &&
           this.state.travellerData && (
             <div>
-              <div>
-                <Map
-                  use="na-ceste-map-traveller"
-                  start={this.state.travellerData.start_miesto}
-                  stops={this.state.travellerMessages}
-                />
-              </div>
+              <Map
+                use="na-ceste-map-traveller"
+                start={this.state.travellerData.start_miesto}
+                stops={this.state.travellerMessages}
+              />
 
               <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
                 <p>{this.state.travellerData.meno}</p>
@@ -162,6 +185,18 @@ class Traveller extends Component {
                   }
                 })}
               </div>
+
+              {this.state.showCommentBtn && (
+                <Button className="comment-box-btn" onClick={() => this.handleCommentBox(true)}>
+                  Komentuj
+                </Button>
+              )}
+
+              <CommentBox
+                show={this.state.showCommentBox}
+                onHide={() => this.handleCommentBox(false)}
+                dialogClassName="comment-box"
+              />
             </div>
           )}
 
