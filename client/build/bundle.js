@@ -11791,7 +11791,6 @@ var Map = function (_Component) {
               iconSize: [18, 24],
               iconAnchor: [9, 24]
             });
-            console.log('yay');
             var marker = _leaflet2.default.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
               icon: icon
             }).addTo(map);
@@ -48520,7 +48519,7 @@ var Articles = function (_Component) {
           var pages = Math.round(count / 8);
           _this2.setState({ totalArticles: pages });
         }).catch(function (err) {
-          console.log('error: ', err);
+          throw err;
         });
 
         var url = '/api/articles/' + this.props.match.params.page;
@@ -48532,7 +48531,7 @@ var Articles = function (_Component) {
             loading: false
           });
         }).catch(function (err) {
-          console.log('error: ', err);
+          throw err;
         });
       } else {
         // get array of filter indeces
@@ -48560,7 +48559,7 @@ var Articles = function (_Component) {
           var pages = Math.round(count / 8);
           _this2.setState({ totalArticles: pages });
         }).catch(function (err) {
-          console.log('error: ', err);
+          throw err;
         });
         var _url = '/api/articles/category/' + filterUrl + '/' + this.props.match.params.page;
         fetch(_url).then(function (resp) {
@@ -48571,7 +48570,7 @@ var Articles = function (_Component) {
             loading: false
           });
         }).catch(function (err) {
-          console.log('error: ', err);
+          throw err;
         });
       }
     }
@@ -48605,7 +48604,6 @@ var Articles = function (_Component) {
   }, {
     key: 'handleFilterClick',
     value: function handleFilterClick(e) {
-      console.log('click ', e.target.value);
       var filter = e.target.value;
       var filters = this.state.filters;
 
@@ -48661,7 +48659,6 @@ var Articles = function (_Component) {
           ),
           this.state.loading && _react2.default.createElement(_Loader2.default, null),
           !this.state.loading && this.state.articles.length > 0 && this.state.articles.map(function (article, i) {
-            // console.log(article)
             var introtext = function introtext() {
               return { __html: article.introtext };
             };
@@ -48891,7 +48888,7 @@ var Article = function (_Component) {
         _this2.updateArticleViews('/api/articles/increase_article_count', {
           id: data[0]['_id']
         }).then({}).catch(function (err) {
-          return console.log(err);
+          throw err;
         });
       }).catch(function (err) {
         _this2.setState({
@@ -63523,7 +63520,7 @@ var Active = function (_Component) {
               loading: false
             });
           }).catch(function (err) {
-            console.log(err);
+            throw err;
           });
         }
       }).catch(function (e) {

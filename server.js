@@ -25,5 +25,5 @@ app.get('/*', function(req, res) {
 });
 
 http.listen(process.env.PORT || 3000, function() {
-  console.log('listening on *:3000');
+  console.log(`Listening on ${process.env.PORT ? process.env.PORT : '*:3000'}`);
 });

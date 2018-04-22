@@ -139,7 +139,6 @@ class Map extends Component {
             iconSize: [18, 24],
             iconAnchor: [9, 24]
           });
-          console.log('yay');
           let marker = L.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
             icon: icon
           }).addTo(map);

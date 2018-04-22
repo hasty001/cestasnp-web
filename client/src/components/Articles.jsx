@@ -80,7 +80,7 @@ class Articles extends Component {
           this.setState({ totalArticles: pages });
         })
         .catch(err => {
-          console.log('error: ', err);
+          throw err;
         });
 
       let url = '/api/articles/' + this.props.match.params.page;
@@ -93,7 +93,7 @@ class Articles extends Component {
           });
         })
         .catch(err => {
-          console.log('error: ', err);
+          throw err;
         });
     } else {
       // get array of filter indeces
@@ -122,7 +122,7 @@ class Articles extends Component {
           this.setState({ totalArticles: pages });
         })
         .catch(err => {
-          console.log('error: ', err);
+          throw err;
         });
       let url = '/api/articles/category/' + filterUrl + '/' + this.props.match.params.page;
       fetch(url)
@@ -134,7 +134,7 @@ class Articles extends Component {
           });
         })
         .catch(err => {
-          console.log('error: ', err);
+          throw err;
         });
     }
   }
@@ -164,7 +164,6 @@ class Articles extends Component {
   }
 
   handleFilterClick(e) {
-    console.log('click ', e.target.value);
     let filter = e.target.value;
     let { filters } = this.state;
     if (filters.length > 1) {
@@ -214,7 +213,6 @@ class Articles extends Component {
           {!this.state.loading &&
             this.state.articles.length > 0 &&
             this.state.articles.map((article, i) => {
-              // console.log(article)
               let introtext = () => {
                 return { __html: article.introtext };
               };
