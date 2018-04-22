@@ -197,16 +197,15 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
   padding: 5px;
   min-height: 300px;
-  background: orange;
 }
 
 #home2,
 #home3 {
   display: inline-block;
   width: 50%;
-  padding: 5px;
+  padding: 10px;
   min-height: 300px;
-  background: tomato;
+  vertical-align: top;
 } @media(max-width: 767px) {
   #home2,
   #home3 {
@@ -214,12 +213,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
-#home3 {
-  background: salmon;
-}
-
-.home2 img,
-.home3 img, {
+.home2 > p > img, 
+.home3 > p > img {
   display: none;
 }
 
