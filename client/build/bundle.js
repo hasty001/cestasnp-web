@@ -48171,20 +48171,30 @@ var Archive = function (_Component) {
         var fully = [];
         var partially = [];
         data.forEach(function (traveller) {
-          var travellerData = {};
-          travellerData.meno = traveller.meno;
-          travellerData.text = traveller.text;
-          travellerData.userId = traveller.user_id;
-          travellerData.startMiesto = traveller.start_miesto;
-          travellerData.startDate = traveller.start_date;
-          travellerData.endDate = traveller.end_date;
-          travellerData.completed = traveller.completed;
-          if (travellerData.completed) {
-            fully.push(travellerData);
-          } else {
-            partially.push(travellerData);
+          if (traveller.end_date != 'NULL') {
+            var travellerData = {};
+            travellerData.meno = traveller.meno;
+            travellerData.text = traveller.text;
+            travellerData.userId = traveller.user_id;
+            travellerData.startMiesto = traveller.start_miesto;
+            travellerData.startDate = traveller.start_date;
+            travellerData.endDate = traveller.end_date;
+            travellerData.completed = traveller.completed;
+            if (travellerData.completed) {
+              fully.push(travellerData);
+            } else {
+              partially.push(travellerData);
+            }
           }
         });
+
+        fully.sort(function (a, b) {
+          return new Date(b.endDate) - new Date(a.endDate);
+        });
+        partially.sort(function (a, b) {
+          return new Date(b.endDate) - new Date(a.endDate);
+        });
+
         _this2.setState({
           fullyCompleted: fully,
           partiallyCompleted: partially,

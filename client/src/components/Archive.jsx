@@ -21,20 +21,26 @@ class Archive extends Component {
         let fully = [];
         let partially = [];
         data.forEach(traveller => {
-          let travellerData = {};
-          travellerData.meno = traveller.meno;
-          travellerData.text = traveller.text;
-          travellerData.userId = traveller.user_id;
-          travellerData.startMiesto = traveller.start_miesto;
-          travellerData.startDate = traveller.start_date;
-          travellerData.endDate = traveller.end_date;
-          travellerData.completed = traveller.completed;
-          if (travellerData.completed) {
-            fully.push(travellerData);
-          } else {
-            partially.push(travellerData);
+          if (traveller.end_date != 'NULL') {
+            let travellerData = {};
+            travellerData.meno = traveller.meno;
+            travellerData.text = traveller.text;
+            travellerData.userId = traveller.user_id;
+            travellerData.startMiesto = traveller.start_miesto;
+            travellerData.startDate = traveller.start_date;
+            travellerData.endDate = traveller.end_date;
+            travellerData.completed = traveller.completed;
+            if (travellerData.completed) {
+              fully.push(travellerData);
+            } else {
+              partially.push(travellerData);
+            }
           }
         });
+
+        fully.sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
+        partially.sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
+
         this.setState({
           fullyCompleted: fully,
           partiallyCompleted: partially,
