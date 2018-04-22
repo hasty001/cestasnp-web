@@ -121,20 +121,16 @@ class Active extends Component {
               <div className="active-travellers" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
-                    <div
-                      key={i}
-                      className="active-traveller"
-                      style={{
-                        border: '3px solid ' + traveller.color,
-                        boxShadow:
-                          '5px 5px 10px 0 ' +
-                          traveller.color +
-                          '94, 5px 5px 10px 0 ' +
-                          traveller.color +
-                          '94'
-                      }}
-                    >
-                      <p>{traveller.meno}</p>
+                    <div key={i} className="active-traveller">
+                      <p>
+                        {traveller.meno}{' '}
+                        <i
+                          className="fas fa-map-marker-alt fa-lg"
+                          style={{
+                            color: `${traveller.color}`
+                          }}
+                        />
+                      </p>
                       <a href={`/na/${traveller.userId}`}>Sleduj putovanie...</a>
                     </div>
                   );

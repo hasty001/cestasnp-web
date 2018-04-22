@@ -24,6 +24,10 @@ body {
   position: absolute;
   top: 100px;
   width: 100%;
+} @media(max-width: 767px) {
+  .app-body {
+    top: 70px;
+  }
 }
 
 /***      BODY      ***/
@@ -39,17 +43,40 @@ body {
   color: #545454;
   z-index: 9999;
   top: 0;
-  border-bottom: solid red;
+  border-bottom: 2px solid red;
+} @media (max-width: 767px) {
+  .app-header {
+    height: 70px;
+  }
 }
 
-.app-logo {
+.logo-screen {
   width: 100px;
   height: 76px;
   display: block;
-  position: absolute;
-  top: 10px;
-  left: 10px; 
-} 
+}
+
+.logo-mobile {
+  width: 50px;
+  height: 50px;
+  display: block;
+}
+
+.logo-position-screen {
+  display: block;
+} @media (max-width: 767px ) {
+  .logo-position-screen {
+    display: none;
+  }
+}
+
+.logo-position-mobile {
+  display: none;
+} @media (max-width: 767px ) {
+  .logo-position-mobile {
+    display: block;
+  }
+}
 
 /***     HEADER     ***/
 /**********************/
@@ -65,11 +92,19 @@ body {
 
 .navbar-header {
   height: 96px;
+} @media (max-width: 767px) {
+  .navbar-header {
+    height: 66px;
+  }
 }
 
 .navbar, .navbar-inverse, .navbar-collapse {
   background-color: #ffffff;
   border-color: #ffffff;
+}
+
+.navbar-inverse {
+  border: 0px;
 }
 
 .navbar, 
@@ -90,6 +125,11 @@ body {
   right: 16px;
   background-color: #ffffff;
   border-color: #ffffff;
+} @media(max-width: 767px) {
+  .navbar-toggle {
+    top: 10px;
+    right: 0px;
+  }
 }
 
 .navbar-inverse .navbar-toggle:focus, 
@@ -122,6 +162,17 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
     border-color: #505050;
     border-bottom: #ff2730 solid;
+  }
+}
+
+.navbar .container {
+  padding-right: 0px;
+  padding-left: 0px;
+  width: 80%;
+} @media (max-width: 767px) {
+  .navbar .container {
+    width: 100%;
+    padding: 0 15px;
   }
 }
 
@@ -239,6 +290,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   border: 0px;
 }
 
+.leaflet-popup-content-wrapper {
+  border-radius: 0px;
+}
+
 /***    MAP         ***/
 /**********************/
 /***    NA CESTE    ***/
@@ -246,12 +301,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 #NaCesteActive {
   display: block;
   width: 100%;
-}
-
-.na-container {
-  position: absolute;
-  width: 104%;
-  left: -2%;
 }
 
 /*** ACTIVE ***/
@@ -281,7 +330,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin: 10px;
   padding: 10px;
   height: 80px;
-  border-radius: 10px;
+  border: 1px solid #ff0002;
 }
 
 /*** TRAVELLER ***/
@@ -311,8 +360,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 90%;
   padding: 15px;
   margin: 4px 0;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   float: right;
   text-align: justify;
   background-color: #ffdbdb;

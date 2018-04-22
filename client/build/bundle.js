@@ -35834,9 +35834,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactBootstrap = __webpack_require__(76);
 
-var _logo = __webpack_require__(483);
+var _logo_screen = __webpack_require__(516);
 
-var _logo2 = _interopRequireDefault(_logo);
+var _logo_screen2 = _interopRequireDefault(_logo_screen);
+
+var _logo_mobile = __webpack_require__(517);
+
+var _logo_mobile2 = _interopRequireDefault(_logo_mobile);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35879,15 +35883,20 @@ var Navigation = function (_Component) {
             null,
             _react2.default.createElement(
               'a',
-              { href: '/' },
-              _react2.default.createElement('img', { src: _logo2.default, className: 'app-logo', alt: 'Cesta SNP logo' })
+              { href: '/', className: 'logo-position-mobile' },
+              _react2.default.createElement('img', { src: _logo_mobile2.default, className: 'logo-mobile', alt: 'Cesta SNP logo pre mobil' })
+            ),
+            _react2.default.createElement(
+              'a',
+              { href: '/', className: 'logo-position-screen' },
+              _react2.default.createElement('img', { src: _logo_screen2.default, className: 'logo-screen', alt: 'Cesta SNP logo pre obrazovku' })
             )
           ),
           _react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
         ),
         _react2.default.createElement(
           _reactBootstrap.Navbar.Collapse,
-          { className: 'navigacka' },
+          null,
           _react2.default.createElement(
             _reactBootstrap.Nav,
             { pullRight: true },
@@ -48091,12 +48100,7 @@ exports.createChainedFunction = _createChainedFunction3.default;
 exports.ValidComponentChildren = _ValidComponentChildren3.default;
 
 /***/ }),
-/* 483 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "/img/16f347c7bc944a2c106d4c58b7c4b577.jpg";
-
-/***/ }),
+/* 483 */,
 /* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -63546,18 +63550,18 @@ var Active = function (_Component) {
             this.state.travellers.map(function (traveller, i) {
               return _react2.default.createElement(
                 'div',
-                {
-                  key: i,
-                  className: 'active-traveller',
-                  style: {
-                    border: '3px solid ' + traveller.color,
-                    boxShadow: '5px 5px 10px 0 ' + traveller.color + '94, 5px 5px 10px 0 ' + traveller.color + '94'
-                  }
-                },
+                { key: i, className: 'active-traveller' },
                 _react2.default.createElement(
                   'p',
                   null,
-                  traveller.meno
+                  traveller.meno,
+                  ' ',
+                  _react2.default.createElement('i', {
+                    className: 'fas fa-map-marker-alt fa-lg',
+                    style: {
+                      color: '' + traveller.color
+                    }
+                  })
                 ),
                 _react2.default.createElement(
                   'a',
@@ -63618,7 +63622,7 @@ exports = module.exports = __webpack_require__(220)(false);
 
 
 // module
-exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n  border-bottom: solid red;\n}\n\n.app-logo {\n  width: 100px;\n  height: 76px;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 10px; \n} \n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar {\n  border-radius: 0px;\n}\n\n.navbar-header {\n  height: 96px;\n}\n\n.navbar, .navbar-inverse, .navbar-collapse {\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar, \n.navbar-inverse, \n.navbar-nav>li>a, \n.navbar-nav .open .dropdown-menu>li>a, \n.navbar-inverse .navbar-nav>.open>a, \n.navbar-inverse .navbar-nav>.open>a:focus, \n.navbar-inverse .navbar-nav>.open>a:hover \n {\n  color: #505050 !important;\n  font-size: 18px;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar-inverse .navbar-toggle:focus, \n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle {\n  background-color: #ffffff;\n  border-color: #ffffff;  \n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\nnav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #ffb8b8;\n}\n\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #ff2730;\n}\n\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n      padding-bottom: 10px;\n      padding-top: 10px;\n  }\n\n  .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {\n    border-color: #505050;\n    border-bottom: #ff2730 solid;\n  }\n}\n\n/***   NAVIGATION   ***/\n/**********************/\n/***     HOME       ***/\n\n#Home {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Home {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***     HOME       ***/\n/**********************/\n/***    KONTAKT     ***/\n\n#Kontakt {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Kontakt {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***    KONTAKT     ***/\n/**********************/\n/***     POIS       ***/\n\n#Pois  {\n  width: 100%;\n}\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 600px;\n} @media (max-width: 767px) {\n  #pois-map {\n    max-height: 500px;\n  }\n}\n\n/***     POIS       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n#Articles,\n#Article {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Articles, \n  #Article {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n.pagination>.active>a, \n.pagination>.active>a:focus, \n.pagination>.active>a:hover, \n.pagination>.active>span, \n.pagination>.active>span:focus, \n.pagination>.active>span:hover {\n  color: #fff;\n  background-color: #ff2730;\n  border-color: #ff2730;\n}\n\n.pagination>li>a, .pagination>li>span {\n  color: #ff2730;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    MAP         ***/\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n/***    MAP         ***/\n/**********************/\n/***    NA CESTE    ***/\n\n#NaCesteActive {\n  display: block;\n  width: 100%;\n}\n\n.na-container {\n  position: absolute;\n  width: 104%;\n  left: -2%;\n}\n\n/*** ACTIVE ***/\n\n#na-ceste-map-active {\n  width: 100%;\n  height: 480px;\n} @media (max-width: 767px) {\n  #na-ceste-map-active {\n    height: 400px;\n  }\n}\n\n.active-travellers {\n  display: block;\n  width: 100%;\n  height: 100px;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n}\n\n.active-traveller {\n  display: inline-block;\n  font-size: 16px;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n  height: 80px;\n  border-radius: 10px;\n}\n\n/*** TRAVELLER ***/\n\n#na-ceste-map-traveller {\n  width: 100%;\n  height: 450px;\n} @media (max-width: 767px) {\n  #na-ceste-map-traveller {\n    height: 400px;\n  }\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  padding: 10px;\n}\n\n.na-ceste-traveller-msgs {\n  padding: 0 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n  display: block;\n  width: 90%;\n  padding: 15px;\n  margin: 4px 0;\n  border-radius: 5px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n  float: right;\n  text-align: justify;\n  background-color: #ffdbdb;\n}\n\n.traveller-comment {\n  float: left;\n  text-align: justify;\n  background-color: #ff7373;\n}\n\n.red-stripe {\n  display: inline-block;\n  height: 12px;\n  background-color: red;\n  width: 14px;\n  border-bottom: solid 4px white;\n  border-top: solid 4px white;\n  margin-right: 5px;\n}\n\n/*** ARCHIVE ***/\n\n#NaCesteArchive {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #NaCesteArchive {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n#NaCesteArchive h2 {\n  margin-top: 0px;\n  text-align: left;\n}\n\n.archived-travellers {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n\n.archived-traveller {\n  display: inline-block;\n  position: relative;\n  background-color: #ececec70;\n  width: 30%;\n  height: 360px;\n  padding: 10px;\n  margin: 10px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n} @media (max-width: 767px) {\n  .archived-traveller {\n    width: 100%;\n    height: 260px;\n  }\n}\n\n.archived-traveller-text {\n  overflow: scroll;\n  height: 200px;\n} @media (max-width: 767px) {\n  .archived-traveller-text {\n    height: 100px;\n  }\n}\n\n\n/***    NA CESTE    ***/\n/**********************/", ""]);
+exports.push([module.i, "/**********************/\n/***     GENERAL    ***/\n\n.hidden {\n  display: none;\n}\n\n.invisible {\n  display: hidden;\n}\n\n/***     GENERAL    ***/\n/**********************/\n/***      BODY      ***/\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Ubuntu', sans-serif;\n  box-sizing: border-box; \n}\n\n.app-body {\n  position: absolute;\n  top: 100px;\n  width: 100%;\n} @media(max-width: 767px) {\n  .app-body {\n    top: 70px;\n  }\n}\n\n/***      BODY      ***/\n/**********************/\n/***     HEADER     ***/\n\n.app-header {\n  box-sizing: border-box;\n  background-color: white;\n  position: fixed;\n  width: 100%;\n  height: 100px;\n  color: #545454;\n  z-index: 9999;\n  top: 0;\n  border-bottom: 2px solid red;\n} @media (max-width: 767px) {\n  .app-header {\n    height: 70px;\n  }\n}\n\n.logo-screen {\n  width: 100px;\n  height: 76px;\n  display: block;\n}\n\n.logo-mobile {\n  width: 50px;\n  height: 50px;\n  display: block;\n}\n\n.logo-position-screen {\n  display: block;\n} @media (max-width: 767px ) {\n  .logo-position-screen {\n    display: none;\n  }\n}\n\n.logo-position-mobile {\n  display: none;\n} @media (max-width: 767px ) {\n  .logo-position-mobile {\n    display: block;\n  }\n}\n\n/***     HEADER     ***/\n/**********************/\n/***   NAVIGATION   ***/\n\n#nav {\n  display: block;\n}\n\n.navbar {\n  border-radius: 0px;\n}\n\n.navbar-header {\n  height: 96px;\n} @media (max-width: 767px) {\n  .navbar-header {\n    height: 66px;\n  }\n}\n\n.navbar, .navbar-inverse, .navbar-collapse {\n  background-color: #ffffff;\n  border-color: #ffffff;\n}\n\n.navbar-inverse {\n  border: 0px;\n}\n\n.navbar, \n.navbar-inverse, \n.navbar-nav>li>a, \n.navbar-nav .open .dropdown-menu>li>a, \n.navbar-inverse .navbar-nav>.open>a, \n.navbar-inverse .navbar-nav>.open>a:focus, \n.navbar-inverse .navbar-nav>.open>a:hover \n {\n  color: #505050 !important;\n  font-size: 18px;\n}\n\n.navbar-toggle {\n  position: relative;\n  top: 20px;\n  right: 16px;\n  background-color: #ffffff;\n  border-color: #ffffff;\n} @media(max-width: 767px) {\n  .navbar-toggle {\n    top: 10px;\n    right: 0px;\n  }\n}\n\n.navbar-inverse .navbar-toggle:focus, \n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle {\n  background-color: #ffffff;\n  border-color: #ffffff;  \n}\n\n@media (min-width: 768px) {\n  .navbar-right {\n    margin-top: 20px;\n  }\n}\n\nnav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {\n  background-color: #ffb8b8;\n}\n\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #ff2730;\n}\n\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n      padding-bottom: 10px;\n      padding-top: 10px;\n  }\n\n  .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {\n    border-color: #505050;\n    border-bottom: #ff2730 solid;\n  }\n}\n\n.navbar .container {\n  padding-right: 0px;\n  padding-left: 0px;\n  width: 80%;\n} @media (max-width: 767px) {\n  .navbar .container {\n    width: 100%;\n    padding: 0 15px;\n  }\n}\n\n/***   NAVIGATION   ***/\n/**********************/\n/***     HOME       ***/\n\n#Home {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Home {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***     HOME       ***/\n/**********************/\n/***    KONTAKT     ***/\n\n#Kontakt {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Kontakt {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n/***    KONTAKT     ***/\n/**********************/\n/***     POIS       ***/\n\n#Pois  {\n  width: 100%;\n}\n\n#pois-map {\n  display: block;\n  width: 100%;\n  height: 600px;\n} @media (max-width: 767px) {\n  #pois-map {\n    max-height: 500px;\n  }\n}\n\n/***     POIS       ***/\n/**********************/\n/***    ARTICLES    ***/\n\n#Articles,\n#Article {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #Articles, \n  #Article {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n.article-div {\n  display: block;\n}\n\n.no-article-div {\n  display: block;\n  margin-top: 15px;\n}\n\n/***    ARTICLES    ***/\n/**********************/\n/***   PAGINATION   ***/\n\n.pagination {\n  display: block;\n}\n\n.no-decoration, .no-decoration:hover {\n  text-decoration: none;\n  color: #333;\n}\n\n.pagination>.active>a, \n.pagination>.active>a:focus, \n.pagination>.active>a:hover, \n.pagination>.active>span, \n.pagination>.active>span:focus, \n.pagination>.active>span:hover {\n  color: #fff;\n  background-color: #ff2730;\n  border-color: #ff2730;\n}\n\n.pagination>li>a, .pagination>li>span {\n  color: #ff2730;\n}\n\n/***   PAGINATION   ***/\n/**********************/\n/***    MAP         ***/\n\n.leaflet-div-icon {\n  background: transparent;\n  border: 0px;\n}\n\n.leaflet-popup-content-wrapper {\n  border-radius: 0px;\n}\n\n/***    MAP         ***/\n/**********************/\n/***    NA CESTE    ***/\n\n#NaCesteActive {\n  display: block;\n  width: 100%;\n}\n\n/*** ACTIVE ***/\n\n#na-ceste-map-active {\n  width: 100%;\n  height: 480px;\n} @media (max-width: 767px) {\n  #na-ceste-map-active {\n    height: 400px;\n  }\n}\n\n.active-travellers {\n  display: block;\n  width: 100%;\n  height: 100px;\n  overflow-x: scroll;\n  overflow-y: hidden;\n  white-space: nowrap;\n}\n\n.active-traveller {\n  display: inline-block;\n  font-size: 16px;\n  width: 200px;\n  margin: 10px;\n  padding: 10px;\n  height: 80px;\n  border: 1px solid #ff0002;\n}\n\n/*** TRAVELLER ***/\n\n#na-ceste-map-traveller {\n  width: 100%;\n  height: 450px;\n} @media (max-width: 767px) {\n  #na-ceste-map-traveller {\n    height: 400px;\n  }\n}\n\n.na-ceste-traveller {\n  display: block;\n  width: 100%;\n  padding: 10px;\n}\n\n.na-ceste-traveller-msgs {\n  padding: 0 10px;\n}\n\n.traveller-message, \n.traveller-comment {\n  display: block;\n  width: 90%;\n  padding: 15px;\n  margin: 4px 0;\n  float: right;\n  text-align: justify;\n  background-color: #ffdbdb;\n}\n\n.traveller-comment {\n  float: left;\n  text-align: justify;\n  background-color: #ff7373;\n}\n\n.red-stripe {\n  display: inline-block;\n  height: 12px;\n  background-color: red;\n  width: 14px;\n  border-bottom: solid 4px white;\n  border-top: solid 4px white;\n  margin-right: 5px;\n}\n\n/*** ARCHIVE ***/\n\n#NaCesteArchive {\n  width: 80%;\n  margin: 15px auto;\n  text-align: justify;\n} @media (max-width: 767px) {\n  #NaCesteArchive {\n    width: 100%;\n    margin: 0;\n    padding: 15px;\n  }\n}\n\n#NaCesteArchive h2 {\n  margin-top: 0px;\n  text-align: left;\n}\n\n.archived-travellers {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n}\n\n.archived-traveller {\n  display: inline-block;\n  position: relative;\n  background-color: #ececec70;\n  width: 30%;\n  height: 360px;\n  padding: 10px;\n  margin: 10px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);\n} @media (max-width: 767px) {\n  .archived-traveller {\n    width: 100%;\n    height: 260px;\n  }\n}\n\n.archived-traveller-text {\n  overflow: scroll;\n  height: 200px;\n} @media (max-width: 767px) {\n  .archived-traveller-text {\n    height: 100px;\n  }\n}\n\n\n/***    NA CESTE    ***/\n/**********************/", ""]);
 
 // exports
 
@@ -64146,6 +64150,18 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
+
+/***/ }),
+/* 516 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "/img/16f347c7bc944a2c106d4c58b7c4b577.jpg";
+
+/***/ }),
+/* 517 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "/img/20087eaa07d42cf3bcef60b04205f4e9.png";
 
 /***/ })
 /******/ ]);
