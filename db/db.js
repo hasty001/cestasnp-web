@@ -32,8 +32,8 @@ DB.prototype = {
         const resCollection = db.collection(collection);
         resCollection
           .find(filterBy)
-          .limit(8)
           .sort(sortBy)
+          .limit(3)
           .toArray(function(err, docs) {
             if (docs) {
               callback(docs);
@@ -57,9 +57,9 @@ DB.prototype = {
         const resCollection = db.collection(collection);
         resCollection
           .find(filterBy)
+          .sort(sortBy)
           .limit(8)
           .skip(8 * page)
-          .sort(sortBy)
           .toArray(function(err, docs) {
             if (docs) {
               callback(docs);

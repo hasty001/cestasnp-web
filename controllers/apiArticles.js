@@ -4,14 +4,24 @@ const bodyParser = require('body-parser');
 
 const query = new DB();
 const router = express.Router();
+
 const ORDER = {
   newestFirst: { created: -1 },
   oldestFirst: { created: 1 }
 };
+
 const filterBy = {
   tags: {
     $nin: ['akcie', 'spravy-z-terenu', 'spravy_z_terenu']
   }
+};
+
+const filtersSplit = category => {
+  return category.split('+').map(filter => {
+    let newFilter = {};
+    newFilter.tags = filter;
+    return newFilter;
+  });
 };
 
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -47,11 +57,7 @@ router.get('/article/:articleId', function(req, res) {
 
 // returns all articles matching category
 router.get('/category/:category', function(req, res) {
-  let filters = req.params.category.split('+').map(filter => {
-    let newFilter = {};
-    newFilter.tags = filter;
-    return newFilter;
-  });
+  let filters = filtersSplit(req.params.category);
   let finalFilter = {};
   finalFilter.$and = filters;
   query.countCollection('articles', finalFilter, function(results) {
@@ -61,11 +67,7 @@ router.get('/category/:category', function(req, res) {
 
 // returns articles matching category on certain page
 router.get('/category/:category/:page', function(req, res) {
-  let filters = req.params.category.split('+').map(filter => {
-    let newFilter = {};
-    newFilter.tags = filter;
-    return newFilter;
-  });
+  let filters = filtersSplit(req.params.category);
   let finalFilter = {};
   finalFilter.$and = filters;
   query.nextSorted(
@@ -86,9 +88,16 @@ router.put('/increase_article_count', function(req, res) {
   });
 });
 
-// not in use
-router.post('/add_article', function(req, res) {
-  query.addArticle(req.body, 'articles');
+// returns 3 newest articles for homepage
+router.get('/for/home', function(req, res) {
+  query.newestSorted(
+    'articles',
+    ORDER.newestFirst,
+    function(results) {
+      res.json(results);
+    },
+    filterBy
+  );
 });
 
 module.exports = router;

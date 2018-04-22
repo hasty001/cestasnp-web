@@ -192,6 +192,37 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
+#home1 {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  min-height: 300px;
+  background: orange;
+}
+
+#home2,
+#home3 {
+  display: inline-block;
+  width: 50%;
+  padding: 5px;
+  min-height: 300px;
+  background: tomato;
+} @media(max-width: 767px) {
+  #home2,
+  #home3 {
+    width: 100%;
+  }
+}
+
+#home3 {
+  background: salmon;
+}
+
+.home2 img,
+.home3 img, {
+  display: none;
+}
+
 /***     HOME       ***/
 /**********************/
 /***    KONTAKT     ***/
@@ -246,6 +277,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 .article-div {
   display: block;
+  min-height: 250px;
 }
 
 .no-article-div {
