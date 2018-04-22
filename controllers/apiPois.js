@@ -5,7 +5,7 @@ const query = new DB();
 const router = express.Router();
 
 router.get('/', function(req, res) {
-  query.all('TEST_pois', function(results, error) {
+  query.all('pois', function(results, error) {
     if (results) {
       res.json(results);
     } else {
