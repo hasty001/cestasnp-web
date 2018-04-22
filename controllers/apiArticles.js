@@ -19,7 +19,7 @@ router.use(bodyParser.json());
 
 // count the entire article collection
 router.get('/', function(req, res) {
-  query.countCollection('TEST_articles', filterBy, function(results) {
+  query.countCollection('articles', filterBy, function(results) {
     res.json(results);
   });
 });
@@ -27,7 +27,7 @@ router.get('/', function(req, res) {
 // operates pagination for all articles
 router.get('/:page', function(req, res) {
   query.nextSorted(
-    'TEST_articles',
+    'articles',
     ORDER.newestFirst,
     req.params.page,
     function(results) {
@@ -40,7 +40,7 @@ router.get('/:page', function(req, res) {
 // returns single article by ID
 router.get('/article/:articleId', function(req, res) {
   let articleId = parseInt(req.params.articleId);
-  query.findBy('TEST_articles', { sql_article_id: articleId }, function(results) {
+  query.findBy('articles', { sql_article_id: articleId }, function(results) {
     res.json(results);
   });
 });
@@ -54,7 +54,7 @@ router.get('/category/:category', function(req, res) {
   });
   let finalFilter = {};
   finalFilter.$and = filters;
-  query.countCollection('TEST_articles', finalFilter, function(results) {
+  query.countCollection('articles', finalFilter, function(results) {
     res.json(results);
   });
 });
@@ -69,7 +69,7 @@ router.get('/category/:category/:page', function(req, res) {
   let finalFilter = {};
   finalFilter.$and = filters;
   query.nextSorted(
-    'TEST_articles',
+    'articles',
     ORDER.newestFirst,
     req.params.page,
     function(results) {
@@ -88,7 +88,7 @@ router.put('/increase_article_count', function(req, res) {
 
 // not in use
 router.post('/add_article', function(req, res) {
-  query.addArticle(req.body, 'TEST_articles');
+  query.addArticle(req.body, 'articles');
 });
 
 module.exports = router;

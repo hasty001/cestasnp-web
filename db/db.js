@@ -3,7 +3,7 @@ require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId;
 
 const DB = function() {
-  this.url = process.env.MONGO_URI;
+  this.url = process.env.MONGODB_ATLAS_URI;
 };
 
 DB.prototype = {
@@ -134,7 +134,7 @@ DB.prototype = {
   increaseArticleCount: function(articleId, callback) {
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        let resCollection = db.collection('TEST_articles');
+        let resCollection = db.collection('articles');
         let oid = new ObjectId(articleId);
         resCollection.findOneAndUpdate({ _id: oid }, { $inc: { article_views: 1 } }).then(res => {
           try {
@@ -156,7 +156,7 @@ DB.prototype = {
   getTravellerDetails: function(travellerId, callback) {
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('TEST_traveler_details');
+        const resCollection = db.collection('traveler_details');
         resCollection.find({ user_id: travellerId }).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -175,7 +175,7 @@ DB.prototype = {
   getTravellerArticle: function(travellerId, callback) {
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('TEST_articles');
+        const resCollection = db.collection('articles');
         resCollection.find({ created_by_user_sql_id: travellerId }).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -194,7 +194,7 @@ DB.prototype = {
   getTravellerMessages: function(travellerId, callback) {
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('TEST_traveler_messages');
+        const resCollection = db.collection('traveler_messages');
         resCollection.find({ user_id: travellerId }).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -213,7 +213,7 @@ DB.prototype = {
   getTravellerComments: function(articleId, callback) {
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('TEST_article_comments');
+        const resCollection = db.collection('article_comments');
         resCollection.find({ article_sql_id: articleId }).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -232,7 +232,7 @@ DB.prototype = {
   getTravellerLastMessage: function(travellerIds, callback) {
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('TEST_traveler_messages');
+        const resCollection = db.collection('traveler_messages');
         resCollection.find({ user_id: { $in: travellerIds } }).toArray(function(err, docs) {
           if (docs) {
             docs.sort(function(a, b) {
