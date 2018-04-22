@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/', function(req, res) {
   query.all('TEST_pois', function(results, error) {
     if (results) {
+      console.log('safasdfasdf');
       res.json(results);
     } else {
       console.log(error);
