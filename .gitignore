@@ -6,3 +6,4 @@ migration_db/
 .env
 client/build/bundle.js
 client/build/bundle.js.map
+npm-debug.log
