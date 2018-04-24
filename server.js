@@ -20,6 +20,12 @@ app.use('/api/articles', require('./controllers/apiArticles'));
 
 app.use('/api/traveller', require('./controllers/apiTraveller'));
 
+app.get('/.well-known/acme-challenge/HD4XZsTuGXU9s3zClzaZkZf06oeKIQPUpche75pC-Ys', (req, res) => {
+  res.send(
+    'HD4XZsTuGXU9s3zClzaZkZf06oeKIQPUpche75pC-Ys.9KU6EMZC0LLoTFbqengZjuf8Xp1E5VFTALY1ghs70HI'
+  );
+});
+
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });
 });
