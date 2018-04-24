@@ -32,6 +32,7 @@ class Active extends Component {
       .then(resp => resp.json())
       .then(data => {
         let travellers = [];
+        let travellerIds = [];
         let colorCount = 0;
         data.forEach(traveller => {
           let travellerData = {};
@@ -43,18 +44,22 @@ class Active extends Component {
           travellerData.endDate = traveller.end_date;
           travellerData.color = colors[colorCount];
           travellers.push(travellerData);
+          travellerIds.push(traveller.user_id);
           colorCount += 1;
           if (colorCount >= colors.length - 1) {
             colorCount = 0;
           }
         });
-        this.setState({
-          travellers
-        });
-        let travellerIds = [];
-        travellers.forEach(traveller => {
-          travellerIds.push(traveller.userId);
-        });
+        if (travellers.length === 0) {
+          this.setState({
+            travellers,
+            error: true
+          });
+        } else {
+          this.setState({
+            travellers
+          });
+        }
         return travellerIds;
       })
       .then(travellerIds => {
@@ -139,7 +144,14 @@ class Active extends Component {
             </div>
           )}
 
-        {this.state.error && <NotFound />}
+        {this.state.error && (
+          <div>
+            <Map use="na-ceste-map-active" travellers={this.state.travellers} />
+            <div className="active-travellers" style={{ textAlign: 'center' }}>
+              <p style={{ marginTop: '10px' }}>Momentálne nie je nikto na ceste.</p>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
