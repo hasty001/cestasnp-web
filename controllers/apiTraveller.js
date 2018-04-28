@@ -1,6 +1,7 @@
 const express = require('express');
 const DB = require('../db/db');
 const bodyParser = require('body-parser');
+const request = require('request');
 
 const query = new DB();
 const router = express.Router();
@@ -54,6 +55,37 @@ router.get('/activeTravellers', function(req, res) {
   let findBy = { end_date: '0000-00-00 00:00:00' };
   query.findBy('traveler_details', findBy, function(results) {
     res.json(results);
+  });
+});
+
+router.post('/addComment', function(req, res) {
+  if (
+    req.body['g-recaptcha-response'] === undefined ||
+    req.body['g-recaptcha-response'] === '' ||
+    req.body['g-recaptcha-response'] === null
+  ) {
+    res.json({ responseError: 'Please select captcha first' });
+    return;
+  }
+
+  const secretKey = process.env.RECAPTCHA;
+  const verificationURL =
+    'https://www.google.com/recaptcha/api/siteverify?secret=' +
+    secretKey +
+    '&response=' +
+    req.body['g-recaptcha-response'];
+  // + '&remoteip=' +
+  // req.connection.remoteAddress;
+
+  request(verificationURL, function(error, response, body) {
+    body = JSON.parse(body);
+    if (body.success) {
+      res.json({ responseSuccess: 'Success' });
+      return;
+    } else {
+      res.json({ responseError: 'Failed captcha verification' });
+      return;
+    }
   });
 });
 

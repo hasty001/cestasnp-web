@@ -122,7 +122,6 @@ class Traveller extends Component {
   }
 
   handleCommentBox(open) {
-    console.log(open);
     this.setState({ showCommentBox: open });
   }
 
