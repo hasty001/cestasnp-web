@@ -42,7 +42,7 @@ class CommentBox extends React.Component {
   addComment() {
     if (this.state.captcha === '') {
       this.setState({
-        errorMsg: 'Prosím dokáž, že nie si robot'
+        errorMsg: 'Prosím potvrď, že nie si robot'
       });
       return;
     }
@@ -54,6 +54,8 @@ class CommentBox extends React.Component {
     let data = {};
     data.comment = this.state.comment;
     data.name = this.state.name;
+    data.articleId = this.props.articleID;
+    data.visitorIp = this.props.visitorIp;
     data['g-recaptcha-response'] = this.state.captcha;
 
     fetch('/api/traveller/addComment', {
@@ -64,8 +66,16 @@ class CommentBox extends React.Component {
       })
     })
       .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
+      .then(comment => {
+        this.setState({
+          loading: false
+        });
+        this.props.updateTravellerComments(comment);
+        this.props.onHide();
+      })
+      .catch(err => {
+        throw err;
+      });
   }
 
   verifyCallback(response) {
@@ -130,9 +140,9 @@ class CommentBox extends React.Component {
               {this.state.errorMsg !== '' && (
                 <p style={{ color: 'white', background: 'pink' }}>{this.state.errorMsg}</p>
               )}
+              <Button onClick={this.addComment}>Pridaj komentár</Button>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={this.addComment}>Pridaj komentár</Button>
               <Button onClick={this.props.onHide}>Zavri</Button>
             </Modal.Footer>
           </Modal>

@@ -264,6 +264,41 @@ DB.prototype = {
         throw err;
       }
     });
+  },
+
+  addComment: function(comment, callback) {
+    mongodb.MongoClient.connect(this.url, function(err, db) {
+      if (db) {
+        let resCollection = db.collection('article_comments');
+        /// see highest comment number
+        resCollection
+          .find()
+          .sort({ sql_comment_id: -1 })
+          .limit(1)
+          .toArray()
+          .then(array => {
+            comment.sql_comment_id = array[0].sql_comment_id + 1;
+          })
+          .then(() => {
+            // save comment with new comment id
+            resCollection
+              .save(comment)
+              .then(() => {
+                db.close();
+                callback(comment);
+              })
+              .catch(err => {
+                db.close();
+                throw err;
+              });
+          })
+          .catch(err => {
+            throw err;
+          });
+      } else {
+        throw err;
+      }
+    });
   }
 };
 

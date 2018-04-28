@@ -418,10 +418,17 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   left: 45%;
   width: 10%;
   min-width: 120px;
-  background: #f39493;
   border-radius: 0px;
   border: 0px;
   text-align: center;
+  background-color: #f53838;
+  color: white;
+}
+
+.comment-box-btn:hover {
+    color: #f53838;
+    background-color: #fffdfd;
+    border-color: #fffefe;
 }
 
 .modal-content {
@@ -439,7 +446,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 .comment-box {
   width: 90%;
-  background: orange;
   color: black;
 }
 

@@ -25,13 +25,27 @@ class Traveller extends Component {
       },
       travellerMessages: '',
       showCommentBtn: false,
-      showCommentBox: false
+      showCommentBox: false,
+      visitorIp: ''
     };
 
     this.handleCommentBox = this.handleCommentBox.bind(this);
+    this.updateTravellerComments = this.updateTravellerComments.bind(this);
   }
 
   componentDidMount() {
+    //get user's API address
+    fetch('https://api.ipify.org/?format=json')
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          visitorIp: data.ip
+        });
+      })
+      .catch(err => {
+        throw err;
+      });
+
     fetch('/api/traveller/details/' + this.state.travellerId)
       .then(resp => resp.json())
       .then(data => {
@@ -125,6 +139,22 @@ class Traveller extends Component {
     this.setState({ showCommentBox: open });
   }
 
+  updateTravellerComments(comment) {
+    let updatedComments = this.state.travellerMessages;
+    let newComment = {};
+    newComment.type = 'comment';
+    newComment.date = comment.date;
+    newComment.username = comment.username;
+    newComment.text = comment.comment;
+    updatedComments.push(newComment);
+    updatedComments.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    });
+    this.setState({
+      travellerMessages: updatedComments
+    });
+  }
+
   render() {
     return (
       <div id="Traveller">
@@ -195,6 +225,9 @@ class Traveller extends Component {
                 show={this.state.showCommentBox}
                 onHide={() => this.handleCommentBox(false)}
                 dialogClassName="comment-box"
+                articleID={this.state.travellerData.articleID}
+                visitorIp={this.state.visitorIp}
+                updateTravellerComments={this.updateTravellerComments}
               />
             </div>
           )}
