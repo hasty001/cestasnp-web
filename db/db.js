@@ -230,6 +230,21 @@ DB.prototype = {
   },
 
   getTravellerLastMessage: function(travellerIds, callback) {
+    if (!Array.isArray(travellerIds)) {
+      throw 'Traveller IDs not an array';
+      return;
+    }
+
+    let typeCheck = 0;
+    travellerIds.forEach(id => {
+      if (typeof id !== 'number') typeCheck += 1;
+    });
+
+    if (typeCheck !== 0) {
+      throw 'Traveller IDs not numbers';
+      return;
+    }
+
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
         const resCollection = db.collection('traveler_messages');
