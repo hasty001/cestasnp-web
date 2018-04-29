@@ -14,7 +14,9 @@ class CommentBox extends React.Component {
       captcha: '',
       captchaLoaded: false,
       loading: false,
-      errorMsg: ''
+      captchaError: '',
+      commentError: '',
+      nameError: ''
     };
 
     this.addComment = this.addComment.bind(this);
@@ -28,21 +30,37 @@ class CommentBox extends React.Component {
   updateComment(e) {
     e.preventDefault();
     this.setState({
-      comment: e.target.value
+      comment: e.target.value,
+      commentError: ''
     });
   }
 
   updateName(e) {
     e.preventDefault();
     this.setState({
-      name: e.target.value
+      name: e.target.value,
+      nameError: ''
     });
   }
 
   addComment() {
     if (this.state.captcha === '') {
       this.setState({
-        errorMsg: 'Prosím potvrď, že nie si robot'
+        captchaError: 'Prosím potvrď, že nie si robot'
+      });
+      return;
+    }
+
+    if (this.state.name === '') {
+      this.setState({
+        nameError: 'Prosím vyplň svoje meno'
+      });
+      return;
+    }
+
+    if (this.state.comment === '') {
+      this.setState({
+        commentError: 'Prosím napíš komentár'
       });
       return;
     }
@@ -81,7 +99,7 @@ class CommentBox extends React.Component {
   verifyCallback(response) {
     this.setState({
       captcha: response,
-      errorMsg: ''
+      captchaError: ''
     });
   }
 
@@ -121,6 +139,9 @@ class CommentBox extends React.Component {
                   style={{ display: 'block' }}
                 />
               </label>
+              {this.state.nameError !== '' && (
+                <p style={{ color: 'white', background: 'pink' }}>{this.state.nameError}</p>
+              )}
               <label style={{ display: 'block' }}>
                 Komentár:
                 <textarea
@@ -129,6 +150,9 @@ class CommentBox extends React.Component {
                   style={{ display: 'block' }}
                 />
               </label>
+              {this.state.commentError !== '' && (
+                <p style={{ color: 'white', background: 'pink' }}>{this.state.commentError}</p>
+              )}
               <Recaptcha
                 render="explicit"
                 verifyCallback={this.verifyCallback}
@@ -137,8 +161,8 @@ class CommentBox extends React.Component {
                 sitekey="6LdmY1UUAAAAAOi_74AYzgrYCp-2fpusucy1lmrK"
                 hl="sk"
               />
-              {this.state.errorMsg !== '' && (
-                <p style={{ color: 'white', background: 'pink' }}>{this.state.errorMsg}</p>
+              {this.state.captchaError !== '' && (
+                <p style={{ color: 'white', background: 'pink' }}>{this.state.captchaError}</p>
               )}
               <Button onClick={this.addComment}>Pridaj komentár</Button>
             </Modal.Body>

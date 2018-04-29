@@ -63623,7 +63623,9 @@ var CommentBox = function (_React$Component) {
       captcha: '',
       captchaLoaded: false,
       loading: false,
-      errorMsg: ''
+      captchaError: '',
+      commentError: '',
+      nameError: ''
     };
 
     _this.addComment = _this.addComment.bind(_this);
@@ -63640,7 +63642,8 @@ var CommentBox = function (_React$Component) {
     value: function updateComment(e) {
       e.preventDefault();
       this.setState({
-        comment: e.target.value
+        comment: e.target.value,
+        commentError: ''
       });
     }
   }, {
@@ -63648,7 +63651,8 @@ var CommentBox = function (_React$Component) {
     value: function updateName(e) {
       e.preventDefault();
       this.setState({
-        name: e.target.value
+        name: e.target.value,
+        nameError: ''
       });
     }
   }, {
@@ -63658,7 +63662,21 @@ var CommentBox = function (_React$Component) {
 
       if (this.state.captcha === '') {
         this.setState({
-          errorMsg: 'Prosím potvrď, že nie si robot'
+          captchaError: 'Prosím potvrď, že nie si robot'
+        });
+        return;
+      }
+
+      if (this.state.name === '') {
+        this.setState({
+          nameError: 'Prosím vyplň svoje meno'
+        });
+        return;
+      }
+
+      if (this.state.comment === '') {
+        this.setState({
+          commentError: 'Prosím napíš komentár'
         });
         return;
       }
@@ -63697,7 +63715,7 @@ var CommentBox = function (_React$Component) {
     value: function verifyCallback(response) {
       this.setState({
         captcha: response,
-        errorMsg: ''
+        captchaError: ''
       });
     }
   }, {
@@ -63751,6 +63769,11 @@ var CommentBox = function (_React$Component) {
                 style: { display: 'block' }
               })
             ),
+            this.state.nameError !== '' && _react2.default.createElement(
+              'p',
+              { style: { color: 'white', background: 'pink' } },
+              this.state.nameError
+            ),
             _react2.default.createElement(
               'label',
               { style: { display: 'block' } },
@@ -63761,6 +63784,11 @@ var CommentBox = function (_React$Component) {
                 style: { display: 'block' }
               })
             ),
+            this.state.commentError !== '' && _react2.default.createElement(
+              'p',
+              { style: { color: 'white', background: 'pink' } },
+              this.state.commentError
+            ),
             _react2.default.createElement(_reactRecaptcha2.default, {
               render: 'explicit',
               verifyCallback: this.verifyCallback,
@@ -63769,10 +63797,10 @@ var CommentBox = function (_React$Component) {
               sitekey: '6LdmY1UUAAAAAOi_74AYzgrYCp-2fpusucy1lmrK',
               hl: 'sk'
             }),
-            this.state.errorMsg !== '' && _react2.default.createElement(
+            this.state.captchaError !== '' && _react2.default.createElement(
               'p',
               { style: { color: 'white', background: 'pink' } },
-              this.state.errorMsg
+              this.state.captchaError
             ),
             _react2.default.createElement(
               _reactBootstrap.Button,
