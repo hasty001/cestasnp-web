@@ -28,19 +28,7 @@ const colors = [
   '#153fca'
 ];
 
-const pins = [
-  pin01,
-  pin02,
-  pin03,
-  pin04,
-  pin05,
-  pin06,
-  pin07,
-  pin08,
-  pin09,
-  pin10,
-  pin11,
-]
+const pins = [pin01, pin02, pin03, pin04, pin05, pin06, pin07, pin08, pin09, pin10, pin11];
 
 class Active extends Component {
   constructor(props) {
@@ -153,7 +141,11 @@ class Active extends Component {
               <div className="active-travellers" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
-                    <div key={i} className="active-traveller" style={{ border: `1px solid ${traveller.color}` }}>
+                    <div
+                      key={i}
+                      className="active-traveller"
+                      style={{ border: `1px solid ${traveller.color}` }}
+                    >
                       <p>
                         {traveller.meno}{' '}
                         <img src={traveller.pin} className="mapMarker" alt="Vzor ukazovatela" />

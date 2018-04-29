@@ -45,14 +45,14 @@ router.get('/comments/:articleId', function(req, res) {
 });
 
 router.get('/finishedTravellers', function(req, res) {
-  let findBy = { end_date: { $ne: '0000-00-00 00:00:00' } };
+  let findBy = { finishedTracking: true };
   query.findBy('traveler_details', findBy, function(results) {
     res.json(results);
   });
 });
 
 router.get('/activeTravellers', function(req, res) {
-  let findBy = { end_date: '0000-00-00 00:00:00' };
+  let findBy = { finishedTracking: false };
   query.findBy('traveler_details', findBy, function(results) {
     res.json(results);
   });

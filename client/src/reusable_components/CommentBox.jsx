@@ -146,11 +146,7 @@ class CommentBox extends React.Component {
             <Modal.Body>
               <label className="commentLabel">
                 Meno:
-                <input
-                  value={this.state.name}
-                  onChange={this.updateName}
-                  className="nameInput"
-                />
+                <input value={this.state.name} onChange={this.updateName} className="nameInput" />
               </label>
               {this.state.nameError !== '' && (
                 <p className="commentError">{this.state.nameError}</p>
@@ -174,7 +170,7 @@ class CommentBox extends React.Component {
                   expiredCallback={this.expiredCallback}
                   sitekey="6LdmY1UUAAAAAOi_74AYzgrYCp-2fpusucy1lmrK"
                   hl="sk"
-                  size={window.innerWidth <= 390 ? "compact" : "normal"}
+                  size={window.innerWidth <= 390 ? 'compact' : 'normal'}
                 />
               </div>
               {this.state.captchaError !== '' && (
