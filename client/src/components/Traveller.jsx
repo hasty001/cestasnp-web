@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
+
 import Map from './Map';
 import Loader from '../reusable_components/Loader';
 import NotFound from '../reusable_components/NotFound';
+import CommentBox from '../reusable_components/CommentBox';
 
 class Traveller extends Component {
   constructor(props) {
@@ -20,11 +23,29 @@ class Traveller extends Component {
         end_date: '',
         completed: ''
       },
-      travellerMessages: ''
+      travellerMessages: '',
+      showCommentBtn: false,
+      showCommentBox: false,
+      visitorIp: ''
     };
+
+    this.handleCommentBox = this.handleCommentBox.bind(this);
+    this.updateTravellerComments = this.updateTravellerComments.bind(this);
   }
 
   componentDidMount() {
+    //get user's API address
+    fetch('https://api.ipify.org/?format=json')
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          visitorIp: data.ip
+        });
+      })
+      .catch(err => {
+        throw err;
+      });
+
     fetch('/api/traveller/details/' + this.state.travellerId)
       .then(resp => resp.json())
       .then(data => {
@@ -100,23 +121,54 @@ class Traveller extends Component {
         });
         throw e;
       });
+
+    window.addEventListener('scroll', () => {
+      if (!this.state.showCommentBtn && window.scrollY > 300) {
+        this.setState({
+          showCommentBtn: true
+        });
+      } else if (this.state.showCommentBtn && window.scrollY <= 300) {
+        this.setState({
+          showCommentBtn: false
+        });
+      }
+    });
+  }
+
+  handleCommentBox(open) {
+    this.setState({ showCommentBox: open });
+  }
+
+  updateTravellerComments(comment) {
+    let updatedComments = this.state.travellerMessages;
+    let newComment = {};
+    newComment.type = 'comment';
+    newComment.date = comment.date;
+    newComment.username = comment.username;
+    newComment.text = comment.comment;
+    updatedComments.push(newComment);
+    updatedComments.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    });
+    this.setState({
+      travellerMessages: updatedComments
+    });
   }
 
   render() {
     return (
       <div id="Traveller">
         {this.state.loading && !this.state.error && <Loader />}
+
         {!this.state.loading &&
           !this.state.error &&
           this.state.travellerData && (
             <div>
-              <div>
-                <Map
-                  use="na-ceste-map-traveller"
-                  start={this.state.travellerData.start_miesto}
-                  stops={this.state.travellerMessages}
-                />
-              </div>
+              <Map
+                use="na-ceste-map-traveller"
+                start={this.state.travellerData.start_miesto}
+                stops={this.state.travellerMessages}
+              />
 
               <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
                 <p>{this.state.travellerData.meno}</p>
@@ -162,6 +214,21 @@ class Traveller extends Component {
                   }
                 })}
               </div>
+
+              {this.state.showCommentBtn && (
+                <Button className="comment-box-btn" onClick={() => this.handleCommentBox(true)}>
+                  Komentuj
+                </Button>
+              )}
+
+              <CommentBox
+                show={this.state.showCommentBox}
+                onHide={() => this.handleCommentBox(false)}
+                dialogClassName="comment-box"
+                articleID={this.state.travellerData.articleID}
+                visitorIp={this.state.visitorIp}
+                updateTravellerComments={this.updateTravellerComments}
+              />
             </div>
           )}
 

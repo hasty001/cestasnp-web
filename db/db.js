@@ -1,6 +1,8 @@
 const mongodb = require('mongodb');
 require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId;
+const Validation = require('./validation');
+const securityCheck = new Validation();
 
 const DB = function() {
   this.url = process.env.MONGODB_ATLAS_URI;
@@ -230,6 +232,21 @@ DB.prototype = {
   },
 
   getTravellerLastMessage: function(travellerIds, callback) {
+    if (!Array.isArray(travellerIds)) {
+      throw 'Traveller IDs not an array';
+      return;
+    }
+
+    let typeCheck = 0;
+    travellerIds.forEach(id => {
+      if (typeof id !== 'number') typeCheck += 1;
+    });
+
+    if (typeCheck !== 0) {
+      throw 'Traveller IDs not numbers';
+      return;
+    }
+
     mongodb.MongoClient.connect(this.url, function(err, db) {
       if (db) {
         const resCollection = db.collection('traveler_messages');
@@ -245,6 +262,45 @@ DB.prototype = {
             db.close();
           }
         });
+      } else {
+        throw err;
+      }
+    });
+  },
+
+  addComment: function(comment, callback) {
+    mongodb.MongoClient.connect(this.url, function(err, db) {
+      if (db) {
+        let resCollection = db.collection('article_comments');
+        /// see highest comment number
+        resCollection
+          .find()
+          .sort({ sql_comment_id: -1 })
+          .limit(1)
+          .toArray()
+          .then(array => {
+            comment.sql_comment_id = array[0].sql_comment_id + 1;
+          })
+          .then(() => {
+            if (securityCheck.checkComment(comment)) {
+              // save comment with new comment id
+              resCollection
+                .save(comment)
+                .then(() => {
+                  db.close();
+                  callback(comment);
+                })
+                .catch(err => {
+                  db.close();
+                  throw err;
+                });
+            } else {
+              callback({ error: 'Malicious comment' });
+            }
+          })
+          .catch(err => {
+            throw err;
+          });
       } else {
         throw err;
       }

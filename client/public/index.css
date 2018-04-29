@@ -330,7 +330,9 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
 }
 
-/*** ACTIVE ***/
+/***    NA CESTE    ***/
+/**********************/
+/***    ACTIVE      ***/
 
 #na-ceste-map-active {
   width: 100%;
@@ -360,7 +362,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   border: 1px solid #ff0002;
 }
 
-/*** TRAVELLER ***/
+/***    ACTIVE      ***/
+/**********************/
+/***   TRAVELLER    ***/
+
+#Traveller {
+  min-height: 1000px;
+}
 
 #na-ceste-map-traveller {
   width: 100%;
@@ -408,7 +416,101 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-right: 5px;
 }
 
-/*** ARCHIVE ***/
+/***   TRAVELLER    ***/
+/**********************/
+/***   COMMENTBOX   ***/
+
+.comment-box-btn {
+  position: fixed;
+  bottom: 0px;
+  left: 45%;
+  width: 10%;
+  min-width: 120px;
+  border-radius: 0px;
+  border: 0px;
+  text-align: center;
+  background-color: #f53838;
+  color: #fffdfd;
+} @media(max-width: 464px) {
+  .comment-box-btn {
+    left: 33%;
+    width: 33%;
+  }
+}
+
+.comment-box-btn:hover {
+    color: #f53838;
+    background-color: #fffdfd;
+    border-color: #fffefe;
+}
+
+.modal-content {
+  border-radius: 0px;
+  border: 0px;
+}
+
+.modal-header {
+  border-bottom: 0px;
+  padding: 5px 15px;
+}
+
+.modal-body {
+  padding: 5px 15px;
+}
+
+.modal-footer {
+  border-top: 0px;
+  text-align: center;
+  padding: 5px 15px;
+}
+
+.comment-box {
+  width: 50%;
+  color: black;
+} @media (max-width: 767px) {
+  .comment-box {
+    width: 90%;
+  }
+}
+
+.recaptchaWrapper {
+  display: block;
+  width: 304px;
+  margin: 0 auto;
+} @media (max-width: 390px) {
+  .recaptchaWrapper {
+    width: 164px;
+  }
+}
+
+.commentError {
+  color: #fffefe; 
+  background: #f19a84; 
+  padding: 5px 10px; 
+  text-align: center;
+}
+
+.commentInput {
+  display: block;
+  width: 100%;
+  height: 150px;
+  border: 1px solid lightgrey;
+}
+
+.nameInput {
+  display: block;
+  width: 100%;
+  border: 1px solid lightgrey;
+}
+
+.commentLabel {
+  display: block;
+  margin: 5px;
+}
+
+/***   COMMENTBOX   ***/
+/**********************/
+/***    ARCHIVE     ***/
 
 #NaCesteArchive {
   width: 80%;
@@ -459,5 +561,5 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 
-/***    NA CESTE    ***/
+/***    ARCHIVE    ***/
 /**********************/

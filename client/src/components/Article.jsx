@@ -25,7 +25,9 @@ class Article extends Component {
           id: data[0]['_id']
         })
           .then({})
-          .catch(err => { throw err });
+          .catch(err => {
+            throw err;
+          });
       })
       .catch(err => {
         this.setState({
