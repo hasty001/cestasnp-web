@@ -85,13 +85,25 @@ class CommentBox extends React.Component {
     })
       .then(res => res.json())
       .then(comment => {
-        this.setState({
-          loading: false
-        });
-        this.props.updateTravellerComments(comment);
-        this.props.onHide();
+        if (comment.error === 'Malicious comment') {
+          this.setState({
+            loading: false,
+            captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+          });
+          return;
+        } else {
+          this.setState({
+            loading: false
+          });
+          this.props.updateTravellerComments(comment);
+          this.props.onHide();
+        }
       })
       .catch(err => {
+        this.setState({
+          loading: false,
+          captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+        });
         throw err;
       });
   }

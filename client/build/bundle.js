@@ -63701,12 +63701,24 @@ var CommentBox = function (_React$Component) {
       }).then(function (res) {
         return res.json();
       }).then(function (comment) {
-        _this2.setState({
-          loading: false
-        });
-        _this2.props.updateTravellerComments(comment);
-        _this2.props.onHide();
+        if (comment.error === 'Malicious comment') {
+          _this2.setState({
+            loading: false,
+            captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+          });
+          return;
+        } else {
+          _this2.setState({
+            loading: false
+          });
+          _this2.props.updateTravellerComments(comment);
+          _this2.props.onHide();
+        }
       }).catch(function (err) {
+        _this2.setState({
+          loading: false,
+          captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+        });
         throw err;
       });
     }

@@ -1,6 +1,8 @@
 const mongodb = require('mongodb');
 require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId;
+const Validation = require('./validation');
+const securityCheck = new Validation();
 
 const DB = function() {
   this.url = process.env.MONGODB_ATLAS_URI;
@@ -280,17 +282,21 @@ DB.prototype = {
             comment.sql_comment_id = array[0].sql_comment_id + 1;
           })
           .then(() => {
-            // save comment with new comment id
-            resCollection
-              .save(comment)
-              .then(() => {
-                db.close();
-                callback(comment);
-              })
-              .catch(err => {
-                db.close();
-                throw err;
-              });
+            if (securityCheck.checkComment(comment)) {
+              // save comment with new comment id
+              resCollection
+                .save(comment)
+                .then(() => {
+                  db.close();
+                  callback(comment);
+                })
+                .catch(err => {
+                  db.close();
+                  throw err;
+                });
+            } else {
+              callback({ error: 'Malicious comment' });
+            }
           })
           .catch(err => {
             throw err;
