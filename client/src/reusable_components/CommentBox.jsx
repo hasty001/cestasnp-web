@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import RecaptchaScreen from 'react-recaptcha';
 import Recaptcha from 'react-recaptcha';
 
 import Loader from '../reusable_components/Loader';
@@ -140,46 +141,48 @@ class CommentBox extends React.Component {
             style={{ marginTop: '100px' }}
           >
             <Modal.Header closeButton>
-              <Modal.Title id="contained-modal-title-lg">Tvoj koment</Modal.Title>
+              <Modal.Title id="contained-modal-title-lg">Tvoj komentár</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <label style={{ display: 'block' }}>
+              <label className="commentLabel">
                 Meno:
                 <input
                   value={this.state.name}
                   onChange={this.updateName}
-                  style={{ display: 'block' }}
+                  className="nameInput"
                 />
               </label>
               {this.state.nameError !== '' && (
-                <p style={{ color: 'white', background: 'pink' }}>{this.state.nameError}</p>
+                <p className="commentError">{this.state.nameError}</p>
               )}
-              <label style={{ display: 'block' }}>
+              <label className="commentLabel">
                 Komentár:
                 <textarea
                   value={this.state.comment}
                   onChange={this.updateComment}
-                  style={{ display: 'block' }}
+                  className="commentInput"
                 />
               </label>
               {this.state.commentError !== '' && (
-                <p style={{ color: 'white', background: 'pink' }}>{this.state.commentError}</p>
+                <p className="commentError">{this.state.commentError}</p>
               )}
-              <Recaptcha
-                render="explicit"
-                verifyCallback={this.verifyCallback}
-                onloadCallback={this.onloadCallback}
-                expiredCallback={this.expiredCallback}
-                sitekey="6LdmY1UUAAAAAOi_74AYzgrYCp-2fpusucy1lmrK"
-                hl="sk"
-              />
+              <div className="recaptchaWrapper">
+                <Recaptcha
+                  render="explicit"
+                  verifyCallback={this.verifyCallback}
+                  onloadCallback={this.onloadCallback}
+                  expiredCallback={this.expiredCallback}
+                  sitekey="6LdmY1UUAAAAAOi_74AYzgrYCp-2fpusucy1lmrK"
+                  hl="sk"
+                  size={window.innerWidth <= 390 ? "compact" : "normal"}
+                />
+              </div>
               {this.state.captchaError !== '' && (
-                <p style={{ color: 'white', background: 'pink' }}>{this.state.captchaError}</p>
+                <p className="commentError">{this.state.captchaError}</p>
               )}
-              <Button onClick={this.addComment}>Pridaj komentár</Button>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={this.props.onHide}>Zavri</Button>
+              <Button onClick={this.addComment}>Pridaj komentár</Button>
             </Modal.Footer>
           </Modal>
         )}
