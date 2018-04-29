@@ -2,19 +2,45 @@ import React, { Component } from 'react';
 import Map from './Map';
 import Loader from '../reusable_components/Loader';
 import NotFound from '../reusable_components/NotFound';
+import pin01 from '../../public/img/pins/Cervena.png';
+import pin02 from '../../public/img/pins/Cierna.png';
+import pin03 from '../../public/img/pins/Fialova.png';
+import pin04 from '../../public/img/pins/Hneda.png';
+import pin05 from '../../public/img/pins/Modra.png';
+import pin06 from '../../public/img/pins/Oranzova.png';
+import pin07 from '../../public/img/pins/Ruzova.png';
+import pin08 from '../../public/img/pins/Svetlo_Ruzova.png';
+import pin09 from '../../public/img/pins/Svetlo_zelena.png';
+import pin10 from '../../public/img/pins/Tmavo_cervena.png';
+import pin11 from '../../public/img/pins/Tmavo_modra.png';
 
 const colors = [
-  '#f6d046',
-  '#f646b0',
-  '#f6465e',
-  '#7146f6',
-  '#466cf6',
-  '#46def6',
-  '#46f69d',
-  '#61f646',
-  '#f67746',
-  '#e3f646'
+  '#ff0000',
+  '#000',
+  '#7807ed',
+  '#a45311',
+  '#158ccb',
+  '#ff9c00',
+  '#d509ed',
+  '#ea34af',
+  '#30ff00',
+  '#923333',
+  '#153fca'
 ];
+
+const pins = [
+  pin01,
+  pin02,
+  pin03,
+  pin04,
+  pin05,
+  pin06,
+  pin07,
+  pin08,
+  pin09,
+  pin10,
+  pin11,
+]
 
 class Active extends Component {
   constructor(props) {
@@ -42,6 +68,7 @@ class Active extends Component {
           travellerData.startDate = traveller.start_date;
           travellerData.endDate = traveller.end_date;
           travellerData.color = colors[colorCount];
+          travellerData.pin = pins[colorCount];
           travellers.push(travellerData);
           colorCount += 1;
           if (colorCount >= colors.length - 1) {
@@ -121,15 +148,10 @@ class Active extends Component {
               <div className="active-travellers" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
-                    <div key={i} className="active-traveller">
+                    <div key={i} className="active-traveller" style={{ border: `1px solid ${traveller.color}` }}>
                       <p>
                         {traveller.meno}{' '}
-                        <i
-                          className="fas fa-map-marker-alt fa-lg"
-                          style={{
-                            color: `${traveller.color}`
-                          }}
-                        />
+                        <img src={traveller.pin} className="mapMarker" alt="Vzor ukazovatela" />
                       </p>
                       <a href={`/na/${traveller.userId}`}>Sleduj putovanie...</a>
                     </div>

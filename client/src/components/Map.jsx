@@ -9,6 +9,7 @@ import utulna from '../../public/img/utulna.png';
 import pramen from '../../public/img/pramen.png';
 import krcma_jedlo from '../../public/img/krcma_jedlo.png';
 import posed from '../../public/img/posed.png';
+import defaultPin from '../../public/img/pins/Cervena.png';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -119,9 +120,9 @@ class Map extends Component {
       this.props.stops.map(stop => {
         if (stop.type === 'message') {
           let icon = L.divIcon({
-            html: '<i class="fas fa-map-marker-alt fa-2x" style="color: #733a07"></i>',
-            iconSize: [18, 24],
-            iconAnchor: [9, 24]
+            html: `<img src=${defaultPin} alt="Ukazovatel na mape" class="mapMarker"/>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
           });
           let marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
           marker.bindPopup(`<p>${stop.date}</p>
@@ -135,9 +136,9 @@ class Map extends Component {
       this.props.travellers.forEach(trvlr => {
         if (trvlr.lastMessage) {
           let icon = L.divIcon({
-            html: `<i class="fas fa-map-marker-alt fa-2x" style="color: ${trvlr.color}"></i>`,
-            iconSize: [18, 24],
-            iconAnchor: [9, 24]
+            html: `<img src=${trvlr.pin} alt="Ukazovatel na mape" class="mapMarker"/>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
           });
           let marker = L.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
             icon: icon
