@@ -63335,6 +63335,7 @@ var Traveller = function (_Component) {
         travellerData.start_date = data[0].start_date;
         travellerData.end_date = data[0].end_date;
         travellerData.completed = data[0].completed;
+        travellerData.travellerId = data[0]['_id'];
         _this2.setState({
           travellerData: travellerData
         });
@@ -63357,15 +63358,29 @@ var Traveller = function (_Component) {
             travellerMessages: travellerMessages
           });
         }).then(function () {
-          fetch('/api/traveller/comments/' + _this2.state.travellerData.articleID).then(function (resp) {
-            return resp.json();
+          var data = {};
+          data.articleId = _this2.state.travellerData.articleID;
+          data.travellerId = _this2.state.travellerData.travellerId;
+          fetch('/api/traveller/comments', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: new Headers({
+              'Content-Type': 'application/json'
+            })
+          }).then(function (res) {
+            return res.json();
           }).then(function (data) {
+            debugger;
             var travellerMessages = _this2.state.travellerMessages;
             data.forEach(function (comment) {
               var newComment = {};
               newComment.type = 'comment';
               newComment.date = comment.date;
-              newComment.username = comment.username;
+              if (comment.username) {
+                newComment.username = comment.username;
+              } else {
+                newComment.username = comment.name;
+              }
               newComment.text = comment.comment;
               travellerMessages.push(newComment);
             });
@@ -63522,7 +63537,9 @@ var Traveller = function (_Component) {
             dialogClassName: 'comment-box',
             articleID: this.state.travellerData.articleID,
             visitorIp: this.state.visitorIp,
-            updateTravellerComments: this.updateTravellerComments
+            updateTravellerComments: this.updateTravellerComments,
+            travellerId: this.state.travellerData.travellerId,
+            travellerName: this.state.travellerData.meno
           })
         ),
         this.state.error && _react2.default.createElement(_NotFound2.default, null)
@@ -63653,6 +63670,8 @@ var CommentBox = function (_React$Component) {
       data.name = this.state.name;
       data.articleId = this.props.articleID;
       data.visitorIp = this.props.visitorIp;
+      data.travellerName = this.props.travellerName;
+      data.travellerId = this.props.travellerId;
       data['g-recaptcha-response'] = this.state.captcha;
 
       fetch('/api/traveller/addComment', {

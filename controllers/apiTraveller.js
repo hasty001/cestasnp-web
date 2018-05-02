@@ -1,4 +1,5 @@
 const express = require('express');
+const sanitize = require('mongo-sanitize');
 const DB = require('../db/db');
 const bodyParser = require('body-parser');
 const request = require('request');
@@ -11,21 +12,21 @@ router.use(bodyParser.json());
 
 // retrieve travellers details
 router.get('/details/:travellerId', function(req, res) {
-  let travellerId = parseInt(req.params.travellerId);
+  let travellerId = sanitize(parseInt(req.params.travellerId));
   query.getTravellerDetails(travellerId, function(results) {
     res.json(results);
   });
 });
 
 router.get('/article/:travellerId', function(req, res) {
-  let travellerId = parseInt(req.params.travellerId);
+  let travellerId = sanitize(parseInt(req.params.travellerId));
   query.getTravellerArticle(travellerId, function(results) {
     res.json(results);
   });
 });
 
 router.get('/messages/:travellerId', function(req, res) {
-  let travellerId = parseInt(req.params.travellerId);
+  let travellerId = sanitize(parseInt(req.params.travellerId));
   query.getTravellerMessages(travellerId, function(results) {
     res.json(results);
   });
@@ -37,9 +38,8 @@ router.post('/lastMessages', function(req, res) {
   });
 });
 
-router.get('/comments/:articleId', function(req, res) {
-  let articleId = parseInt(req.params.articleId);
-  query.getTravellerComments(articleId, function(results) {
+router.post('/comments', function(req, res) {
+  query.getTravellerComments(req.body.articleId, req.body.travellerId, function(results) {
     res.json(results);
   });
 });
@@ -82,47 +82,85 @@ router.post('/addComment', function(req, res) {
     if (body.success) {
       let comment = {};
       let now = new Date();
-      comment.date =
-        now.getFullYear() +
-        '-' +
-        ('0' + (now.getMonth() + 1)).slice(-2) +
-        '-' +
-        ('0' + now.getDate()).slice(-2) +
-        ' ' +
-        ('0' + now.getHours()).slice(-2) +
-        ':' +
-        ('0' + now.getMinutes()).slice(-2) +
-        ':' +
-        ('0' + now.getSeconds()).slice(-2);
-      comment.lang = 'sk-SK';
-      comment.sql_user_id = 0;
-      comment.parent = 0;
-      comment.path = 0;
-      comment.level = 0;
-      comment.object_group = 'com_content';
-      comment.object_params = '';
-      comment.email = '';
-      comment.homepage = '';
-      comment.title = '';
-      comment.isgood = 0;
-      comment.ispoor = 0;
-      comment.published = 1;
-      comment.subscribe = 0;
-      comment.source = '';
-      comment.source_id = 0;
-      comment.checked_out = 0;
-      comment.checked_out_time = '0000-00-00 00:00:00';
-      comment.editor = '';
-      comment.comment = req.body.comment;
-      comment.name = req.body.name;
-      comment.username = req.body.name;
-      comment.ip = req.body.visitorIp;
-      comment.article_sql_id = req.body.articleId;
+      // old system of comments relating to sql article id from Joomla
+      if (req.body.articleId !== 0) {
+        comment.date =
+          now.getFullYear() +
+          '-' +
+          ('0' + (now.getMonth() + 1)).slice(-2) +
+          '-' +
+          ('0' + now.getDate()).slice(-2) +
+          ' ' +
+          ('0' + now.getHours()).slice(-2) +
+          ':' +
+          ('0' + now.getMinutes()).slice(-2) +
+          ':' +
+          ('0' + now.getSeconds()).slice(-2);
+        comment.lang = 'sk-SK';
+        comment.sql_user_id = 0;
+        comment.parent = 0;
+        comment.path = 0;
+        comment.level = 0;
+        comment.object_group = 'com_content';
+        comment.object_params = '';
+        comment.email = '';
+        comment.homepage = '';
+        comment.title = '';
+        comment.isgood = 0;
+        comment.ispoor = 0;
+        comment.published = 1;
+        comment.subscribe = 0;
+        comment.source = '';
+        comment.source_id = 0;
+        comment.checked_out = 0;
+        comment.checked_out_time = '0000-00-00 00:00:00';
+        comment.editor = '';
+        let sComment = sanitize(req.body.comment);
+        comment.comment = sComment;
+        let sName = sanitize(req.body.name);
+        comment.name = sName;
+        comment.username = sName;
+        let sVisitorIp = sanitize(req.body.visitorIp);
+        comment.ip = sVisitorIp;
+        let sArticleId = sanitize(req.body.articleId);
+        comment.article_sql_id = sArticleId;
 
-      query.addComment(comment, function(com) {
-        res.json(com);
-        return;
-      });
+        query.addCommentOldTraveller(comment, function(com) {
+          res.json(com);
+          return;
+        });
+      } else {
+        // new system using traveler_comments collection in mongo
+        comment.date =
+          now.getFullYear() +
+          '-' +
+          ('0' + (now.getMonth() + 1)).slice(-2) +
+          '-' +
+          ('0' + now.getDate()).slice(-2) +
+          ' ' +
+          ('0' + now.getHours()).slice(-2) +
+          ':' +
+          ('0' + now.getMinutes()).slice(-2) +
+          ':' +
+          ('0' + now.getSeconds()).slice(-2);
+        comment.lang = 'sk-SK';
+        let sComment = sanitize(req.body.comment);
+        comment.comment = sComment;
+        let sName = sanitize(req.body.name);
+        comment.name = sName;
+        let sVisitorIp = sanitize(req.body.visitorIp);
+        comment.ip = sVisitorIp;
+        comment.travellerDetails = {};
+        let sTravellerId = sanitize(req.body.travellerId);
+        comment.travellerDetails.id = sTravellerId;
+        let sTravellerName = sanitize(req.body.travellerName);
+        comment.travellerDetails.name = sTravellerName;
+
+        query.addCommentNewTraveller(comment, function(com) {
+          res.json(com);
+          return;
+        });
+      }
     } else {
       res.json({ responseError: 'Failed captcha verification' });
       return;

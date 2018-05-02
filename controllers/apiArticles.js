@@ -1,4 +1,5 @@
 const express = require('express');
+const sanitize = require('mongo-sanitize');
 const DB = require('../db/db');
 const bodyParser = require('body-parser');
 
@@ -39,7 +40,7 @@ router.get('/:page', function(req, res) {
   query.nextSorted(
     'articles',
     ORDER.newestFirst,
-    req.params.page,
+    sanitize(req.params.page),
     function(results) {
       res.json(results);
     },
@@ -49,7 +50,7 @@ router.get('/:page', function(req, res) {
 
 // returns single article by ID
 router.get('/article/:articleId', function(req, res) {
-  let articleId = parseInt(req.params.articleId);
+  let articleId = sanitize(parseInt(req.params.articleId));
   query.findBy('articles', { sql_article_id: articleId }, function(results) {
     res.json(results);
   });
@@ -57,7 +58,7 @@ router.get('/article/:articleId', function(req, res) {
 
 // returns all articles matching category
 router.get('/category/:category', function(req, res) {
-  let filters = filtersSplit(req.params.category);
+  let filters = filtersSplit(sanitize(req.params.category));
   let finalFilter = {};
   finalFilter.$and = filters;
   query.countCollection('articles', finalFilter, function(results) {
@@ -67,13 +68,13 @@ router.get('/category/:category', function(req, res) {
 
 // returns articles matching category on certain page
 router.get('/category/:category/:page', function(req, res) {
-  let filters = filtersSplit(req.params.category);
+  let filters = filtersSplit(sanitize(req.params.category));
   let finalFilter = {};
   finalFilter.$and = filters;
   query.nextSorted(
     'articles',
     ORDER.newestFirst,
-    req.params.page,
+    sanitize(req.params.page),
     function(results) {
       res.json(results);
     },

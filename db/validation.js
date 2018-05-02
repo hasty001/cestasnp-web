@@ -1,7 +1,7 @@
 const Validation = function() {};
 
 Validation.prototype = {
-  checkComment: function(comment) {
+  checkCommentOldTraveller: function(comment) {
     if (
       typeof comment.date === 'string' &&
       typeof comment.lang === 'string' &&
@@ -28,6 +28,22 @@ Validation.prototype = {
       typeof comment.username === 'string' &&
       typeof comment.ip === 'string' &&
       typeof comment.article_sql_id === 'number'
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
+  checkCommentNewTraveller: function(comment) {
+    if (
+      typeof comment.date === 'string' &&
+      typeof comment.lang === 'string' &&
+      typeof comment.comment === 'string' &&
+      typeof comment.name === 'string' &&
+      typeof comment.ip === 'string' &&
+      typeof comment.travellerDetails.id === 'string' &&
+      typeof comment.travellerDetails.name === 'string'
     ) {
       return true;
     } else {

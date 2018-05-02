@@ -57,6 +57,7 @@ class Traveller extends Component {
         travellerData.start_date = data[0].start_date;
         travellerData.end_date = data[0].end_date;
         travellerData.completed = data[0].completed;
+        travellerData.travellerId = data[0]['_id'];
         this.setState({
           travellerData
         });
@@ -81,15 +82,29 @@ class Traveller extends Component {
             });
           })
           .then(() => {
-            fetch('/api/traveller/comments/' + this.state.travellerData.articleID)
-              .then(resp => resp.json())
+            let data = {};
+            data.articleId = this.state.travellerData.articleID;
+            data.travellerId = this.state.travellerData.travellerId;
+            fetch('/api/traveller/comments', {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: new Headers({
+                'Content-Type': 'application/json'
+              })
+            })
+              .then(res => res.json())
               .then(data => {
+                debugger;
                 let travellerMessages = this.state.travellerMessages;
                 data.forEach(comment => {
                   let newComment = {};
                   newComment.type = 'comment';
                   newComment.date = comment.date;
-                  newComment.username = comment.username;
+                  if (comment.username) {
+                    newComment.username = comment.username;
+                  } else {
+                    newComment.username = comment.name;
+                  }
                   newComment.text = comment.comment;
                   travellerMessages.push(newComment);
                 });
@@ -228,6 +243,8 @@ class Traveller extends Component {
                 articleID={this.state.travellerData.articleID}
                 visitorIp={this.state.visitorIp}
                 updateTravellerComments={this.updateTravellerComments}
+                travellerId={this.state.travellerData.travellerId}
+                travellerName={this.state.travellerData.meno}
               />
             </div>
           )}
