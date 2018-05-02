@@ -75,6 +75,8 @@ class CommentBox extends React.Component {
     data.name = this.state.name;
     data.articleId = this.props.articleID;
     data.visitorIp = this.props.visitorIp;
+    data.travellerName = this.props.travellerName;
+    data.travellerId = this.props.travellerId;
     data['g-recaptcha-response'] = this.state.captcha;
 
     fetch('/api/traveller/addComment', {

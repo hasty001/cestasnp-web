@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
-import logo_screen from '../../public/img/logo_screen.jpg';
+import logo_screen from '../../public/img/logo_screen.png';
 import logo_mobile from '../../public/img/logo_mobile.png';
 
 const ROUTES = {
@@ -35,24 +35,23 @@ class Navigation extends Component {
             </MenuItem>
 
             <NavDropdown eventKey={2} title="Pred cestou" id="basic-nav-dropdown">
-              <MenuItem eventKey={2.1} href={ROUTES.clanky}>
+              <MenuItem eventKey={2.1} title="Články" href={ROUTES.clanky}>
                 Články
               </MenuItem>
-              <MenuItem eventKey={2.2} href={ROUTES.pois}>
+              <MenuItem eventKey={2.2} title="Dôležité miesta" href={ROUTES.pois}>
                 Dôležité miesta
               </MenuItem>
             </NavDropdown>
 
-            <NavDropdown eventKey={3} title="Na ceste" id="basic-nav-dropdown">
-              <MenuItem eventKey={3.1} href={ROUTES.naCeste}>
-                Aktuálne
-              </MenuItem>
-              <MenuItem eventKey={3.2} href={ROUTES.archiv}>
-                Archív
-              </MenuItem>
-            </NavDropdown>
+            <MenuItem eventKey={3} title="LIVE sledovanie" href={ROUTES.naCeste}>
+              LIVE sledovanie
+            </MenuItem>
 
-            <MenuItem eventKey={4} href={ROUTES.kontakt}>
+            <MenuItem eventKey={4} title="Archív" href={ROUTES.archiv}>
+              Archív
+            </MenuItem>
+
+            <MenuItem eventKey={5} title="Kontakt" href={ROUTES.kontakt}>
               Kontakt
             </MenuItem>
           </Nav>
