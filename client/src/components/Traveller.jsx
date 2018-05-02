@@ -94,7 +94,6 @@ class Traveller extends Component {
             })
               .then(res => res.json())
               .then(data => {
-                debugger;
                 let travellerMessages = this.state.travellerMessages;
                 data.forEach(comment => {
                   let newComment = {};
@@ -222,7 +221,14 @@ class Traveller extends Component {
                   } else {
                     return (
                       <div key={i} className="traveller-comment">
-                        <p>{message.date + ' ' + message.username}</p>
+                        <p>
+                          <i
+                            className="fa fa-comment"
+                            aria-hidden="true"
+                            style={{ color: '#ccc2c2' }}
+                          />
+                          {' ' + message.date + ' ' + message.username}
+                        </p>
                         <p dangerouslySetInnerHTML={{ __html: message.text }} />
                       </div>
                     );

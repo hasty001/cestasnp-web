@@ -400,15 +400,16 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 90%;
   padding: 15px;
   margin: 4px 0;
-  float: right;
+  float: left;
   text-align: justify;
   background-color: #ffdbdb;
 }
 
 .traveller-comment {
-  float: left;
+  float: right;
   text-align: justify;
-  background-color: #ff7373;
+  background-color: white;
+  border: 1px solid #ccc2c2;
 }
 
 .red-stripe {
