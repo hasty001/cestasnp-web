@@ -70,7 +70,15 @@ class Traveller extends Component {
               let newMessage = {};
               newMessage.type = 'message';
               newMessage.date = message.pub_date;
-              newMessage.img = message.img;
+              if (message.img) {
+                if (message.img.eager) {
+                  newMessage.img = message.img.eager[0].url
+                } else {
+                  newMessage.img = message.img
+                }
+              } else {
+                newMessage.img = "None"
+              }
               newMessage.lat = message.lat;
               newMessage.lon = message.lon;
               newMessage.text = message.text;
@@ -195,11 +203,10 @@ class Traveller extends Component {
                   if (message.type === 'message') {
                     return (
                       <div key={i} className="traveller-message">
-                        {message.img !== 'None' && (
+                        {message.img !== 'None' && message.img !== null && (
                           <img
                             src={
-                              'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                              message.img
+                              (typeof message.img === 'string' && !message.img.includes('res.cloudinary.com')) ? 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' + message.img : message.img
                             }
                             style={{
                               display: '-webkit-box',
