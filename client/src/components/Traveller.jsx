@@ -198,8 +198,7 @@ class Traveller extends Component {
                         {message.img !== 'None' && (
                           <img
                             src={
-                              'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                              message.img
+                              message.img.eager[0].url
                             }
                             style={{
                               display: '-webkit-box',
