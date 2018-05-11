@@ -95,9 +95,20 @@ class Active extends Component {
               let lastMessages = [];
 
               messages.forEach(msg => {
-                if (!ids.includes(msg.user_id)) {
+                if (ids.length === 0) {
                   ids.push(msg.user_id);
                   lastMessages.push(msg);
+                } else {
+                  let idCounter = 0;
+                  ids.forEach(id => {
+                    if (id === msg.user_id) {
+                      idCounter += 1;
+                    }
+                  });
+                  if (idCounter === 0) {
+                    ids.push(msg.user_id);
+                    lastMessages.push(msg);
+                  }
                 }
               });
 

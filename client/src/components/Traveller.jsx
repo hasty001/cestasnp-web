@@ -208,13 +208,13 @@ class Traveller extends Component {
                             <img
                               src={
                                 typeof message.img === 'string' &&
-                                !message.img.includes('res.cloudinary.com')
+                                message.img.indexOf('res.cloudinary.com') === -1
                                   ? 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
                                     message.img
                                   : message.img
                               }
                               style={{
-                                display: '-webkit-box',
+                                display: 'block',
                                 margin: '0px auto 15px',
                                 minWidth: '80px',
                                 maxWidth: '100%',
