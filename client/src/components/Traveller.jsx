@@ -72,12 +72,12 @@ class Traveller extends Component {
               newMessage.date = message.pub_date;
               if (message.img) {
                 if (message.img.eager) {
-                  newMessage.img = message.img.eager[0].url
+                  newMessage.img = message.img.eager[0].url;
                 } else {
-                  newMessage.img = message.img
+                  newMessage.img = message.img;
                 }
               } else {
-                newMessage.img = "None"
+                newMessage.img = 'None';
               }
               newMessage.lat = message.lat;
               newMessage.lon = message.lon;
@@ -116,7 +116,7 @@ class Traveller extends Component {
                   travellerMessages.push(newComment);
                 });
                 travellerMessages.sort((a, b) => {
-                  return new Date(b.date) - new Date(a.date);
+                  return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
                 });
                 this.setState({
                   travellerMessages,
@@ -170,7 +170,7 @@ class Traveller extends Component {
     newComment.text = comment.comment;
     updatedComments.push(newComment);
     updatedComments.sort((a, b) => {
-      return new Date(b.date) - new Date(a.date);
+      return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
     });
     this.setState({
       travellerMessages: updatedComments
@@ -203,21 +203,26 @@ class Traveller extends Component {
                   if (message.type === 'message') {
                     return (
                       <div key={i} className="traveller-message">
-                        {message.img !== 'None' && message.img !== null && (
-                          <img
-                            src={
-                              (typeof message.img === 'string' && !message.img.includes('res.cloudinary.com')) ? 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' + message.img : message.img
-                            }
-                            style={{
-                              display: '-webkit-box',
-                              margin: '0px auto 15px',
-                              minWidth: '80px',
-                              maxWidth: '100%',
-                              maxHeight: '80vh'
-                            }}
-                            alt="fotka z putovania"
-                          />
-                        )}
+                        {message.img !== 'None' &&
+                          message.img !== null && (
+                            <img
+                              src={
+                                typeof message.img === 'string' &&
+                                !message.img.includes('res.cloudinary.com')
+                                  ? 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
+                                    message.img
+                                  : message.img
+                              }
+                              style={{
+                                display: '-webkit-box',
+                                margin: '0px auto 15px',
+                                minWidth: '80px',
+                                maxWidth: '100%',
+                                maxHeight: '80vh'
+                              }}
+                              alt="fotka z putovania"
+                            />
+                          )}
                         <div className="red-stripe" />
                         <p style={{ display: 'inline-block' }}>
                           {message.date + ' ' + message.username}

@@ -38,8 +38,13 @@ class Archive extends Component {
           }
         });
 
-        fully.sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
-        partially.sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
+        fully.sort((a, b) => {
+          return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
+        });
+
+        partially.sort((a, b) => {
+          return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
+        });
 
         this.setState({
           fullyCompleted: fully,

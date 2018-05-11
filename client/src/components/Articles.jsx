@@ -102,7 +102,7 @@ class Articles extends Component {
       });
       // sort the indeces from higher to lower
       filterIndeces.sort((a, b) => {
-        return b - a;
+        return b > a ? 1 : b < a ? -1 : 0;
       });
       // remove filtered categories
       filterIndeces.forEach(i => {
