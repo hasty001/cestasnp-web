@@ -18,7 +18,7 @@ config.params = {
   center: [48.73, 19.46],
   zoomControl: false,
   zoom: 8,
-  maxZoom: 12,
+  maxZoom: 14,
   minZoom: 7,
   scrollwheel: false,
   infoControl: false,
