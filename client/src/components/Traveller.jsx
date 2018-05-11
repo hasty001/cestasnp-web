@@ -195,7 +195,14 @@ class Traveller extends Component {
               <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
                 <p>{this.state.travellerData.meno}</p>
                 <p>{this.state.travellerData.text}</p>
-                <p>Začiatok: {this.state.travellerData.start_miesto}</p>
+                <p>
+                  Začiatok: {this.state.travellerData.start_miesto}{' '}
+                  {this.state.travellerData.start_date.substring(8, 10)}
+                  {'.'}
+                  {this.state.travellerData.start_date.substring(5, 7)}
+                  {'.'}
+                  {this.state.travellerData.start_date.substring(0, 4)}
+                </p>
               </div>
 
               <div className="na-ceste-traveller-msgs">
@@ -208,9 +215,9 @@ class Traveller extends Component {
                             <img
                               src={
                                 typeof message.img === 'string' &&
-                                message.img.indexOf('res.cloudinary.com') === -1
+                                  message.img.indexOf('res.cloudinary.com') === -1
                                   ? 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                    message.img
+                                  message.img
                                   : message.img
                               }
                               style={{
