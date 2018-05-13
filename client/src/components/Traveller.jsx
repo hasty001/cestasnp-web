@@ -166,7 +166,7 @@ class Traveller extends Component {
     let newComment = {};
     newComment.type = 'comment';
     newComment.date = comment.date;
-    newComment.username = comment.username;
+    newComment.username = comment.name;
     newComment.text = comment.comment;
     updatedComments.push(newComment);
     updatedComments.sort((a, b) => {
@@ -215,9 +215,9 @@ class Traveller extends Component {
                             <img
                               src={
                                 typeof message.img === 'string' &&
-                                  message.img.indexOf('res.cloudinary.com') === -1
+                                message.img.indexOf('res.cloudinary.com') === -1
                                   ? 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                  message.img
+                                    message.img
                                   : message.img
                               }
                               style={{

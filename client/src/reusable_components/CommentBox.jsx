@@ -71,6 +71,19 @@ class CommentBox extends React.Component {
     });
 
     let data = {};
+    let now = new Date();
+    data.date =
+      now.getFullYear() +
+      '-' +
+      ('0' + (now.getMonth() + 1)).slice(-2) +
+      '-' +
+      ('0' + now.getDate()).slice(-2) +
+      ' ' +
+      ('0' + now.getHours()).slice(-2) +
+      ':' +
+      ('0' + now.getMinutes()).slice(-2) +
+      ':' +
+      ('0' + now.getSeconds()).slice(-2);
     data.comment = this.state.comment;
     data.name = this.state.name;
     data.articleId = this.props.articleID;

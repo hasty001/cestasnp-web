@@ -81,21 +81,8 @@ router.post('/addComment', function(req, res) {
     body = JSON.parse(body);
     if (body.success) {
       let comment = {};
-      let now = new Date();
-      // old system of comments relating to sql article id from Joomla
       if (req.body.articleId !== 0) {
-        comment.date =
-          now.getFullYear() +
-          '-' +
-          ('0' + (now.getMonth() + 1)).slice(-2) +
-          '-' +
-          ('0' + now.getDate()).slice(-2) +
-          ' ' +
-          ('0' + now.getHours()).slice(-2) +
-          ':' +
-          ('0' + now.getMinutes()).slice(-2) +
-          ':' +
-          ('0' + now.getSeconds()).slice(-2);
+        // old system of comments relating to sql article id from Joomla
         comment.lang = 'sk-SK';
         comment.sql_user_id = 0;
         comment.parent = 0;
@@ -124,6 +111,8 @@ router.post('/addComment', function(req, res) {
         comment.ip = sVisitorIp;
         let sArticleId = sanitize(req.body.articleId);
         comment.article_sql_id = sArticleId;
+        let sDate = sanitize(req.body.date);
+        comment.date = sDate;
 
         query.addCommentOldTraveller(comment, function(com) {
           res.json(com);
@@ -131,18 +120,6 @@ router.post('/addComment', function(req, res) {
         });
       } else {
         // new system using traveler_comments collection in mongo
-        comment.date =
-          now.getFullYear() +
-          '-' +
-          ('0' + (now.getMonth() + 1)).slice(-2) +
-          '-' +
-          ('0' + now.getDate()).slice(-2) +
-          ' ' +
-          ('0' + now.getHours()).slice(-2) +
-          ':' +
-          ('0' + now.getMinutes()).slice(-2) +
-          ':' +
-          ('0' + now.getSeconds()).slice(-2);
         comment.lang = 'sk-SK';
         let sComment = sanitize(req.body.comment);
         comment.comment = sComment;
@@ -155,6 +132,8 @@ router.post('/addComment', function(req, res) {
         comment.travellerDetails.id = sTravellerId;
         let sTravellerName = sanitize(req.body.travellerName);
         comment.travellerDetails.name = sTravellerName;
+        let sDate = sanitize(req.body.date);
+        comment.date = sDate;
 
         query.addCommentNewTraveller(comment, function(com) {
           res.json(com);
