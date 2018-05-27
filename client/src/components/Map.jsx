@@ -25,7 +25,7 @@ config.params = {
   attributionControl: true
 };
 config.tileLayer = {
-  uri: 'http://tiles.freemap.sk/T/{z}/{x}/{y}.png',
+  uri: 'https://tiles.freemap.sk/T/{z}/{x}/{y}.png',
   params: {
     minZoom: 7,
     attribution:
