@@ -63346,7 +63346,7 @@ var Traveller = function (_Component) {
             newMessage.date = message.pub_date;
             if (message.img) {
               if (message.img.eager) {
-                newMessage.img = message.img.eager[0].url;
+                newMessage.img = message.img.eager[0].secure_url;
               } else {
                 newMessage.img = message.img;
               }
@@ -63500,7 +63500,7 @@ var Traveller = function (_Component) {
                   'div',
                   { key: i, className: 'traveller-message' },
                   message.img !== 'None' && message.img !== null && _react2.default.createElement('img', {
-                    src: typeof message.img === 'string' && message.img.indexOf('res.cloudinary.com') === -1 ? 'http://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' + message.img : message.img,
+                    src: typeof message.img === 'string' && message.img.indexOf('res.cloudinary.com') === -1 ? 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' + message.img : message.img,
                     style: {
                       display: 'block',
                       margin: '0px auto 15px',
