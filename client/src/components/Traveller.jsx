@@ -69,7 +69,7 @@ class Traveller extends Component {
             let travellerMessages = data.map(message => {
               let newMessage = {};
               newMessage.type = 'message';
-              newMessage.date = message.pub_date;
+              newMessage.date = (message.pub_date).substring(0, 16);
               if (message.img) {
                 if (message.img.eager) {
                   newMessage.img = message.img.eager[0].secure_url;
@@ -106,7 +106,7 @@ class Traveller extends Component {
                 data.forEach(comment => {
                   let newComment = {};
                   newComment.type = 'comment';
-                  newComment.date = comment.date;
+                  newComment.date = (comment.date).substring(0, 16);
                   if (comment.username) {
                     newComment.username = comment.username;
                   } else {

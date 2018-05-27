@@ -63343,7 +63343,7 @@ var Traveller = function (_Component) {
           var travellerMessages = data.map(function (message) {
             var newMessage = {};
             newMessage.type = 'message';
-            newMessage.date = message.pub_date;
+            newMessage.date = message.pub_date.substring(0, 16);
             if (message.img) {
               if (message.img.eager) {
                 newMessage.img = message.img.eager[0].secure_url;
@@ -63379,7 +63379,7 @@ var Traveller = function (_Component) {
             data.forEach(function (comment) {
               var newComment = {};
               newComment.type = 'comment';
-              newComment.date = comment.date;
+              newComment.date = comment.date.substring(0, 16);
               if (comment.username) {
                 newComment.username = comment.username;
               } else {
