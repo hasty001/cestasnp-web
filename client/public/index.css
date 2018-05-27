@@ -288,6 +288,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
+#Kontakt p {
+  margin: 0;
+}
+
 /***    KONTAKT     ***/
 /**********************/
 /***     POIS       ***/
