@@ -1,4 +1,4 @@
-const mongodb = require('mongodb');
+const MongoClient = require('mongodb').MongoClient;
 const sanitize = require('mongo-sanitize');
 require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId;
@@ -11,9 +11,10 @@ const DB = function() {
 
 DB.prototype = {
   all: function(collection, callback) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection(collection);
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection(collection);
         resCollection.find().toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -30,9 +31,10 @@ DB.prototype = {
   },
 
   newestSorted: function(collection, sortBy = {}, callback, filterBy = {}) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection(collection);
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection(collection);
         resCollection
           .find(filterBy)
           .sort(sortBy)
@@ -53,11 +55,12 @@ DB.prototype = {
   },
 
   nextSorted: function(collection, sortBy = {}, next = 0, callback, filterBy = {}) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       let page = next - 1;
       page = page < 0 ? 0 : page;
       if (db) {
-        const resCollection = db.collection(collection);
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection(collection);
         resCollection
           .find(filterBy)
           .sort(sortBy)
@@ -79,9 +82,10 @@ DB.prototype = {
   },
 
   findBy: function(collection, findBy = {}, callback) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection(collection);
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection(collection);
         resCollection.find(findBy).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -98,9 +102,10 @@ DB.prototype = {
   },
 
   countCollection: function(collection, findBy = {}, callback) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection(collection);
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection(collection);
         resCollection.count(findBy).then(data => {
           try {
             callback(data);
@@ -117,9 +122,10 @@ DB.prototype = {
   },
 
   addArticle: function(article, collection) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        let resCollection = db.collection(collection);
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection(collection);
         resCollection.save(article).then(() => {
           try {
             db.close();
@@ -136,9 +142,10 @@ DB.prototype = {
 
   increaseArticleCount: function(articleId, callback) {
     let sArticleId = sanitize(articleId);
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        let resCollection = db.collection('articles');
+        const resDB = db.db('cestasnp');
+        let resCollection = resDB.collection('articles');
         let oid = new ObjectId(sArticleId);
         resCollection.findOneAndUpdate({ _id: oid }, { $inc: { article_views: 1 } }).then(res => {
           try {
@@ -159,9 +166,10 @@ DB.prototype = {
 
   getTravellerDetails: function(travellerId, callback) {
     let sTravellerId = sanitize(travellerId);
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('traveler_details');
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection('traveler_details');
         resCollection.find({ user_id: sTravellerId }).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -179,9 +187,10 @@ DB.prototype = {
 
   getTravellerArticle: function(travellerId, callback) {
     let sTravellerId = sanitize(travellerId);
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('articles');
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection('articles');
         resCollection.find({ created_by_user_sql_id: sTravellerId }).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -199,9 +208,10 @@ DB.prototype = {
 
   getTravellerMessages: function(travellerId, callback) {
     let sTravellerId = sanitize(travellerId);
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('traveler_messages');
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection('traveler_messages');
         resCollection.find({ user_id: sTravellerId }).toArray(function(err, docs) {
           if (docs) {
             callback(docs);
@@ -220,10 +230,11 @@ DB.prototype = {
   getTravellerComments: function(articleId, travellerId, callback) {
     let sArticleId = sanitize(articleId);
     let sTravellerId = sanitize(travellerId);
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
         if (sArticleId === 0) {
-          const resCollection = db.collection('traveler_comments');
+          const resDB = db.db('cestasnp');
+          const resCollection = resDB.collection('traveler_comments');
           resCollection.find({ 'travellerDetails.id': sTravellerId }).toArray(function(err, docs) {
             if (docs) {
               callback(docs);
@@ -234,7 +245,8 @@ DB.prototype = {
             }
           });
         } else {
-          const resCollection = db.collection('article_comments');
+          const resDB = db.db('cestasnp');
+          const resCollection = resDB.collection('article_comments');
           resCollection.find({ article_sql_id: sArticleId }).toArray(function(err, docs) {
             if (docs) {
               callback(docs);
@@ -268,9 +280,10 @@ DB.prototype = {
       return;
     }
 
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        const resCollection = db.collection('traveler_messages');
+        const resDB = db.db('cestasnp');
+        const resCollection = resDB.collection('traveler_messages');
         resCollection.find({ user_id: { $in: sTravellerIds } }).toArray(function(err, docs) {
           if (docs) {
             docs.sort(function(a, b) {
@@ -290,9 +303,10 @@ DB.prototype = {
   },
 
   addCommentOldTraveller: function(comment, callback) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        let resCollection = db.collection('article_comments');
+        const resDB = db.db('cestasnp');
+        let resCollection = resDBollection('article_comments');
         /// see highest comment number
         resCollection
           .find()
@@ -329,9 +343,10 @@ DB.prototype = {
   },
 
   addCommentNewTraveller: function(comment, callback) {
-    mongodb.MongoClient.connect(this.url, function(err, db) {
+    MongoClient.connect(this.url, function(err, db) {
       if (db) {
-        let resCollection = db.collection('traveler_comments');
+        const resDB = db.db('cestasnp');
+        let resCollection = resDBollection('traveler_comments');
         /// see highest comment number
         if (securityCheck.checkCommentNewTraveller(comment)) {
           // save comment with new comment id

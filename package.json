@@ -15,21 +15,21 @@
   "author": "Peter Trizuliak",
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
     "mongo-sanitize": "^1.0.0",
-    "mongodb": "^2.2.33",
-    "request": "^2.85.0"
+    "mongodb": "^3.0",
+    "request": "^2.87.0"
   },
   "devDependencies": {
-    "prettier": "^1.10.2",
-    "nodemon": "^1.17.3",
-    "webpack": "^4.5.0",
-    "webpack-cli": "^2.0.14",
+    "babel-eslint": "^8.2.3",
     "dotenv": "^4.0.0",
-    "eslint": "^4.17.0",
+    "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.0",
-    "babel-eslint": "^8.2.1"
+    "nodemon": "^1.17.5",
+    "prettier": "^1.13.0",
+    "webpack": "^4.9.1",
+    "webpack-cli": "^2.1.4"
   }
 }
