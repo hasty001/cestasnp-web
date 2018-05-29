@@ -306,7 +306,7 @@ DB.prototype = {
     MongoClient.connect(this.url, function(err, db) {
       if (db) {
         const resDB = db.db('cestasnp');
-        let resCollection = resDBollection('article_comments');
+        let resCollection = resDB.collection('article_comments');
         /// see highest comment number
         resCollection
           .find()
@@ -346,7 +346,7 @@ DB.prototype = {
     MongoClient.connect(this.url, function(err, db) {
       if (db) {
         const resDB = db.db('cestasnp');
-        let resCollection = resDBollection('traveler_comments');
+        let resCollection = resDB.collection('traveler_comments');
         /// see highest comment number
         if (securityCheck.checkCommentNewTraveller(comment)) {
           // save comment with new comment id
