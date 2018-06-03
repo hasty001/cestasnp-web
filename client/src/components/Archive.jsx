@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Loader from '../reusable_components/Loader';
 import NotFound from '../reusable_components/NotFound';
+import sortByDateAsc from '../helpers/helpers';
+import sortByDateDesc from '../helpers/helpers';
 
 class Archive extends Component {
   constructor(props) {
@@ -10,7 +12,7 @@ class Archive extends Component {
       loading: true,
       error: false,
       fullyCompleted: [],
-      partiallyCompleted: []
+      partiallyCompleted: [],
     };
   }
 
@@ -38,23 +40,18 @@ class Archive extends Component {
           }
         });
 
-        fully.sort((a, b) => {
-          return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
-        });
-
-        partially.sort((a, b) => {
-          return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
-        });
+        sortByDateDesc(fully, 'startDate');
+        sortByDateDesc(partially, 'startDate');
 
         this.setState({
           fullyCompleted: fully,
           partiallyCompleted: partially,
-          loading: false
+          loading: false,
         });
       })
       .catch(e => {
         this.setState({
-          error: true
+          error: true,
         });
         throw e;
       });

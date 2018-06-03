@@ -7,9 +7,6 @@ const request = require('request');
 const query = new DB();
 const router = express.Router();
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-
 // retrieve travellers details
 router.get('/details/:travellerId', function(req, res) {
   let travellerId = sanitize(parseInt(req.params.travellerId));

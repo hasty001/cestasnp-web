@@ -8,6 +8,7 @@ const root = path.join(__dirname, '/client/build');
 
 app.use(express.static(root));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // api controllers
 app.get('/api', function(req, res) {

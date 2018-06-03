@@ -43,7 +43,7 @@ const articleCategories = [
   { tag: 'nezaradene', text: 'Nezaradené' },
   { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
   { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' },
-  { tag: 'rozhovory', text: 'Rozhovory' }
+  { tag: 'rozhovory', text: 'Rozhovory' },
 ];
 
 const categoryTags = articleCategories.map(category => {
@@ -62,7 +62,7 @@ class Articles extends Component {
       filters: this.props.match.params.category ? this.props.match.params.category.split('+') : [],
       categories: articleCategories.map(category => {
         return category;
-      })
+      }),
     };
     this.handlePageSelect = this.handlePageSelect.bind(this);
     this.handleCategorySelect = this.handleCategorySelect.bind(this);
@@ -89,7 +89,7 @@ class Articles extends Component {
         .then(data => {
           this.setState({
             articles: data,
-            loading: false
+            loading: false,
           });
         })
         .catch(err => {
@@ -110,7 +110,7 @@ class Articles extends Component {
       });
       // update state
       this.setState({
-        categories
+        categories,
       });
 
       let filterUrl = filters.join('+');
@@ -130,7 +130,7 @@ class Articles extends Component {
         .then(data => {
           this.setState({
             articles: data,
-            loading: false
+            loading: false,
           });
         })
         .catch(err => {
@@ -157,7 +157,7 @@ class Articles extends Component {
     } else {
       this.setState({
         activeFilter: e,
-        loading: true
+        loading: true,
       });
       location.assign('/pred/filteredarticles/' + filters.join('+') + '/1');
     }

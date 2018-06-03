@@ -25,7 +25,7 @@ const colors = [
   '#ea34af',
   '#30ff00',
   '#923333',
-  '#153fca'
+  '#153fca',
 ];
 
 const pins = [pin01, pin02, pin03, pin04, pin05, pin06, pin07, pin08, pin09, pin10, pin11];
@@ -37,7 +37,7 @@ class Active extends Component {
     this.state = {
       loading: true,
       error: false,
-      travellers: []
+      travellers: [],
     };
   }
 
@@ -68,26 +68,26 @@ class Active extends Component {
         if (travellers.length === 0) {
           this.setState({
             travellers,
-            error: true
+            error: true,
           });
         } else {
           this.setState({
-            travellers
+            travellers,
           });
         }
         return travellerIds;
       })
       .then(travellerIds => {
         let data = {
-          travellerIds: travellerIds
+          travellerIds: travellerIds,
         };
         if (travellerIds.length > 0) {
           fetch('/api/traveller/lastMessages/', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: new Headers({
-              'Content-Type': 'application/json'
-            })
+              'Content-Type': 'application/json',
+            }),
           })
             .then(resp => resp.json())
             .then(messages => {
@@ -123,7 +123,7 @@ class Active extends Component {
 
               this.setState({
                 travellers,
-                loading: false
+                loading: false,
               });
             })
             .catch(err => {
@@ -133,7 +133,7 @@ class Active extends Component {
       })
       .catch(e => {
         this.setState({
-          error: true
+          error: true,
         });
         throw e;
       });
