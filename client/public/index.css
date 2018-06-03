@@ -397,6 +397,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   height: 480px;
 } 
 
+/* SAFARI IPHONE 5 VIEW FIX */
 @media (max-width: 767px) and (max-height: 580px) {
   #na-ceste-map-active {
     height: 300px;
@@ -408,9 +409,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
     height: 400px;
   }
 }
-
-/* SAFARI IPHONE 5 VIEW FIX */
-
 
 .active-travellers {
   display: block;
@@ -498,6 +496,22 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   border-bottom: solid 4px white;
   border-top: solid 4px white;
   margin-right: 5px;
+}
+
+.travellerPhotoModal {
+  margin-top: 120px;
+  width: 900px;
+  max-width: 90%;
+}
+
+@media (max-width: 767px) {
+  .travellerPhotoModal {
+    max-width: 96%;
+  }
+}
+
+.travellerPhotoModal > .modal-content > .modal-body {
+  padding: 5px;
 }
 
 /***   TRAVELLER    ***/

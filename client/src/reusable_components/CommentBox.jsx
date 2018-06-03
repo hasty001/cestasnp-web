@@ -17,7 +17,7 @@ class CommentBox extends React.Component {
       loading: false,
       captchaError: '',
       commentError: '',
-      nameError: ''
+      nameError: '',
     };
 
     this.addComment = this.addComment.bind(this);
@@ -32,7 +32,7 @@ class CommentBox extends React.Component {
     e.preventDefault();
     this.setState({
       comment: e.target.value,
-      commentError: ''
+      commentError: '',
     });
   }
 
@@ -40,34 +40,34 @@ class CommentBox extends React.Component {
     e.preventDefault();
     this.setState({
       name: e.target.value,
-      nameError: ''
+      nameError: '',
     });
   }
 
   addComment() {
     if (this.state.captcha === '') {
       this.setState({
-        captchaError: 'Prosím potvrď, že nie si robot'
+        captchaError: 'Prosím potvrď, že nie si robot',
       });
       return;
     }
 
     if (this.state.name === '') {
       this.setState({
-        nameError: 'Prosím vyplň svoje meno'
+        nameError: 'Prosím vyplň svoje meno',
       });
       return;
     }
 
     if (this.state.comment === '') {
       this.setState({
-        commentError: 'Prosím napíš komentár'
+        commentError: 'Prosím napíš komentár',
       });
       return;
     }
 
     this.setState({
-      loading: true
+      loading: true,
     });
 
     let data = {};
@@ -96,20 +96,20 @@ class CommentBox extends React.Component {
       method: 'POST',
       body: JSON.stringify(data),
       headers: new Headers({
-        'Content-Type': 'application/json'
-      })
+        'Content-Type': 'application/json',
+      }),
     })
       .then(res => res.json())
       .then(comment => {
         if (comment.error === 'Malicious comment') {
           this.setState({
             loading: false,
-            captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+            captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
           });
           return;
         } else {
           this.setState({
-            loading: false
+            loading: false,
           });
           this.props.updateTravellerComments(comment);
           this.props.onHide();
@@ -118,7 +118,7 @@ class CommentBox extends React.Component {
       .catch(err => {
         this.setState({
           loading: false,
-          captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+          captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
         });
         throw err;
       });
@@ -127,19 +127,19 @@ class CommentBox extends React.Component {
   verifyCallback(response) {
     this.setState({
       captcha: response,
-      captchaError: ''
+      captchaError: '',
     });
   }
 
   onloadCallback() {
     this.setState({
-      captchaLoaded: true
+      captchaLoaded: true,
     });
   }
 
   expiredCallback() {
     this.setState({
-      captcha: ''
+      captcha: '',
     });
   }
 
