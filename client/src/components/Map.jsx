@@ -22,7 +22,7 @@ config.params = {
   minZoom: 7,
   scrollwheel: false,
   infoControl: false,
-  attributionControl: true
+  attributionControl: true,
 };
 config.tileLayer = {
   uri: 'https://tiles.freemap.sk/T/{z}/{x}/{y}.png',
@@ -31,8 +31,8 @@ config.tileLayer = {
     attribution:
       'mapa © <a href="https://www.freemap.sk">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
     id: '',
-    accessToken: ''
-  }
+    accessToken: '',
+  },
 };
 
 class Map extends Component {
@@ -45,7 +45,7 @@ class Map extends Component {
       geojson: null,
       subwayLinesFilter: '*',
       numEntrances: null,
-      use: this.props.use
+      use: this.props.use,
     };
   }
 
@@ -61,7 +61,7 @@ class Map extends Component {
     L.control
       .scale({
         position: 'bottomright',
-        imperial: false
+        imperial: false,
       })
       .addTo(map);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -69,8 +69,8 @@ class Map extends Component {
       style: {
         color: '#fe0000',
         weight: 3,
-        opacity: 0.8
-      }
+        opacity: 0.8,
+      },
     }).addTo(map);
 
     /// DOLEZITE MIESTA
@@ -106,7 +106,7 @@ class Map extends Component {
         let icon = L.icon({
           iconUrl: iconUrl,
           iconSize: [32, 32],
-          iconAnchor: [16, 32]
+          iconAnchor: [16, 32],
         });
         let marker = L.marker([poi.coordinates[1], poi.coordinates[0]], { icon: icon }).addTo(map);
         marker.bindPopup(`<h4>${poi.name}</h4>
@@ -122,7 +122,7 @@ class Map extends Component {
           let icon = L.divIcon({
             html: `<img src=${defaultPin} alt="Ukazovatel na mape" class="mapMarker"/>`,
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
           });
           let marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
           marker.bindPopup(`<p>${stop.date}</p>
@@ -134,14 +134,14 @@ class Map extends Component {
     //ACTIVE TRAVELLERS
     if (this.props.use === 'na-ceste-map-active' && this.props.travellers.length > 0) {
       this.props.travellers.forEach(trvlr => {
-        if (trvlr.lastMessage) {
+        if (trvlr.lastMessage && trvlr.color !== '#a29e9e') {
           let icon = L.divIcon({
             html: `<img src=${trvlr.pin} alt="Ukazovatel na mape" class="mapMarker"/>`,
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
           });
           let marker = L.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
-            icon: icon
+            icon: icon,
           }).addTo(map);
           marker.bindPopup(`
           <p><b>${trvlr.meno}</b></p>

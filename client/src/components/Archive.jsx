@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Loader from '../reusable_components/Loader';
 import NotFound from '../reusable_components/NotFound';
-import sortByDateAsc from '../helpers/helpers';
-import sortByDateDesc from '../helpers/helpers';
+import { sortByDateDesc } from '../helpers/helpers';
 
 class Archive extends Component {
   constructor(props) {

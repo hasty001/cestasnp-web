@@ -13,6 +13,8 @@ import pin08 from '../../public/img/pins/Svetlo_Ruzova.png';
 import pin09 from '../../public/img/pins/Svetlo_zelena.png';
 import pin10 from '../../public/img/pins/Tmavo_cervena.png';
 import pin11 from '../../public/img/pins/Tmavo_modra.png';
+import { sortByDateAsc } from '../helpers/helpers';
+import format from 'date-fns/format';
 
 const colors = [
   '#ff0000',
@@ -27,6 +29,8 @@ const colors = [
   '#923333',
   '#153fca',
 ];
+
+const grey = '#a29e9e';
 
 const pins = [pin01, pin02, pin03, pin04, pin05, pin06, pin07, pin08, pin09, pin10, pin11];
 
@@ -47,30 +51,34 @@ class Active extends Component {
       .then(data => {
         let travellers = [];
         let travellerIds = [];
-        let colorCount = 0;
+        let now = format(new Date(), 'YYYY-MM-DD');
         data.forEach(traveller => {
           let travellerData = {};
           travellerData.meno = traveller.meno;
           travellerData.text = traveller.text;
           travellerData.userId = traveller.user_id;
           travellerData.startMiesto = traveller.start_miesto;
-          travellerData.startDate = traveller.start_date;
+          travellerData.startDate = format(traveller.start_date, 'YYYY-MM-DD');
           travellerData.endDate = traveller.end_date;
-          travellerData.color = colors[colorCount];
-          travellerData.pin = pins[colorCount];
           travellers.push(travellerData);
           travellerIds.push(traveller.user_id);
-          colorCount += 1;
-          if (colorCount >= colors.length - 1) {
-            colorCount = 0;
-          }
         });
+        sortByDateAsc(travellers, 'startDate');
         if (travellers.length === 0) {
           this.setState({
             travellers,
             error: true,
           });
         } else {
+          let colorCount = 0;
+          travellers.forEach(trvlr => {
+            trvlr.pin = pins[colorCount];
+            trvlr.color = trvlr.startDate < now ? colors[colorCount] : grey;
+            colorCount += 1;
+            if (colorCount >= colors.length - 1) {
+              colorCount = 0;
+            }
+          });
           this.setState({
             travellers,
           });
@@ -152,17 +160,33 @@ class Active extends Component {
               <div className="active-travellers" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
-                    <div
-                      key={i}
-                      className="active-traveller"
-                      style={{ border: `1px solid ${traveller.color}` }}
-                    >
-                      <p>
-                        {traveller.meno}{' '}
-                        <img src={traveller.pin} className="mapMarker" alt="Vzor ukazovatela" />
-                      </p>
-                      <a href={`/na/${traveller.userId}`}>Sleduj putovanie...</a>
-                    </div>
+                    <a key={i} href={`/na/${traveller.userId}`}>
+                      {traveller.color !== grey ? (
+                        <div
+                          className="active-traveller"
+                          style={{ border: `1px solid ${traveller.color}`, textAlign: 'center' }}
+                        >
+                          <p style={{ color: traveller.color, margin: '12px 0 0 0' }}>
+                            {traveller.meno}{' '}
+                            <img src={traveller.pin} className="mapMarker" alt="Vzor ukazovatela" />
+                          </p>
+                        </div>
+                      ) : (
+                        <div
+                          className="active-traveller"
+                          style={{ border: `1px solid ${grey}`, color: grey }}
+                        >
+                          <p style={{ margin: '8px 0 0 0' }}>{traveller.meno}</p>
+                          <p style={{ margin: '0px', fontSize: '12px' }}>
+                            vyráža {traveller.startDate.substring(8, 10)}
+                            {'.'}
+                            {traveller.startDate.substring(5, 7)}
+                            {'.'}
+                            {traveller.startDate.substring(0, 4)}
+                          </p>
+                        </div>
+                      )}
+                    </a>
                   );
                 })}
               </div>

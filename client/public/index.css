@@ -417,6 +417,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin: 10px 5px;
   padding: 10px;
   height: 80px;
+  vertical-align: top;
 }
 
 .mapMarker {
