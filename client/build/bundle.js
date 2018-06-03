@@ -12112,7 +12112,7 @@ var Map = function (_Component) {
       //ACTIVE TRAVELLERS
       if (this.props.use === 'na-ceste-map-active' && this.props.travellers.length > 0) {
         this.props.travellers.forEach(function (trvlr) {
-          if (trvlr.lastMessage && trvlr.color !== '#a29e9e') {
+          if (trvlr.lastMessage && trvlr.color !== '#b19494') {
             var icon = _leaflet2.default.divIcon({
               html: '<img src=' + trvlr.pin + ' alt="Ukazovatel na mape" class="mapMarker"/>',
               iconSize: [32, 32],
@@ -64612,7 +64612,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var colors = ['#ff0000', '#000', '#153fca', '#7807ed', '#a45311', '#ff9c00', '#d509ed', '#ea34af', '#30ff00', '#923333', '#158ccb', '#ffe401'];
 
-var grey = '#a29e9e';
+var grey = '#b19494';
 
 var pins = [_Cervena2.default, _Cierna2.default, _Tmavo_modra2.default, _Fialova2.default, _Hneda2.default, _Oranzova2.default, _Ruzova2.default, _Svetlo_Ruzova2.default, _Svetlo_zelena2.default, _Tmavo_cervena2.default, _Modra2.default];
 

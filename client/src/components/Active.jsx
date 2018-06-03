@@ -32,7 +32,7 @@ const colors = [
   '#ffe401',
 ];
 
-const grey = '#a29e9e';
+const grey = '#b19494';
 
 const pins = [pin01, pin02, pin03, pin04, pin05, pin06, pin07, pin08, pin09, pin10, pin11];
 

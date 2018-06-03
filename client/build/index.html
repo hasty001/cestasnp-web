@@ -12,11 +12,38 @@
   <link rel="icon" href="/favicon.ico">
   <script src='https://www.google.com/recaptcha/api.js'></script>
   <meta name="google-site-verification" content="cnoR7I-_DuBu6hd2kSk11IoSf3l0QlU6oQsvFxJxnwE" />
+  <!-- COOKIE CONSENT -->
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"
+  />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+  <script>
+    window.addEventListener("load", function () {
+      window.cookieconsent.initialise({
+        "palette": {
+          "popup": {
+            "background": "#237afc"
+          },
+          "button": {
+            "background": "transparent",
+            "text": "#fff",
+            "border": "#fff"
+          }
+        },
+        "content": {
+          "message": "Na portáli cestasnp.sk používame súbory cookies pre zlepšenie Vášho online zážitku.",
+          "dismiss": "Rozumiem!",
+          "link": "Zisti viac."
+        }
+      })
+    });
+  </script>
+  <!-- COOKIE CONSENT -->
 </head>
 
 <body>
   <div id='root'></div>
   <script src='/bundle.js' type='text/javascript'></script>
+
 </body>
 
 </html>

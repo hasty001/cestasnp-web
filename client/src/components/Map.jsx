@@ -134,7 +134,7 @@ class Map extends Component {
     //ACTIVE TRAVELLERS
     if (this.props.use === 'na-ceste-map-active' && this.props.travellers.length > 0) {
       this.props.travellers.forEach(trvlr => {
-        if (trvlr.lastMessage && trvlr.color !== '#a29e9e') {
+        if (trvlr.lastMessage && trvlr.color !== '#b19494') {
           let icon = L.divIcon({
             html: `<img src=${trvlr.pin} alt="Ukazovatel na mape" class="mapMarker"/>`,
             iconSize: [32, 32],
