@@ -64530,6 +64530,10 @@ var _Cierna = __webpack_require__(520);
 
 var _Cierna2 = _interopRequireDefault(_Cierna);
 
+var _Tmavo_modra = __webpack_require__(529);
+
+var _Tmavo_modra2 = _interopRequireDefault(_Tmavo_modra);
+
 var _Fialova = __webpack_require__(521);
 
 var _Fialova2 = _interopRequireDefault(_Fialova);
@@ -64537,10 +64541,6 @@ var _Fialova2 = _interopRequireDefault(_Fialova);
 var _Hneda = __webpack_require__(522);
 
 var _Hneda2 = _interopRequireDefault(_Hneda);
-
-var _Modra = __webpack_require__(523);
-
-var _Modra2 = _interopRequireDefault(_Modra);
 
 var _Oranzova = __webpack_require__(524);
 
@@ -64562,9 +64562,13 @@ var _Tmavo_cervena = __webpack_require__(528);
 
 var _Tmavo_cervena2 = _interopRequireDefault(_Tmavo_cervena);
 
-var _Tmavo_modra = __webpack_require__(529);
+var _Modra = __webpack_require__(523);
 
-var _Tmavo_modra2 = _interopRequireDefault(_Tmavo_modra);
+var _Modra2 = _interopRequireDefault(_Modra);
+
+var _Zlta = __webpack_require__(549);
+
+var _Zlta2 = _interopRequireDefault(_Zlta);
 
 var _helpers = __webpack_require__(222);
 
@@ -64580,11 +64584,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var colors = ['#ff0000', '#000', '#7807ed', '#a45311', '#158ccb', '#ff9c00', '#d509ed', '#ea34af', '#30ff00', '#923333', '#153fca'];
+var colors = ['#ff0000', '#000', '#153fca', '#7807ed', '#a45311', '#ff9c00', '#d509ed', '#ea34af', '#30ff00', '#923333', '#158ccb', '#ffe401'];
 
 var grey = '#a29e9e';
 
-var pins = [_Cervena2.default, _Cierna2.default, _Fialova2.default, _Hneda2.default, _Modra2.default, _Oranzova2.default, _Ruzova2.default, _Svetlo_Ruzova2.default, _Svetlo_zelena2.default, _Tmavo_cervena2.default, _Tmavo_modra2.default];
+var pins = [_Cervena2.default, _Cierna2.default, _Tmavo_modra2.default, _Fialova2.default, _Hneda2.default, _Oranzova2.default, _Ruzova2.default, _Svetlo_Ruzova2.default, _Svetlo_zelena2.default, _Tmavo_cervena2.default, _Modra2.default];
 
 var Active = function (_Component) {
   _inherits(Active, _Component);
@@ -66315,6 +66319,12 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
+
+/***/ }),
+/* 549 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "/img/3551a83ff520fc5920a79331f3c30453.png";
 
 /***/ })
 /******/ ]);

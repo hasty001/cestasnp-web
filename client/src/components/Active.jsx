@@ -4,30 +4,32 @@ import Loader from '../reusable_components/Loader';
 import NotFound from '../reusable_components/NotFound';
 import pin01 from '../../public/img/pins/Cervena.png';
 import pin02 from '../../public/img/pins/Cierna.png';
-import pin03 from '../../public/img/pins/Fialova.png';
-import pin04 from '../../public/img/pins/Hneda.png';
-import pin05 from '../../public/img/pins/Modra.png';
+import pin03 from '../../public/img/pins/Tmavo_modra.png';
+import pin04 from '../../public/img/pins/Fialova.png';
+import pin05 from '../../public/img/pins/Hneda.png';
 import pin06 from '../../public/img/pins/Oranzova.png';
 import pin07 from '../../public/img/pins/Ruzova.png';
 import pin08 from '../../public/img/pins/Svetlo_Ruzova.png';
 import pin09 from '../../public/img/pins/Svetlo_zelena.png';
 import pin10 from '../../public/img/pins/Tmavo_cervena.png';
-import pin11 from '../../public/img/pins/Tmavo_modra.png';
+import pin11 from '../../public/img/pins/Modra.png';
+import pin12 from '../../public/img/pins/Zlta.png';
 import { sortByDateAsc } from '../helpers/helpers';
 import format from 'date-fns/format';
 
 const colors = [
   '#ff0000',
   '#000',
+  '#153fca',
   '#7807ed',
   '#a45311',
-  '#158ccb',
   '#ff9c00',
   '#d509ed',
   '#ea34af',
   '#30ff00',
   '#923333',
-  '#153fca',
+  '#158ccb',
+  '#ffe401',
 ];
 
 const grey = '#a29e9e';
