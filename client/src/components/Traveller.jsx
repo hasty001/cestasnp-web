@@ -77,7 +77,10 @@ class Traveller extends Component {
               if (message.img) {
                 if (message.img.eager) {
                   newMessage.img = message.img.eager[0].secure_url;
-                  newMessage.fullImg = message.img.secure_url;
+                  let first = message.img.secure_url.slice(0, 51);
+                  let second = '/c_scale,w_1240/';
+                  let third = message.img.secure_url.slice(52);
+                  newMessage.fullImg = first + second + third;
                 } else {
                   newMessage.img = message.img;
                 }
@@ -227,9 +230,9 @@ class Traveller extends Component {
                             <img
                               src={
                                 typeof message.img === 'string' &&
-                                message.img.indexOf('res.cloudinary.com') === -1
+                                  message.img.indexOf('res.cloudinary.com') === -1
                                   ? 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                    message.img
+                                  message.img
                                   : message.img
                               }
                               style={{
@@ -245,7 +248,7 @@ class Traveller extends Component {
                                   true,
                                   message.img.indexOf('res.cloudinary.com') === -1
                                     ? 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                      message.img
+                                    message.img
                                     : message.fullImg,
                                 );
                               }}
