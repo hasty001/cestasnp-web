@@ -75,7 +75,7 @@ class Active extends Component {
           let colorCount = 0;
           travellers.forEach(trvlr => {
             trvlr.pin = pins[colorCount];
-            trvlr.color = trvlr.startDate < now ? colors[colorCount] : grey;
+            trvlr.color = trvlr.startDate <= now ? colors[colorCount] : grey;
             colorCount += 1;
             if (colorCount >= colors.length - 1) {
               colorCount = 0;
