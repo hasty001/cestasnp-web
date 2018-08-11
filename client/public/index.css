@@ -441,15 +441,39 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   #na-ceste-map-active {
     height: 125px;
   }
+} @media (max-width: 800px) and (min-height: 333px) {
+  #na-ceste-map-active {
+    height: 158px;
+  }
+} @media (max-width: 800px) and (min-height: 366px) {
+  #na-ceste-map-active {
+    height: 191px;
+  }
 } @media (max-width: 800px) and (min-height: 400px) {
   #na-ceste-map-active {
     height: 225px;
+  }
+} @media (max-width: 800px) and (min-height: 433px) {
+  #na-ceste-map-active {
+    height: 258px;
+  }
+} @media (max-width: 800px) and (min-height: 466px) {
+  #na-ceste-map-active {
+    height: 291px;
   }
 } @media (max-width: 800px) and (min-height: 500px) {
   #na-ceste-map-active {
     height: 325px;
   }
-}  @media (max-width: 800px) and (min-height: 568px) {
+} @media (max-width: 800px) and (min-height: 533px) {
+  #na-ceste-map-active {
+    height: 358px;
+  }
+} @media (max-width: 800px) and (min-height: 566px) {
+  #na-ceste-map-active {
+    height: 391px;
+  }
+} @media (max-width: 800px) and (min-height: 568px) {
   #na-ceste-map-active {
     height: 396px;
   }
@@ -457,13 +481,41 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   #na-ceste-map-active {
     height: 425px;
   }
+} @media (max-width: 800px) and (min-height: 633px) {
+  #na-ceste-map-active {
+    height: 458px;
+  }
+} @media (max-width: 800px) and (min-height: 666px) {
+  #na-ceste-map-active {
+    height: 491px;
+  }
 } @media (max-width: 800px) and (min-height: 680px) {
   #na-ceste-map-active {
     height: 530px;
   }
+} @media (max-width: 800px) and (min-height: 700px) {
+  #na-ceste-map-active {
+    height: 525px;
+  }
+} @media (max-width: 800px) and (min-height: 733px) {
+  #na-ceste-map-active {
+    height: 558px;
+  }
+} @media (max-width: 800px) and (min-height: 766px) {
+  #na-ceste-map-active {
+    height: 591px;
+  }
 } @media (max-width: 800px) and (min-height: 800px) {
   #na-ceste-map-active {
     height: 625px;
+  }
+} @media (max-width: 800px) and (min-height: 833px) {
+  #na-ceste-map-active {
+    height: 658px;
+  }
+} @media (max-width: 800px) and (min-height: 866px) {
+  #na-ceste-map-active {
+    height: 691px;
   }
 } @media (max-width: 800px) and (min-height: 1000px) {
   #na-ceste-map-active {
