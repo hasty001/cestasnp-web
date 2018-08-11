@@ -13,25 +13,24 @@ import defaultPin from '../../public/img/pins/Cervena.png';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
-let config = {};
-config.params = {
-  center: [48.73, 19.46],
-  zoomControl: false,
-  zoom: 8,
-  maxZoom: 14,
-  minZoom: 7,
-  scrollwheel: false,
-  infoControl: false,
-  attributionControl: true,
-};
-config.tileLayer = {
-  uri: 'https://tiles.freemap.sk/T/{z}/{x}/{y}.png',
+let config = {
   params: {
+    center: [48.73, 19.46],
+    zoomControl: false,
+    zoom: 8,
+    maxZoom: 14,
     minZoom: 7,
-    attribution:
-      'mapa © <a href="https://www.freemap.sk">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
-    id: '',
-    accessToken: '',
+    scrollwheel: false,
+    infoControl: false,
+    attributionControl: false,
+  },
+  tileLayer: {
+    uri: 'https://tiles.freemap.sk/T/{z}/{x}/{y}.png',
+    params: {
+      minZoom: 7,
+      id: '',
+      accessToken: '',
+    },
   },
 };
 
@@ -58,6 +57,13 @@ class Map extends Component {
     if (this.state.map) return;
     // this function creates the Leaflet map object and is called after the Map component mounts
     let map = L.map(id, config.params);
+    L.control
+      .attribution({
+        prefix:
+          'Mapa © <a href="https://www.freemap.sk">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
+        position: 'bottomright',
+      })
+      .addTo(map);
     L.control
       .scale({
         position: 'bottomright',
