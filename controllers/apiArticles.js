@@ -8,13 +8,13 @@ const router = express.Router();
 
 const ORDER = {
   newestFirst: { created: -1 },
-  oldestFirst: { created: 1 }
+  oldestFirst: { created: 1 },
 };
 
 const filterBy = {
   tags: {
-    $nin: ['akcie', 'spravy-z-terenu', 'spravy_z_terenu']
-  }
+    $nin: ['akcie', 'spravy-z-terenu', 'spravy_z_terenu'],
+  },
 };
 
 const filtersSplit = category => {
@@ -44,7 +44,7 @@ router.get('/:page', function(req, res) {
     function(results) {
       res.json(results);
     },
-    filterBy
+    filterBy,
   );
 });
 
@@ -78,7 +78,7 @@ router.get('/category/:category/:page', function(req, res) {
     function(results) {
       res.json(results);
     },
-    finalFilter
+    finalFilter,
   );
 });
 
@@ -97,7 +97,7 @@ router.get('/for/home', function(req, res) {
     function(results) {
       res.json(results);
     },
-    filterBy
+    filterBy,
   );
 });
 

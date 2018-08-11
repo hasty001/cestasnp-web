@@ -125,8 +125,8 @@ DB.prototype = {
               callback(data);
               db.close();
             } catch (err) {
-              throw err;
               db.close();
+              throw err;
             }
           });
         } else {
@@ -172,8 +172,8 @@ DB.prototype = {
               callback(res);
               db.close();
             } catch (err) {
-              throw err;
               db.close();
+              throw err;
             }
           });
         } else {
@@ -279,7 +279,6 @@ DB.prototype = {
                 }
               });
           } else {
-            const resDB = db.db('cestasnp');
             const resCollection = resDB.collection('article_comments');
             resCollection.find({ article_sql_id: sArticleId }).toArray(function(err, docs) {
               if (docs) {
@@ -298,10 +297,9 @@ DB.prototype = {
     );
   },
 
-  getTravellerLastMessage: function(travellerIds, callback) {
+  getTravellersMessages: function(travellerIds, callback) {
     if (!Array.isArray(travellerIds)) {
       throw 'Traveller IDs not an array';
-      return;
     }
 
     let typeCheck = 0;
@@ -312,7 +310,6 @@ DB.prototype = {
 
     if (typeCheck !== 0) {
       throw 'Traveller IDs not numbers';
-      return;
     }
 
     MongoClient.connect(
@@ -329,8 +326,8 @@ DB.prototype = {
               callback(docs);
               db.close();
             } else {
-              throw err;
               db.close();
+              throw err;
             }
           });
         } else {
@@ -338,6 +335,34 @@ DB.prototype = {
         }
       },
     );
+  },
+
+  getTravellerLastMessage: function(travellerId) {
+    let connectionURL = this.url;
+    return new Promise(function(resolve, reject) {
+      MongoClient.connect(
+        connectionURL,
+        function(err, db) {
+          if (db) {
+            db.db('cestasnp')
+              .collection('traveler_messages')
+              .find({ user_id: travellerId })
+              .sort({ pub_date: -1 })
+              .toArray(function(err, docs) {
+                if (docs) {
+                  db.close();
+                  resolve(docs[0]);
+                } else {
+                  db.close();
+                  reject(err);
+                }
+              });
+          } else {
+            reject(err);
+          }
+        },
+      );
+    });
   },
 
   addCommentOldTraveller: function(comment, callback) {
@@ -411,6 +436,34 @@ DB.prototype = {
         }
       },
     );
+  },
+
+  finishTracking: function(userId) {
+    let connectionURL = this.url;
+    return new Promise(function(resolve, reject) {
+      MongoClient.connect(
+        connectionURL,
+        function(err, db) {
+          if (db) {
+            db.db('cestasnp')
+              .collection('traveler_details')
+              .findOneAndUpdate({ user_id: userId }, { $set: { finishedTracking: true } })
+              .then(res => {
+                try {
+                  console.log('RES: ', res);
+                  db.close();
+                  resolve(res);
+                } catch (err) {
+                  db.close();
+                  reject(err);
+                }
+              });
+          } else {
+            reject(err);
+          }
+        },
+      );
+    });
   },
 };
 

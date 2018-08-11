@@ -401,29 +401,86 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 #na-ceste-map-active {
   width: 100%;
+  min-height: 99px;
 } @media (min-height: 300px) {
   #na-ceste-map-active {
     height: 100px;
+  }
+} @media (min-height: 333px) {
+  #na-ceste-map-active {
+    height: 133px;
+  }
+} @media (min-height: 366px) {
+  #na-ceste-map-active {
+    height: 166px;
   }
 } @media (min-height: 400px) {
   #na-ceste-map-active {
     height: 200px;
   }
+} @media (min-height: 433px) {
+  #na-ceste-map-active {
+    height: 233px;
+  }
+} @media (min-height: 466px) {
+  #na-ceste-map-active {
+    height: 266px;
+  }
 } @media (min-height: 500px) {
   #na-ceste-map-active {
     height: 300px;
+  }
+} @media (min-height: 533px) {
+  #na-ceste-map-active {
+    height: 333px;
+  }
+} @media (min-height: 566px) {
+  #na-ceste-map-active {
+    height: 366px;
+  }
+} @media (min-height: 568px) {
+  #na-ceste-map-active {
+    height: 368px;
   }
 } @media (min-height: 600px) {
   #na-ceste-map-active {
     height: 400px;
   }
+} @media (min-height: 633px) {
+  #na-ceste-map-active {
+    height: 433px;
+  }
+} @media (min-height: 666px) {
+  #na-ceste-map-active {
+    height: 466px;
+  }
 } @media (min-height: 680px) {
   #na-ceste-map-active {
-    height: 505px;
+    height: 480px;
+  }
+} @media (min-height: 700px) {
+  #na-ceste-map-active {
+    height: 500px;
+  }
+} @media (min-height: 733px) {
+  #na-ceste-map-active {
+    height: 533px;
+  }
+} @media (min-height: 766px) {
+  #na-ceste-map-active {
+    height: 566px;
   }
 } @media (min-height: 800px) {
   #na-ceste-map-active {
     height: 600px;
+  }
+} @media (min-height: 833px) {
+  #na-ceste-map-active {
+    height: 633px;
+  }
+} @media (min-height: 866px) {
+  #na-ceste-map-active {
+    height: 666px;
   }
 } @media (min-height: 1000px) {
   #na-ceste-map-active {
@@ -433,9 +490,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   #na-ceste-map-active {
     height: 1000px;
   }
+} @media (min-height: 1100px) {
+  #na-ceste-map-active {
+    height: 900px;
+  }
 } @media (min-height: 1300px) {
   #na-ceste-map-active {
-    height: 1100px;
+    height: 1200px;
   }
 } @media (max-width: 800px) and (min-height: 300px) {
   #na-ceste-map-active {

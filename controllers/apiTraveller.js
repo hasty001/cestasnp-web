@@ -1,57 +1,114 @@
 const express = require('express');
 const sanitize = require('mongo-sanitize');
 const DB = require('../db/db');
-const bodyParser = require('body-parser');
 const request = require('request');
 
-const query = new DB();
+const db = new DB();
 const router = express.Router();
 
 // retrieve travellers details
 router.get('/details/:travellerId', function(req, res) {
   let travellerId = sanitize(parseInt(req.params.travellerId));
-  query.getTravellerDetails(travellerId, function(results) {
+  db.getTravellerDetails(travellerId, function(results) {
     res.json(results);
   });
 });
 
 router.get('/article/:travellerId', function(req, res) {
   let travellerId = sanitize(parseInt(req.params.travellerId));
-  query.getTravellerArticle(travellerId, function(results) {
+  db.getTravellerArticle(travellerId, function(results) {
     res.json(results);
   });
 });
 
 router.get('/messages/:travellerId', function(req, res) {
   let travellerId = sanitize(parseInt(req.params.travellerId));
-  query.getTravellerMessages(travellerId, function(results) {
+  db.getTravellerMessages(travellerId, function(results) {
     res.json(results);
   });
 });
 
 router.post('/lastMessages', function(req, res) {
-  query.getTravellerLastMessage(req.body.travellerIds, function(results) {
+  db.getTravellersMessages(req.body.travellerIds, function(results) {
     res.json(results);
   });
 });
 
 router.post('/comments', function(req, res) {
-  query.getTravellerComments(req.body.articleId, req.body.travellerId, function(results) {
+  db.getTravellerComments(req.body.articleId, req.body.travellerId, function(results) {
     res.json(results);
   });
 });
 
 router.get('/finishedTravellers', function(req, res) {
   let findBy = { finishedTracking: true };
-  query.findBy('traveler_details', findBy, function(results) {
+  db.findBy('traveler_details', findBy, function(results) {
     res.json(results);
   });
 });
 
 router.get('/activeTravellers', function(req, res) {
   let findBy = { finishedTracking: false };
-  query.findBy('traveler_details', findBy, function(results) {
-    res.json(results);
+
+  db.findBy('traveler_details', findBy, function(results) {
+    let activeTravellers = results;
+
+    let trvlrIds = activeTravellers.map(trvlr => {
+      return trvlr.user_id;
+    });
+
+    let trvlrsObject = {};
+
+    activeTravellers.forEach(trvlr => {
+      trvlrsObject[trvlr.user_id] = {
+        start: trvlr.start_date,
+      };
+    });
+
+    let trvlrPromises = trvlrIds.map(id => {
+      return db.getTravellerLastMessage(id);
+    });
+
+    Promise.all(trvlrPromises)
+      .then(function(msgs) {
+        let now = new Date();
+        let expired = msgs
+          .filter(msg => {
+            let published = new Date(msg.pub_date);
+            trvlrsObject[msg.user_id].lastMsgDate = msg.pub_date;
+            return (
+              now.valueOf() > published.valueOf() &&
+              now.valueOf() - published.valueOf() >= 432000000
+            );
+          })
+          .map(msg => {
+            return msg.user_id;
+          });
+
+        let reallyExpired = expired.filter(exp => {
+          let startDate = new Date(trvlrsObject[exp].start);
+          let lastMsgDate = new Date(trvlrsObject[exp].lastMsgDate);
+          return startDate.valueOf() < lastMsgDate.valueOf();
+        });
+
+        if (reallyExpired.length > 0) {
+          let finishPromises = reallyExpired.map(id => {
+            return db.finishTracking(id);
+          });
+          Promise.all(finishPromises)
+            .then(function() {
+              res.json(activeTravellers);
+            })
+            .catch(function(e) {
+              throw e;
+            });
+        } else {
+          res.json(activeTravellers);
+        }
+      })
+      .catch(function(e) {
+        throw e;
+      });
   });
 });
 
@@ -111,7 +168,7 @@ router.post('/addComment', function(req, res) {
         let sDate = sanitize(req.body.date);
         comment.date = sDate;
 
-        query.addCommentOldTraveller(comment, function(com) {
+        db.addCommentOldTraveller(comment, function(com) {
           res.json(com);
           return;
         });
@@ -132,7 +189,7 @@ router.post('/addComment', function(req, res) {
         let sDate = sanitize(req.body.date);
         comment.date = sDate;
 
-        query.addCommentNewTraveller(comment, function(com) {
+        db.addCommentNewTraveller(comment, function(com) {
           res.json(com);
           return;
         });
