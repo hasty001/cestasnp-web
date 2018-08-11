@@ -150,7 +150,9 @@ class Map extends Component {
             icon: icon,
           }).addTo(map);
           marker.bindPopup(`
-          <p><b>${trvlr.meno}</b></p>
+          <p><b><a href='/na/${trvlr.userId}' style={text-decoration: none;}>${
+            trvlr.meno
+          }</a></b></p>
           <p>${trvlr.lastMessage.pub_date}</p>
           <p>${trvlr.lastMessage.text}</p>`);
         }

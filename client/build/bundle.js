@@ -12125,7 +12125,7 @@ var Map = function (_Component) {
             var marker = _leaflet2.default.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
               icon: icon
             }).addTo(map);
-            marker.bindPopup('\n          <p><b>' + trvlr.meno + '</b></p>\n          <p>' + trvlr.lastMessage.pub_date + '</p>\n          <p>' + trvlr.lastMessage.text + '</p>');
+            marker.bindPopup('\n          <p><b><a href=\'/na/' + trvlr.userId + '\' style={text-decoration: none;}>' + trvlr.meno + '</a></b></p>\n          <p>' + trvlr.lastMessage.pub_date + '</p>\n          <p>' + trvlr.lastMessage.text + '</p>');
           }
         });
       }
