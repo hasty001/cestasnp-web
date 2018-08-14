@@ -15,17 +15,18 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection(collection);
-          resCollection.find().toArray(function(err, docs) {
-            if (docs) {
-              callback(docs);
-              db.close();
-            } else {
-              throw err;
-              db.close();
-            }
-          });
+          db.db('cestasnp')
+            .collection(collection)
+            .find()
+            .toArray(function(err, docs) {
+              if (docs) {
+                db.close();
+                callback(docs);
+              } else {
+                db.close();
+                throw err;
+              }
+            });
         } else {
           throw err;
         }
@@ -38,19 +39,18 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection(collection);
-          resCollection
+          db.db('cestasnp')
+            .collection(collection)
             .find(filterBy)
             .sort(sortBy)
             .limit(3)
             .toArray(function(err, docs) {
               if (docs) {
+                db.close();
                 callback(docs);
-                db.close();
               } else {
-                throw err;
                 db.close();
+                throw err;
               }
             });
         } else {
@@ -67,20 +67,19 @@ DB.prototype = {
         let page = next - 1;
         page = page < 0 ? 0 : page;
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection(collection);
-          resCollection
+          db.db('cestasnp')
+            .collection(collection)
             .find(filterBy)
             .sort(sortBy)
             .limit(8)
             .skip(8 * page)
             .toArray(function(err, docs) {
               if (docs) {
+                db.close();
                 callback(docs);
-                db.close();
               } else {
-                throw err;
                 db.close();
+                throw err;
               }
             });
         } else {
@@ -95,17 +94,18 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection(collection);
-          resCollection.find(findBy).toArray(function(err, docs) {
-            if (docs) {
-              callback(docs);
-              db.close();
-            } else {
-              throw err;
-              db.close();
-            }
-          });
+          db.db('cestasnp')
+            .collection(collection)
+            .find(findBy)
+            .toArray(function(err, docs) {
+              if (docs) {
+                db.close();
+                callback(docs);
+              } else {
+                db.close();
+                throw err;
+              }
+            });
         } else {
           throw err;
         }
@@ -118,17 +118,17 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection(collection);
-          resCollection.count(findBy).then(data => {
-            try {
-              callback(data);
+          db.db('cestasnp')
+            .collection(collection)
+            .count(findBy)
+            .then(data => {
               db.close();
-            } catch (err) {
+              callback(data);
+            })
+            .catch(err => {
               db.close();
               throw err;
-            }
-          });
+            });
         } else {
           throw err;
         }
@@ -141,16 +141,16 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection(collection);
-          resCollection.save(article).then(() => {
-            try {
+          db.db('cestasnp')
+            .collection(collection)
+            .save(article)
+            .then(() => {
               db.close();
-            } catch (err) {
+            })
+            .catch(e => {
+              db.close();
               throw err;
-              db.close();
-            }
-          });
+            });
         } else {
           throw err;
         }
@@ -164,18 +164,18 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          let resCollection = resDB.collection('articles');
           let oid = new ObjectId(sArticleId);
-          resCollection.findOneAndUpdate({ _id: oid }, { $inc: { article_views: 1 } }).then(res => {
-            try {
-              callback(res);
+          db.db('cestasnp')
+            .collection('articles')
+            .findOneAndUpdate({ _id: oid }, { $inc: { article_views: 1 } })
+            .then(res => {
               db.close();
-            } catch (err) {
+              callback(res);
+            })
+            .catch(err => {
               db.close();
               throw err;
-            }
-          });
+            });
         } else {
           throw err;
         }
@@ -191,17 +191,18 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection('traveler_details');
-          resCollection.find({ user_id: sTravellerId }).toArray(function(err, docs) {
-            if (docs) {
-              callback(docs);
-              db.close();
-            } else {
-              throw err;
-              db.close();
-            }
-          });
+          db.db('cestasnp')
+            .collection('traveler_details')
+            .find({ user_id: sTravellerId })
+            .toArray(function(err, docs) {
+              if (docs) {
+                db.close();
+                callback(docs);
+              } else {
+                db.close();
+                throw err;
+              }
+            });
         } else {
           throw err;
         }
@@ -215,17 +216,18 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection('articles');
-          resCollection.find({ created_by_user_sql_id: sTravellerId }).toArray(function(err, docs) {
-            if (docs) {
-              callback(docs);
-              db.close();
-            } else {
-              throw err;
-              db.close();
-            }
-          });
+          db.db('cestasnp')
+            .collection('articles')
+            .find({ created_by_user_sql_id: sTravellerId })
+            .toArray(function(err, docs) {
+              if (docs) {
+                db.close();
+                callback(docs);
+              } else {
+                db.close();
+                throw err;
+              }
+            });
         } else {
           throw err;
         }
@@ -239,17 +241,18 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection('traveler_messages');
-          resCollection.find({ user_id: sTravellerId }).toArray(function(err, docs) {
-            if (docs) {
-              callback(docs);
-              db.close();
-            } else {
-              throw err;
-              db.close();
-            }
-          });
+          db.db('cestasnp')
+            .collection('traveler_messages')
+            .find({ user_id: sTravellerId })
+            .toArray(function(err, docs) {
+              if (docs) {
+                db.close();
+                callback(docs);
+              } else {
+                db.close();
+                throw err;
+              }
+            });
         } else {
           throw err;
         }
@@ -265,30 +268,31 @@ DB.prototype = {
       function(err, db) {
         if (db) {
           if (sArticleId === 0) {
-            const resDB = db.db('cestasnp');
-            const resCollection = resDB.collection('traveler_comments');
-            resCollection
+            db.db('cestasnp')
+              .collection('traveler_comments')
               .find({ 'travellerDetails.id': sTravellerId })
+              .toArray(function(err, docs) {
+                if (docs) {
+                  db.close();
+                  callback(docs);
+                } else {
+                  db.close();
+                  throw err;
+                }
+              });
+          } else {
+            db.db('cestasnp')
+              .collection('article_comments')
+              .find({ article_sql_id: sArticleId })
               .toArray(function(err, docs) {
                 if (docs) {
                   callback(docs);
                   db.close();
                 } else {
-                  throw err;
                   db.close();
+                  throw err;
                 }
               });
-          } else {
-            const resCollection = resDB.collection('article_comments');
-            resCollection.find({ article_sql_id: sArticleId }).toArray(function(err, docs) {
-              if (docs) {
-                callback(docs);
-                db.close();
-              } else {
-                throw err;
-                db.close();
-              }
-            });
           }
         } else {
           throw err;
@@ -316,20 +320,21 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          const resCollection = resDB.collection('traveler_messages');
-          resCollection.find({ user_id: { $in: sTravellerIds } }).toArray(function(err, docs) {
-            if (docs) {
-              docs.sort(function(a, b) {
-                return new Date(b.pub_date) - new Date(a.pub_date);
-              });
-              callback(docs);
-              db.close();
-            } else {
-              db.close();
-              throw err;
-            }
-          });
+          db.db('cestasnp')
+            .collection('traveler_messages')
+            .find({ user_id: { $in: sTravellerIds } })
+            .toArray(function(err, docs) {
+              if (docs) {
+                docs.sort(function(a, b) {
+                  return new Date(b.pub_date) - new Date(a.pub_date);
+                });
+                db.close();
+                callback(docs);
+              } else {
+                db.close();
+                throw err;
+              }
+            });
         } else {
           throw err;
         }
@@ -370,10 +375,8 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          let resCollection = resDB.collection('article_comments');
-          /// see highest comment number
-          resCollection
+          db.db('cestasnp')
+            .collection('article_comments')
             .find()
             .sort({ sql_comment_id: -1 })
             .limit(1)
@@ -413,8 +416,7 @@ DB.prototype = {
       this.url,
       function(err, db) {
         if (db) {
-          const resDB = db.db('cestasnp');
-          let resCollection = resDB.collection('traveler_comments');
+          let resCollection = db.db('cestasnp').collection('traveler_comments');
           /// see highest comment number
           if (securityCheck.checkCommentNewTraveller(comment)) {
             // save comment with new comment id
@@ -449,14 +451,12 @@ DB.prototype = {
               .collection('traveler_details')
               .findOneAndUpdate({ user_id: userId }, { $set: { finishedTracking: true } })
               .then(res => {
-                try {
-                  console.log('RES: ', res);
-                  db.close();
-                  resolve(res);
-                } catch (err) {
-                  db.close();
-                  reject(err);
-                }
+                db.close();
+                resolve(res);
+              })
+              .catch(err => {
+                db.close();
+                reject(err);
               });
           } else {
             reject(err);
