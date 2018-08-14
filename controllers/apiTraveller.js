@@ -90,7 +90,7 @@ router.get('/activeTravellers', function(req, res) {
           });
 
         if (expired.length > 0) {
-          let finishPromises = reallyExpired.map(id => {
+          let finishPromises = expired.map(id => {
             return db.finishTracking(id);
           });
           Promise.all(finishPromises)
