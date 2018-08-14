@@ -74,6 +74,7 @@ router.get('/activeTravellers', function(req, res) {
         let now = new Date();
         let expired = msgs
           .filter(msg => {
+            console.log('msg: ', msg);
             let startDate = new Date(trvlrsObject[msg.user_id].start);
             let published = new Date(msg.pub_date);
             return (
