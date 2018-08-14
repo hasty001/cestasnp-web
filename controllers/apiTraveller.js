@@ -74,9 +74,10 @@ router.get('/activeTravellers', function(req, res) {
         let now = new Date();
         let expired = msgs
           .filter(msg => {
+            let startDate = new Date(trvlrsObject[msg.user_id].start);
             let published = new Date(msg.pub_date);
-            trvlrsObject[msg.user_id].lastMsgDate = msg.pub_date;
             return (
+              startDate.valueOf() < published.valueOf() &&
               now.valueOf() > published.valueOf() &&
               now.valueOf() - published.valueOf() >= 432000000
             );
@@ -85,14 +86,8 @@ router.get('/activeTravellers', function(req, res) {
             return msg.user_id;
           });
 
-        let reallyExpired = expired.filter(exp => {
-          let startDate = new Date(trvlrsObject[exp].start);
-          let lastMsgDate = new Date(trvlrsObject[exp].lastMsgDate);
-          return startDate.valueOf() < lastMsgDate.valueOf();
-        });
-
-        if (reallyExpired.length > 0) {
-          let finishPromises = reallyExpired.map(id => {
+        if (expired.length > 0) {
+          let finishPromises = expired.map(id => {
             return db.finishTracking(id);
           });
           Promise.all(finishPromises)
