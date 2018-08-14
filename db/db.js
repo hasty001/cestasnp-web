@@ -348,18 +348,10 @@ DB.prototype = {
               .collection('traveler_messages')
               .find({ user_id: travellerId })
               .sort({ pub_date: -1 })
-              .limit(1)
               .toArray(function(err, docs) {
-                if (docs && docs.length > 0) {
+                if (docs) {
                   db.close();
                   resolve(docs[0]);
-                } else if (docs && docs.length === 0) {
-                  db.close();
-                  resolve({
-                    message: `No messages found for ${travellerId}`,
-                    pub_date: new Date(),
-                    user_id: travellerId,
-                  });
                 } else {
                   db.close();
                   reject(err);
