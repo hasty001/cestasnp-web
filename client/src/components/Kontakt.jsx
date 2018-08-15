@@ -23,9 +23,9 @@ const Kontakt = () => {
       <p>Zasielanie zo Slovenska v EUR: SK3483300000002501407836</p>
       <p>Zasielanie z Česka v CZK: CZ2320100000002501407836</p>
       <br />
-      <p>Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme
-      v <a href="https://cestasnp.sk/pred/articles/article/379">zozname darcov</a>,
-      kde bude uvedené aj na čo boli prostriedky použité.</p>
+      <p>Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme v
+        <a href="https://cestasnp.sk/pred/articles/article/379"> zozname darcov</a>
+        , kde bude uvedené aj na čo boli prostriedky použité.</p>
       <br />
       <p>Ďakujeme, že podporujete našu prácu, čo nás posúva vpred.</p>
     </div >

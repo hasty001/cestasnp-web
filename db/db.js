@@ -356,8 +356,8 @@ DB.prototype = {
               .toArray(function(err, docs) {
                 if (docs) {
                   if (docs && docs.length > 0) {
-                    db.close(); 
-                    resolve(docs[0]); 
+                    db.close();
+                    resolve(docs[0]);
                   } else if (docs && docs.length === 0) {
                     db.close();
                     resolve({
@@ -365,9 +365,9 @@ DB.prototype = {
                       pub_date: new Date(),
                       user_id: travellerId,
                     });
-                  } else { 
+                  } else {
                     db.close();
-                    reject(err)
+                    reject(err);
                   }
                 }
               });
