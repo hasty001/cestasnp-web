@@ -13,14 +13,19 @@ const Kontakt = () => {
         info@cestasnp.sk
         </a></p>
       <br />
-      <p>Všetok vývoj a prevádzku portálu robíme vo svojom voľnom čase. Nakoľko na samotnú každomesačnú prevádzku portálu potrebujeme aj finančné prostriedky, budeme veľmi radi ak našu prácu podporíte aj finančne.</p>
+      <p>Všetok vývoj a prevádzku portálu robíme vo svojom voľnom čase. Nakoľko na samotnú
+      každomesačnú prevádzku portálu potrebujeme aj finančné prostriedky,
+      budeme veľmi radi ak našu prácu podporíte aj finančne. Pravidelne aktualizovaný zoznam darcov
+      nájdete na tomto <a href="https://cestasnp.sk/pred/articles/article/379">odkaze</a>.</p>
       <br />
       <p>Môžete tak urobiť ľubovoľnou čiastkou na účet OZ CestaSNP.sk:</p>
       <br />
       <p>Zasielanie zo Slovenska v EUR: SK3483300000002501407836</p>
       <p>Zasielanie z Česka v CZK: CZ2320100000002501407836</p>
       <br />
-      <p>Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme v zozname darcov, kde bude uvedené aj na čo boli prostriedky použité.</p>
+      <p>Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme
+      v <a href="https://cestasnp.sk/pred/articles/article/379">zozname darcov</a>,
+      kde bude uvedené aj na čo boli prostriedky použité.</p>
       <br />
       <p>Ďakujeme, že podporujete našu prácu, čo nás posúva vpred.</p>
     </div >
