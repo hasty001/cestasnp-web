@@ -79,11 +79,13 @@ body {
 }
 
 .app-body {
-  position: absolute;
+  position: relative;
   top: 100px;
   width: 100%;
+  min-height: calc(100vh - 100px);
 } @media(max-width: 800px) {
   .app-body {
+    min-height: calc(100vh - 70px);
     top: 70px;
   }
 }
@@ -386,13 +388,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 #NaCesteActive {
   display: block;
   width: 100%;
-  position: fixed;
+  position: relative;
   height: 100%;
-  top: 100px;
-} @media(max-width: 800px) {
-  #NaCesteActive {
-    top: 70px;
-  }
 }
 
 /***    NA CESTE    ***/
@@ -552,7 +549,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 } @media (max-width: 800px) and (min-height: 680px) {
   #na-ceste-map-active {
-    height: 530px;
+    height: 510px;
   }
 } @media (max-width: 800px) and (min-height: 700px) {
   #na-ceste-map-active {
@@ -599,14 +596,9 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  position: absolute;
-  bottom: 100px;
+  position: relative;
   z-index: 9999;
   background: white;
-} @media(max-width: 800px) {
-  .active-travellers {
-    bottom: 70px;
-  }
 }
 
 .active-traveller {
@@ -657,6 +649,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .na-ceste-traveller-msgs {
+  display: block;
   padding: 0 10px;
 }
 
@@ -851,3 +844,25 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 /***    ARCHIVE    ***/
 /**********************/
+/***    FOOTER     ***/
+
+.app-footer {
+  width: 100%;
+  height: 80px;
+  position: relative;
+  bottom: 0;
+}
+
+.content-wrap {
+  padding-bottom: 80px;
+}
+
+.sponzor {
+  display: block;
+  width: 500px;
+  margin: 0 auto; 
+} @media (max-width: 500px) {
+  .sponzor {
+    width: 100%;
+  }
+}
