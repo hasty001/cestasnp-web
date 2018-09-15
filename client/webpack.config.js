@@ -4,26 +4,26 @@ module.exports = {
   entry: ['whatwg-fetch', './src/index.js'],
   output: {
     path: path.resolve('./build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.jsx', '.html', '.css']
+    extensions: ['.js', '.jsx', '.html', '.css'],
   },
   module: {
     rules: [
       {
         test: /\.(jsx?)$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
       },
       {
         test: /\.(jpe?g|png|gif|svg|ico)$/i,
-        loader: 'file-loader?name=/img/[hash].[ext]'
+        loader: 'file-loader?name=/img/[hash].[ext]',
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader']
-      }
-    ]
-  }
+        loaders: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
 };
