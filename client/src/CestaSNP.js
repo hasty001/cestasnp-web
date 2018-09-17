@@ -40,7 +40,13 @@ const CestaSNP = () => (
         </Router>
       </div>
       <div className="app-footer">
-        <img src={websupport} alt="logo sponzora" className="sponzor" />
+        <a href='https://www.websupport.sk/freeweb#site=freeweb&ban=d66d4825' className="sponzor" title='Webhosting, domény, virtuálne servery'>
+          <img src='http://provizie.websupport.sk/accounts/default1/banners2/sk/728x90freeweb_SK.png'
+          alt='Sponzorvaný hosting od WebSupport.sk' title='Webhosting, domény, virtuálne servery'
+          width='728' height='90' /></a>
+          <p className="sponzor">
+            Vlastný <a href='https://www.websupport.sk/freeweb-reklama'>virtuálny server od 8,77 €</a> od WebSupport.sk
+          </p>
       </div>
     </div>
   </div>
