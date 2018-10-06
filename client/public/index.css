@@ -599,6 +599,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   position: relative;
   z-index: 9999;
   background: white;
+  -ms-overflow-style: none;
+  overflow: auto;
 }
 
 .active-traveller {
