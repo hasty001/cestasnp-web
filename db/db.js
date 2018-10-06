@@ -396,7 +396,8 @@ DB.prototype = {
             .then(() => {
               if (securityCheck.checkCommentOldTraveller(comment)) {
                 // save comment with new comment id
-                resCollection
+                db.db('cestasnp')
+                  .collection('article_comments')
                   .save(comment)
                   .then(() => {
                     db.close();

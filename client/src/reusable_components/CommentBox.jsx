@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import RecaptchaScreen from 'react-recaptcha';
+import moment from 'moment-timezone';
 import Recaptcha from 'react-recaptcha';
-
 import Loader from '../reusable_components/Loader';
 
-class CommentBox extends React.Component {
+moment.tz.setDefault('Europe/Vienna');
+
+class CommentBox extends Component {
   constructor(props) {
     super(props);
 
@@ -71,19 +72,7 @@ class CommentBox extends React.Component {
     });
 
     let data = {};
-    let now = new Date();
-    data.date =
-      now.getFullYear() +
-      '-' +
-      ('0' + (now.getMonth() + 1)).slice(-2) +
-      '-' +
-      ('0' + now.getDate()).slice(-2) +
-      ' ' +
-      ('0' + now.getHours()).slice(-2) +
-      ':' +
-      ('0' + now.getMinutes()).slice(-2) +
-      ':' +
-      ('0' + now.getSeconds()).slice(-2);
+    data.date = moment().format('YYYY-MM-DD HH:mm:ss');
     data.comment = this.state.comment;
     data.name = this.state.name;
     data.articleId = this.props.articleID;
