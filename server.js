@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const forceHTTPS = require('expressjs-force-https').forceHTTPS;
 
 const app = express();
 const http = require('http').Server(app);
@@ -25,6 +26,10 @@ app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });
 });
 
+if (process.env.PORT) {
+  app.use(forceHTTPS);
+}
+
 http.listen(process.env.PORT || 3000, function() {
-  console.log(`Listening on ${process.env.PORT ? process.env.PORT : '*:3000'}`);
+  console.log(`Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`);
 });

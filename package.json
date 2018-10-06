@@ -16,11 +16,12 @@
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "dotenv": "^4.0.0",
     "express": "^4.16.3",
+    "expressjs-force-https": "^2.0.0",
     "mongo-sanitize": "^1.0.0",
     "mongodb": "^3.0",
-    "request": "^2.87.0",
-    "dotenv": "^4.0.0"
+    "request": "^2.87.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",

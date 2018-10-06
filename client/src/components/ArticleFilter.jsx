@@ -4,13 +4,13 @@ class ArticleFilter extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      articleCategories: this.props.articleCategories
+      articleCategories: this.props.articleCategories,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      articleCategories: nextProps.articleCategories
+      articleCategories: nextProps.articleCategories,
     });
   }
 
