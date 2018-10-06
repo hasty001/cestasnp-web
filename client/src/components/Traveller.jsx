@@ -153,8 +153,6 @@ class Traveller extends Component {
       });
 
     window.addEventListener('scroll', () => {
-      console.log('Y: ', window.pageYOffset);
-
       if (!this.state.showCommentBtn && window.pageYOffset > 300) {
         this.setState({
           showCommentBtn: true,
@@ -195,8 +193,6 @@ class Traveller extends Component {
   }
 
   render() {
-    console.log('btn ', this.state.showCommentBtn);
-
     return (
       <div id="Traveller">
         {this.state.loading && !this.state.error && <Loader />}
