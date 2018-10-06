@@ -7,8 +7,8 @@ import ArticleFilter from './ArticleFilter';
 
 const articleCategories = [
   { tag: 'vsetky', text: 'Všetky' },
-  { tag: 'faqs', text: 'FAQs' },
-  { tag: 'novinky', text: 'Novinky' },
+  // { tag: 'faqs', text: 'FAQs' },
+  // { tag: 'novinky', text: 'Novinky' },
   { tag: 'ostatne', text: 'Ostatné' },
   { tag: 'vybavenie', text: 'Vybavenie' },
   { tag: 'odkazy', text: 'Odkazy' },
@@ -16,14 +16,14 @@ const articleCategories = [
   { tag: 'dolezite_miesta', text: 'Dôležité miesta' },
   { tag: 'stravovanie', text: 'Stravovanie' },
   { tag: 'cestopisy', text: 'Cestopisy' },
-  { tag: 'spravy_z_terenu', text: 'Správy z terénu' },
+  // { tag: 'spravy_z_terenu', text: 'Správy z terénu' },
   { tag: 'zaujimavosti', text: 'Zaujímavosti' },
-  { tag: 'akcie', text: 'Akcie' },
+  // { tag: 'akcie', text: 'Akcie' },
   { tag: 'obmedzenia', text: 'Obmedzenia' },
-  { tag: 'oznamy', text: 'Oznamy' },
+  // { tag: 'oznamy', text: 'Oznamy' },
   { tag: 'cesta-hrdinov-snp', text: 'Cesta hrdinov SNP' },
   { tag: 'akcie-snp', text: 'Akcie Cesta hrdinov SNP' },
-  { tag: 'akcie-ostatne', text: 'Ostatné akcie' },
+  // { tag: 'akcie-ostatne', text: 'Ostatné akcie' },
   { tag: 'oblecenie', text: 'Oblečenie' },
   { tag: 'obuv', text: 'Obuv' },
   { tag: 'o-cestesnpsk', text: 'O CesteSNP.sk' },
@@ -40,8 +40,8 @@ const articleCategories = [
   { tag: 'male-karpaty', text: 'Malé Karpaty' },
   { tag: 'recepty', text: 'Recepty' },
   { tag: 'o-strave', text: 'O strave' },
-  { tag: 'nezaradene', text: 'Nezaradené' },
-  { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
+  // { tag: 'nezaradene', text: 'Nezaradené' },
+  // { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
   { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' },
   { tag: 'rozhovory', text: 'Rozhovory' },
 ];
@@ -164,6 +164,10 @@ class Articles extends Component {
   }
 
   handleFilterClick(e) {
+    console.log('value ', e.target.value);
+    console.log('target ', e.target.attributes);
+    console.log('e ', e);
+    debugger;
     let filter = e.target.value;
     let { filters } = this.state;
     if (filters.length > 1) {
@@ -188,12 +192,7 @@ class Articles extends Component {
               let filterText = articleCategories[filterIndex].text;
               return (
                 <Button key={i} type="button" value={filter} onClick={this.handleFilterClick}>
-                  {filterText}{' '}
-                  <i
-                    className="fa fa-times pointer"
-                    aria-hidden="true"
-                    style={{ color: 'darkgrey' }}
-                  />
+                  {filterText}
                 </Button>
               );
             })}

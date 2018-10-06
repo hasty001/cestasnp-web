@@ -7,7 +7,7 @@ class Article extends Component {
     this.state = {
       url: '/api/articles/article/' + this.props.match.params.articleId,
       loading: true,
-      article: []
+      article: [],
     };
     this.updateArticleViews = this.updateArticleViews.bind(this);
   }
@@ -18,11 +18,11 @@ class Article extends Component {
       .then(data => {
         this.setState({
           article: data,
-          loading: false
+          loading: false,
         });
         //increase article count
         this.updateArticleViews('/api/articles/increase_article_count', {
-          id: data[0]['_id']
+          id: data[0]['_id'],
         })
           .then({})
           .catch(err => {
@@ -32,7 +32,7 @@ class Article extends Component {
       .catch(err => {
         this.setState({
           article: [{ title: '404', fulltext: 'Článok sme nenašli :(' }],
-          loading: false
+          loading: false,
         });
       });
   }
@@ -44,12 +44,12 @@ class Article extends Component {
       cache: 'no-cache', // *default, cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *omit
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
       },
       method: 'PUT', // *GET, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *same-origin
       redirect: 'follow', // *manual, error
-      referrer: 'no-referrer' // *client
+      referrer: 'no-referrer', // *client
     }).then(response => response.json()); // parses response to JSON
   }
 

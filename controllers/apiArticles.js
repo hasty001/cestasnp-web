@@ -13,7 +13,7 @@ const ORDER = {
 
 const filterBy = {
   tags: {
-    $nin: ['akcie', 'spravy-z-terenu', 'spravy_z_terenu'],
+    $nin: ['akcie', 'spravy-z-terenu', 'spravy_z_terenu', 'oznamy', 'akcie-ostatne', 'nezaradene'],
   },
 };
 
