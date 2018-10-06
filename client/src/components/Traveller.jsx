@@ -153,11 +153,13 @@ class Traveller extends Component {
       });
 
     window.addEventListener('scroll', () => {
-      if (!this.state.showCommentBtn && window.scrollY > 300) {
+      console.log('Y: ', window.pageYOffset);
+
+      if (!this.state.showCommentBtn && window.pageYOffset > 300) {
         this.setState({
           showCommentBtn: true,
         });
-      } else if (this.state.showCommentBtn && window.scrollY <= 300) {
+      } else if (this.state.showCommentBtn && window.pageYOffset <= 300) {
         this.setState({
           showCommentBtn: false,
         });
@@ -193,6 +195,8 @@ class Traveller extends Component {
   }
 
   render() {
+    console.log('btn ', this.state.showCommentBtn);
+
     return (
       <div id="Traveller">
         {this.state.loading && !this.state.error && <Loader />}

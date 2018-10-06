@@ -80630,11 +80630,13 @@ var Traveller = function (_Component) {
       });
 
       window.addEventListener('scroll', function () {
-        if (!_this2.state.showCommentBtn && window.scrollY > 300) {
+        console.log('Y: ', window.pageYOffset);
+
+        if (!_this2.state.showCommentBtn && window.pageYOffset > 300) {
           _this2.setState({
             showCommentBtn: true
           });
-        } else if (_this2.state.showCommentBtn && window.scrollY <= 300) {
+        } else if (_this2.state.showCommentBtn && window.pageYOffset <= 300) {
           _this2.setState({
             showCommentBtn: false
           });
@@ -80675,6 +80677,8 @@ var Traveller = function (_Component) {
     key: 'render',
     value: function render() {
       var _this3 = this;
+
+      console.log('btn ', this.state.showCommentBtn);
 
       return _react2.default.createElement(
         'div',
