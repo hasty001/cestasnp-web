@@ -7,6 +7,10 @@ const app = express();
 const http = require('http').Server(app);
 const root = path.join(__dirname, '/client/build');
 
+if (process.env.PORT) {
+  app.use(forceHTTPS);
+}
+
 app.use(express.static(root));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -25,10 +29,6 @@ app.use('/api/traveller', require('./controllers/apiTraveller'));
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });
 });
-
-if (process.env.PORT) {
-  app.use(forceHTTPS);
-}
 
 http.listen(process.env.PORT || 3000, function() {
   console.log(`Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`);
