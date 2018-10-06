@@ -1,14 +1,19 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const forceHTTPS = require('expressjs-force-https').forceHTTPS;
 
 const app = express();
 const http = require('http').Server(app);
 const root = path.join(__dirname, '/client/build');
 
 if (process.env.PORT) {
-  app.use(forceHTTPS);
+  app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https') {
+      res.redirect(`https://${req.header('host')}${req.url}`);
+    } else {
+      next();
+    }
+  });
 }
 
 app.use(express.static(root));
