@@ -9,6 +9,10 @@
   display: hidden;
 }
 
+img {
+  max-width: 100% !important;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
