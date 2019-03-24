@@ -24,6 +24,7 @@
   "devDependencies": {
     "nodemon": "^1.17.5",
     "prettier": "^1.13.0",
+    "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
   "engines": {
