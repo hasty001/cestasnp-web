@@ -12,6 +12,7 @@ import Article from './components/Article';
 import Pois from './components/Pois';
 import Traveller from './components/Traveller';
 import Active from './components/Active';
+import Cookies from './components/Cookies';
 
 import websupport from '../public/img/websupport.png';
 
@@ -35,6 +36,7 @@ const CestaSNP = () => (
             <Route exact path="/na/archive" component={Archive} />
             <Route path="/na/:traveller" component={Traveller} />
             <Route exact path="/kontakt" component={Kontakt} />
+            <Route exact path="/cookies" component={Cookies} />
             <Route path="*" component={NotFound} />
           </Switch>
         </Router>

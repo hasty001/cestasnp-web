@@ -848,9 +848,9 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 
-/***    ARCHIVE    ***/
+/***    ARCHIVE     ***/
 /**********************/
-/***    FOOTER     ***/
+/***    FOOTER      ***/
 
 .app-footer {
   width: 100%;
@@ -872,3 +872,26 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
     width: 100%;
   }
 }
+
+/***    FOOTER      ***/
+/**********************/
+/***    COOKIES     ***/
+
+#Cookies {
+  width: 80%;
+  margin: 15px auto;
+  text-align: justify;
+} @media (max-width: 767px) {
+  #Cookies {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+#Cookies p {
+  margin: 0;
+}
+
+/***    COOKIES     ***/
+/**********************/
