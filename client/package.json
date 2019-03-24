@@ -31,6 +31,6 @@
   "author": "Peter Trizuliak",
   "scripts": {
     "dev": "webpack -w --config webpack.config.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "npm install && webpack --config webpack.prod.js"
   }
 }
