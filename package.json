@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js & npm run dev --prefix ./client/ ",
-    "build": "npm run build --prefix ./client/"
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "repository": {
     "type": "git",
@@ -23,10 +23,7 @@
   },
   "devDependencies": {
     "nodemon": "^1.17.5",
-    "prettier": "^1.13.0",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0",
-    "webpack-merge": "^4.2.1"
+    "prettier": "^1.13.0"
   },
   "engines": {
     "node": "8.12.0"
