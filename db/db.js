@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
 const sanitize = require('mongo-sanitize');
-require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId;
 const Validation = require('./validation');
 const securityCheck = new Validation();

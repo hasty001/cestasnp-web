@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Map from './Map';
 import Loader from '../reusable_components/Loader';
-import NotFound from '../reusable_components/NotFound';
 import pin01 from '../../public/img/pins/Cervena.png';
 import pin02 from '../../public/img/pins/Cierna.png';
 import pin03 from '../../public/img/pins/Tmavo_modra.png';
@@ -13,7 +12,6 @@ import pin08 from '../../public/img/pins/Svetlo_Ruzova.png';
 import pin09 from '../../public/img/pins/Svetlo_zelena.png';
 import pin10 from '../../public/img/pins/Tmavo_cervena.png';
 import pin11 from '../../public/img/pins/Modra.png';
-import pin12 from '../../public/img/pins/Zlta.png';
 import { sortByDateAsc } from '../helpers/helpers';
 import format from 'date-fns/format';
 
