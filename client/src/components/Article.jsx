@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Loader from '../reusable_components/Loader';
+import Meta from '../reusable_components/Meta';
 
 class Article extends Component {
   constructor(props) {
@@ -24,10 +25,12 @@ class Article extends Component {
         this.updateArticleViews('/api/articles/increase_article_count', {
           id: data[0]['_id'],
         })
-          .then({})
-          .catch(err => {
-            throw err;
-          });
+        .then(() => {
+          return
+        })
+        .catch(err => {
+          throw err;
+        });
       })
       .catch(err => {
         this.setState({
@@ -50,7 +53,11 @@ class Article extends Component {
       mode: 'cors', // no-cors, *same-origin
       redirect: 'follow', // *manual, error
       referrer: 'no-referrer', // *client
-    }).then(response => response.json()); // parses response to JSON
+    })
+    .then(response => response.json())// parses response to JSON
+    .catch(err => {
+      throw err
+    })
   }
 
   render() {
@@ -71,6 +78,12 @@ class Article extends Component {
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <div>
+            <Meta
+              title={this.state.article[0].title}
+              url={this.state.url}
+              metadesc={this.state.article[0].metadesc}
+              img={this.state.img || ''}
+            />
             <h2>{header}</h2>
             <div dangerouslySetInnerHTML={introText()} />
             <div dangerouslySetInnerHTML={fullText()} />
