@@ -12,6 +12,7 @@ DB.prototype = {
   all: function(collection, callback) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -36,6 +37,7 @@ DB.prototype = {
   newestSorted: function(collection, sortBy = {}, callback, filterBy = {}) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -62,6 +64,7 @@ DB.prototype = {
   nextSorted: function(collection, sortBy = {}, next = 0, callback, filterBy = {}) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         let page = next - 1;
         page = page < 0 ? 0 : page;
@@ -91,6 +94,7 @@ DB.prototype = {
   findBy: function(collection, findBy = {}, callback) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -115,6 +119,7 @@ DB.prototype = {
   countCollection: function(collection, findBy = {}, callback) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -138,6 +143,7 @@ DB.prototype = {
   addArticle: function(article, collection) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -161,6 +167,7 @@ DB.prototype = {
     let sArticleId = sanitize(articleId);
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           let oid = new ObjectId(sArticleId);
@@ -188,6 +195,7 @@ DB.prototype = {
     let sTravellerId = sanitize(travellerId);
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -213,6 +221,7 @@ DB.prototype = {
     let sTravellerId = sanitize(travellerId);
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -238,6 +247,7 @@ DB.prototype = {
     let sTravellerId = sanitize(travellerId);
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -264,6 +274,7 @@ DB.prototype = {
     let sTravellerId = sanitize(travellerId);
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           if (sArticleId === 0) {
@@ -317,6 +328,7 @@ DB.prototype = {
 
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -346,6 +358,7 @@ DB.prototype = {
     return new Promise(function(resolve, reject) {
       MongoClient.connect(
         connectionURL,
+        { useNewUrlParser: true },
         function(err, db) {
           if (db) {
             db.db('cestasnp')
@@ -381,6 +394,7 @@ DB.prototype = {
   addCommentOldTraveller: function(comment, callback) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
@@ -423,6 +437,7 @@ DB.prototype = {
   addCommentNewTraveller: function(comment, callback) {
     MongoClient.connect(
       this.url,
+      { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           let resCollection = db.db('cestasnp').collection('traveler_comments');
@@ -454,6 +469,7 @@ DB.prototype = {
     return new Promise(function(resolve, reject) {
       MongoClient.connect(
         connectionURL,
+        { useNewUrlParser: true },
         function(err, db) {
           if (db) {
             db.db('cestasnp')
