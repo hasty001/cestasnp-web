@@ -12,6 +12,7 @@
   <link rel="icon" href="/favicon.ico">
   <script src='https://www.google.com/recaptcha/api.js'></script>
   <meta name="google-site-verification" content="cnoR7I-_DuBu6hd2kSk11IoSf3l0QlU6oQsvFxJxnwE" />
+  
   <!-- COOKIE CONSENT -->
   <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
   <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
@@ -39,7 +40,7 @@
   </script>
   <!-- COOKIE CONSENT -->
 
-  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <!-- GTAG GOOGLE ANALYTICS -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-12924143-1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -47,6 +48,22 @@
     gtag('js', new Date());
     gtag('config', 'UA-12924143-1');
   </script>
+  <!-- GTAG GOOGLE ANALYTICS -->
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase.js"></script>
+  <script>
+    var config = {
+      apiKey: "AIzaSyBJpRnnmBqfGnYXU0N6AVtO3S5X3Ug4_CQ",
+      authDomain: "cestasnp-sk.firebaseapp.com",
+      databaseURL: "https://cestasnp-sk.firebaseio.com",
+      projectId: "cestasnp-sk",
+      storageBucket: "cestasnp-sk.appspot.com",
+      messagingSenderId: "733336663349"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <!-- FIREBASE -->
 
 </head>
 

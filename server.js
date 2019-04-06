@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const { admin } = require('./server/util/firebase')
 
 const app = express();
 const http = require('http').Server(app);
@@ -25,11 +26,11 @@ app.get('/api', function(req, res) {
   res.json({ status: '200' });
 });
 
-app.use('/api/pois', require('./controllers/apiPois'));
+app.use('/api/pois', require('./server/controllers/apiPois'));
 
-app.use('/api/articles', require('./controllers/apiArticles'));
+app.use('/api/articles', require('./server/controllers/apiArticles'));
 
-app.use('/api/traveller', require('./controllers/apiTraveller'));
+app.use('/api/traveller', require('./server/controllers/apiTraveller'));
 
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });
