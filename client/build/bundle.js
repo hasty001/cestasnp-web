@@ -70404,7 +70404,7 @@ function (_React$Component) {
         htmlFor: "email"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Email:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "email",
-        id: "email",
+        id: "login-email",
         name: "email",
         autoComplete: "new-email",
         onBlur: function onBlur(e) {
@@ -70417,7 +70417,7 @@ function (_React$Component) {
         htmlFor: "password"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Heslo:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "password",
-        id: "password",
+        id: "login-password",
         name: "password",
         autoComplete: "new-password",
         onBlur: function onBlur(e) {
@@ -70512,6 +70512,7 @@ function (_React$Component) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _VerificationSent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VerificationSent */ "./src/components/Ucet/VerificationSent.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -70534,6 +70535,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var Register =
 /*#__PURE__*/
 function (_React$Component) {
@@ -70549,7 +70551,8 @@ function (_React$Component) {
       name: '',
       email: '',
       password: '',
-      passwordConfirmation: ''
+      passwordConfirmation: '',
+      verificationSent: 0
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleRegister = _this.handleRegister.bind(_assertThisInitialized(_this));
@@ -70564,6 +70567,8 @@ function (_React$Component) {
   }, {
     key: "handleRegister",
     value: function handleRegister() {
+      var _this2 = this;
+
       console.log(this.state);
       var _this$state = this.state,
           name = _this$state.name,
@@ -70575,12 +70580,18 @@ function (_React$Component) {
         return;
       }
 
-      firebase.auth().createUserWithEmailAndPassword(email, password).then(function (user) {
+      firebase.auth().createUserWithEmailAndPassword(email, password).then(function () {
+        var user = firebase.auth().currentUser;
         console.log('user ', user);
-        var currentUser = firebase.auth().currentUser;
-        console.log('currentUser ', currentUser);
-        return currentUser.updateProfile({
+        firebase.auth().languageCode = 'sk';
+        user.updateProfile({
           displayName: name
+        });
+        user.sendEmailVerification();
+        firebase.auth().signOut();
+
+        _this2.setState({
+          verificationSent: 1
         });
       }).catch(function (error) {
         console.log('error ', error);
@@ -70591,11 +70602,13 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, this.state.verificationSent ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_VerificationSent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        email: this.state.email
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         onSubmit: function onSubmit(e) {
-          _this2.handleRegister;
+          _this3.handleRegister;
           e.preventDefault();
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Vytvori\u0165 si \xFA\u010Det"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -70605,7 +70618,7 @@ function (_React$Component) {
         id: "name",
         name: "name",
         onBlur: function onBlur(e) {
-          _this2.handleChange(e);
+          _this3.handleChange(e);
 
           e.preventDefault();
         },
@@ -70614,11 +70627,11 @@ function (_React$Component) {
         htmlFor: "email"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Email:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "email",
-        id: "email",
+        id: "reg-email",
         name: "email",
         autoComplete: "new-email",
         onBlur: function onBlur(e) {
-          _this2.handleChange(e);
+          _this3.handleChange(e);
 
           e.preventDefault();
         },
@@ -70627,11 +70640,11 @@ function (_React$Component) {
         htmlFor: "password"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Heslo:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "password",
-        id: "password",
+        id: "reg-password",
         name: "password",
         autoComplete: "new-password",
         onBlur: function onBlur(e) {
-          _this2.handleChange(e);
+          _this3.handleChange(e);
 
           e.preventDefault();
         },
@@ -70643,7 +70656,7 @@ function (_React$Component) {
         id: "passwordConfirmation",
         name: "passwordConfirmation",
         onBlur: function onBlur(e) {
-          _this2.handleChange(e);
+          _this3.handleChange(e);
 
           e.preventDefault();
         },
@@ -70652,7 +70665,7 @@ function (_React$Component) {
         className: "button button--primary button--pill",
         onClick: this.handleRegister,
         type: "submit"
-      }, "Prihlasit"));
+      }, "Vytvori\u0165 \xFA\u010Det")));
     }
   }]);
 
@@ -70660,6 +70673,25 @@ function (_React$Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (Register);
+
+/***/ }),
+
+/***/ "./src/components/Ucet/VerificationSent.jsx":
+/*!**************************************************!*\
+  !*** ./src/components/Ucet/VerificationSent.jsx ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ __webpack_exports__["default"] = (function (_ref) {
+  var email = _ref.email;
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Registr\xE1cia prebehla \xFAspe\u0161ne"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Pros\xEDm potvr\u010F svoju registr\xE1ciu kliknut\xEDm na link, ktor\xFD sme ti zaslali na ", email, " a m\xF4\u017Ee\u0161 sa prihl\xE1si\u0165."));
+});
 
 /***/ }),
 
@@ -70686,9 +70718,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -70710,8 +70742,10 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Account).call(this, props));
     _this.state = {
-      user: null
+      user: null,
+      userDetails: null
     };
+    _this.userMongoCheck = _this.userMongoCheck.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -70722,17 +70756,41 @@ function (_React$Component) {
 
       console.log('account mounted');
       firebase.auth().onAuthStateChanged(function (user) {
-        console.log('auth changed');
+        console.log('auth changed', user);
 
-        if (user) {
-          _this2.setState({
-            user: user
-          });
+        if (user && user.emailVerified) {
+          _this2.userMongoCheck(user);
         } else {
           _this2.setState({
             user: null
           });
         }
+      });
+    }
+  }, {
+    key: "userMongoCheck",
+    value: function userMongoCheck(user) {
+      var _this3 = this;
+
+      fetch('/api/traveller/userCheck', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: user.email,
+          name: user.displayName,
+          uid: user.uid
+        }),
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then(function (res) {
+        return res.json();
+      }).then(function (userArray) {
+        _this3.setState({
+          user: user,
+          userDetails: userArray[0]
+        });
+      }).catch(function (e) {
+        console.error('error ', e);
       });
     }
   }, {

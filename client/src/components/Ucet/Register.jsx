@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+
+import VerificationSent from './VerificationSent'
 
 class Register extends React.Component {
     constructor(props) {
@@ -8,6 +10,7 @@ class Register extends React.Component {
             email: '',
             password: '',
             passwordConfirmation: '',
+            verificationSent: 0,
         }
 
         this.handleChange=this.handleChange.bind(this)
@@ -29,12 +32,22 @@ class Register extends React.Component {
         }
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(user => {
+        .then(() => {
+            let user = firebase.auth().currentUser
             console.log('user ', user)
-            let currentUser = firebase.auth().currentUser
-            console.log('currentUser ', currentUser)
-            return currentUser.updateProfile({
+            
+            firebase.auth().languageCode = 'sk'
+            
+            user.updateProfile({
                 displayName: name,
+            })
+            
+            user.sendEmailVerification()
+
+            firebase.auth().signOut()
+            
+            this.setState({
+                verificationSent: 1
             })
         })
         .catch(error => {
@@ -46,68 +59,76 @@ class Register extends React.Component {
 
     render() {
         return(
-            <form onSubmit={(e) => {
-                this.handleRegister
-                e.preventDefault()
-            }}>
-                <h1>Vytvoriť si účet</h1>
-                <label htmlFor="name">
-                    <span>Meno:</span>
-                    <input
-                        type="name"
-                        id="name"
-                        name="name"
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
-                    />
-                </label>
-                <label htmlFor="email">
-                    <span>Email:</span>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        autoComplete="new-email"
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
-                    />
-                </label>
-                <label htmlFor="password">
-                    <span>Heslo:</span>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        autoComplete="new-password"
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
-                    />
-                </label>
-                <label htmlFor="passwordConfirmation">
-                    <span>Potvrď heslo:</span>
-                    <input
-                        type="password"
-                        id="passwordConfirmation"
-                        name="passwordConfirmation"
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
-                    />
-                </label>
+            <Fragment>
+                {this.state.verificationSent ? 
 
-                <button className="button button--primary button--pill" onClick={this.handleRegister} type="submit">Prihlasit</button>
-            </form>
+                <VerificationSent email={this.state.email}/>
+
+                :
+
+                <form onSubmit={(e) => {
+                        this.handleRegister
+                        e.preventDefault()
+                    }}>
+                    <h1>Vytvoriť si účet</h1>
+                    <label htmlFor="name">
+                        <span>Meno:</span>
+                        <input
+                            type="name"
+                            id="name"
+                            name="name"
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
+                            />
+                    </label>
+                    <label htmlFor="email">
+                        <span>Email:</span>
+                        <input
+                            type="email"
+                            id="reg-email"
+                            name="email"
+                            autoComplete="new-email"
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
+                            />
+                    </label>
+                    <label htmlFor="password">
+                        <span>Heslo:</span>
+                        <input
+                            type="password"
+                            id="reg-password"
+                            name="password"
+                            autoComplete="new-password"
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
+                            />
+                    </label>
+                    <label htmlFor="passwordConfirmation">
+                        <span>Potvrď heslo:</span>
+                        <input
+                            type="password"
+                            id="passwordConfirmation"
+                            name="passwordConfirmation"
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
+                            />
+                    </label>
+
+                    <button className="button button--primary button--pill" onClick={this.handleRegister} type="submit">Vytvoriť účet</button>
+                </form>}
+            </Fragment>
         ) 
     }
 }

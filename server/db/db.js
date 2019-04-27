@@ -465,10 +465,9 @@ DB.prototype = {
   },
 
   finishTracking: function(userId) {
-    let connectionURL = this.url;
     return new Promise(function(resolve, reject) {
       MongoClient.connect(
-        connectionURL,
+        this.url,
         { useNewUrlParser: true },
         function(err, db) {
           if (db) {
@@ -490,6 +489,42 @@ DB.prototype = {
       );
     });
   },
+
+  createTraveller: function({ email, name, uid }, callback) {
+    MongoClient.connect(
+      this.url,
+      { useNewUrlParser: true },
+      function(err, db) {
+        if (db) {
+          db.db('cestasnp').collection('traveler_details')
+          .insertOne({
+            sql_id: "",
+            meno: name,
+            text: "",
+            start_date: "",
+            end_date: "",
+            completed: "",
+            user_id: uid,
+            start_miesto: "",
+            number: "",  // pocet ucastnikov
+            email,
+            articleID: "",
+            finishedTracking: true,
+          })
+          .then(() => {
+            db.close();
+            callback(comment);
+          })
+          .catch(err => {
+            db.close();
+            throw err;
+          });
+        } else {
+          throw err;
+        }
+      },
+    );
+  }
 };
 
 module.exports = DB;

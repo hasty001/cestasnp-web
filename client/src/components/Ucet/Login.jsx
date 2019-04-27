@@ -35,7 +35,7 @@ class Login extends React.Component {
                 <span>Email:</span>
                 <input
                     type="email"
-                    id="email"
+                    id="login-email"
                     name="email"
                     autoComplete="new-email"
                     onBlur={(e) => {
@@ -48,7 +48,7 @@ class Login extends React.Component {
                 <span>Heslo:</span>
                 <input
                     type="password"
-                    id="password"
+                    id="login-password"
                     name="password"
                     autoComplete="new-password"
                     onBlur={(e) => {
