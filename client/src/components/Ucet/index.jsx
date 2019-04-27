@@ -23,7 +23,8 @@ class Account extends React.Component {
                 this.userMongoCheck(user)
             } else {
                 this.setState({
-                    user: null
+                    user: null,
+                    userDetails: null,
                 })
             }
         })
@@ -50,6 +51,14 @@ class Account extends React.Component {
         })
         .catch(e => {
             console.error('error ', e);
+            let loggedUser = firebase.auth().currentUser
+            if (loggedUser) {
+                firebase.auth().signOut()
+            }
+            this.setState({
+                user: null,
+                userDetails: null,
+            })
         })
     }
     

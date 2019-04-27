@@ -202,18 +202,13 @@ router.post('/addComment', function(req, res) {
 });
 
 router.post('/userCheck', function(req, res) {
-
   let { email, name, uid } = req.body
-  
   db.findBy('traveler_details', { user_id: uid }, function(userDetails) {
     if (userDetails && userDetails.length > 0) {
-      console.error('userDetails ', userDetails);
       res.json(userDetails);
       return;
     } else {
-      console.log('details ', userDetails);
       db.createTraveller({ email, name, uid }, function(creation) {
-        console.log('creation ', creation);
         res.json(creation);
         return;
       })

@@ -70806,7 +70806,8 @@ function (_React$Component) {
           _this2.userMongoCheck(user);
         } else {
           _this2.setState({
-            user: null
+            user: null,
+            userDetails: null
           });
         }
       });
@@ -70835,6 +70836,16 @@ function (_React$Component) {
         });
       }).catch(function (e) {
         console.error('error ', e);
+        var loggedUser = firebase.auth().currentUser;
+
+        if (loggedUser) {
+          firebase.auth().signOut();
+        }
+
+        _this3.setState({
+          user: null,
+          userDetails: null
+        });
       });
     }
   }, {

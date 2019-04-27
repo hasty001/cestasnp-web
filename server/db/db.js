@@ -496,8 +496,7 @@ DB.prototype = {
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
-          db.db('cestasnp').collection('traveler_details')
-          .insertOne({
+          let userRecord = {
             sql_id: "",
             meno: name,
             text: "",
@@ -510,10 +509,12 @@ DB.prototype = {
             email,
             articleID: "",
             finishedTracking: true,
-          })
+          }
+          db.db('cestasnp').collection('traveler_details')
+          .insertOne(userRecord)
           .then(() => {
             db.close();
-            callback(comment);
+            callback(userRecord);
           })
           .catch(err => {
             db.close();
