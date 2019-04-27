@@ -6,6 +6,7 @@ class Login extends React.Component {
         this.state = {
             email: '',
             password: '',
+            error: '',
         }
 
         this.handleChange=this.handleChange.bind(this)
@@ -22,6 +23,15 @@ class Login extends React.Component {
         console.log(this.state)
         let { email, password } = this.state
         firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(user => {
+            console.log('user ', user)
+        })
+        .catch(e => {
+            console.error('err ', e)
+            this.setState({
+                error: 'Email alebo heslo nesedia. Skús ešte raz!'
+            })
+        })
     }
 
     render() {
@@ -31,6 +41,7 @@ class Login extends React.Component {
                 e.preventDefault()
             }}>
                 <h1>Prihlásiť sa</h1>
+                {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                 <label htmlFor="email">
                 <span>Email:</span>
                 <input

@@ -13,6 +13,13 @@ img {
   max-width: 100% !important;
 }
 
+.errorMsg {
+  background: rgb(255, 210, 210);
+  margin: 10px;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
