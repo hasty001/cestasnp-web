@@ -20,14 +20,12 @@ class Login extends React.Component {
     }
 
     handleLogin() {
-        console.log(this.state)
         let { email, password } = this.state
         firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(user => {
-            console.log('user ', user)
+        .then(() => {
+            return
         })
         .catch(e => {
-            console.error('err ', e)
             this.setState({
                 error: 'Email alebo heslo nesedia. Skús ešte raz!'
             })
@@ -69,7 +67,7 @@ class Login extends React.Component {
                     onChange={this.handleChange}/>
                 </label>
 
-                <button className="button button--primary button--pill" onClick={this.handleLogin} type="submit">Prihlasit</button>
+                <button className="button button--primary button--pill" onClick={this.handleLogin} type="submit">Prihlásiť</button>
             </form>
         ) 
     }

@@ -70387,15 +70387,12 @@ function (_React$Component) {
     value: function handleLogin() {
       var _this2 = this;
 
-      console.log(this.state);
       var _this$state = this.state,
           email = _this$state.email,
           password = _this$state.password;
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
-        console.log('user ', user);
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+        return;
       }).catch(function (e) {
-        console.error('err ', e);
-
         _this2.setState({
           error: 'Email alebo heslo nesedia. Skús ešte raz!'
         });
@@ -70443,7 +70440,7 @@ function (_React$Component) {
         className: "button button--primary button--pill",
         onClick: this.handleLogin,
         type: "submit"
-      }, "Prihlasit"));
+      }, "Prihl\xE1si\u0165"));
     }
   }]);
 
@@ -70565,7 +70562,8 @@ function (_React$Component) {
       email: '',
       password: '',
       passwordConfirmation: '',
-      verificationSent: 0
+      verificationSent: 0,
+      error: ''
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleRegister = _this.handleRegister.bind(_assertThisInitialized(_this));
@@ -70582,20 +70580,28 @@ function (_React$Component) {
     value: function handleRegister() {
       var _this2 = this;
 
-      console.log(this.state);
       var _this$state = this.state,
           name = _this$state.name,
           email = _this$state.email,
           password = _this$state.password,
           passwordConfirmation = _this$state.passwordConfirmation;
 
+      if (!name || name.trim().length === 0) {
+        this.setState({
+          error: "Zabudol si na meno!"
+        });
+        return;
+      }
+
       if (password !== passwordConfirmation) {
+        this.setState({
+          error: "Heslá nie sú rovnaké. Skús ešte raz!"
+        });
         return;
       }
 
       firebase.auth().createUserWithEmailAndPassword(email, password).then(function () {
         var user = firebase.auth().currentUser;
-        console.log('user ', user);
         firebase.auth().languageCode = 'sk';
         user.updateProfile({
           displayName: name
@@ -70608,8 +70614,31 @@ function (_React$Component) {
         });
       }).catch(function (error) {
         console.log('error ', error);
-        var errorCode = error.code;
-        var errorMessage = error.message;
+
+        switch (error.code) {
+          case 'auth/invalid-email':
+            _this2.setState({
+              error: "Email má nesprávny formát. Skús ešte raz!"
+            });
+
+            break;
+
+          case 'auth/email-already-in-use':
+            _this2.setState({
+              error: "Skús iný email, s týmto to nepôjde."
+            });
+
+            break;
+
+          default:
+            _this2.setState({
+              error: "Účet sa nepodarilo vytvoriť. Skús neskôr."
+            });
+
+            break;
+        }
+
+        return;
       });
     }
   }, {
@@ -70624,7 +70653,9 @@ function (_React$Component) {
           _this3.handleRegister;
           e.preventDefault();
         }
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Vytvori\u0165 si \xFA\u010Det"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Vytvori\u0165 si \xFA\u010Det"), this.state.error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "errorMsg"
+      }, this.state.error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "name"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Meno:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "name",
@@ -70703,7 +70734,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = (function (_ref) {
   var email = _ref.email;
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Registr\xE1cia prebehla \xFAspe\u0161ne"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Pros\xEDm potvr\u010F svoju registr\xE1ciu kliknut\xEDm na link, ktor\xFD sme ti zaslali na ", email, " a m\xF4\u017Ee\u0161 sa prihl\xE1si\u0165."));
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Registr\xE1cia prebehla \xFAspe\u0161ne"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Pros\xEDm potvr\u010F svoju registr\xE1ciu kliknut\xEDm na link, ktor\xFD sme ti zaslali na ", email, " a m\xF4\u017Ee\u0161 sa prihl\xE1si\u0165. Mysli na to, \u017Ee email mohol skon\u010Di\u0165 aj v tvojom spame."));
 });
 
 /***/ }),

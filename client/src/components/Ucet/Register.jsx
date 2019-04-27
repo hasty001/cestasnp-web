@@ -11,6 +11,7 @@ class Register extends React.Component {
             password: '',
             passwordConfirmation: '',
             verificationSent: 0,
+            error: '',
         }
 
         this.handleChange=this.handleChange.bind(this)
@@ -24,36 +25,56 @@ class Register extends React.Component {
     }
 
     handleRegister() {
-        console.log(this.state)
         let { name, email, password, passwordConfirmation } = this.state
         
-        if (password !== passwordConfirmation) {
+        if (!name || name.trim().length === 0) {
+            this.setState({
+                error: "Zabudol si na meno!"
+            })
             return
         }
+
+        if (password !== passwordConfirmation) {
+            this.setState({
+                error: "Heslá nie sú rovnaké. Skús ešte raz!"
+            })
+            return
+        }
+
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(() => {
             let user = firebase.auth().currentUser
-            console.log('user ', user)
-            
             firebase.auth().languageCode = 'sk'
-            
             user.updateProfile({
                 displayName: name,
             })
-            
             user.sendEmailVerification()
-
             firebase.auth().signOut()
-            
             this.setState({
                 verificationSent: 1
             })
         })
         .catch(error => {
             console.log('error ', error)
-            let errorCode = error.code
-            let errorMessage = error.message
+            switch (error.code) {
+                case 'auth/invalid-email':
+                    this.setState({
+                        error: "Email má nesprávny formát. Skús ešte raz!"
+                    })
+                    break;
+                case 'auth/email-already-in-use':
+                    this.setState({
+                        error: "Skús iný email, s týmto to nepôjde."
+                    })
+                    break;
+                default:
+                    this.setState({
+                        error: "Účet sa nepodarilo vytvoriť. Skús neskôr."
+                    })
+                    break;
+            }
+            return
         })
     }
 
@@ -71,6 +92,7 @@ class Register extends React.Component {
                         e.preventDefault()
                     }}>
                     <h1>Vytvoriť si účet</h1>
+                    {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                     <label htmlFor="name">
                         <span>Meno:</span>
                         <input
