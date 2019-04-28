@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import Loader from '../reusable_components/Loader';
+import React from 'react';
+import { Modal, } from 'react-bootstrap';
 
 const ImageBox = ({ url, show, onHide }) => (
   <Modal id="ImageBox" show={show} onHide={onHide} dialogClassName="travellerPhotoModal">

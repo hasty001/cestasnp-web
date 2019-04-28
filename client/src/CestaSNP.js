@@ -5,7 +5,7 @@ import createHistory from 'history/createBrowserHistory';
 import Navigation from './components/Navigation';
 import Archive from './components/Archive';
 import Kontakt from './components/Kontakt';
-import NotFound from './reusable_components/NotFound';
+import NotFound from './components/reusable/NotFound';
 import Home from './components/Home';
 import Articles from './components/Articles';
 import Article from './components/Article';
@@ -13,7 +13,7 @@ import Pois from './components/Pois';
 import Traveller from './components/Traveller';
 import Active from './components/Active';
 import Cookies from './components/Cookies';
-import Ucet from './components/Ucet/index';
+import Account from './components/Account/index';
 
 import websupport from '../public/img/websupport.png';
 
@@ -38,7 +38,7 @@ const CestaSNP = () => (
             <Route path="/na/:traveller" component={Traveller} />
             <Route exact path="/kontakt" component={Kontakt} />
             <Route exact path="/cookies" component={Cookies} />
-            <Route exact path="/ucet" component={Ucet} />
+            <Route exact path="/ucet" component={Account} />
             <Route path="*" component={NotFound} />
           </Switch>
         </Router>

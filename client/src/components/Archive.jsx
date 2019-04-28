@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Loader from '../reusable_components/Loader';
-import NotFound from '../reusable_components/NotFound';
+import Loader from '../components/reusable/Loader';
+import NotFound from '../components/reusable/NotFound';
 import { sortByDateDesc } from '../helpers/helpers';
 
 class Archive extends Component {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Map from './Map';
-import Loader from '../reusable_components/Loader';
+import Loader from '../components/reusable/Loader';
 import pin01 from '../../public/img/pins/Cervena.png';
 import pin02 from '../../public/img/pins/Cierna.png';
 import pin03 from '../../public/img/pins/Tmavo_modra.png';

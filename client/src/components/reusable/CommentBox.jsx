@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import moment from 'moment-timezone';
 import Recaptcha from 'react-recaptcha';
-import Loader from '../reusable_components/Loader';
+import Loader from './Loader';
 
 moment.tz.setDefault('Europe/Vienna');
 

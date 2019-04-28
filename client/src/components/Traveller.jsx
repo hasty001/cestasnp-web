@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 
 import Map from './Map';
-import Loader from '../reusable_components/Loader';
-import NotFound from '../reusable_components/NotFound';
-import CommentBox from '../reusable_components/CommentBox';
-import ImageBox from '../reusable_components/ImageBox';
+import Loader from '../components/reusable/Loader';
+import NotFound from '../components/reusable/NotFound';
+import CommentBox from '../components/reusable/CommentBox';
+import ImageBox from '../components/reusable/ImageBox';
 
 class Traveller extends Component {
   constructor(props) {

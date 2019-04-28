@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Loader from '../reusable_components/Loader';
+import Loader from '../components/reusable/Loader';
 
 class Home extends Component {
   constructor(props) {
