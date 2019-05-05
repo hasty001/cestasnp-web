@@ -902,3 +902,26 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 /***    COOKIES     ***/
 /**********************/
+/***    ACCOUNT     ***/
+
+.resetPasswordModal {
+  margin-top: 120px;
+  width: 900px;
+  max-width: 90%;
+}
+
+@media (max-width: 767px) {
+  .resetPasswordModal {
+    max-width: 96%;
+  }
+}
+
+.resetPasswordModal > .modal-content > .modal-body {
+  padding: 5px;
+}
+
+.linkLikeButton {
+  border: 0px;
+  text-decoration: underline;
+  color: #0062ff;
+}

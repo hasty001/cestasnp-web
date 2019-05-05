@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { Fragment, } from 'react'
 
 import { auth } from '../../helpers/firebase'
+import ForgottenPassword from '../reusable/ForgottenPassword'
 
 class Login extends React.Component {
     constructor(props) {
@@ -9,10 +10,12 @@ class Login extends React.Component {
             email: '',
             password: '',
             error: '',
+            showBox: false,
         }
 
         this.handleChange=this.handleChange.bind(this)
         this.handleLogin=this.handleLogin.bind(this)
+        this.handleForgottenPasswordBox=this.handleForgottenPasswordBox.bind(this)
     }
 
     handleChange(event) {
@@ -41,43 +44,58 @@ class Login extends React.Component {
         })
     }
 
+    handleForgottenPasswordBox(open) {
+        this.setState({
+          showBox: open,
+        })
+      }
+
     render() {
         return(
-            <form onSubmit={(e) => {
-                this.handleLogin
-                e.preventDefault()
-            }}>
-                <h1>Prihlásiť sa</h1>
-                {this.state.error && <p className="errorMsg">{this.state.error}</p>}
-                <label htmlFor="email">
-                <span>Email:</span>
-                <input
-                    type="email"
-                    id="login-email"
-                    name="email"
-                    autoComplete="new-email"
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}/>
-                </label>
-                <label htmlFor="password">
-                <span>Heslo:</span>
-                <input
-                    type="password"
-                    id="login-password"
-                    name="password"
-                    autoComplete="new-password"
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}/>
-                </label>
+            <Fragment>
+                <form onSubmit={(e) => {
+                    this.handleLogin
+                    e.preventDefault()
+                }}>
+                    <h1>Prihlásiť sa</h1>
+                    {this.state.error && <p className="errorMsg">{this.state.error}</p>}
+                    <label htmlFor="email">
+                    <span>Email:</span>
+                    <input
+                        type="email"
+                        id="login-email"
+                        name="email"
+                        autoComplete="new-email"
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}/>
+                    </label>
+                    <label htmlFor="password">
+                    <span>Heslo:</span>
+                    <input
+                        type="password"
+                        id="login-password"
+                        name="password"
+                        autoComplete="new-password"
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}/>
+                    </label>
+                    <button type="button" className="linkLikeButton" onClick={() => { 
+                        this.handleForgottenPasswordBox(true)
+                    }}>Zabudol si heslo?</button>
+                    <button className="button button--primary button--pill" onClick={this.handleLogin} type="submit">Prihlásiť</button>
+                </form>
 
-                <button className="button button--primary button--pill" onClick={this.handleLogin} type="submit">Prihlásiť</button>
-            </form>
+                <ForgottenPassword
+                    show={this.state.showBox}
+                    onHide={() => this.handleForgottenPasswordBox(false)}
+                />
+            </Fragment>
         ) 
     }
 }
