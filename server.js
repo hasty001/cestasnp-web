@@ -26,11 +26,11 @@ app.get('/api', function(req, res) {
   res.json({ status: '200' });
 });
 
-app.use('/api/pois', require('./server/controllers/apiPois'));
+app.use('/api/pois', require('./server/controllers/pois'));
 
-app.use('/api/articles', require('./server/controllers/apiArticles'));
+app.use('/api/articles', require('./server/controllers/articles'));
 
-app.use('/api/traveller', require('./server/controllers/apiTraveller'));
+app.use('/api/traveller', require('./server/controllers/traveller'));
 
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });

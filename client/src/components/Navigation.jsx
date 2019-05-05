@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
+
+import { auth } from '../helpers/firebase'
 import logo_screen from '../../public/img/logo_screen.png';
 import logo_mobile from '../../public/img/logo_mobile.png';
 
@@ -25,6 +27,7 @@ class Navigation extends Component {
             <a href="/" className="logo-position-screen">
               <img src={logo_screen} className="logo-screen" alt="Cesta SNP logo pre obrazovku" />
             </a>
+            <button onClick={() => auth.signOut()}>Logout</button>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>

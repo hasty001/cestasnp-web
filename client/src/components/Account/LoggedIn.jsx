@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react'
 
+import { auth } from '../../helpers/firebase'
+
 class LoggedIn extends React.Component {
   constructor(props) {
     super(props) 
@@ -10,7 +12,7 @@ class LoggedIn extends React.Component {
   }
 
   handleSignOut() {
-    firebase.auth().signOut()
+    auth.signOut()
   }
 
   render() {

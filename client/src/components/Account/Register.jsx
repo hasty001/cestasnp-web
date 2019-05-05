@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 
 import VerificationSent from './VerificationSent'
 
+import { auth }from '../../helpers/firebase'
+
 class Register extends React.Component {
     constructor(props) {
         super(props) 
@@ -42,15 +44,15 @@ class Register extends React.Component {
         }
 
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
         .then(() => {
-            let user = firebase.auth().currentUser
-            firebase.auth().languageCode = 'sk'
+            let user = auth.currentUser
+            auth.languageCode = 'sk'
             user.updateProfile({
                 displayName: name,
             })
             user.sendEmailVerification()
-            firebase.auth().signOut()
+            auth.signOut()
             this.setState({
                 verificationSent: 1
             })

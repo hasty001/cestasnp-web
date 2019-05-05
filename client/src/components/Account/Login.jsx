@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { auth } from '../../helpers/firebase'
+
 class Login extends React.Component {
     constructor(props) {
         super(props) 
@@ -21,11 +23,18 @@ class Login extends React.Component {
 
     handleLogin() {
         let { email, password } = this.state
-        firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {
+        auth.signInWithEmailAndPassword(email, password)
+        .then(({ user }) => {
+            console.log('user ', user.emailVerified)
+            if (!user.emailVerified) {
+                this.setState({
+                    error: 'Účet ešte nie je potvrdený. Po registrácii sme ti zaslali email, ktorý treba otvoriť a potvrdiť. Skús pozrieť do svojej emailovej schránky. Mohlo sa stať aj že skončil v spame.'
+                })
+            }
             return
         })
         .catch(e => {
+            console.error('error ', e)
             this.setState({
                 error: 'Email alebo heslo nesedia. Skús ešte raz!'
             })
