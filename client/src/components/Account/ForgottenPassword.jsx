@@ -42,7 +42,8 @@ class ForgottenPassword extends React.Component {
         })
         .catch(err => {
             this.setState({
-                error: 'Email, má nesprávny formát.',
+                error: '',
+                passwordSent: true,
             })
         })
     }

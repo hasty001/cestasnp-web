@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const sanitize = require('mongo-sanitize');
+const moment = require('moment')
 const ObjectId = require('mongodb').ObjectId;
 const Validation = require('./validation');
 const securityCheck = new Validation();
@@ -509,6 +510,8 @@ DB.prototype = {
             email,
             articleID: "",
             finishedTracking: true,
+            created: moment().format('YYYY-MM-DD HH:mm:ss'),
+            lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'),
           }
           db.db('cestasnp').collection('traveler_details')
           .insertOne(userRecord)

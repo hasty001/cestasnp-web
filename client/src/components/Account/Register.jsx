@@ -70,6 +70,11 @@ class Register extends React.Component {
                         error: "Skús iný email, s týmto to nepôjde."
                     })
                     break;
+                case 'auth/weak-password':
+                    this.setState({
+                        error: "Máš slabé heslo. Minimálne 6 znakov."
+                    })
+                    break;
                 default:
                     this.setState({
                         error: "Účet sa nepodarilo vytvoriť. Skús neskôr."
