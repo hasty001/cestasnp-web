@@ -89,11 +89,13 @@ class Register extends React.Component {
 
                 :
 
-                <form onSubmit={(e) => {
+                <form 
+                    className="accountWrap"
+                    onSubmit={(e) => {
                         this.handleRegister
                         e.preventDefault()
                     }}>
-                    <h1>Vytvoriť si účet</h1>
+                    <h2>Vytvoriť si účet</h2>
                     {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                     <label htmlFor="name">
                         <span>Meno:</span>
@@ -150,7 +152,7 @@ class Register extends React.Component {
                             />
                     </label>
 
-                    <button className="button button--primary button--pill" onClick={this.handleRegister} type="submit">Vytvoriť účet</button>
+                    <button className="snpBtn" onClick={this.handleRegister} type="submit">Vytvoriť účet</button>
                 </form>}
             </Fragment>
         ) 

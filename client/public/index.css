@@ -13,13 +13,6 @@ img {
   max-width: 100% !important;
 }
 
-.errorMsg {
-  background: rgb(255, 210, 210);
-  margin: 10px;
-  padding: 10px 20px;
-  border-radius: 10px;
-}
-
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
@@ -924,4 +917,101 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   border: 0px;
   text-decoration: underline;
   color: #0062ff;
+  font-size: 15px;
+  background: transparent;
 }
+
+.accountWrap {
+  width: 80%;
+  margin: 20px auto;
+  font-size: 18px;
+}
+
+.accountWrap label {
+  display: block;
+  width: 100%;
+}
+
+.accountWrap span {
+  display: inline-block;
+  width: 200px;
+  text-align: right;
+  padding-right: 15px;
+  margin: 5px 0;
+}
+
+.accountWrap h2 {
+  margin-left: 200px;
+}
+
+.accountWrap button {
+  display: block;
+  margin-left: 200px;
+}
+
+.accountWrap input {
+  border: 1px solid lightgray;
+  height: 36px;
+  min-width: 240px;
+}
+
+.errorMsg {
+  background: rgb(255, 210, 210);
+  margin: 10px 10px 10px 200px;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+@media (max-width: 550px) {
+  
+  #resetWrap button {
+    margin-left: 15px;
+  }
+
+  #resetWrap span {
+    padding-left: 15px;
+  }
+
+  .accountWrap {
+    width: 90%;
+    margin: 20px auto;
+    font-size: 18px;
+  }
+  
+  .accountWrap span {
+    width: 100%;
+    text-align: left;
+    padding-left: 50px;
+  }
+  
+  .accountWrap button {
+    margin-left: 50px;
+  }
+  
+  .accountWrap input {
+    margin-left: 50px;
+  }
+
+  .accountWrap h2 {
+    margin-left: 50px;
+  }
+
+  .errorMsg {
+    margin: 10px;
+  }
+
+
+}
+
+.snpBtn {
+  background: #f97474;
+  border: solid 0px;
+  padding: 5px 30px;
+  font-size: 18px;
+  height: 40px;
+  border-radius: 20px;
+  color: #f5f5f5;
+  box-shadow: #867e7e 2px 2px 3px;
+  margin: 10px;
+}
+

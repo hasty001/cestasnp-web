@@ -35,7 +35,6 @@ class ForgottenPassword extends React.Component {
 
         auth.sendPasswordResetEmail(this.state.email)
         .then(res => {
-            console.log('res ', res)
             this.setState({
                 error: '',
                 passwordSent: true,
@@ -52,8 +51,10 @@ class ForgottenPassword extends React.Component {
         return (
             <Modal id="ForgottenPassword" show={this.props.show} onHide={this.props.onHide} dialogClassName="resetPasswordModal">
                 <Modal.Body close>
-                    {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                     {!this.state.passwordSent && <Fragment>
+                        <div id="resetWrap" className="accountWrap">
+                        <p style={{fontSize: '20px', textAlign: 'center', }}>Zabudol si heslo? Nevadí, zadaj email a pošleme ti nové.</p>
+                        {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                         <label htmlFor="email">
                             <span>Email:</span>
                             <input
@@ -61,15 +62,20 @@ class ForgottenPassword extends React.Component {
                                 id="login-email"
                                 name="email"
                                 autoComplete="new-email"
+                                style={{ marginLeft: '15px' }}
                                 onBlur={(e) => {
                                     this.handleChange(e)
                                     e.preventDefault()
                                 }}
                                 onChange={this.handleChange}/>
                         </label>
-                        <button className="button button--primary button--pill" onClick={this.resetPassword} type="submit">Poslať nové heslo</button>
+                        <button 
+                            className="snpBtn" 
+                            onClick={this.resetPassword} 
+                            type="submit">Poslať nové heslo</button>
+                        </div>
                     </Fragment>}
-                    {this.state.passwordSent && <p>Ak má u nás <b>{this.state.email}</b> účet. Zaslali sme mu email s novým heslom.</p>}
+                    {this.state.passwordSent && <p style={{fontSize: '20px', textAlign: 'center', margin: '30px'}}>Ak má u nás <b>{this.state.email}</b> účet. Zaslali sme mu email s novým heslom.</p>}
                 </Modal.Body>
             </Modal>
         )

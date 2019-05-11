@@ -1,7 +1,7 @@
 import React, { Fragment, } from 'react'
 
 import { auth } from '../../helpers/firebase'
-import ForgottenPassword from '../reusable/ForgottenPassword'
+import ForgottenPassword from './ForgottenPassword'
 
 class Login extends React.Component {
     constructor(props) {
@@ -53,11 +53,13 @@ class Login extends React.Component {
     render() {
         return(
             <Fragment>
-                <form onSubmit={(e) => {
+                <form 
+                    className="accountWrap" 
+                    onSubmit={(e) => {
                     this.handleLogin
                     e.preventDefault()
                 }}>
-                    <h1>Prihlásiť sa</h1>
+                    <h2>Prihlásiť sa</h2>
                     {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                     <label htmlFor="email">
                     <span>Email:</span>
@@ -88,7 +90,7 @@ class Login extends React.Component {
                     <button type="button" className="linkLikeButton" onClick={() => { 
                         this.handleForgottenPasswordBox(true)
                     }}>Zabudol si heslo?</button>
-                    <button className="button button--primary button--pill" onClick={this.handleLogin} type="submit">Prihlásiť</button>
+                    <button className="snpBtn" onClick={this.handleLogin} type="submit">Prihlásiť</button>
                 </form>
 
                 <ForgottenPassword
