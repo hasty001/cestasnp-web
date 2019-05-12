@@ -26,10 +26,13 @@ class LoggedIn extends React.Component {
         <Fragment>
           {Object.keys(this.props.userData.travellerDetails).length > 0 
             ? 
-            <TravellerAccount />
+            <TravellerAccount traveller={this.props.userData}/>
             :
-            <FanAccount />}
-          <button className="snpBtn" onClick={this.handleSignOut} type="submit">Odhlásiť</button>
+            <FanAccount fan={this.props.userData}/>}
+          <button className="snpBtn" style={{
+            display: 'block',
+            margin: '15px auto',
+          }} onClick={this.handleSignOut} type="submit">Odhlásiť</button>
         </ Fragment>
       )
   }
