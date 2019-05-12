@@ -44,16 +44,18 @@ router.get('/finishedTravellers', function(req, res) {
   db.findBy('traveler_details', { 
     finishedTracking: true, 
     end_date: { $ne: "" },
-  }, function(results) {
+  })
+  .then(results => {
     res.json(results);
-  });
+  })
+  .catch(e => {
+    console.error('error ', e)
+  })
 });
 
 router.get('/activeTravellers', function(req, res) {
-  let findBy = { finishedTracking: false };
-
-  db.findBy('traveler_details', findBy, function(results) {
-    let activeTravellers = results;
+  db.findBy('traveler_details', { finishedTracking: false })
+  .then(activeTravellers => {
 
     let trvlrIds = activeTravellers.map(trvlr => {
       return trvlr.user_id;
@@ -109,7 +111,10 @@ router.get('/activeTravellers', function(req, res) {
       .catch(function(e) {
         throw e;
       });
-  });
+  })
+  .catch(e => {
+    console.error('error ', e)
+  })
 });
 
 router.post('/addComment', function(req, res) {
@@ -203,12 +208,21 @@ router.post('/addComment', function(req, res) {
 
 router.post('/userCheck', function(req, res) {
   let { email, name, uid } = req.body
-  db.findBy('traveler_details', { user_id: uid }, function(userDetails) {
+  Promise.all([
+    db.findBy('users', { uid }),
+    db.findBy('traveler_details', { user_id: uid }),
+  ])
+  .then(([ userDetails, travellerDetails ]) => {
+    // console.log('userDetails ', userDetails)
+    // console.log('travellerDetails ', travellerDetails)
     if (userDetails && userDetails.length > 0) {
-      res.json(userDetails);
+      res.json({
+        userDetails: userDetails[0],
+        travellerDetails: travellerDetails[0] || {},
+      });
       return;
     } else {
-      db.createTraveller({ email, name, uid }, function(creation) {
+      db.createUser({ email, name, uid }, function(creation) {
         res.json(creation);
         return;
       })

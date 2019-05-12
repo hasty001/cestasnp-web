@@ -7,11 +7,11 @@ import { AuthContext, } from '../AuthContext'
 const Account = () => {
     const authData = useContext(AuthContext);
     const [ { auth } ] = useState({ auth: authData })
-    console.log('authData ', authData);
-    console.log('auth ', auth);
-    console.log('authData.user ', authData.user);
+    // console.log('authData ', authData);
+    // console.log('auth ', auth);
+    // console.log('authData.user ', authData.user);
     return <Fragment>
-        {authData.isAuth ? <LoggedIn /> : <NotLoggedIn />}
+        {authData.isAuth ? <LoggedIn userData={authData} /> : <NotLoggedIn />}
     </Fragment>
 }
 

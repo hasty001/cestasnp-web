@@ -16,10 +16,13 @@ class LoggedIn extends React.Component {
   }
 
   render() {
+
+      console.log('userD ', this.props.userData)
+      
       return (
         <Fragment>
           <h1>Tu pride cela uzivatelska sekcia!</h1>
-          <button className="button button--primary button--pill" onClick={this.handleSignOut} type="submit">Odhlasit</button>
+          <button className="snpBtn" onClick={this.handleSignOut} type="submit">Odhlasit</button>
         </ Fragment>
       )
   }

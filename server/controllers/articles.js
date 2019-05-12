@@ -51,9 +51,13 @@ router.get('/:page', function(req, res) {
 // returns single article by ID
 router.get('/article/:articleId', function(req, res) {
   let articleId = sanitize(parseInt(req.params.articleId));
-  query.findBy('articles', { sql_article_id: articleId }, function(results) {
+  query.findBy('articles', { sql_article_id: articleId })
+  .then(results => {
     res.json(results);
-  });
+  })
+  .catch(e => {
+    console.error('error ', e)
+  })
 });
 
 // returns all articles matching category

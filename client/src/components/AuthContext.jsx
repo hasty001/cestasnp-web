@@ -17,7 +17,6 @@ export class AuthProvider extends React.Component {
     }
 
     componentDidMount() {
-        console.log('app mounted')
         auth.onAuthStateChanged(user => {
             console.log('auth changed', user)
             if (user && user.emailVerified) {
@@ -45,12 +44,14 @@ export class AuthProvider extends React.Component {
             }),
         })
         .then(res => res.json())
-        .then(userArray => {
-            console.log('userArray ', userArray);
+        .then(({ userDetails, travellerDetails }) => {
+            // console.log('userDetails ', userDetails);
+            // console.log('travellerDetails ', travellerDetails);
             this.setState({
                 isAuth: 1,
                 user,
-                userDetails: userArray[0],
+                userDetails,
+                travellerDetails,
             })
         })
         .catch(e => {

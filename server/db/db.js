@@ -92,29 +92,32 @@ DB.prototype = {
     );
   },
 
-  findBy: function(collection, findBy = {}, callback) {
-    MongoClient.connect(
-      this.url,
-      { useNewUrlParser: true },
-      function(err, db) {
-        if (db) {
-          db.db('cestasnp')
-            .collection(collection)
-            .find(findBy)
-            .toArray(function(err, docs) {
-              if (docs) {
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw err;
-              }
-            });
-        } else {
-          throw err;
-        }
-      },
-    );
+  findBy: function(collection, findBy = {}) {
+    return new Promise(function(resolve, reject) {
+      MongoClient.connect(
+        process.env.MONGODB_ATLAS_URI,
+        { useNewUrlParser: true },
+        function(err, db) {
+          if (db) {
+            db.db('cestasnp')
+              .collection(collection)
+              .find(findBy)
+              .toArray(function(err, docs) {
+                if (docs) {
+                  db.close();
+                  resolve(docs);
+                } else {
+                  db.close();
+                  reject(err);
+                }
+              });
+          } else {
+            reject(err);
+          }
+        },
+      );
+
+    })
   },
 
   countCollection: function(collection, findBy = {}, callback) {
@@ -491,34 +494,72 @@ DB.prototype = {
     });
   },
 
-  createTraveller: function({ email, name, uid }, callback) {
+  createUser: function({ email, name, uid }, callback) {
     MongoClient.connect(
       this.url,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           let userRecord = {
+            uid,
+            sql_user_id: "",
+            name,
+            email,
+            usertype: "Fan",
+            registerDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+            lastvisitDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+            sendEmail: "NOT IN USE",
+            gid: "NOT IN USE",
+            block: "NOT IN USE",
+            password: "NOT IN USE",
+            username: "NOT IN USE",
+            activation: "NOT IN USE",
+            params: "NOT IN USE",
+          }
+          db.db('cestasnp').collection('users')
+          .insertOne(userRecord)
+          .then(() => {
+            db.close();
+            callback(userRecord);
+          })
+          .catch(err => {
+            db.close();
+            throw err;
+          });
+        } else {
+          throw err;
+        }
+      },
+    );
+  },
+
+  createTraveller: function({ meno, text, start_date, uid, start_miesto, number, email }, callback) {
+    MongoClient.connect(
+      this.url,
+      { useNewUrlParser: true },
+      function(err, db) {
+        if (db) {
+          let travellerRecord = {
             sql_id: "",
-            meno: "",         // nazov skupiny
-            name,             // meno uzivatela
-            text: "",
-            start_date: "",
+            meno,             // nazov skupiny
+            text,             // popis skupiny
+            start_date,
             end_date: "",
             completed: "",
             user_id: uid,
-            start_miesto: "",
-            number: "",       // pocet ucastnikov
-            email,
+            start_miesto,
+            number,           // pocet ucastnikov
+            email,            // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
             articleID: "",
             finishedTracking: true,
             created: moment().format('YYYY-MM-DD HH:mm:ss'),
             lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'),
           }
           db.db('cestasnp').collection('traveler_details')
-          .insertOne(userRecord)
+          .insertOne(travellerRecord)
           .then(() => {
             db.close();
-            callback(userRecord);
+            callback(travellerRecord);
           })
           .catch(err => {
             db.close();
