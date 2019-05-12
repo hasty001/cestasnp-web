@@ -499,14 +499,15 @@ DB.prototype = {
         if (db) {
           let userRecord = {
             sql_id: "",
-            meno: name,
+            meno: "",         // nazov skupiny
+            name,             // meno uzivatela
             text: "",
             start_date: "",
             end_date: "",
             completed: "",
             user_id: uid,
             start_miesto: "",
-            number: "",  // pocet ucastnikov
+            number: "",       // pocet ucastnikov
             email,
             articleID: "",
             finishedTracking: true,
