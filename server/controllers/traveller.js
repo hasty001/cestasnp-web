@@ -227,7 +227,15 @@ router.post('/userCheck', function(req, res) {
         return;
       })
     }
-  });    
+  });
+  
+  router.post('/setupTraveller', function(req, res) {
+    let { meno, text, start_date, uid, start_miesto, number, email } = req.body
+    db.createTraveller({ meno, text, start_date, uid, start_miesto, number, email }, function(resp) {
+      res.json(resp)
+      return
+    })
+  })
      
 })
 

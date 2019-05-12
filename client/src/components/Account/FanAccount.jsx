@@ -93,7 +93,30 @@ class FanAccount extends React.Component {
         }
 
         console.log('this.state ', this.state)
-        
+        fetch('/api/traveller/setupTraveller/', {
+            method: 'POST',
+            body: JSON.stringify({
+                meno: nazov,
+                text: popis,
+                start_date,
+                uid: this.state.fan.userDetails.uid,
+                start_miesto: zaciatok !== 'oth' ? zaciatok : inyZaciatok,
+                number: pocet,
+                email: 0,
+            }),
+            headers: new Headers({
+              'Content-Type': 'application/json',
+            }),
+        })
+        .then(resp => resp.json())
+        .then(res => {
+            console.log('RESPONSE ', res)
+            return
+        })
+        .catch(e => {
+            console.error('err ', e)
+            return
+        })
     }
   
     render() {
