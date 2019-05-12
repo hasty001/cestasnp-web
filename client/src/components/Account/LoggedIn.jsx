@@ -2,6 +2,9 @@ import React, { Fragment } from 'react'
 
 import { auth } from '../../helpers/firebase'
 
+import FanAccount from './FanAccount'
+import TravellerAccount from './TravellerAccount'
+
 class LoggedIn extends React.Component {
   constructor(props) {
     super(props) 
@@ -21,8 +24,12 @@ class LoggedIn extends React.Component {
       
       return (
         <Fragment>
-          <h1>Tu pride cela uzivatelska sekcia!</h1>
-          <button className="snpBtn" onClick={this.handleSignOut} type="submit">Odhlasit</button>
+          {Object.keys(this.props.userData.travellerDetails).length > 0 
+            ? 
+            <TravellerAccount />
+            :
+            <FanAccount />}
+          <button className="snpBtn" onClick={this.handleSignOut} type="submit">Odhlásiť</button>
         </ Fragment>
       )
   }
