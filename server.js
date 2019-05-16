@@ -31,6 +31,9 @@ app.use('/api/articles', require('./controllers/apiArticles'));
 
 app.use('/api/traveller', require('./controllers/apiTraveller'));
 
+// console.log('hello');
+
+
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });
 });
