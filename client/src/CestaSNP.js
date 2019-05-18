@@ -1,6 +1,8 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router';
 import createHistory from 'history/createBrowserHistory';
+import LogRocket from 'logrocket';
+LogRocket.init('2szgtb/cestasnp-web');
 
 import Navigation from './components/Navigation';
 import Archive from './components/Archive';
