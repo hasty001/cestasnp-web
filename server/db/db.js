@@ -195,30 +195,33 @@ DB.prototype = {
 
   // traveller related
 
-  getTravellerDetails: function(travellerId, callback) {
-    let sTravellerId = sanitize(travellerId);
-    MongoClient.connect(
-      this.url,
-      { useNewUrlParser: true },
-      function(err, db) {
-        if (db) {
-          db.db('cestasnp')
-            .collection('traveler_details')
-            .find({ user_id: sTravellerId })
-            .toArray(function(err, docs) {
-              if (docs) {
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw err;
-              }
-            });
-        } else {
-          throw err;
-        }
-      },
-    );
+  getTravellerDetails: function(travellerId) {
+    let connectionURL = this.url;
+    return new Promise(function(resolve, reject) {
+      let sTravellerId = sanitize(travellerId);
+      MongoClient.connect(
+        connectionURL,
+        { useNewUrlParser: true },
+        function(err, db) {
+          if (db) {
+            db.db('cestasnp')
+              .collection('traveler_details')
+              .find({ user_id: sTravellerId })
+              .toArray(function(err, docs) {
+                if (docs) {
+                  db.close();
+                  resolve(docs);
+                } else {
+                  db.close();
+                  reject(err);
+                }
+              });
+          } else {
+            reject(err);
+          }
+        },
+      );
+    })
   },
 
   getTravellerArticle: function(travellerId, callback) {
@@ -247,30 +250,33 @@ DB.prototype = {
     );
   },
 
-  getTravellerMessages: function(travellerId, callback) {
-    let sTravellerId = sanitize(travellerId);
-    MongoClient.connect(
-      this.url,
-      { useNewUrlParser: true },
-      function(err, db) {
-        if (db) {
-          db.db('cestasnp')
-            .collection('traveler_messages')
-            .find({ user_id: sTravellerId })
-            .toArray(function(err, docs) {
-              if (docs) {
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw err;
-              }
-            });
-        } else {
-          throw err;
-        }
-      },
-    );
+  getTravellerMessages: function(travellerId) {
+    let connectionURL = this.url;
+    return new Promise(function(resolve, reject) {
+      let sTravellerId = sanitize(travellerId);
+      MongoClient.connect(
+        connectionURL,
+        { useNewUrlParser: true },
+        function(err, db) {
+          if (db) {
+            db.db('cestasnp')
+              .collection('traveler_messages')
+              .find({ user_id: sTravellerId })
+              .toArray(function(err, docs) {
+                if (docs) {
+                  db.close();
+                  resolve(docs);
+                } else {
+                  db.close();
+                  reject(err);
+                }
+              });
+          } else {
+            reject(err);
+          }
+        },
+      );
+    })
   },
 
   getTravellerComments: function(articleId, travellerId, callback) {
@@ -523,6 +529,7 @@ DB.prototype = {
             callback({
               userDetails: userRecord,
               travellerDetails: {},
+              travellerMessages: [],
             });
           })
           .catch(err => {

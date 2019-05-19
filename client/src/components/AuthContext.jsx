@@ -2,12 +2,14 @@ import React from 'react';
 
 import { auth } from '../helpers/firebase'
 
-export let AuthContext = React.createContext({
+export const AuthContext = React.createContext({
     isAuth: 0,
     user: null,
     userDetails: {},
     travellerDetails: {},
-});
+    travellerMessages: [],
+    updateTravellerDetails: () => {},
+})
 
 export class AuthProvider extends React.Component {
 
@@ -16,6 +18,8 @@ export class AuthProvider extends React.Component {
         user: null,
         userDetails: {},
         travellerDetails: {},
+        travellerMessages: [],
+        updateTravellerDetails: this.updateTravellerDetails.bind(this),
     }
 
     componentDidMount() {
@@ -29,6 +33,7 @@ export class AuthProvider extends React.Component {
                     user: null,
                     userDetails: {},
                     travellerDetails: {},
+                    travellerMessages: [],
                 })
             }
         })
@@ -47,7 +52,7 @@ export class AuthProvider extends React.Component {
             }),
         })
         .then(res => res.json())
-        .then(({ userDetails, travellerDetails }) => {
+        .then(({ userDetails, travellerDetails, travellerMessages }) => {
             console.log('userDetails ', userDetails);
             console.log('travellerDetails ', travellerDetails);
             this.setState({
@@ -55,10 +60,11 @@ export class AuthProvider extends React.Component {
                 user,
                 userDetails,
                 travellerDetails,
+                travellerMessages,
             })
         })
         .catch(e => {
-            console.error('error ', e);
+            console.error('userMongoCheck error ', e);
             let loggedUser = auth.currentUser
             if (loggedUser) {
                 auth.signOut()
@@ -68,10 +74,16 @@ export class AuthProvider extends React.Component {
                 user: null,
                 userDetails: {},
                 travellerDetails: {},
+                travellerMessages: [],
             })
         })
     }
 
+    updateTravellerDetails(details) { 
+        this.setState({
+            travellerDetails: details,
+        })
+    }
 
     render(){
         return(

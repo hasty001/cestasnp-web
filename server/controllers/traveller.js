@@ -9,9 +9,13 @@ const router = express.Router();
 // retrieve travellers details
 router.get('/details/:travellerId', function(req, res) {
   let travellerId = sanitize(parseInt(req.params.travellerId));
-  db.getTravellerDetails(travellerId, function(results) {
+  db.getTravellerDetails(travellerId)
+  .then(results => {
     res.json(results);
-  });
+  })
+  .catch(e => {
+    console.error('err ', e);
+  })
 });
 
 router.get('/article/:travellerId', function(req, res) {
@@ -23,9 +27,13 @@ router.get('/article/:travellerId', function(req, res) {
 
 router.get('/messages/:travellerId', function(req, res) {
   let travellerId = sanitize(parseInt(req.params.travellerId));
-  db.getTravellerMessages(travellerId, function(results) {
+  db.getTravellerMessages(travellerId)
+  .then(results => {
     res.json(results);
-  });
+  })
+  .catch(e => {
+    console.error('err ', e);
+  })
 });
 
 router.post('/lastMessages', function(req, res) {
@@ -210,15 +218,18 @@ router.post('/userCheck', function(req, res) {
   let { email, name, uid } = req.body
   Promise.all([
     db.findBy('users', { uid }),
-    db.findBy('traveler_details', { user_id: uid }),
+    db.getTravellerDetails(uid),
+    db.getTravellerMessages(uid),
   ])
-  .then(([ userDetails, travellerDetails ]) => {
+  .then(([ userDetails, travellerDetails, travellerMessages ]) => {
     // console.log('userDetails ', userDetails)
-    // console.log('travellerDetails ', travellerDetails)
+    console.log('travellerDetails ', travellerDetails)
+    console.log('travellerMessages ', travellerMessages)
     if (userDetails && userDetails.length > 0) {
       res.json({
         userDetails: userDetails[0],
         travellerDetails: travellerDetails[0] || {},
+        travellerMessages: travellerMessages[0] || [],
       });
       return;
     } else {

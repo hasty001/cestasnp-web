@@ -90,7 +90,7 @@ class Active extends Component {
           travellerIds: travellerIds,
         };
         if (travellerIds.length > 0) {
-          fetch('/api/traveller/lastMessages/', {
+          fetch('/api/traveller/lastMessages', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: new Headers({

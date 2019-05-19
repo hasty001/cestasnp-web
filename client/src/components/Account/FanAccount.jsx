@@ -1,5 +1,4 @@
 import React from 'react'
-
 import moment from 'moment'
 
 class FanAccount extends React.Component {
@@ -21,8 +20,8 @@ class FanAccount extends React.Component {
     }
 
     handleChange(event) {
-        console.log('state ', this.state)
-        console.log('event ', event.target.value)
+        // console.log('state ', this.state)
+        // console.log('event ', event.target.value)
         if (event.target.name === 'zaciatok' && event.target.value !== 'oth') {
             this.setState({
                 [event.target.name]: event.target.value,
@@ -93,14 +92,14 @@ class FanAccount extends React.Component {
         }
 
         console.log('this.state ', this.state)
-        fetch('/api/traveller/setupTraveller/', {
+        fetch('/api/traveller/setupTraveller', {
             method: 'POST',
             body: JSON.stringify({
                 meno: nazov,
                 text: popis,
                 start_date,
                 uid: this.state.fan.userDetails.uid,
-                start_miesto: zaciatok !== 'oth' ? zaciatok : inyZaciatok,
+                start_miesto: zaciatok === 'oth' ? inyZaciatok : zaciatok,
                 number: pocet,
                 email: 0,
             }),
@@ -109,111 +108,112 @@ class FanAccount extends React.Component {
             }),
         })
         .then(resp => resp.json())
-        .then(res => {
-            console.log('RESPONSE ', res)
+        .then(travellerDetails => {
+            this.state.fan.updateTravellerDetails(travellerDetails)
             return
         })
         .catch(e => {
-            console.error('err ', e)
+            console.error('fanAccount err ', e)
             return
         })
     }
   
     render() {
-        console.log('this.props ', this.props)
-        
-        return <form 
-        className="fanAccountWrap"
-        onSubmit={(e) => {
-            this.createTraveller
-            e.preventDefault()
-        }}>
-            <h2>Chystáš sa na cestu?</h2>
-            <p>Vytvor si profil a vyraz!</p>
-            <label htmlFor="nazov">
-                <span>Názov tvojej cesty</span>
-                <input
-                    id="nazov"
-                    name="nazov"
-                    value={this.state.nazov}
-                    type="text"
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}
-                    />
-            </label>
-            <label htmlFor="popis">
-                <span>O tvojej skupine alebo putovaní</span>
-                <textarea
-                    id="popis"
-                    name="popis"
-                    value={this.state.popis}
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}
-                    />
-            </label>
-            <label htmlFor="zaciatok">
-                <span>Kde štartuješ/te?</span>
-                <select
-                    name="zaciatok"
-                    value={this.state.zaciatok}
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}
-                >
-                    <option selected value="Dukla">Dukla</option>
-                    <option value="Devín">Devín</option>
-                    <option value="oth">Inde</option>
-                </select>
-                {this.state.zaciatok === "oth" && <input
-                    type="text"
-                    name="inyZaciatok"
-                    defaultValue="Kde?"
-                    id="inyZaciatok"
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}
-                    />}
-            </label>
-            <label htmlFor="pocet">
-                <span>Koľko vás ide? (0 ak nechceš uviesť)</span>
-                <input
-                    type="number"
-                    id="pocet"
-                    name="pocet"
-                    value={this.state.pocet}
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}
-                    />
-            </label>
-            <label htmlFor="start_date">
-                <span>Kedy vyrážaš/te?</span>
-                <input
-                    type="date"
-                    id="start_date"
-                    name="start_date"
-                    onBlur={(e) => {
-                        this.handleChange(e)
-                        e.preventDefault()
-                    }}
-                    onChange={this.handleChange}
-                    />
-            </label>
-            {this.state.error && <p className="errorMsg">{this.state.error}</p>}
-            <button className="snpBtn" onClick={this.createTraveller} type="submit">Vytvoriť účet</button>
-        </form>
+        // console.log('this.props ', this.props)
+        return (
+            <form 
+                className="fanAccountWrap"
+                onSubmit={(e) => {
+                    this.createTraveller
+                    e.preventDefault()
+                }}>
+                <h2>Chystáš sa na cestu?</h2>
+                <p>Vytvor si profil a vyraz!</p>
+                <label htmlFor="nazov">
+                    <span>Názov tvojej cesty</span>
+                    <input
+                        id="nazov"
+                        name="nazov"
+                        value={this.state.nazov}
+                        type="text"
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}
+                        />
+                </label>
+                <label htmlFor="popis">
+                    <span>O tvojej skupine alebo putovaní</span>
+                    <textarea
+                        id="popis"
+                        name="popis"
+                        value={this.state.popis}
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}
+                        />
+                </label>
+                <label htmlFor="zaciatok">
+                    <span>Kde štartuješ/te?</span>
+                    <select
+                        name="zaciatok"
+                        value={this.state.zaciatok}
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}
+                        >
+                        <option selected value="Dukla">Dukla</option>
+                        <option value="Devín">Devín</option>
+                        <option value="oth">Inde</option>
+                    </select>
+                    {this.state.zaciatok === "oth" && <input
+                        type="text"
+                        name="inyZaciatok"
+                        defaultValue="Kde?"
+                        id="inyZaciatok"
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}
+                        />}
+                </label>
+                <label htmlFor="pocet">
+                    <span>Koľko vás ide? (0 ak nechceš uviesť)</span>
+                    <input
+                        type="number"
+                        id="pocet"
+                        name="pocet"
+                        value={this.state.pocet}
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}
+                        />
+                </label>
+                <label htmlFor="start_date">
+                    <span>Kedy vyrážaš/te?</span>
+                    <input
+                        type="date"
+                        id="start_date"
+                        name="start_date"
+                        onBlur={(e) => {
+                            this.handleChange(e)
+                            e.preventDefault()
+                        }}
+                        onChange={this.handleChange}
+                        />
+                </label>
+                {this.state.error && <p className="errorMsg">{this.state.error}</p>}
+                <button className="snpBtn" onClick={this.createTraveller} type="submit">Vytvoriť cestu</button>
+            </form>
+        )
     }
 }
 
