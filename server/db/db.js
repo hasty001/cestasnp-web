@@ -520,7 +520,10 @@ DB.prototype = {
           .insertOne(userRecord)
           .then(() => {
             db.close();
-            callback(userRecord);
+            callback({
+              userDetails: userRecord,
+              travellerDetails: {},
+            });
           })
           .catch(err => {
             db.close();

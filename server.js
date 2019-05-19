@@ -32,9 +32,6 @@ app.use('/api/articles', require('./server/controllers/articles'));
 
 app.use('/api/traveller', require('./server/controllers/traveller'));
 
-// console.log('hello');
-
-
 app.get('/*', function(req, res) {
   res.sendFile('index.html', { root });
 });

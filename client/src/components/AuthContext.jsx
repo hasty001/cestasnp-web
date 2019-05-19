@@ -5,7 +5,8 @@ import { auth } from '../helpers/firebase'
 export let AuthContext = React.createContext({
     isAuth: 0,
     user: null,
-    userDetails: null,
+    userDetails: {},
+    travellerDetails: {},
 });
 
 export class AuthProvider extends React.Component {
@@ -13,7 +14,8 @@ export class AuthProvider extends React.Component {
     state = {
         isAuth: 0,
         user: null,
-        userDetails: null,
+        userDetails: {},
+        travellerDetails: {},
     }
 
     componentDidMount() {
@@ -25,7 +27,8 @@ export class AuthProvider extends React.Component {
                 this.setState({
                     isAuth: 0,
                     user: null,
-                    userDetails: null,
+                    userDetails: {},
+                    travellerDetails: {},
                 })
             }
         })
@@ -45,8 +48,8 @@ export class AuthProvider extends React.Component {
         })
         .then(res => res.json())
         .then(({ userDetails, travellerDetails }) => {
-            // console.log('userDetails ', userDetails);
-            // console.log('travellerDetails ', travellerDetails);
+            console.log('userDetails ', userDetails);
+            console.log('travellerDetails ', travellerDetails);
             this.setState({
                 isAuth: 1,
                 user,
@@ -63,7 +66,8 @@ export class AuthProvider extends React.Component {
             this.setState({
                 isAuth: 0,
                 user: null,
-                userDetails: null,
+                userDetails: {},
+                travellerDetails: {},
             })
         })
     }
