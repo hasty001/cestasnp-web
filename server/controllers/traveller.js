@@ -8,7 +8,7 @@ const router = express.Router();
 
 // retrieve travellers details
 router.get('/details/:travellerId', function(req, res) {
-  let travellerId = sanitize(parseInt(req.params.travellerId));
+  let travellerId = sanitize(req.params.travellerId);
   db.getTravellerDetails(travellerId)
   .then(results => {
     res.json(results);

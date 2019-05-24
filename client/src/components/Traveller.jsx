@@ -14,7 +14,7 @@ class Traveller extends Component {
     this.state = {
       loading: true,
       error: false,
-      travellerId: parseInt(this.props.match.params.traveller),
+      travellerId: this.props.match.params.traveller,
       travellerData: {
         meno: '',
         text: '',
