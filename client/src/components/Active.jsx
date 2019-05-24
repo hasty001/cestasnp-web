@@ -97,7 +97,9 @@ class Active extends Component {
               'Content-Type': 'application/json',
             }),
           })
-            .then(resp => resp.json())
+            .then(resp => {
+              return resp.json()
+            })
             .then(messages => {
               let ids = [];
               let lastMessages = [];

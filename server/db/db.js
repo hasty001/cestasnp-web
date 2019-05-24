@@ -328,7 +328,7 @@ DB.prototype = {
 
     let typeCheck = 0;
     let sTravellerIds = travellerIds.map(id => {
-      if (typeof id !== 'number') typeCheck += 1;
+      if (typeof id !== 'number' && typeof id !== 'string') typeCheck += 1;
       return sanitize(id);
     });
 
