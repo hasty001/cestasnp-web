@@ -580,6 +580,43 @@ DB.prototype = {
         }
       },
     );
+  },
+
+  updateTraveller: function({ meno, text, start_date, uid, start_miesto, end_date, number, completed, email, finishedTracking }, callback) {
+    MongoClient.connect(
+      this.url,
+      { useNewUrlParser: true },
+      function(err, db) {
+        if (db) {
+          db.db('cestasnp').collection('traveler_details')
+          .findOneAndUpdate({ user_id: uid }, { 
+            $set: {             
+              meno: sanitize(meno),             // nazov skupiny
+              text: sanitize(text),             // popis skupiny
+              start_date: sanitize(start_date),
+              end_date: sanitize(end_date),
+              completed: sanitize(completed),
+              user_id: sanitize(uid),
+              start_miesto: sanitize(start_miesto),
+              number: sanitize(number),           // pocet ucastnikov
+              email: sanitize(email),            // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
+              finishedTracking: sanitize(finishedTracking),
+              lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'), 
+            } 
+          })
+          .then(() => {
+            db.close();
+            callback({ response: `${uid} successfully updated` });
+          })
+          .catch(err => {
+            db.close();
+            throw err;
+          });
+        } else {
+          throw err;
+        }
+      },
+    );
   }
 };
 

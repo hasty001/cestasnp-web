@@ -247,6 +247,14 @@ router.post('/userCheck', function(req, res) {
       return
     })
   })
+
+  router.post('/updateTraveller', function(req, res) {
+    let { meno, text, start_date, uid, start_miesto, number, end_date, completed, email, finishedTracking } = req.body
+    db.updateTraveller({ meno, text, start_date, uid, start_miesto, number, end_date, completed, email, finishedTracking }, function(resp) {
+      res.json(resp)
+      return
+    })
+  })
      
 })
 
