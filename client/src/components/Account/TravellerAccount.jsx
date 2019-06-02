@@ -15,9 +15,17 @@ class TravellerAccount extends React.Component {
           start_date: this.props.traveller.travellerDetails.start_date,
           user_id: this.props.traveller.travellerDetails.user_id,
           loading: 0,
+          edit: {
+              meno: 0,
+              popis: 0,
+              zaciatok: 0,
+              pocet: 0,
+              start_date: 0,
+          }
         }
         this.handleChange=this.handleChange.bind(this)
         this.updateTraveller=this.updateTraveller.bind(this)
+        this.triggerEdit=this.triggerEdit.bind(this)
     }
 
     handleChange(event) {
@@ -32,6 +40,15 @@ class TravellerAccount extends React.Component {
                 error: "",
             })
         }
+    }
+
+    triggerEdit(target) {
+        console.log('trigger event ', target)
+        let editUpdate = this.state.edit
+        editUpdate[target] = this.state.edit[target] === 1 ? 0 : 1
+        this.setState({
+            edit: editUpdate
+        })
     }
 
     updateTraveller() {
@@ -146,77 +163,100 @@ class TravellerAccount extends React.Component {
                 <h2>Moja cesta</h2>
                 <p>Tu si môžeš upraviť detaily o svojej ceste a zároveň posielať správy.</p>
                 <label htmlFor="nazov">
-                    <span>Moja cesta</span>
-                    <input
-                        id="nazov"
-                        name="nazov"
-                        value={this.state.meno}
-                        type="text"
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
+                    <span onClick={() => this.triggerEdit("meno") }>Moja cesta <i className="fas fa-edit" ></i></span>
+                    {this.state.edit.meno ? 
+                        <input
+                            id="nazov"
+                            name="nazov"
+                            value={this.state.meno}
+                            type="text"
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
                         />
+                        :
+                        <p className="travellerP">{this.state.meno}</p>
+                    }
                 </label>
                 <label htmlFor="popis">
-                    <span>Popis</span>
-                    <textarea
-                        id="popis"
-                        name="popis"
-                        value={this.state.popis}
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
+                    <span onClick={() => this.triggerEdit("popis") }>Popis <i className="fas fa-edit" ></i></span>
+                    {this.state.edit.popis ? 
+                        <textarea
+                            id="popis"
+                            name="popis"
+                            value={this.state.popis}
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
                         />
+                        :
+                        <p className="travellerP">{this.state.meno}</p>
+                    }
                 </label>
                 <label htmlFor="zaciatok">
-                    <span>Začiatok</span>
-                    <input
-                        id="zaciatok"
-                        name="zaciatok"
-                        value={this.state.zaciatok}
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
+                    <span onClick={() => {
+                        this.triggerEdit("zaciatok") 
+                        this.triggerEdit("start_date") 
+                    }}>Začiatok <i className="fas fa-edit" ></i></span>
+                    {this.state.edit.zaciatok ?
+                        <input
+                            id="zaciatok"
+                            name="zaciatok"
+                            value={this.state.zaciatok}
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
                         />
+                        :
+                        <p className="travellerP">{this.state.zaciatok}</p>
+                    }
                 </label>
                 <label htmlFor="start_date">
-                    <input
-                        type="date"
-                        id="start_date"
-                        name="start_date"
-                        value={this.state.start_date}
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
+                    {this.state.edit.start_date ?
+                        <input
+                            type="date"
+                            id="start_date"
+                            name="start_date"
+                            value={this.state.start_date}
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
                         />
+                        :
+                        <p className="travellerP">{this.state.start_date}</p>
+                    }
                 </label>
                 <label htmlFor="pocet">
-                    <span>Počet</span>
-                    <input
-                        type="number"
-                        id="pocet"
-                        name="pocet"
-                        value={this.state.pocet}
-                        onBlur={(e) => {
-                            this.handleChange(e)
-                            e.preventDefault()
-                        }}
-                        onChange={this.handleChange}
+                    <span onClick={() => this.triggerEdit("pocet") }>Počet <i className="fas fa-edit" ></i></span>
+                    {this.state.edit.pocet ?
+                        <input
+                            type="number"
+                            id="pocet"
+                            name="pocet"
+                            value={this.state.pocet}
+                            onBlur={(e) => {
+                                this.handleChange(e)
+                                e.preventDefault()
+                            }}
+                            onChange={this.handleChange}
                         />
+                        :
+                        <p className="travellerP">{this.state.pocet}</p>
+                    }
                 </label>
                 {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                 {this.state.loading ? 
                     <Loader />
                     :
-                    <button className="snpBtn" onClick={this.updateTraveller} type="submit">Zmeniť detaily</button>}
+                    <button className="snpBtn" onClick={this.updateTraveller} type="submit">Uložiť zmeny</button>}
             </form>
         ) 
     }
