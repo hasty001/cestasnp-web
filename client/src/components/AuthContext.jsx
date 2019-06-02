@@ -27,6 +27,15 @@ export class AuthProvider extends React.Component {
             console.log('auth changed', user)
             if (user && user.emailVerified) {
                 this.userMongoCheck(user)
+            } else if (user) {
+                auth.signOut()
+                this.setState({
+                    isAuth: 0,
+                    user: null,
+                    userDetails: {},
+                    travellerDetails: {},
+                    travellerMessages: [],
+                })
             } else {
                 this.setState({
                     isAuth: 0,
@@ -55,6 +64,7 @@ export class AuthProvider extends React.Component {
         .then(({ userDetails, travellerDetails, travellerMessages }) => {
             console.log('userDetails ', userDetails);
             console.log('travellerDetails ', travellerDetails);
+            console.log('travellerMessages ', travellerMessages);
             this.setState({
                 isAuth: 1,
                 user,
