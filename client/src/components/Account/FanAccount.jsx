@@ -11,12 +11,13 @@ class FanAccount extends React.Component {
         nazov: "",
         popis: "",
         zaciatok: "Dukla",
-        inyZaciatok: "",
+        inyZaciatok: "Kde?",
         pocet: "",
         start_date: "",
       }
       this.handleChange=this.handleChange.bind(this)
       this.createTraveller=this.createTraveller.bind(this)
+      this.removeDefault=this.removeDefault.bind(this)
     }
 
     handleChange(event) {
@@ -25,7 +26,7 @@ class FanAccount extends React.Component {
         if (event.target.name === 'zaciatok' && event.target.value !== 'oth') {
             this.setState({
                 [event.target.name]: event.target.value,
-                inyZaciatok: "",
+                inyZaciatok: "Kde?",
                 error: "",
             })
         } else if(event.target.name === 'start_date') {
@@ -37,6 +38,14 @@ class FanAccount extends React.Component {
             this.setState({
                 [event.target.name]: event.target.value,
                 error: "",
+            })
+        }
+    }
+
+    removeDefault(event) {
+        if(event.target.value === "Kde?") {
+            this.setState({
+                inyZaciatok: ""
             })
         }
     }
@@ -174,13 +183,14 @@ class FanAccount extends React.Component {
                     {this.state.zaciatok === "oth" && <input
                         type="text"
                         name="inyZaciatok"
-                        defaultValue="Kde?"
                         id="inyZaciatok"
                         onBlur={(e) => {
                             this.handleChange(e)
                             e.preventDefault()
                         }}
                         onChange={this.handleChange}
+                        onClick={this.removeDefault}
+                        value={this.state.inyZaciatok}
                         />}
                 </label>
                 <label htmlFor="pocet">
