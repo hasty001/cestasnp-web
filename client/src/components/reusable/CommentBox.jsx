@@ -96,6 +96,12 @@ class CommentBox extends Component {
             captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
           });
           return;
+        } else if (comment.responseError === 'Failed captcha verification') {
+          this.setState({
+            loading: false,
+            captchaError: 'Prosím potvrď, že nie si robot',
+          });
+          return;
         } else {
           this.setState({
             loading: false,
@@ -105,6 +111,7 @@ class CommentBox extends Component {
         }
       })
       .catch(err => {
+        console.log('err ', err)
         this.setState({
           loading: false,
           captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',

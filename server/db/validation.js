@@ -2,6 +2,7 @@ const Validation = function() {};
 
 Validation.prototype = {
   checkCommentOldTraveller: function(comment) {
+    console.log('comment check ', comment);
     if (
       typeof comment.date === 'string' &&
       typeof comment.lang === 'string' &&
@@ -36,6 +37,8 @@ Validation.prototype = {
   },
 
   checkCommentNewTraveller: function(comment) {
+    console.log('comment check ', comment);
+    
     if (
       typeof comment.date === 'string' &&
       typeof comment.lang === 'string' &&

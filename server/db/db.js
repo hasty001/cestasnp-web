@@ -287,7 +287,7 @@ DB.prototype = {
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
-          if (sArticleId === 0) {
+          if (sArticleId === 0 || sArticleId === "") {
             db.db('cestasnp')
               .collection('traveler_comments')
               .find({ 'travellerDetails.id': sTravellerId })
@@ -560,7 +560,7 @@ DB.prototype = {
             start_miesto,
             number,           // pocet ucastnikov
             email,            // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
-            articleID: "",
+            articleID: 0,
             finishedTracking: true,
             created: moment().format('YYYY-MM-DD HH:mm:ss'),
             lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'),
