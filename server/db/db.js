@@ -617,6 +617,29 @@ DB.prototype = {
         }
       },
     );
+  },
+
+  sendMessage: function(message, callback) {
+    MongoClient.connect(
+      this.url,
+      { useNewUrlParser: true },
+      function(error, db) {
+        if (db) {
+          db.db('cestasnp').collection('traveler_messages')
+            .save(securityCheck.sanitizeTravellerMessage(message))
+            .then(() => {
+              db.close();
+              callback(message);
+            })
+            .catch(err => {
+              db.close();
+              callback({error: err });
+            });
+        } else {
+          callback({ error });
+        }
+      },
+    );
   }
 };
 

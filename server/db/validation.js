@@ -1,3 +1,5 @@
+const sanitize = require('mongo-sanitize');
+
 const Validation = function() {};
 
 Validation.prototype = {
@@ -51,6 +53,21 @@ Validation.prototype = {
       return true;
     } else {
       return false;
+    }
+  },
+
+  sanitizeTravellerMessage: function(msg) {
+    let { lon, lat, accuracy, text, pub_date, user_id, img, pub_date_milseconds, details_id } = msg
+    return {
+      lon: sanitize(lon), 
+      lat: sanitize(lat), 
+      accuracy: sanitize(accuracy), 
+      text: sanitize(text), 
+      pub_date: sanitize(pub_date), 
+      user_id: sanitize(user_id),
+      img: sanitize(img),
+      pub_date_milseconds: sanitize(pub_date_milseconds),
+      details_id: sanitize(details_id),
     }
   }
 };

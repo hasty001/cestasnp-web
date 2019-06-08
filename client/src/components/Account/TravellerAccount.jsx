@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import Loader from '../reusable/Loader'
+import Message from './Message'
 
 class TravellerAccount extends React.Component {
 
@@ -13,6 +14,7 @@ class TravellerAccount extends React.Component {
             pocet: this.props.traveller.travellerDetails.number,
             start_date: this.props.traveller.travellerDetails.start_date,
             user_id: this.props.traveller.travellerDetails.user_id,
+            travellerId: this.props.traveller.travellerDetails["_id"],
             loading: 0,
             edit: {
                 meno: 0,
@@ -169,6 +171,7 @@ class TravellerAccount extends React.Component {
                 this.updateTraveller
                 e.preventDefault()
             }}>
+                <Message userId={this.state.user_id} travellerId={this.state.travellerId}/>
                 <h2>Moja cesta</h2>
                 <p>Tu si môžeš upraviť detaily o svojej ceste a zároveň posielať správy.</p>
                 <label htmlFor="meno">

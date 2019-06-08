@@ -260,6 +260,14 @@ router.post('/userCheck', function(req, res) {
       return
     })
   })
+
+  router.post('/sendMessage', function(req, res) {
+    let { lon, lat, accuracy, text, pub_date, user_id, img, pub_date_milseconds, details_id } = req.body
+    db.sendMessage({ lon, lat, accuracy, text, pub_date, user_id, img, pub_date_milseconds, details_id }, function(resp) {
+      res.json(resp)
+      return
+    })
+  })
      
 })
 
