@@ -250,10 +250,10 @@ DB.prototype = {
     );
   },
 
-  getTravellerMessages: function(travellerId) {
+  getTravellerMessages: function(userId) {
     let connectionURL = this.url;
     return new Promise(function(resolve, reject) {
-      let sTravellerId = sanitize(travellerId);
+      let sUserId = sanitize(userId);
       MongoClient.connect(
         connectionURL,
         { useNewUrlParser: true },
@@ -261,9 +261,10 @@ DB.prototype = {
           if (db) {
             db.db('cestasnp')
               .collection('traveler_messages')
-              .find({ user_id: sTravellerId })
+              .find({ user_id: sUserId })
               .toArray(function(err, docs) {
                 if (docs) {
+                  console.log('DOCS ', docs)
                   db.close();
                   resolve(docs);
                 } else {

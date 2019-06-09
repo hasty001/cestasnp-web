@@ -1114,3 +1114,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin: 10px;
 }
 
+.thinRedWrap {
+  border: solid 1px #f97474;
+  padding: 15px;
+}
+

@@ -15,7 +15,7 @@ class TravellerAccount extends React.Component {
             start_date: this.props.traveller.travellerDetails.start_date,
             user_id: this.props.traveller.travellerDetails.user_id,
             travellerId: this.props.traveller.travellerDetails["_id"],
-            travellerMsgs: [],
+            travellerMsgs: this.props.traveller.travellerMessages || [],
             loading: 0,
             edit: {
                 meno: 0,
@@ -45,6 +45,11 @@ class TravellerAccount extends React.Component {
                 error: "",
             })
         }
+    }
+
+    updateTravellerMsgs() {
+        console.log('messages');
+        
     }
 
     triggerEdit(target) {
