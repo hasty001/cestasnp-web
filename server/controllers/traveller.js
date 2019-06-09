@@ -19,14 +19,14 @@ router.get('/details/:travellerId', function(req, res) {
 });
 
 router.get('/article/:travellerId', function(req, res) {
-  let travellerId = sanitize(parseInt(req.params.travellerId));
+  let travellerId = sanitize(req.params.travellerId);
   db.getTravellerArticle(travellerId, function(results) {
     res.json(results);
   });
 });
 
 router.get('/messages/:travellerId', function(req, res) {
-  let travellerId = sanitize(parseInt(req.params.travellerId));
+  let travellerId = sanitize(req.params.travellerId);
   db.getTravellerMessages(travellerId)
   .then(results => {
     res.json(results);

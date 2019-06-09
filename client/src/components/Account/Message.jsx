@@ -16,7 +16,15 @@ class Message extends Component {
         img: '',
     };
 
+    this.handleChange = this.handleChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({
+        [event.target.name]: event.target.value,
+        errorMsg: "",
+    })
   }
 
   sendMessage() {
@@ -93,13 +101,14 @@ class Message extends Component {
                     <span>Text</span>
                     <textarea
                         type="text"
-                        id="msg"
-                        name="msg"
+                        id="message"
+                        name="message"
                         onBlur={(e) => {
                             this.handleChange(e)
                             e.preventDefault()
                         }}
                         onChange={this.handleChange}
+                        value={this.state.message}
                         />
                 </label>
                 <button className="snpBtn" onClick={this.sendMessage} type="submit">Poslať správu</button>

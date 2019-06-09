@@ -15,6 +15,7 @@ class TravellerAccount extends React.Component {
             start_date: this.props.traveller.travellerDetails.start_date,
             user_id: this.props.traveller.travellerDetails.user_id,
             travellerId: this.props.traveller.travellerDetails["_id"],
+            travellerMsgs: [],
             loading: 0,
             edit: {
                 meno: 0,
@@ -28,6 +29,7 @@ class TravellerAccount extends React.Component {
         }
         this.handleChange=this.handleChange.bind(this)
         this.updateTraveller=this.updateTraveller.bind(this)
+        this.updateTravellerMsgs=this.updateTravellerMsgs.bind(this)
         this.triggerEdit=this.triggerEdit.bind(this)
     }
 
