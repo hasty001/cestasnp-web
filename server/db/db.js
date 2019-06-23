@@ -12,7 +12,7 @@ const DB = function() {
 DB.prototype = {
   all: function(collection, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -37,7 +37,7 @@ DB.prototype = {
 
   newestSorted: function(collection, sortBy = {}, callback, filterBy = {}) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -64,7 +64,7 @@ DB.prototype = {
 
   nextSorted: function(collection, sortBy = {}, next = 0, callback, filterBy = {}) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         let page = next - 1;
@@ -122,7 +122,7 @@ DB.prototype = {
 
   countCollection: function(collection, findBy = {}, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -146,13 +146,13 @@ DB.prototype = {
 
   addArticle: function(article, collection) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
           db.db('cestasnp')
             .collection(collection)
-            .save(article)
+            .insertOne(article)
             .then(() => {
               db.close();
             })
@@ -170,7 +170,7 @@ DB.prototype = {
   increaseArticleCount: function(articleId, callback) {
     let sArticleId = sanitize(articleId);
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -196,11 +196,14 @@ DB.prototype = {
   // traveller related
 
   getTravellerDetails: function(travellerId) {
-    let connectionURL = this.url;
     return new Promise(function(resolve, reject) {
       let sTravellerId = sanitize(travellerId);
+      // for before FIREBASE users
+      if (sTravellerId.length <= 3) {
+        sTravellerId =  parseInt(sTravellerId);
+      }
       MongoClient.connect(
-        connectionURL,
+        process.env.MONGODB_ATLAS_URI,
         { useNewUrlParser: true },
         function(err, db) {
           if (db) {
@@ -227,7 +230,7 @@ DB.prototype = {
   getTravellerArticle: function(travellerId, callback) {
     let sTravellerId = sanitize(travellerId);
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -251,7 +254,7 @@ DB.prototype = {
   },
 
   getTravellerMessages: function(userId) {
-    let connectionURL = this.url;
+    let connectionURL = process.env.MONGODB_ATLAS_URI;
     return new Promise(function(resolve, reject) {
       let sUserId = sanitize(userId);
       MongoClient.connect(
@@ -264,7 +267,6 @@ DB.prototype = {
               .find({ user_id: sUserId })
               .toArray(function(err, docs) {
                 if (docs) {
-                  console.log('DOCS ', docs)
                   db.close();
                   resolve(docs);
                 } else {
@@ -284,7 +286,7 @@ DB.prototype = {
     let sArticleId = sanitize(articleId);
     let sTravellerId = sanitize(travellerId);
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -338,7 +340,7 @@ DB.prototype = {
     }
 
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -365,7 +367,7 @@ DB.prototype = {
   },
 
   getTravellerLastMessage: function(travellerId) {
-    let connectionURL = this.url;
+    let connectionURL = process.env.MONGODB_ATLAS_URI;
     return new Promise(function(resolve, reject) {
       MongoClient.connect(
         connectionURL,
@@ -404,7 +406,7 @@ DB.prototype = {
 
   addCommentOldTraveller: function(comment, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -422,7 +424,7 @@ DB.prototype = {
                 // save comment with new comment id
                 db.db('cestasnp')
                   .collection('article_comments')
-                  .save(comment)
+                  .insertOne(comment)
                   .then(() => {
                     db.close();
                     callback(comment);
@@ -447,7 +449,7 @@ DB.prototype = {
 
   addCommentNewTraveller: function(comment, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -456,7 +458,7 @@ DB.prototype = {
           if (securityCheck.checkCommentNewTraveller(comment)) {
             // save comment with new comment id
             resCollection
-              .save(comment)
+              .insertOne(comment)
               .then(() => {
                 db.close();
                 callback(comment);
@@ -478,7 +480,7 @@ DB.prototype = {
   finishTracking: function(userId) {
     return new Promise(function(resolve, reject) {
       MongoClient.connect(
-        this.url,
+        process.env.MONGODB_ATLAS_URI,
         { useNewUrlParser: true },
         function(err, db) {
           if (db) {
@@ -489,9 +491,9 @@ DB.prototype = {
                 db.close();
                 resolve(res);
               })
-              .catch(err => {
+              .catch(error => {
                 db.close();
-                reject(err);
+                reject(error);
               });
           } else {
             reject(err);
@@ -503,7 +505,7 @@ DB.prototype = {
 
   createUser: function({ email, name, uid }, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -546,7 +548,7 @@ DB.prototype = {
 
   createTraveller: function({ meno, text, start_date, uid, start_miesto, number, email }, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -585,7 +587,7 @@ DB.prototype = {
 
   updateTraveller: function({ meno, text, start_date, uid, start_miesto, end_date, number, completed, email, finishedTracking }, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(err, db) {
         if (db) {
@@ -622,12 +624,12 @@ DB.prototype = {
 
   sendMessage: function(message, callback) {
     MongoClient.connect(
-      this.url,
+      process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
       function(error, db) {
         if (db) {
           db.db('cestasnp').collection('traveler_messages')
-            .save(securityCheck.sanitizeTravellerMessage(message))
+            .insertOne(securityCheck.sanitizeTravellerMessage(message))
             .then(() => {
               db.close();
               callback(message);
