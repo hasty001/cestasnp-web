@@ -147,8 +147,6 @@ router.post('/addComment', function(req, res) {
   request(verificationURL, function(error, response, body) {
     
     body = JSON.parse(body);
-    console.log('RECAPTCHA DONE NOW!' , body);
-    console.log('REQ ' , req.body);
     if (body.success) {
       let comment = {};
       if (req.body.articleId !== 0 && req.body.articleId !== "") {
@@ -189,8 +187,6 @@ router.post('/addComment', function(req, res) {
           return;
         });
       } else {
-        console.log('req.body ', req.body);
-        
         // new system using traveler_comments collection in mongo
         comment.lang = 'sk-SK';
         let sComment = sanitize(req.body.comment);

@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import Loader from '../reusable/Loader'
 import Message from './Message'
+import SentMessages from './SentMessages'
 
 class TravellerAccount extends React.Component {
 
@@ -47,13 +48,16 @@ class TravellerAccount extends React.Component {
         }
     }
 
-    updateTravellerMsgs() {
-        console.log('messages');
-        
+    updateTravellerMsgs(msg) {
+        let updatedMsgs = this.state.travellerMsgs
+        updatedMsgs.push(msg)
+        updatedMsgs.sort((a,b) => new Date(b.pub_date) - new Date(a.pub_date))
+        this.setState({
+            travellerMessages: updatedMsgs
+        })
     }
 
     triggerEdit(target) {
-        console.log('trigger event ', target)
         let editUpdate = this.state.edit
         editUpdate[target] = this.state.edit[target] === 1 ? 0 : 1
         this.setState({
@@ -136,7 +140,6 @@ class TravellerAccount extends React.Component {
         })
         .then(resp => resp.json())
         .then(travellerDetails => {
-            console.log('UPDATED successfully ', travellerDetails);
             this.setState({
                 loading: 0,
                 edit: {
@@ -170,7 +173,6 @@ class TravellerAccount extends React.Component {
 
     render() {
         console.log('traveller ', this.props.traveller)
-
         return (
             <form 
             className="fanAccountWrap"
@@ -178,7 +180,8 @@ class TravellerAccount extends React.Component {
                 this.updateTraveller
                 e.preventDefault()
             }}>
-                <Message userId={this.state.user_id} travellerId={this.state.travellerId}/>
+                <Message userId={this.state.user_id} travellerId={this.state.travellerId} updateTravellerMsgs={this.updateTravellerMsgs}/>
+                <SentMessages msgs={this.state.travellerMsgs}/>
                 <h2>Moja cesta</h2>
                 <p>Tu si môžeš upraviť detaily o svojej ceste a zároveň posielať správy.</p>
                 <label htmlFor="meno">

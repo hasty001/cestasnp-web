@@ -62,9 +62,9 @@ export class AuthProvider extends React.Component {
         })
         .then(res => res.json())
         .then(({ userDetails, travellerDetails, travellerMessages }) => {
-            console.log('userDetails ', userDetails);
-            console.log('travellerDetails ', travellerDetails);
-            console.log('travellerMessages ', travellerMessages);
+            // console.log('userDetails ', userDetails);
+            // console.log('travellerDetails ', travellerDetails);
+            // console.log('travellerMessages ', travellerMessages);
             this.setState({
                 isAuth: 1,
                 user,

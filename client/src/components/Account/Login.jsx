@@ -28,7 +28,6 @@ class Login extends React.Component {
         let { email, password } = this.state
         auth.signInWithEmailAndPassword(email, password)
         .then(({ user }) => {
-            console.log('user ', user.emailVerified)
             if (!user.emailVerified) {
                 this.setState({
                     error: 'Účet ešte nie je potvrdený. Po registrácii sme ti zaslali email, ktorý treba otvoriť a potvrdiť. Skús pozrieť do svojej emailovej schránky. Mohlo sa stať aj že skončil v spame.'

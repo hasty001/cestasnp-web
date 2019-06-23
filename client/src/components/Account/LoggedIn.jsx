@@ -19,9 +19,6 @@ class LoggedIn extends React.Component {
   }
 
   render() {
-
-      console.log('userD ', this.props.userData)
-      
       return (
         <Fragment>
           {this.props.userData.travellerDetails && Object.keys(this.props.userData.travellerDetails).length > 0 

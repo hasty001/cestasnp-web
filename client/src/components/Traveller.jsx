@@ -70,8 +70,6 @@ class Traveller extends Component {
         fetch('/api/traveller/messages/' + this.state.travellerId)
           .then(resp => resp.json())
           .then(data => {
-            console.log('MSGS ', data);
-            
             let travellerMessages = data.map(message => {
               let newMessage = {};
               newMessage.type = 'message';

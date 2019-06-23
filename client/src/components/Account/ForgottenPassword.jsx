@@ -19,7 +19,6 @@ class ForgottenPassword extends React.Component {
     }
 
     handleChange(event) {
-        console.log('event ', event)
         this.setState({
             email: event.target.value
         })

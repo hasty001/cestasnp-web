@@ -111,7 +111,7 @@ class CommentBox extends Component {
         }
       })
       .catch(err => {
-        console.log('err ', err)
+        console.error('err ', err)
         this.setState({
           loading: false,
           captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',

@@ -100,7 +100,6 @@ class FanAccount extends React.Component {
             return
         }
 
-        console.log('this.state ', this.state)
         fetch('/api/traveller/setupTraveller', {
             method: 'POST',
             body: JSON.stringify({

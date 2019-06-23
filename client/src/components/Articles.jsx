@@ -164,10 +164,6 @@ class Articles extends Component {
   }
 
   handleFilterClick(e) {
-    console.log('value ', e.target.value);
-    console.log('target ', e.target.attributes);
-    console.log('e ', e);
-    debugger;
     let filter = e.target.value;
     let { filters } = this.state;
     if (filters.length > 1) {

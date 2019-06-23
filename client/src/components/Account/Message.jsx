@@ -21,6 +21,7 @@ class Message extends Component {
             lon: 0,
         },
         positionLoading: 0,
+        msgSent: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -33,6 +34,7 @@ class Message extends Component {
     this.setState({
         [event.target.name]: event.target.value,
         errorMsg: "",
+        successMsg: "",
     })
   }
 
@@ -88,7 +90,7 @@ class Message extends Component {
       .then(res => res.json())
       .then(msgRes => {
         if (msgRes.error) {
-            console.log('msgError ', msgRes.error);
+            console.error('msgError ', msgRes.error);
             this.setState({
                 loading: false,
                 errorMsg: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
@@ -97,13 +99,17 @@ class Message extends Component {
         } else {
           this.setState({
             loading: false,
+            successMsg: 'Správa úspešne poslaná!',
+            message: '',
+            lat: '',
+            lon: '',
+            img: '',
           });
           this.props.updateTravellerMsgs(msgRes)
-          this.props.onHide();
         }
       })
       .catch(err => {
-        console.log('err ', err)
+        console.error('err ', err)
         this.setState({
           loading: false,
           captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
@@ -114,7 +120,6 @@ class Message extends Component {
 
 
   triggerEdit(target) {
-    console.log('trigger event ', target)
     let edit = this.state.edit
     edit[target] = this.state.edit[target] === 1 ? 0 : 1
     this.setState({
@@ -131,6 +136,7 @@ class Message extends Component {
 
                 <h2>Poslať správu</h2>
                 {this.state.errorMsg && <p className="errorMsg">{this.state.errorMsg}</p>}
+                {this.state.successMsg && <p className="successMsg">{this.state.successMsg}</p>}
                 <label htmlFor="name">
                     <span>Text</span>
                     <textarea
@@ -152,7 +158,7 @@ class Message extends Component {
                         <label htmlFor="lat">
                             <span onClick={() => {
                                 this.triggerEdit("lat") 
-                            }}>Lat: <i className="fas fa-edit" ></i></span>
+                            }}>Zem. šírka (latitude): <i className="fas fa-edit" ></i></span>
                             {this.state.edit.lat ?
                                 <input
                                 id="lat"
@@ -171,7 +177,7 @@ class Message extends Component {
                         <label htmlFor="lon">
                             <span onClick={() => {
                                 this.triggerEdit("lon") 
-                            }}>Lon: <i className="fas fa-edit" ></i></span>
+                            }}>Zem. dĺžka (longitude): <i className="fas fa-edit" ></i></span>
                             {this.state.edit.lon ?
                                 <input
                                 id="lon"
