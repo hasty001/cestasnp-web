@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment-timezone';
 import Loader from '../reusable/Loader';
+import CloudinaryWidget from '../reusable/CloudinaryWidget';
 
 moment.tz.setDefault('Europe/Vienna');
 
@@ -196,6 +197,7 @@ class Message extends Component {
                         <button className="snpBtn" onClick={this.getMyPosition} type="button">Získaj pozíciu</button>
                     </Fragment>
                 }
+                <CloudinaryWidget />
                 <button className="snpBtn" onClick={this.sendMessage} type="submit">Poslať správu</button>
             </Fragment>
         }
