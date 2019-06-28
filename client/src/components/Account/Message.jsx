@@ -78,7 +78,7 @@ class Message extends Component {
     data.text = this.state.message;
     data.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
     data.user_id = this.props.userId;
-    data.img = null;
+    data.img = this.state.img;
     data.pub_date_milseconds = moment().valueOf();
     data.details_id = this.props.travellerId;
 
@@ -206,9 +206,12 @@ class Message extends Component {
             }
             {
               this.state.img ?
-                <img src={this.state.img.secure_url} alt="nahrana fotka z cesty" />
+                <Fragment>
+                  <img src={this.state.img.secure_url} alt="nahrana fotka z cesty" />
+                  <CloudinaryWidget uid={this.props.userId} updateImageDetails={this.updateImageDetails} btnTxt={"Nahraj inú fotku"}/>
+                </Fragment>
                 :
-                <CloudinaryWidget uid={this.props.userId} updateImageDetails={this.updateImageDetails} />
+                <CloudinaryWidget uid={this.props.userId} updateImageDetails={this.updateImageDetails} btnTxt={"Nahraj fotku"}/>
             }
             <button className="snpBtn" onClick={this.sendMessage} type="submit">Poslať správu</button>
           </Fragment>

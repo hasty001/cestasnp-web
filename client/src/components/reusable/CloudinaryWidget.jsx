@@ -1,10 +1,47 @@
 import React from 'react';
 
-export default ({ uid, updateImageDetails }) => {
+class CloudinaryWidget extends React.Component {
+    constructor(props) {
+        super(props)
 
-    const generateSignature = (callback, params_to_sign) => {
-        console.log('params to sign ', params_to_sign)
-        
+        this.state = {
+            myWidget: ''
+        }
+    }
+
+    componentDidMount() {
+        const myWidget = cloudinary.createUploadWidget({
+            cloudName: 'cestasnp-sk',
+            apiKey: '186532245374812',
+            uploadSignature: this.generateSignature,
+            uploadPreset: 'eo9nitmv',
+            sources: ['local', 'camera'],
+            multiple: false,
+            resourceType: "image",
+            cropping: false,
+            tags: ['live_sledovanie'],
+            public_id: `${this.props.uid}_${Date.now()}`,
+            clientAllowedFormats: ["png", "jpg", "jpeg"],
+            thumbnailTransformation: [
+                { width: 248, height: 140, crop: "fill" },
+                { width: 800, height: 400, crop: "fill" }],
+        }, (error, result) => {
+            if (!error && result && result.event === "success") {
+                console.log('Done! Here is the image info: ', result.info)
+                this.props.updateImageDetails(result.info)
+            } else if (error) {
+                console.error('Error ', error)
+                this.props.updateImageDetails('')
+            }
+        }
+        )
+
+        this.setState({
+            myWidget
+        })
+    }
+
+    generateSignature = (callback, params_to_sign) => {
         fetch('/api/cloudinary/generateSignature', {
             method: 'POST',
             body: JSON.stringify(params_to_sign),
@@ -12,50 +49,24 @@ export default ({ uid, updateImageDetails }) => {
                 'Content-Type': 'application/json',
             }),
         })
-        .then(res => res.json())
-        .then(signature => {
-            callback(signature)
-        })
-        .catch(err => {
-            console.error('cloudinary err ', err)
-        })
+            .then(res => res.json())
+            .then(signature => {
+                callback(signature)
+            })
+            .catch(err => {
+                console.error('cloudinary err ', err)
+            })
     }
-    
-    const myWidget = cloudinary.createUploadWidget({
-      cloudName: 'cestasnp-sk', 
-      apiKey: '186532245374812',
-      uploadSignature: generateSignature,
-      uploadPreset: 'eo9nitmv',
-      sources: ['local', 'camera'],
-      multiple: false,
-      resourceType: "image",
-      cropping: false,
-      tags: ['live_sledovanie'],
-      public_id: `${uid}_${Date.now()}`,
-      clientAllowedFormats: ["png","jpg","jpeg"],
-      thumbnailTransformation: [
-        { width: 248, height: 140, crop: "fill" }, 
-        { width: 800, height: 400, crop: "fill" } ],
-    }, (error, result) => { 
-        if (!error && result && result.event === "success") { 
-            console.log('Done! Here is the image info: ', result.info)
-            updateImageDetails(result.info)
-        } else {
-            console.log('Error ', error)
-        }
-      }
-    )
 
-    const openWidget = (event) => {
-        console.log(event)
-        console.log(event.target.value)
-        myWidget.open()
-    } 
-    
-    return(
-        <button id="upload_widget" className="cloudinary-button" onClick={openWidget}>Nahraj fotku</button>
-    )
+    openWidget = () => {
+        this.state.myWidget.open()
+    }
+
+    render() {
+        return(
+            <button id = "upload_widget" className = "snpBtn" onClick = { this.openWidget } > { this.props.btnTxt }</button>
+        )
+    }
 }
 
-
-
+export default CloudinaryWidget

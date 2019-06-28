@@ -34,17 +34,14 @@ class SentMessages extends Component {
                 <h2>Tvoje správy</h2>
                 {this.state.msgs.map((message, i) => 
                     <div key={i} className="traveller-message">
-                        {message.img &&
+                        {console.log('message ', message)}
+                        {console.log('message.img ', message.img)}
+                        {
+                            message.img &&
                             message.img !== 'None' &&
                             message.img !== null && (
                             <img
-                                src={
-                                typeof message.img === 'string' &&
-                                message.img.indexOf('res.cloudinary.com') === -1
-                                    ? 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                    message.img
-                                    : message.img
-                                }
+                                src={message.img.eager[0].secure_url}
                                 style={{
                                 display: 'block',
                                 margin: '0px auto 15px',
@@ -53,15 +50,12 @@ class SentMessages extends Component {
                                 maxHeight: '80vh',
                                 }}
                                 alt="fotka z putovania"
-                                onClick={() => {
-                                this.handleImageBox(
-                                    true,
-                                    message.img.indexOf('res.cloudinary.com') === -1
-                                    ? 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                        message.img
-                                    : message.fullImg,
-                                );
-                                }}
+                                // onClick={() => {
+                                // this.handleImageBox(
+                                //     true,
+                                //     message.img.secure_url,
+                                // );
+                                // }}
                             />
                             )}
                         <div className="red-stripe" />
