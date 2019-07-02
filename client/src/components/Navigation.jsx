@@ -12,7 +12,8 @@ const ROUTES = {
   pois: '/pred/pois',
   naCeste: '/na/ceste',
   archiv: '/na/archive',
-  kontakt: '/kontakt'
+  kontakt: '/kontakt',
+  mojaCesta: '/ucet',
 };
 
 class Navigation extends Component {
@@ -27,7 +28,6 @@ class Navigation extends Component {
             <a href="/" className="logo-position-screen">
               <img src={logo_screen} className="logo-screen" alt="Cesta SNP logo pre obrazovku" />
             </a>
-            <button onClick={() => auth.signOut()}>Logout</button>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
@@ -50,11 +50,15 @@ class Navigation extends Component {
               LIVE sledovanie
             </MenuItem>
 
-            <MenuItem eventKey={4} title="Archív" href={ROUTES.archiv}>
+            <MenuItem eventKey={4} title="Moja cesta" href={ROUTES.mojaCesta}>
+              Moja cesta
+            </MenuItem>
+
+            <MenuItem eventKey={5} title="Archív" href={ROUTES.archiv}>
               Archív
             </MenuItem>
 
-            <MenuItem eventKey={5} title="Kontakt" href={ROUTES.kontakt}>
+            <MenuItem eventKey={6} title="Kontakt" href={ROUTES.kontakt}>
               Kontakt
             </MenuItem>
           </Nav>

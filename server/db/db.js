@@ -564,7 +564,7 @@ DB.prototype = {
             number,           // pocet ucastnikov
             email,            // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
             articleID: 0,
-            finishedTracking: true,
+            finishedTracking: false,
             created: moment().format('YYYY-MM-DD HH:mm:ss'),
             lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'),
           }
