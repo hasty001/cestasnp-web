@@ -8,6 +8,7 @@ export const AuthContext = React.createContext({
     userDetails: {},
     travellerDetails: {},
     travellerMessages: [],
+    authProviderMounted: 0,
     updateTravellerDetails: () => {},
 })
 
@@ -19,6 +20,7 @@ export class AuthProvider extends React.Component {
         userDetails: {},
         travellerDetails: {},
         travellerMessages: [],
+        authProviderMounted: 0,
         updateTravellerDetails: this.updateTravellerDetails.bind(this),
     }
 
@@ -35,6 +37,7 @@ export class AuthProvider extends React.Component {
                     userDetails: {},
                     travellerDetails: {},
                     travellerMessages: [],
+                    authProviderMounted: 1,
                 })
             } else {
                 this.setState({
@@ -43,6 +46,7 @@ export class AuthProvider extends React.Component {
                     userDetails: {},
                     travellerDetails: {},
                     travellerMessages: [],
+                    authProviderMounted: 1,
                 })
             }
         })
@@ -71,6 +75,7 @@ export class AuthProvider extends React.Component {
                 userDetails,
                 travellerDetails,
                 travellerMessages,
+                authProviderMounted: 1,
             })
         })
         .catch(e => {
@@ -85,6 +90,7 @@ export class AuthProvider extends React.Component {
                 userDetails: {},
                 travellerDetails: {},
                 travellerMessages: [],
+                authProviderMounted: 1,
             })
         })
     }
