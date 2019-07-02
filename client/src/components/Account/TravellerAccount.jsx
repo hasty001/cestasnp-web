@@ -7,7 +7,7 @@ import SentMessages from './SentMessages'
 class TravellerAccount extends React.Component {
 
     constructor(props) {
-        super(props) 
+        super(props)
         this.state = {
             meno: this.props.traveller.travellerDetails.meno,
             popis: this.props.traveller.travellerDetails.text,
@@ -28,10 +28,10 @@ class TravellerAccount extends React.Component {
             error: "",
             successMsg: "",
         }
-        this.handleChange=this.handleChange.bind(this)
-        this.updateTraveller=this.updateTraveller.bind(this)
-        this.updateTravellerMsgs=this.updateTravellerMsgs.bind(this)
-        this.triggerEdit=this.triggerEdit.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.updateTraveller = this.updateTraveller.bind(this)
+        this.updateTravellerMsgs = this.updateTravellerMsgs.bind(this)
+        this.triggerEdit = this.triggerEdit.bind(this)
     }
 
     handleChange(event) {
@@ -51,7 +51,7 @@ class TravellerAccount extends React.Component {
     updateTravellerMsgs(msg) {
         let updatedMsgs = this.state.travellerMsgs
         updatedMsgs.push(msg)
-        updatedMsgs.sort((a,b) => new Date(b.pub_date) - new Date(a.pub_date))
+        updatedMsgs.sort((a, b) => new Date(b.pub_date) - new Date(a.pub_date))
         this.setState({
             travellerMessages: updatedMsgs
         })
@@ -76,16 +76,17 @@ class TravellerAccount extends React.Component {
         } = this.state
 
         if (
-          popis === this.props.traveller.travellerDetails.text &&
-          zaciatok === this.props.traveller.travellerDetails.start_miesto &&
-          pocet === this.props.traveller.travellerDetails.number &&
-          start_date === this.props.traveller.travellerDetails.start_date &&
-          user_id === this.props.traveller.travellerDetails.user_id
+            meno === this.props.traveller.travellerDetails.meno &&
+            popis === this.props.traveller.travellerDetails.text &&
+            zaciatok === this.props.traveller.travellerDetails.start_miesto &&
+            pocet === this.props.traveller.travellerDetails.number &&
+            start_date === this.props.traveller.travellerDetails.start_date &&
+            user_id === this.props.traveller.travellerDetails.user_id
         ) {
             this.setState({
                 error: "Nič si nezmenil"
             })
-            return 
+            return
         }
 
         if (!meno || meno.trim().length === 0) {
@@ -129,64 +130,64 @@ class TravellerAccount extends React.Component {
                 uid: user_id,
                 start_miesto: zaciatok,
                 number: pocet,
-                end_date: "", 
-                completed: "", 
-                email: 0, 
+                end_date: "",
+                completed: "",
+                email: 0,
                 finishedTracking: false,
             }),
             headers: new Headers({
-              'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             }),
         })
-        .then(resp => resp.json())
-        .then(travellerDetails => {
-            this.setState({
-                loading: 0,
-                edit: {
-                    meno: 0,
-                    popis: 0,
-                    zaciatok: 0,
-                    pocet: 0,
-                    start_date: 0,
-                },
-                successMsg: "Detaily tvojej cesty sme úspešne zmenili"
+            .then(resp => resp.json())
+            .then(travellerDetails => {
+                this.setState({
+                    loading: 0,
+                    edit: {
+                        meno: 0,
+                        popis: 0,
+                        zaciatok: 0,
+                        pocet: 0,
+                        start_date: 0,
+                    },
+                    successMsg: "Detaily tvojej cesty sme úspešne zmenili"
+                })
+                this.props.traveller.updateTravellerDetails({
+                    meno,
+                    text: popis,
+                    start_date,
+                    uid: user_id,
+                    start_miesto: zaciatok,
+                    number: pocet,
+                    end_date: "",
+                    completed: "",
+                    email: 0,
+                    finishedTracking: false,
+                })
+                return
             })
-            this.props.traveller.updateTravellerDetails({
-                meno,
-                text: popis,
-                start_date,
-                uid: user_id,
-                start_miesto: zaciatok,
-                number: pocet,
-                end_date: "", 
-                completed: "", 
-                email: 0, 
-                finishedTracking: false,
+            .catch(e => {
+                console.error('fanAccount err ', e)
+                return
             })
-            return
-        })
-        .catch(e => {
-            console.error('fanAccount err ', e)
-            return
-        })
     }
 
     render() {
         console.log('traveller ', this.props.traveller)
         return (
-            <form 
-            className="fanAccountWrap"
-            onSubmit={(e) => {
-                this.updateTraveller
-                e.preventDefault()
-            }}>
-                <Message userId={this.state.user_id} travellerId={this.state.travellerId} updateTravellerMsgs={this.updateTravellerMsgs}/>
-                <SentMessages msgs={this.state.travellerMsgs}/>
+            <form
+                className="fanAccountWrap"
+                onSubmit={(e) => {
+                    this.updateTraveller
+                    e.preventDefault()
+                }}>
+                <Message userId={this.state.user_id} travellerId={this.state.travellerId} updateTravellerMsgs={this.updateTravellerMsgs} />
+                <SentMessages msgs={this.state.travellerMsgs} />
                 <h2>Moja cesta</h2>
                 <p>Tu si môžeš upraviť detaily o svojej ceste a zároveň posielať správy.</p>
                 <label htmlFor="meno">
-                    <span onClick={() => this.triggerEdit("meno") }>Moja cesta <i className="fas fa-edit" ></i></span>
-                    {this.state.edit.meno ? 
+                    <span onClick={() => this.triggerEdit("meno")}>Moja cesta <i className="fas fa-edit" ></i></span>
+                    {this.state.edit.meno ?
                         <input
                             id="meno"
                             name="meno"
@@ -203,8 +204,8 @@ class TravellerAccount extends React.Component {
                     }
                 </label>
                 <label htmlFor="popis">
-                    <span onClick={() => this.triggerEdit("popis") }>Popis <i className="fas fa-edit" ></i></span>
-                    {this.state.edit.popis ? 
+                    <span onClick={() => this.triggerEdit("popis")}>Popis <i className="fas fa-edit" ></i></span>
+                    {this.state.edit.popis ?
                         <textarea
                             id="popis"
                             name="popis"
@@ -221,8 +222,8 @@ class TravellerAccount extends React.Component {
                 </label>
                 <label htmlFor="zaciatok">
                     <span onClick={() => {
-                        this.triggerEdit("zaciatok") 
-                        this.triggerEdit("start_date") 
+                        this.triggerEdit("zaciatok")
+                        this.triggerEdit("start_date")
                     }}>Začiatok <i className="fas fa-edit" ></i></span>
                     {this.state.edit.zaciatok ?
                         <input
@@ -257,7 +258,7 @@ class TravellerAccount extends React.Component {
                     }
                 </label>
                 <label htmlFor="pocet">
-                    <span onClick={() => this.triggerEdit("pocet") }>Počet <i className="fas fa-edit" ></i></span>
+                    <span onClick={() => this.triggerEdit("pocet")}>Počet <i className="fas fa-edit" ></i></span>
                     {this.state.edit.pocet ?
                         <input
                             type="number"
@@ -276,12 +277,12 @@ class TravellerAccount extends React.Component {
                 </label>
                 {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                 {this.state.successMsg && <p className="successMsg">{this.state.successMsg}</p>}
-                {this.state.loading ? 
+                {this.state.loading ?
                     <Loader />
                     :
                     <button className="snpBtn" onClick={this.updateTraveller} type="submit">Uložiť zmeny</button>}
             </form>
-        ) 
+        )
     }
 }
 export default TravellerAccount
