@@ -12,6 +12,9 @@ cloudinary.config({
 })
 
 router.post('/generateSignature', function(req, res) {
+    console.log(process.env.CLOUD_NAME)
+    console.log(process.env.CLOUD_PUB)
+    console.log(process.env.CLOUD_SEC)
     const signature = cloudinary.utils.api_sign_request(req.body, process.env.CLOUDIN_SEC)
     res.json(signature)
 });
