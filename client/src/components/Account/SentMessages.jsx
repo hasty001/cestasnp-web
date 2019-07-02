@@ -31,7 +31,7 @@ class SentMessages extends Component {
     render() {
         return (
             <div id="SentMessages" className="thinRedWrap">
-                <h2>Tvoje správy</h2>
+                <h2>Moje správy</h2>
                 {this.state.msgs.map((message, i) => 
                     <div key={i} className="traveller-message">
                         {console.log('message ', message)}

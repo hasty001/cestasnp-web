@@ -182,7 +182,7 @@ class TravellerAccount extends React.Component {
                     e.preventDefault()
                 }}>
                 <Message userId={this.state.user_id} travellerId={this.state.travellerId} updateTravellerMsgs={this.updateTravellerMsgs} />
-                <SentMessages msgs={this.state.travellerMsgs} />
+                {this.state.travellerMsgs.length > 0 && <SentMessages msgs={this.state.travellerMsgs} />}
                 <h2>Moja cesta</h2>
                 <p>Tu si môžeš upraviť detaily o svojej ceste a zároveň posielať správy.</p>
                 <label htmlFor="meno">
