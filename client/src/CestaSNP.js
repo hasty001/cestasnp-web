@@ -1,6 +1,6 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router';
-import { createBrowserHistory } from 'history';
+import history from '../src/helpers/history';
 
 import Navigation from './components/Navigation';
 import Archive from './components/Archive';
@@ -18,49 +18,37 @@ import { AuthProvider } from './components/AuthContext';
 
 import websupport from '../public/img/websupport.png';
 
-const history = createBrowserHistory();
-
-class CestaSNP extends React.Component {
-
-  constructor(props) {
-      super(props)
-  }
-
-  render() {
-    return (
-      <div className="app">
-          <div className="app-header">
-            <Navigation />
+const CestaSNP = () => (
+  <div className="app">
+      <AuthProvider>
+        <div className="app-header">
+          <Navigation />
+        </div>
+        <div className="app-body">
+          <div className="content-wrap">
+              <Router history={history}>
+                <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route path="/pred/articles/article/:articleId" component={Article} />
+                  <Route path="/pred/filteredarticles/:category/:page" component={Articles} />
+                  <Route path="/pred/articles/:page" component={Articles} />
+                  <Route exact path="/pred/pois" component={Pois} />
+                  <Route exact path="/na/ceste" component={Active} />
+                  <Route exact path="/na/archive" component={Archive} />
+                  <Route path="/na/:traveller" component={Traveller} />
+                  <Route exact path="/kontakt" component={Kontakt} />
+                  <Route exact path="/cookies" component={Cookies} />
+                  <Route exact path="/ucet" component={Account} />
+                  <Route path="*" component={NotFound} />
+                </Switch>
+              </Router>
           </div>
-          <div className="app-body">
-            <div className="content-wrap">
-              <AuthProvider>
-                <Router history={history}>
-                  <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route path="/pred/articles/article/:articleId" component={Article} />
-                    <Route path="/pred/filteredarticles/:category/:page" component={Articles} />
-                    <Route path="/pred/articles/:page" component={Articles} />
-                    <Route exact path="/pred/pois" component={Pois} />
-                    <Route exact path="/na/ceste" component={Active} />
-                    <Route exact path="/na/archive" component={Archive} />
-                    <Route path="/na/:traveller" component={Traveller} />
-                    <Route exact path="/kontakt" component={Kontakt} />
-                    <Route exact path="/cookies" component={Cookies} />
-                    <Route exact path="/ucet" component={Account} />
-                    <Route path="*" component={NotFound} />
-                  </Switch>
-                </Router>
-              </AuthProvider>
-            </div>
-            <div className="app-footer">
-              <img src={websupport} alt="logo sponzora" className="sponzor" />
-            </div>
+          <div className="app-footer">
+            <img src={websupport} alt="logo sponzora" className="sponzor" />
           </div>
-      </div>
-    )
-  } 
-  
-};
+        </div>
+      </AuthProvider>
+  </div>
+)
 
 export default CestaSNP;

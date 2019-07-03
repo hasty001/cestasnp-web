@@ -8,7 +8,7 @@ import { AuthContext, } from '../AuthContext'
 console.log('AuthContext ', AuthContext)
 
 const Account = () => {
-    const authData = useContext(AuthContext);
+    const authData = useContext(AuthContext)
     const [ auth ] = useState(authData)
     console.log('auth!!! ', auth);
     // console.log('authData.user ', authData.user);

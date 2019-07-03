@@ -87,7 +87,7 @@ body {
   top: 100px;
   width: 100%;
   min-height: calc(100vh - 100px);
-} @media(max-width: 800px) {
+} @media(max-width: 945px) {
   .app-body {
     min-height: calc(100vh - 70px);
     top: 70px;
@@ -192,7 +192,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .navbar .container {
   padding-right: 0px;
   padding-left: 0px;
-  width: 80%;
+  width: 90%;
 } @media (max-width: 945px) {
   .navbar .container {
     width: 100%;
