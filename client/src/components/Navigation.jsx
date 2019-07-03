@@ -22,12 +22,16 @@ const Navigation = () => {
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
         <Navbar.Brand>
-          <a href="/" className="logo-position-mobile">
+          <div title="Domov" className="logo-position-mobile" onClick={() => {
+            history.push(ROUTES.domov)
+          }}>
             <img src={logo_mobile} className="logo-mobile" alt="Cesta SNP logo pre mobil" />
-          </a>
-          <a href="/" className="logo-position-screen">
+          </div>
+          <div title="Domov" className="logo-position-screen" onClick={() => {
+            history.push(ROUTES.domov)
+          }}>
             <img src={logo_screen} className="logo-screen" alt="Cesta SNP logo pre obrazovku" />
-          </a>
+          </div>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
@@ -41,13 +45,13 @@ const Navigation = () => {
 
           <NavDropdown eventKey={2} title="Pred cestou" id="basic-nav-dropdown">
             <NavItem eventKey={2.1} title="Články" onClick={() => {
-            history.push(ROUTES.clanky)
-          }}>
+              history.push(ROUTES.clanky)
+            }}>
               Články
             </NavItem>
             <NavItem eventKey={2.2} title="Dôležité miesta" onClick={() => {
-            history.push(ROUTES.pois)
-          }}>
+              history.push(ROUTES.pois)
+            }}>
               Dôležité miesta
             </NavItem>
           </NavDropdown>

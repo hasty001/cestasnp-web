@@ -13,6 +13,15 @@ img {
   max-width: 100% !important;
 }
 
+a {
+  text-decoration: none !important;
+}
+
+li {
+  list-style: none !important;
+  display: inline-block;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
@@ -200,6 +209,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
+.navbar li, .navbar-inverse li {
+  display: block;
+}
+
 @media (max-width: 945px) {
     .navbar-header {
         float: none;
@@ -353,7 +366,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .no-decoration, .no-decoration:hover {
-  text-decoration: none;
+  text-decoration: none !important;
+  list-style: none !important;
   color: #333;
 }
 
@@ -598,7 +612,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
   height: 100px;
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: n;
   white-space: nowrap;
   position: relative;
   z-index: 9999;

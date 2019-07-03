@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+
+import { NavItem, } from 'react-bootstrap';
+import history from '../helpers/history';
+
 import Loader from '../components/reusable/Loader';
 
 class Home extends Component {
@@ -38,14 +42,20 @@ class Home extends Component {
               return (
                 <div id={'home' + (i + 1)} key={i}>
                   <div className="article-div">
-                    <a
+                    <NavItem
                       className="no-decoration"
-                      href={'/pred/articles/article/' + article.sql_article_id}
-                    >
+                      onClick={() => {
+                        history.push(`/pred/articles/article/${article.sql_article_id}`)
+                      }}>
                       <h2 className="no-decoration">{article.title}</h2>
-                    </a>
+                    </NavItem>
                     <div className={'home' + (i + 1)} dangerouslySetInnerHTML={introtext()} />
-                    <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
+                    <NavItem
+                      onClick={() => {
+                        history.push(`/pred/articles/article/${article.sql_article_id}`)
+                      }}>
+                      Čítaj viac...
+                    </NavItem>
                   </div>
                 </div>
               );

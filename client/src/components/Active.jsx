@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+
+import { NavItem, Nav} from 'react-bootstrap';
+import history from '../helpers/history';
+
 import Map from './Map';
 import Loader from '../components/reusable/Loader';
 import pin01 from '../../public/img/pins/Cervena.png';
@@ -162,7 +166,9 @@ class Active extends Component {
               <div className="active-travellers" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
-                    <a key={i} href={`/na/${traveller.userId}`}>
+                    <NavItem key={i} onClick={() => {
+                      history.push(`/na/${traveller.userId}`)
+                    }}>
                       {traveller.color !== grey ? (
                         <div
                           className="active-traveller"
@@ -188,7 +194,7 @@ class Active extends Component {
                           </p>
                         </div>
                       )}
-                    </a>
+                    </NavItem>
                   );
                 })}
               </div>

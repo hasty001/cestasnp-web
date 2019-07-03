@@ -1,4 +1,6 @@
 import React from 'react';
+import { NavItem, } from 'react-bootstrap';
+import history from '../helpers/history';
 
 const Kontakt = () => {
   return (
@@ -24,7 +26,9 @@ const Kontakt = () => {
         Všetok vývoj a prevádzku portálu robíme vo svojom voľnom čase. Nakoľko na samotnú
         každomesačnú prevádzku portálu potrebujeme aj finančné prostriedky, budeme veľmi radi ak
         našu prácu podporíte aj finančne. Pravidelne aktualizovaný zoznam darcov nájdete na tomto{' '}
-        <a href="https://cestasnp.sk/pred/articles/article/379">odkaze</a>.
+        <NavItem onClick={() => {
+          history.push("/pred/articles/article/379")
+        }}>odkaze</NavItem>.
       </p>
       <br />
       <p>Môžete tak urobiť ľubovoľnou čiastkou na účet OZ CestaSNP.sk:</p>
@@ -34,7 +38,9 @@ const Kontakt = () => {
       <br />
       <p>
         Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme v
-        <a href="https://cestasnp.sk/pred/articles/article/379"> zozname darcov</a>
+        <NavItem onClick={() => {
+          history.push("/pred/articles/article/379")
+        }}> zozname darcov</NavItem>
         , kde bude uvedené aj na čo boli prostriedky použité.
       </p>
       <br />

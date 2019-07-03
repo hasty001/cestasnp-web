@@ -46,8 +46,8 @@ class Message extends Component {
     })
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       this.setState({
-        lat: coords.latitude.toFixed(2),
-        lon: coords.longitude.toFixed(2),
+        lat: coords.latitude.toFixed(6),
+        lon: coords.longitude.toFixed(6),
         accuracy: coords.accuracy,
         positionLoading: 0,
       })
