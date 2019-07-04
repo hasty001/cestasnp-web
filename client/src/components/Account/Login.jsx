@@ -5,7 +5,7 @@ import ForgottenPassword from './ForgottenPassword'
 
 class Login extends React.Component {
     constructor(props) {
-        super(props) 
+        super(props)
         this.state = {
             email: '',
             password: '',
@@ -52,8 +52,13 @@ class Login extends React.Component {
     render() {
         return(
             <Fragment>
-                <form 
-                    className="accountWrap" 
+            <div className="accountWrap">
+            <p>Ak sa chceš zúčastniť LIVE Sledovania vytovor si prosím účet a prihlás sa na tejto stránke.</p>
+            <p>Tento účet slúži <b>len pre zasielanie správ</b>. Ak neplánuješ vyraziť na Cestu hrdinov SNP
+            v najbližších dňoch účet nepotrebuješ.</p>
+            </div>
+                <form
+                    className="accountWrap"
                     onSubmit={(e) => {
                     this.handleLogin
                     e.preventDefault()
@@ -86,7 +91,7 @@ class Login extends React.Component {
                         }}
                         onChange={this.handleChange}/>
                     </label>
-                    <button type="button" className="linkLikeButton" onClick={() => { 
+                    <button type="button" className="linkLikeButton" onClick={() => {
                         this.handleForgottenPasswordBox(true)
                     }}>Zabudol si heslo?</button>
                     <button className="snpBtn" onClick={this.handleLogin} type="submit">Prihlásiť</button>
@@ -97,7 +102,7 @@ class Login extends React.Component {
                     onHide={() => this.handleForgottenPasswordBox(false)}
                 />
             </Fragment>
-        ) 
+        )
     }
 }
 

@@ -77,7 +77,7 @@ const Navigation = () => {
           <NavItem eventKey={4} title="Moja cesta" onClick={() => {
             history.push(ROUTES.mojaCesta)
           }}>
-            {!authData.isAuth ? "Prihlásiť" : "Poslať správu"}
+            {!authData.isAuth ? "Prihlásiť sa" : "Poslať správu"}
           </NavItem>
         </Nav>
       </Navbar.Collapse>

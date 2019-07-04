@@ -4,7 +4,7 @@ import moment from 'moment'
 class FanAccount extends React.Component {
 
     constructor(props) {
-      super(props) 
+      super(props)
       this.state = {
         fan: this.props.fan,
         error: "",
@@ -125,18 +125,23 @@ class FanAccount extends React.Component {
             return
         })
     }
-  
+
     render() {
         // console.log('this.props ', this.props)
         return (
-            <form 
+            <form
                 className="fanAccountWrap"
                 onSubmit={(e) => {
                     this.createTraveller
                     e.preventDefault()
                 }}>
                 <h2>Chystáš sa na cestu?</h2>
-                <p>Vytvor si profil a vyraz!</p>
+                <p>Prečítaj si ako používať LIVE Sledovanie
+                popísane <a href="https://livesledovanie.herokuapp.com/akozacat" target="_blank">tomto návode</a> a
+                vytvor si profil! </p>
+              <p>
+              Potom stačí len vyraziť :).
+                </p>
                 <label htmlFor="nazov">
                     <span>Názov tvojej cesty</span>
                     <input
@@ -219,6 +224,9 @@ class FanAccount extends React.Component {
                         onChange={this.handleChange}
                         />
                 </label>
+                <p>
+                Nezabudni si ale pozrieť <a href="https://livesledovanie.herokuapp.com/akozacat" target="_blank">návod</a>.
+                </p>
                 {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                 <button className="snpBtn" onClick={this.createTraveller} type="submit">Vytvoriť cestu</button>
             </form>
