@@ -137,10 +137,10 @@ class FanAccount extends React.Component {
                 }}>
                 <h2>Chystáš sa na cestu?</h2>
                 <p>Prečítaj si ako používať LIVE Sledovanie
-                popísane <a href="https://livesledovanie.herokuapp.com/akozacat" target="_blank">tomto návode</a> a
+                popísané v <a href="https://livesledovanie.herokuapp.com/akozacat" target="_blank">tomto návode</a> a
                 vytvor si profil! </p>
               <p>
-              Potom stačí len vyraziť :).
+              Potom stačí už len vyraziť :).
                 </p>
                 <label htmlFor="nazov">
                     <span>Názov tvojej cesty</span>

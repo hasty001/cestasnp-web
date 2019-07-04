@@ -53,9 +53,9 @@ class Login extends React.Component {
         return(
             <Fragment>
             <div className="accountWrap">
-            <p>Ak sa chceš zúčastniť LIVE Sledovania vytovor si prosím účet a prihlás sa na tejto stránke.</p>
+            <p>Ak sa chceš zúčastniť LIVE Sledovania, vytvor si prosím účet a prihlás sa na tejto stránke.</p>
             <p>Tento účet slúži <b>len pre zasielanie správ</b>. Ak neplánuješ vyraziť na Cestu hrdinov SNP
-            v najbližších dňoch účet nepotrebuješ.</p>
+            v najbližších dňoch, účet nepotrebuješ.</p>
             </div>
                 <form
                     className="accountWrap"
