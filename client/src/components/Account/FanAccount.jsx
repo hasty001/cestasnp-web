@@ -137,7 +137,7 @@ class FanAccount extends React.Component {
                 }}>
                 <h2>Chystáš sa na cestu?</h2>
                 <p>Prečítaj si ako používať LIVE Sledovanie
-                popísané v <a href="https://livesledovanie.herokuapp.com/akozacat" target="_blank">tomto návode</a> a
+                popísané v <a href="/pred/articles/article/10004" target="_blank">tomto návode</a> a
                 vytvor si profil! </p>
               <p>
               Potom stačí už len vyraziť :).
@@ -225,7 +225,7 @@ class FanAccount extends React.Component {
                         />
                 </label>
                 <p>
-                Nezabudni si ale pozrieť <a href="https://livesledovanie.herokuapp.com/akozacat" target="_blank">návod</a>.
+                Nezabudni si ale pozrieť <a href="/pred/articles/article/10004" target="_blank">návod</a>.
                 </p>
                 {this.state.error && <p className="errorMsg">{this.state.error}</p>}
                 <button className="snpBtn" onClick={this.createTraveller} type="submit">Vytvoriť cestu</button>
