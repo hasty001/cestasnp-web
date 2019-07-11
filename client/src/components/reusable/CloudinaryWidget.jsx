@@ -64,7 +64,7 @@ class CloudinaryWidget extends React.Component {
 
     render() {
         return(
-            <button id = "upload_widget" className = "snpBtn" onClick = { this.openWidget } > { this.props.btnTxt }</button>
+            <button id = "upload_widget" className = "snpBtnWhite" onClick = { this.openWidget } > { this.props.btnTxt }</button>
         )
     }
 }

@@ -51,7 +51,10 @@ class TravellerAccount extends React.Component {
     updateTravellerMsgs(msg) {
         let updatedMsgs = this.state.travellerMsgs
         updatedMsgs.push(msg)
-        updatedMsgs.sort((a, b) => new Date(b.pub_date) - new Date(a.pub_date))
+        updatedMsgs.sort(function(a, b) {
+            if (new Date(b.pub_date) < new Date(a.pub_date)) return -1
+            if (new Date(b.pub_date) > new Date(a.pub_date)) return 1
+        })
         this.setState({
             travellerMessages: updatedMsgs
         })

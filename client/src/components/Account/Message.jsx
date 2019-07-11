@@ -145,20 +145,6 @@ class Message extends Component {
             <h2>Poslať správu</h2>
             {this.state.errorMsg && <p className="errorMsg">{this.state.errorMsg}</p>}
             {this.state.successMsg && <p className="successMsg">{this.state.successMsg}</p>}
-            <label htmlFor="name">
-              <span>Text</span>
-              <textarea
-                type="text"
-                id="message"
-                name="message"
-                onBlur={(e) => {
-                  this.handleChange(e)
-                  e.preventDefault()
-                }}
-                onChange={this.handleChange}
-                value={this.state.message}
-              />
-            </label>
             {this.state.positionLoading ?
               <Loader />
               :
@@ -201,9 +187,23 @@ class Message extends Component {
                     <p className="travellerP">{this.state.lon}</p>
                   }
                 </label>
-                <button className="snpBtn" onClick={this.getMyPosition} type="button">Získaj pozíciu</button>
+                <button className="snpBtnWhite" onClick={this.getMyPosition} type="button">Získaj pozíciu</button>
               </Fragment>
             }
+            <label htmlFor="name">
+              <span>Text</span>
+              <textarea
+                type="text"
+                id="message"
+                name="message"
+                onBlur={(e) => {
+                  this.handleChange(e)
+                  e.preventDefault()
+                }}
+                onChange={this.handleChange}
+                value={this.state.message}
+              />
+            </label>
             {
               this.state.img ?
                 <Fragment>
