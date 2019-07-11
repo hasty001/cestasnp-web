@@ -631,13 +631,27 @@ DB.prototype = {
           db.db('cestasnp').collection('traveler_messages')
             .insertOne(securityCheck.sanitizeTravellerMessage(message))
             .then(() => {
-              db.close();
-              callback(message);
+              db.db('cestasnp').collection('traveler_details')
+                .findOneAndUpdate({ user_id: message.user_id }, { 
+                  $set: {             
+                    finishedTracking: false,
+                  } 
+                })
+                .then(() => {
+                  db.close();
+                  console.log(`${message.user_id} successfully updated`);
+                  callback(message);
+                })
+                .catch(err => {
+                  db.close();
+                  throw err;
+                })
             })
             .catch(err => {
               db.close();
               callback({error: err });
             });
+          
         } else {
           callback({ error });
         }
