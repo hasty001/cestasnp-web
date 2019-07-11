@@ -90,8 +90,8 @@ router.get('/activeTravellers', function(req, res) {
             let published = new Date(msg.pub_date);
             trvlrsObject[msg.user_id].lastMsgDate = msg.pub_date;
             return (
-              // check if journey start later than last message
-              startDate.valueOf() < published.valueOf() &&
+              // check if journey start later than now
+              startDate.valueOf() < now.valueOf() &&
               // check if message is older than 5 days
               now.valueOf() > published.valueOf() &&
               now.valueOf() - published.valueOf() >= 432000000
