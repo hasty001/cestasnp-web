@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 
 import Map from './Map';
-import Loader from '../reusable_components/Loader';
-import NotFound from '../reusable_components/NotFound';
-import CommentBox from '../reusable_components/CommentBox';
-import ImageBox from '../reusable_components/ImageBox';
+import Loader from '../components/reusable/Loader';
+import NotFound from '../components/reusable/NotFound';
+import CommentBox from '../components/reusable/CommentBox';
+import ImageBox from '../components/reusable/ImageBox';
 
 class Traveller extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class Traveller extends Component {
     this.state = {
       loading: true,
       error: false,
-      travellerId: parseInt(this.props.match.params.traveller),
+      travellerId: this.props.match.params.traveller,
       travellerData: {
         meno: '',
         text: '',
@@ -230,9 +230,9 @@ class Traveller extends Component {
                             <img
                               src={
                                 typeof message.img === 'string' &&
-                                message.img.indexOf('res.cloudinary.com') === -1
+                                  message.img.indexOf('res.cloudinary.com') === -1
                                   ? 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                    message.img
+                                  message.img
                                   : message.img
                               }
                               style={{
@@ -248,7 +248,7 @@ class Traveller extends Component {
                                   true,
                                   message.img.indexOf('res.cloudinary.com') === -1
                                     ? 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/' +
-                                      message.img
+                                    message.img
                                     : message.fullImg,
                                 );
                               }}

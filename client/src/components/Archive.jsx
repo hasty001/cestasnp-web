@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import Loader from '../reusable_components/Loader';
-import NotFound from '../reusable_components/NotFound';
+import Loader from '../components/reusable/Loader';
+import NotFound from '../components/reusable/NotFound';
 import { sortByDateDesc } from '../helpers/helpers';
+
+import { NavItem, } from 'react-bootstrap';
+import history from '../helpers/history';
 
 class Archive extends Component {
   constructor(props) {
@@ -77,7 +80,9 @@ class Archive extends Component {
                       <div className="archived-traveller-text">
                         <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
                       </div>
-                      <a href={`/na/${traveller.userId}`}>Sleduj celé putovanie...</a>
+                      <NavItem onClick={() => {
+                        history.push(`/na/${traveller.userId}`)
+                      }}>Sleduj celé putovanie...</NavItem>
                     </div>
                   );
                 })}
@@ -101,7 +106,9 @@ class Archive extends Component {
                       <div className="archived-traveller-text">
                         <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
                       </div>
-                      <a href={`/na/${traveller.userId}`}>Sleduj celé putovanie...</a>
+                      <NavItem onClick={() => {
+                        history.push(`/na/${traveller.userId}`)
+                      }}>Sleduj celé putovanie...</NavItem>
                     </div>
                   );
                 })}

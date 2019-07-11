@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, NavItem } from 'react-bootstrap';
+import history from '../helpers/history';
 
-import Loader from '../reusable_components/Loader';
+import Loader from '../components/reusable/Loader';
 import PaginationAdvanced from './PaginationAdvanced';
 import ArticleFilter from './ArticleFilter';
 
@@ -164,10 +165,6 @@ class Articles extends Component {
   }
 
   handleFilterClick(e) {
-    console.log('value ', e.target.value);
-    console.log('target ', e.target.attributes);
-    console.log('e ', e);
-    debugger;
     let filter = e.target.value;
     let { filters } = this.state;
     if (filters.length > 1) {
@@ -217,14 +214,18 @@ class Articles extends Component {
               };
               return (
                 <div key={i} className="article-div">
-                  <a
+                  <NavItem
                     className="no-decoration"
-                    href={'/pred/articles/article/' + article.sql_article_id}
+                    onClick={() => {
+                      history.push('/pred/articles/article/' + article.sql_article_id)
+                    }}
                   >
                     <h2 className="no-decoration">{article.title}</h2>
-                  </a>
+                  </NavItem>
                   <div dangerouslySetInnerHTML={introtext()} />
-                  <a href={'/pred/articles/article/' + article.sql_article_id}>Čítaj viac...</a>
+                  <NavItem onClick={() => {
+                        history.push('/pred/articles/article/' + article.sql_article_id)
+                      }}>Čítaj viac...</NavItem>
                 </div>
               );
             })}

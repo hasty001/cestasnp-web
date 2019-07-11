@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+
+import { NavItem, Nav} from 'react-bootstrap';
+import history from '../helpers/history';
+
 import Map from './Map';
-import Loader from '../reusable_components/Loader';
+import Loader from '../components/reusable/Loader';
 import pin01 from '../../public/img/pins/Cervena.png';
 import pin02 from '../../public/img/pins/Cierna.png';
 import pin03 from '../../public/img/pins/Tmavo_modra.png';
@@ -90,14 +94,16 @@ class Active extends Component {
           travellerIds: travellerIds,
         };
         if (travellerIds.length > 0) {
-          fetch('/api/traveller/lastMessages/', {
+          fetch('/api/traveller/lastMessages', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: new Headers({
               'Content-Type': 'application/json',
             }),
           })
-            .then(resp => resp.json())
+            .then(resp => {
+              return resp.json()
+            })
             .then(messages => {
               let ids = [];
               let lastMessages = [];
@@ -160,7 +166,9 @@ class Active extends Component {
               <div className="active-travellers" style={{ textAlign: 'center' }}>
                 {this.state.travellers.map((traveller, i) => {
                   return (
-                    <a key={i} href={`/na/${traveller.userId}`}>
+                    <NavItem key={i} onClick={() => {
+                      history.push(`/na/${traveller.userId}`)
+                    }}>
                       {traveller.color !== grey ? (
                         <div
                           className="active-traveller"
@@ -186,7 +194,7 @@ class Active extends Component {
                           </p>
                         </div>
                       )}
-                    </a>
+                    </NavItem>
                   );
                 })}
               </div>

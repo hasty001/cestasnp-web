@@ -13,6 +13,15 @@ img {
   max-width: 100% !important;
 }
 
+a {
+  text-decoration: none !important;
+}
+
+li {
+  list-style: none !important;
+  display: inline-block;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
@@ -27,7 +36,7 @@ img {
   z-index: 9999;
   top: 0;
   border-bottom: 2px solid red;
-} @media (max-width: 800px) {
+} @media (max-width: 945px) {
   .app-header {
     height: 70px;
   }
@@ -42,14 +51,14 @@ img {
   display: block;
 }
 
-@media (max-width: 800px ) {
+@media (max-width: 945px ) {
   .logo-mobile {
     height: 50px;
     margin-left: 15px;
   }
 }
 
-@media (min-width: 801px) {
+@media (min-width: 946px) {
   .logo-mobile {
     height: 60px;
   }
@@ -87,7 +96,7 @@ body {
   top: 100px;
   width: 100%;
   min-height: calc(100vh - 100px);
-} @media(max-width: 800px) {
+} @media(max-width: 945px) {
   .app-body {
     min-height: calc(100vh - 70px);
     top: 70px;
@@ -108,14 +117,14 @@ body {
 
 .navbar-header {
   height: 96px;
-} @media (max-width: 800px) {
+} @media (max-width: 945px) {
   .navbar-header {
     /* padding: 0 15px; */
     height: 66px;
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 945px) {
   .navbar .container {
     width: 100%;
     padding: 0;
@@ -149,7 +158,7 @@ body {
   right: 16px;
   background-color: #ffffff;
   border-color: #ffffff;
-} @media(max-width: 800px) {
+} @media(max-width: 946px) {
   .navbar-toggle {
     top: 10px;
     right: 10px;
@@ -163,7 +172,7 @@ body {
   border-color: #ffffff;  
 }
 
-@media (min-width: 801px) {
+@media (min-width: 946px) {
   .navbar-right {
     margin-top: 20px;
   }
@@ -177,7 +186,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   background-color: #ff2730;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 945px) {
   .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
       padding-bottom: 10px;
       padding-top: 10px;
@@ -192,15 +201,19 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .navbar .container {
   padding-right: 0px;
   padding-left: 0px;
-  width: 80%;
-} @media (max-width: 800px) {
+  width: 90%;
+} @media (max-width: 945px) {
   .navbar .container {
     width: 100%;
     /* padding: 0 15px; */
   }
 }
 
-@media (max-width: 800px) {
+.navbar li, .navbar-inverse li {
+  display: block;
+}
+
+@media (max-width: 945px) {
     .navbar-header {
         float: none;
     }
@@ -353,7 +366,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .no-decoration, .no-decoration:hover {
-  text-decoration: none;
+  text-decoration: none !important;
+  list-style: none !important;
   color: #333;
 }
 
@@ -598,7 +612,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
   height: 100px;
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: n;
   white-space: nowrap;
   position: relative;
   z-index: 9999;
@@ -708,16 +722,21 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 /***   COMMENTBOX   ***/
 
 .comment-box-btn {
-  position: fixed;
+  background: #f97474;
+  border: solid 0px;
+  border-radius: 20px;
   bottom: 0px;
-  left: 45%;
-  width: 10%;
+  box-shadow: #867e7e 2px 2px 3px;
+  color: #f5f5f5;
+  font-size: 18px;
+  height: 40px;
+  margin: 5px;
   min-width: 120px;
-  border-radius: 0px;
-  border: 0px;
+  left: 45%;
+  position: fixed;
   text-align: center;
-  background-color: #f53838;
-  color: #fffdfd;
+  width: 10%;
+  z-index: 999;
 } @media(max-width: 464px) {
   .comment-box-btn {
     left: 33%;
@@ -895,3 +914,239 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 /***    COOKIES     ***/
 /**********************/
+/***    ACCOUNT     ***/
+
+.resetPasswordModal {
+  margin-top: 120px;
+  width: 900px;
+  max-width: 90%;
+}
+
+@media (max-width: 767px) {
+  .resetPasswordModal {
+    max-width: 96%;
+  }
+}
+
+.resetPasswordModal > .modal-content > .modal-body {
+  padding: 5px;
+}
+
+.linkLikeButton {
+  border: 0px;
+  text-decoration: underline;
+  color: #0062ff;
+  font-size: 15px;
+  background: transparent;
+}
+
+.accountWrap, .fanAccountWrap {
+  width: 80%;
+  margin: 20px auto;
+  font-size: 18px;
+}
+
+.accountWrap label, .fanAccountWrap label {
+  display: block;
+  width: 100%;
+}
+
+.accountWrap span {
+  display: inline-block;
+  width: 200px;
+  text-align: right;
+  padding-right: 15px;
+  margin: 5px 0;
+}
+
+.fanAccountWrap span {
+  display: block;
+  width: 100%;
+}
+
+.accountWrap h2 {
+  margin-left: 200px;
+}
+
+.fanAccountWrap h2 {
+  text-align: center;
+}
+
+.fanAccountWrap p {
+  text-align: justify;
+  font-weight: 800;
+}
+
+.accountWrap button {
+  display: block;
+  margin-left: 200px;
+}
+
+.fanAccountWrap button {
+  display: block;
+  margin: 15px auto;
+}
+
+.accountWrap input {
+  border: 1px solid lightgray;
+  height: 36px;
+  min-width: 240px;
+  padding-left: 10px;
+}
+
+.fanAccountWrap input {
+  display: block;
+  width: 100%;
+  border: 1px solid lightgray;
+  height: 36px;
+  min-width: 240px;
+  margin: 5px 0;
+  padding-left: 10px;
+}
+
+.fanAccountWrap select {
+  height: 36px;
+  border: solid 1px transparent;
+  background: #ffdada;
+  width: 20%;
+  margin: 5px 0;
+}
+
+.fanAccountWrap textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid lightgray;
+  height: 200px;
+  min-width: 240px;
+  margin: 5px 0;
+  padding-left: 10px;
+}
+
+.travellerP {
+  display: block;
+  width: 100%;
+  height: 36px;
+  min-width: 240px;
+  margin: 5px 0;
+  padding-left: 40px;
+}
+
+.errorMsg {
+  color: #bb0202;
+  background: rgb(255, 210, 210);
+  /* margin: 10px 10px 10px 200px; */
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.successMsg {
+  color: #126b12;
+  background: rgb(228, 255, 210);
+  /* margin: 10px 10px 10px 200px; */
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+#inyZaciatok {
+  display: inline-block;
+  width: 79%;
+  margin-left: 1%;
+  padding-left: 10px;
+}
+
+@media (max-width: 550px) {
+  
+  #resetWrap button {
+    margin-left: 15px;
+  }
+
+  #resetWrap span {
+    padding-left: 15px;
+  }
+
+  .accountWrap {
+    width: 90%;
+    margin: 20px auto;
+    font-size: 18px;
+  }
+
+  .fanAccountWrap {
+    width: 95%;
+  }
+
+  .fanAccountWrap select {
+    display: block;
+    width: 100px;
+  }
+
+  .fanAccountWrap h2 {
+    text-align: left;
+  }
+
+  #inyZaciatok {
+    display: block;
+    width: 100%;
+  }
+  
+  .accountWrap span {
+    width: 100%;
+    text-align: left;
+    padding-left: 50px;
+  }
+  
+  .accountWrap button {
+    margin-left: 50px;
+  }
+  
+  .accountWrap input {
+    margin-left: 50px;
+  }
+
+  .accountWrap h2 {
+    margin-left: 50px;
+  }
+
+  .errorMsg {
+    margin: 10px;
+  }
+
+  .snpBtn {
+
+  }
+
+}
+
+.snpBtn {
+  background: #f97474;
+  border: solid 0px;
+  padding: 5px 30px;
+  font-size: 18px;
+  height: 40px;
+  border-radius: 20px;
+  color: #f5f5f5;
+  box-shadow: #867e7e 2px 2px 3px;
+  margin: 10px;
+}
+
+.snpBtnWhite {
+  background: white;
+  border: 1px solid #f97474;
+  color: #333333;
+  padding: 5px 30px;
+  font-size: 18px;
+  height: 40px;
+  border-radius: 20px;
+  box-shadow: #867e7e 2px 2px 3px;
+  margin: 10px;
+}
+
+.thinRedWrap {
+  border: solid 1px #f97474;
+  padding: 15px;
+}
+
+#SentMessages {
+  overflow: overlay;
+  margin: 30px 0;
+}
+  

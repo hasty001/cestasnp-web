@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Loader from '../reusable_components/Loader';
-import Meta from '../reusable_components/Meta';
+import Loader from '../components/reusable/Loader';
+import Meta from '../components/reusable/Meta';
 
 class Article extends Component {
   constructor(props) {
