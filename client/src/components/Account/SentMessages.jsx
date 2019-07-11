@@ -37,8 +37,6 @@ class SentMessages extends Component {
                 <h2>Moje správy</h2>
                 {this.state.msgs.map((message, i) => 
                     <div key={i} className="traveller-message">
-                        {console.log('message ', message)}
-                        {console.log('message.img ', message.img)}
                         {
                             message.img &&
                             message.img !== 'None' &&

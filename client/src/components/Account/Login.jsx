@@ -36,7 +36,7 @@ class Login extends React.Component {
             return
         })
         .catch(e => {
-            console.error('error ', e)
+            // console.error('error ', e)
             this.setState({
                 error: 'Email alebo heslo nesedia. Skús ešte raz!'
             })

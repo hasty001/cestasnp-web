@@ -27,14 +27,11 @@ class CloudinaryWidget extends React.Component {
                 { width: 800, height: 400, crop: "fill" }],
         }, (error, result) => {
             if (!error && result && result.event === "success") {
-                console.log('Done! Here is the image info: ', result.info)
                 this.props.updateImageDetails(result.info)
             } else if (error) {
-                console.error('Error ', error)
                 this.props.updateImageDetails('')
             }
-        }
-        )
+        })
 
         this.setState({
             myWidget
@@ -54,7 +51,7 @@ class CloudinaryWidget extends React.Component {
                 callback(signature)
             })
             .catch(err => {
-                console.error('cloudinary err ', err)
+                return
             })
     }
 
@@ -63,8 +60,8 @@ class CloudinaryWidget extends React.Component {
     }
 
     render() {
-        return(
-            <button id = "upload_widget" className = "snpBtnWhite" onClick = { this.openWidget } > { this.props.btnTxt }</button>
+        return (
+            <button id="upload_widget" className="snpBtnWhite" onClick={this.openWidget} > {this.props.btnTxt}</button>
         )
     }
 }

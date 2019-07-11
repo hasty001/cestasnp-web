@@ -176,7 +176,6 @@ class TravellerAccount extends React.Component {
     }
 
     render() {
-        console.log('traveller ', this.props.traveller)
         return (
             <form
                 className="fanAccountWrap"

@@ -639,7 +639,7 @@ DB.prototype = {
                 })
                 .then(() => {
                   db.close();
-                  console.log(`${message.user_id} successfully updated`);
+                  console.log(`${message.user_id} reactivated`);
                   callback(message);
                 })
                 .catch(err => {

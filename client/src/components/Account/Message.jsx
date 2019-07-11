@@ -92,7 +92,6 @@ class Message extends Component {
       .then(res => res.json())
       .then(msgRes => {
         if (msgRes.error) {
-          console.error('msgError ', msgRes.error);
           this.setState({
             loading: false,
             errorMsg: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
@@ -111,7 +110,6 @@ class Message extends Component {
         }
       })
       .catch(err => {
-        console.error('err ', err)
         this.setState({
           loading: false,
           captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',

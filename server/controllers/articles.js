@@ -57,6 +57,7 @@ router.get('/article/:articleId', function(req, res) {
   })
   .catch(e => {
     console.error('error ', e)
+    return
   })
 });
 

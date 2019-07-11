@@ -21,8 +21,6 @@ class FanAccount extends React.Component {
     }
 
     handleChange(event) {
-        // console.log('state ', this.state)
-        // console.log('event ', event.target.value)
         if (event.target.name === 'zaciatok' && event.target.value !== 'oth') {
             this.setState({
                 [event.target.name]: event.target.value,
@@ -127,7 +125,6 @@ class FanAccount extends React.Component {
     }
 
     render() {
-        // console.log('this.props ', this.props)
         return (
             <form
                 className="fanAccountWrap"

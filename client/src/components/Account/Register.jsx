@@ -58,7 +58,6 @@ class Register extends React.Component {
             })
         })
         .catch(error => {
-            console.error('error ', error)
             switch (error.code) {
                 case 'auth/invalid-email':
                     this.setState({

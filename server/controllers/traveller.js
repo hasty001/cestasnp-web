@@ -223,9 +223,6 @@ router.post('/userCheck', function(req, res) {
     db.getTravellerMessages(uid),
   ])
   .then(([ userDetails, travellerDetails, travellerMessages ]) => {
-    // console.log('userDetails ', userDetails)
-    // console.log('travellerDetails ', travellerDetails)
-    // console.log('travellerMessages ', travellerMessages)
     if (userDetails && userDetails.length > 0) {
       res.json({
         userDetails: userDetails[0],
