@@ -44,6 +44,12 @@ class Message extends Component {
     this.setState({
       positionLoading: 1
     })
+
+    const options = {
+      timeout: 8000,
+      enableHighAccuracy: true,
+    }
+
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       this.setState({
         lat: coords.latitude.toFixed(6),
@@ -51,7 +57,15 @@ class Message extends Component {
         accuracy: coords.accuracy,
         positionLoading: 0,
       })
-    });
+    },
+    (err) => {
+      console.error('err ', err.message)
+      this.setState({
+        errorMsg: <span>Vyzerá to, že nemáš povelené získavanie GPS pozície. Povoľ podľa návodu <a href="https://cestasnp.sk/pred/articles/article/10004" target="_blank">tu</a> alebo zadaj ručne.</span>,
+        positionLoading: 0,
+      })
+    },
+    options)
   }
 
   sendMessage() {
