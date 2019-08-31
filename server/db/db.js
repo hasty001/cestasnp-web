@@ -5,21 +5,21 @@ const ObjectId = require('mongodb').ObjectId;
 const Validation = require('./validation');
 const securityCheck = new Validation();
 
-const DB = function() {
+const DB = function () {
   this.url = process.env.MONGODB_ATLAS_URI;
 };
 
 DB.prototype = {
-  all: function(collection, callback) {
+  all: function (collection, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp')
             .collection(collection)
             .find()
-            .toArray(function(err, docs) {
+            .toArray(function (err, docs) {
               if (docs) {
                 db.close();
                 callback(docs);
@@ -35,18 +35,18 @@ DB.prototype = {
     );
   },
 
-  newestSorted: function(collection, sortBy = {}, callback, filterBy = {}) {
+  newestSorted: function (collection, sortBy = {}, callback, filterBy = {}) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp')
             .collection(collection)
             .find(filterBy)
             .sort(sortBy)
             .limit(3)
-            .toArray(function(err, docs) {
+            .toArray(function (err, docs) {
               if (docs) {
                 db.close();
                 callback(docs);
@@ -62,11 +62,11 @@ DB.prototype = {
     );
   },
 
-  nextSorted: function(collection, sortBy = {}, next = 0, callback, filterBy = {}) {
+  nextSorted: function (collection, sortBy = {}, next = 0, callback, filterBy = {}) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         let page = next - 1;
         page = page < 0 ? 0 : page;
         if (db) {
@@ -76,7 +76,7 @@ DB.prototype = {
             .sort(sortBy)
             .limit(8)
             .skip(8 * page)
-            .toArray(function(err, docs) {
+            .toArray(function (err, docs) {
               if (docs) {
                 db.close();
                 callback(docs);
@@ -92,17 +92,17 @@ DB.prototype = {
     );
   },
 
-  findBy: function(collection, findBy = {}) {
-    return new Promise(function(resolve, reject) {
+  findBy: function (collection, findBy = {}) {
+    return new Promise(function (resolve, reject) {
       MongoClient.connect(
         process.env.MONGODB_ATLAS_URI,
         { useNewUrlParser: true },
-        function(err, db) {
+        function (err, db) {
           if (db) {
             db.db('cestasnp')
               .collection(collection)
               .find(findBy)
-              .toArray(function(err, docs) {
+              .toArray(function (err, docs) {
                 if (docs) {
                   db.close();
                   resolve(docs);
@@ -120,11 +120,11 @@ DB.prototype = {
     })
   },
 
-  countCollection: function(collection, findBy = {}, callback) {
+  countCollection: function (collection, findBy = {}, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp')
             .collection(collection)
@@ -144,11 +144,11 @@ DB.prototype = {
     );
   },
 
-  addArticle: function(article, collection) {
+  addArticle: function (article, collection) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp')
             .collection(collection)
@@ -167,12 +167,12 @@ DB.prototype = {
     );
   },
 
-  increaseArticleCount: function(articleId, callback) {
+  increaseArticleCount: function (articleId, callback) {
     let sArticleId = sanitize(articleId);
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           let oid = new ObjectId(sArticleId);
           db.db('cestasnp')
@@ -195,22 +195,22 @@ DB.prototype = {
 
   // traveller related
 
-  getTravellerDetails: function(travellerId) {
-    return new Promise(function(resolve, reject) {
+  getTravellerDetails: function (travellerId) {
+    return new Promise(function (resolve, reject) {
       let sTravellerId = sanitize(travellerId);
       // for before FIREBASE users
       if (sTravellerId.length <= 3) {
-        sTravellerId =  parseInt(sTravellerId);
+        sTravellerId = parseInt(sTravellerId);
       }
       MongoClient.connect(
         process.env.MONGODB_ATLAS_URI,
         { useNewUrlParser: true },
-        function(err, db) {
+        function (err, db) {
           if (db) {
             db.db('cestasnp')
               .collection('traveler_details')
               .find({ user_id: sTravellerId })
-              .toArray(function(err, docs) {
+              .toArray(function (err, docs) {
                 if (docs) {
                   db.close();
                   resolve(docs);
@@ -227,21 +227,21 @@ DB.prototype = {
     })
   },
 
-  getTravellerArticle: function(travellerId, callback) {
+  getTravellerArticle: function (travellerId, callback) {
     let sTravellerId = sanitize(travellerId);
     // for before FIREBASE users
     if (sTravellerId.length <= 3) {
-      sTravellerId =  parseInt(sTravellerId);
+      sTravellerId = parseInt(sTravellerId);
     }
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp')
             .collection('articles')
             .find({ created_by_user_sql_id: sTravellerId })
-            .toArray(function(err, docs) {
+            .toArray(function (err, docs) {
               if (docs) {
                 db.close();
                 callback(docs);
@@ -257,23 +257,23 @@ DB.prototype = {
     );
   },
 
-  getTravellerMessages: function(userId) {
+  getTravellerMessages: function (userId) {
     let connectionURL = process.env.MONGODB_ATLAS_URI;
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       let sUserId = sanitize(userId);
       // for before FIREBASE users
       if (sUserId.length <= 3) {
-        sUserId =  parseInt(sUserId);
+        sUserId = parseInt(sUserId);
       }
       MongoClient.connect(
         connectionURL,
         { useNewUrlParser: true },
-        function(err, db) {
+        function (err, db) {
           if (db) {
             db.db('cestasnp')
               .collection('traveler_messages')
               .find({ user_id: sUserId })
-              .toArray(function(err, docs) {
+              .toArray(function (err, docs) {
                 if (docs) {
                   db.close();
                   resolve(docs);
@@ -290,19 +290,19 @@ DB.prototype = {
     })
   },
 
-  getTravellerComments: function(articleId, travellerId, callback) {
+  getTravellerComments: function (articleId, travellerId, callback) {
     let sArticleId = sanitize(articleId);
     let sTravellerId = sanitize(travellerId);
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           if (sArticleId === 0 || sArticleId === "") {
             db.db('cestasnp')
               .collection('traveler_comments')
               .find({ 'travellerDetails.id': sTravellerId })
-              .toArray(function(err, docs) {
+              .toArray(function (err, docs) {
                 if (docs) {
                   db.close();
                   callback(docs);
@@ -315,7 +315,7 @@ DB.prototype = {
             db.db('cestasnp')
               .collection('article_comments')
               .find({ article_sql_id: sArticleId })
-              .toArray(function(err, docs) {
+              .toArray(function (err, docs) {
                 if (docs) {
                   callback(docs);
                   db.close();
@@ -332,7 +332,7 @@ DB.prototype = {
     );
   },
 
-  getTravellersMessages: function(travellerIds, callback) {
+  getTravellersMessages: function (travellerIds, callback) {
     if (!Array.isArray(travellerIds)) {
       throw 'Traveller IDs not an array';
     }
@@ -350,14 +350,14 @@ DB.prototype = {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp')
             .collection('traveler_messages')
             .find({ user_id: { $in: sTravellerIds } })
-            .toArray(function(err, docs) {
+            .toArray(function (err, docs) {
               if (docs) {
-                docs.sort(function(a, b) {
+                docs.sort(function (a, b) {
                   return new Date(b.pub_date) - new Date(a.pub_date);
                 });
                 db.close();
@@ -374,19 +374,19 @@ DB.prototype = {
     );
   },
 
-  getTravellerLastMessage: function(travellerId) {
+  getTravellerLastMessage: function (travellerId) {
     let connectionURL = process.env.MONGODB_ATLAS_URI;
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       MongoClient.connect(
         connectionURL,
         { useNewUrlParser: true },
-        function(err, db) {
+        function (err, db) {
           if (db) {
             db.db('cestasnp')
               .collection('traveler_messages')
               .find({ user_id: travellerId })
               .sort({ pub_date: -1 })
-              .toArray(function(err, docs) {
+              .toArray(function (err, docs) {
                 if (docs) {
                   if (docs && docs.length > 0) {
                     db.close();
@@ -395,7 +395,7 @@ DB.prototype = {
                     db.close();
                     resolve({
                       message: `No messages found for ${travellerId}`,
-                      pub_date: new Date(),
+                      pub_date: 0,
                       user_id: travellerId,
                     });
                   } else {
@@ -412,11 +412,11 @@ DB.prototype = {
     });
   },
 
-  addCommentOldTraveller: function(comment, callback) {
+  addCommentOldTraveller: function (comment, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp')
             .collection('article_comments')
@@ -455,11 +455,11 @@ DB.prototype = {
     );
   },
 
-  addCommentNewTraveller: function(comment, callback) {
+  addCommentNewTraveller: function (comment, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           let resCollection = db.db('cestasnp').collection('traveler_comments');
           /// see highest comment number
@@ -485,16 +485,26 @@ DB.prototype = {
     );
   },
 
-  finishTracking: function(userId) {
-    return new Promise(function(resolve, reject) {
+  finishTracking: function (userId) {
+    return new Promise(function (resolve, reject) {
       MongoClient.connect(
         process.env.MONGODB_ATLAS_URI,
         { useNewUrlParser: true },
-        function(err, db) {
+        function (err, db) {
           if (db) {
             db.db('cestasnp')
               .collection('traveler_details')
-              .findOneAndUpdate({ user_id: userId }, { $set: { finishedTracking: true } })
+              .findOneAndUpdate(
+                {
+                  user_id: userId
+                },
+                {
+                  $set: {
+                    finishedTracking: true,
+                    end_date: moment().format('YYYY-MM-DD')
+                  }
+                }
+              )
               .then(res => {
                 db.close();
                 resolve(res);
@@ -511,11 +521,11 @@ DB.prototype = {
     });
   },
 
-  createUser: function({ email, name, uid }, callback) {
+  createUser: function ({ email, name, uid }, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           let userRecord = {
             uid,
@@ -534,19 +544,19 @@ DB.prototype = {
             params: "NOT IN USE",
           }
           db.db('cestasnp').collection('users')
-          .insertOne(userRecord)
-          .then(() => {
-            db.close();
-            callback({
-              userDetails: userRecord,
-              travellerDetails: {},
-              travellerMessages: [],
+            .insertOne(userRecord)
+            .then(() => {
+              db.close();
+              callback({
+                userDetails: userRecord,
+                travellerDetails: {},
+                travellerMessages: [],
+              });
+            })
+            .catch(err => {
+              db.close();
+              throw err;
             });
-          })
-          .catch(err => {
-            db.close();
-            throw err;
-          });
         } else {
           throw err;
         }
@@ -554,11 +564,11 @@ DB.prototype = {
     );
   },
 
-  createTraveller: function({ meno, text, start_date, uid, start_miesto, number, email }, callback) {
+  createTraveller: function ({ meno, text, start_date, uid, start_miesto, number, email }, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           let travellerRecord = {
             sql_id: "",
@@ -577,15 +587,15 @@ DB.prototype = {
             lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'),
           }
           db.db('cestasnp').collection('traveler_details')
-          .insertOne(travellerRecord)
-          .then(() => {
-            db.close();
-            callback(travellerRecord);
-          })
-          .catch(err => {
-            db.close();
-            throw err;
-          });
+            .insertOne(travellerRecord)
+            .then(() => {
+              db.close();
+              callback(travellerRecord);
+            })
+            .catch(err => {
+              db.close();
+              throw err;
+            });
         } else {
           throw err;
         }
@@ -593,36 +603,36 @@ DB.prototype = {
     );
   },
 
-  updateTraveller: function({ meno, text, start_date, uid, start_miesto, end_date, number, completed, email, finishedTracking }, callback) {
+  updateTraveller: function ({ meno, text, start_date, uid, start_miesto, end_date, number, completed, email, finishedTracking }, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(err, db) {
+      function (err, db) {
         if (db) {
           db.db('cestasnp').collection('traveler_details')
-          .findOneAndUpdate({ user_id: uid }, { 
-            $set: {             
-              meno: sanitize(meno),             // nazov skupiny
-              text: sanitize(text),             // popis skupiny
-              start_date: sanitize(start_date),
-              end_date: sanitize(end_date),
-              completed: sanitize(completed),
-              user_id: sanitize(uid),
-              start_miesto: sanitize(start_miesto),
-              number: sanitize(number),           // pocet ucastnikov
-              email: sanitize(email),            // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
-              finishedTracking: sanitize(finishedTracking),
-              lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'), 
-            } 
-          })
-          .then(() => {
-            db.close();
-            callback({ response: `${uid} successfully updated` });
-          })
-          .catch(err => {
-            db.close();
-            throw err;
-          });
+            .findOneAndUpdate({ user_id: uid }, {
+              $set: {
+                meno: sanitize(meno),             // nazov skupiny
+                text: sanitize(text),             // popis skupiny
+                start_date: sanitize(start_date),
+                end_date: sanitize(end_date),
+                completed: sanitize(completed),
+                user_id: sanitize(uid),
+                start_miesto: sanitize(start_miesto),
+                number: sanitize(number),           // pocet ucastnikov
+                email: sanitize(email),            // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
+                finishedTracking: sanitize(finishedTracking),
+                lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss'),
+              }
+            })
+            .then(() => {
+              db.close();
+              callback({ response: `${uid} successfully updated` });
+            })
+            .catch(err => {
+              db.close();
+              throw err;
+            });
         } else {
           throw err;
         }
@@ -630,20 +640,21 @@ DB.prototype = {
     );
   },
 
-  sendMessage: function(message, callback) {
+  sendMessage: function (message, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true },
-      function(error, db) {
+      function (error, db) {
         if (db) {
           db.db('cestasnp').collection('traveler_messages')
             .insertOne(securityCheck.sanitizeTravellerMessage(message))
             .then(() => {
               db.db('cestasnp').collection('traveler_details')
-                .findOneAndUpdate({ user_id: message.user_id }, { 
-                  $set: {             
+                .findOneAndUpdate({ user_id: message.user_id }, {
+                  $set: {
                     finishedTracking: false,
-                  } 
+                    end_date: "",
+                  }
                 })
                 .then(() => {
                   db.close();
@@ -657,9 +668,9 @@ DB.prototype = {
             })
             .catch(err => {
               db.close();
-              callback({error: err });
+              callback({ error: err });
             });
-          
+
         } else {
           callback({ error });
         }

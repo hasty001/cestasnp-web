@@ -7,125 +7,130 @@ const db = new DB();
 const router = express.Router();
 
 // retrieve travellers details
-router.get('/details/:travellerId', function(req, res) {
+router.get('/details/:travellerId', function (req, res) {
   let travellerId = sanitize(req.params.travellerId);
   db.getTravellerDetails(travellerId)
-  .then(results => {
-    res.json(results);
-  })
-  .catch(e => {
-    console.error('err ', e);
-  })
+    .then(results => {
+      res.json(results);
+    })
+    .catch(e => {
+      console.error('err ', e);
+    })
 });
 
-router.get('/article/:travellerId', function(req, res) {
+router.get('/article/:travellerId', function (req, res) {
   let travellerId = sanitize(req.params.travellerId);
-  db.getTravellerArticle(travellerId, function(results) {
+  db.getTravellerArticle(travellerId, function (results) {
     res.json(results);
   });
 });
 
-router.get('/messages/:travellerId', function(req, res) {
+router.get('/messages/:travellerId', function (req, res) {
   let travellerId = sanitize(req.params.travellerId);
   db.getTravellerMessages(travellerId)
-  .then(results => {
-    res.json(results);
-  })
-  .catch(e => {
-    console.error('err ', e);
-  })
+    .then(results => {
+      res.json(results);
+    })
+    .catch(e => {
+      console.error('err ', e);
+    })
 });
 
-router.post('/lastMessages', function(req, res) {
-  db.getTravellersMessages(req.body.travellerIds, function(results) {
-    res.json(results);
-  });
-});
-
-router.post('/comments', function(req, res) {
-  db.getTravellerComments(req.body.articleId, req.body.travellerId, function(results) {
+router.post('/lastMessages', function (req, res) {
+  db.getTravellersMessages(req.body.travellerIds, function (results) {
     res.json(results);
   });
 });
 
-router.get('/finishedTravellers', function(req, res) {
-  db.findBy('traveler_details', { 
-    finishedTracking: true, 
+router.post('/comments', function (req, res) {
+  db.getTravellerComments(req.body.articleId, req.body.travellerId, function (results) {
+    res.json(results);
+  });
+});
+
+router.get('/finishedTravellers', function (req, res) {
+  db.findBy('traveler_details', {
+    finishedTracking: true,
     end_date: { $ne: "" },
   })
-  .then(results => {
-    res.json(results);
-  })
-  .catch(e => {
-    console.error('error ', e)
-  })
+    .then(results => {
+      console.log('results ', results)
+      res.json(results);
+    })
+    .catch(e => {
+      console.error('error ', e)
+    })
 });
 
-router.get('/activeTravellers', function(req, res) {
+router.get('/activeTravellers', function (req, res) {
   db.findBy('traveler_details', { finishedTracking: false })
-  .then(activeTravellers => {
+    .then(activeTravellers => {
 
-    let trvlrIds = activeTravellers.map(trvlr => {
-      return trvlr.user_id;
-    });
-
-    let trvlrsObject = {};
-
-    activeTravellers.forEach(trvlr => {
-      trvlrsObject[trvlr.user_id] = {
-        start: trvlr.start_date,
-      };
-    });
-
-    let trvlrPromises = trvlrIds.map(id => {
-      return db.getTravellerLastMessage(id);
-    });
-
-    Promise.all(trvlrPromises)
-      .then(function(msgs) {
-        let now = new Date();
-        let expired = msgs
-          .filter(msg => {
-            let startDate = new Date(trvlrsObject[msg.user_id].start);
-            let published = new Date(msg.pub_date);
-            trvlrsObject[msg.user_id].lastMsgDate = msg.pub_date;
-            return (
-              // check if journey start later than now
-              startDate.valueOf() < now.valueOf() &&
-              // check if message is older than 5 days
-              now.valueOf() > published.valueOf() &&
-              now.valueOf() - published.valueOf() >= 432000000
-            );
-          })
-          .map(msg => {
-            return msg.user_id;
-          });
-
-        if (expired.length > 0) {
-          let finishPromises = expired.map(id => {
-            return db.finishTracking(id);
-          });
-          Promise.all(finishPromises)
-            .then(function() {
-              res.json(activeTravellers);
-            })
-            .catch(function(e) {
-              throw e;
-            });
-        } else {
-          res.json(activeTravellers);
-        }
-      })
-      .catch(function(e) {
-        throw e;
+      let trvlrIds = activeTravellers.map(trvlr => {
+        return trvlr.user_id;
       });
-  })
-  .catch(e => {
-    console.error('error ', e)
-  })
+
+      let trvlrsObject = {};
+
+      activeTravellers.forEach(trvlr => {
+        trvlrsObject[trvlr.user_id] = {
+          start: trvlr.start_date,
+        };
+      });
+
+      let trvlrPromises = trvlrIds.map(id => {
+        return db.getTravellerLastMessage(id);
+      });
+
+      Promise.all(trvlrPromises)
+        .then(function (msgs) {
+          let now = new Date();
+          let expired = msgs
+            .filter(msg => {
+              let startDate = new Date(trvlrsObject[msg.user_id].start);
+              let published = 0
+              if (msg.pub_date) {
+                published = new Date(msg.pub_date);
+              }
+              if (!published &&
+                startDate.valueOf() < now.valueOf() &&
+                startDate.valueOf() - now.valueOf() >= 259200000) {
+                  return msg
+                } else if (startDate.valueOf() < now.valueOf() &&
+                now.valueOf() > published.valueOf() &&
+                now.valueOf() - published.valueOf() >= 259200000) {
+                  return msg
+              }
+            })
+            .map(msg => {
+              return msg.user_id;
+            });
+
+          if (expired.length > 0) {
+            let finishPromises = expired.map(id => {
+              return db.finishTracking(id);
+            });
+            Promise.all(finishPromises)
+              .then(function () {
+                res.json(activeTravellers);
+              })
+              .catch(function (e) {
+                throw e;
+              });
+          } else {
+            res.json(activeTravellers);
+          }
+        })
+        .catch(function (e) {
+          throw e;
+        });
+    })
+    .catch(e => {
+      console.error('error ', e)
+    })
 });
 
-router.post('/addComment', function(req, res) {
+router.post('/addComment', function (req, res) {
   if (
     req.body['g-recaptcha-response'] === undefined ||
     req.body['g-recaptcha-response'] === '' ||
@@ -144,8 +149,8 @@ router.post('/addComment', function(req, res) {
   // + '&remoteip=' +
   // req.connection.remoteAddress;
 
-  request(verificationURL, function(error, response, body) {
-    
+  request(verificationURL, function (error, response, body) {
+
     body = JSON.parse(body);
     if (body.success) {
       let comment = {};
@@ -182,7 +187,7 @@ router.post('/addComment', function(req, res) {
         let sDate = sanitize(req.body.date);
         comment.date = sDate;
 
-        db.addCommentOldTraveller(comment, function(com) {
+        db.addCommentOldTraveller(comment, function (com) {
           res.json(com);
           return;
         });
@@ -203,7 +208,7 @@ router.post('/addComment', function(req, res) {
         let sDate = sanitize(req.body.date);
         comment.date = sDate;
 
-        db.addCommentNewTraveller(comment, function(com) {
+        db.addCommentNewTraveller(comment, function (com) {
           res.json(com);
           return;
         });
@@ -215,53 +220,53 @@ router.post('/addComment', function(req, res) {
   });
 });
 
-router.post('/userCheck', function(req, res) {
+router.post('/userCheck', function (req, res) {
   let { email, name, uid } = req.body
   Promise.all([
     db.findBy('users', { uid }),
     db.getTravellerDetails(uid),
     db.getTravellerMessages(uid),
   ])
-  .then(([ userDetails, travellerDetails, travellerMessages ]) => {
-    if (userDetails && userDetails.length > 0) {
-      res.json({
-        userDetails: userDetails[0],
-        travellerDetails: travellerDetails[0] || {},
-        travellerMessages: travellerMessages || [],
-      });
-      return;
-    } else {
-      db.createUser({ email, name, uid }, function(creation) {
-        res.json(creation);
+    .then(([userDetails, travellerDetails, travellerMessages]) => {
+      if (userDetails && userDetails.length > 0) {
+        res.json({
+          userDetails: userDetails[0],
+          travellerDetails: travellerDetails[0] || {},
+          travellerMessages: travellerMessages || [],
+        });
         return;
-      })
-    }
-  });
-  
-  router.post('/setupTraveller', function(req, res) {
+      } else {
+        db.createUser({ email, name, uid }, function (creation) {
+          res.json(creation);
+          return;
+        })
+      }
+    });
+
+  router.post('/setupTraveller', function (req, res) {
     let { meno, text, start_date, uid, start_miesto, number, email } = req.body
-    db.createTraveller({ meno, text, start_date, uid, start_miesto, number, email }, function(resp) {
+    db.createTraveller({ meno, text, start_date, uid, start_miesto, number, email }, function (resp) {
       res.json(resp)
       return
     })
   })
 
-  router.post('/updateTraveller', function(req, res) {
+  router.post('/updateTraveller', function (req, res) {
     let { meno, text, start_date, uid, start_miesto, number, end_date, completed, email, finishedTracking } = req.body
-    db.updateTraveller({ meno, text, start_date, uid, start_miesto, number, end_date, completed, email, finishedTracking }, function(resp) {
+    db.updateTraveller({ meno, text, start_date, uid, start_miesto, number, end_date, completed, email, finishedTracking }, function (resp) {
       res.json(resp)
       return
     })
   })
 
-  router.post('/sendMessage', function(req, res) {
+  router.post('/sendMessage', function (req, res) {
     let { lon, lat, accuracy, text, pub_date, user_id, img, pub_date_milseconds, details_id } = req.body
-    db.sendMessage({ lon, lat, accuracy, text, pub_date, user_id, img, pub_date_milseconds, details_id }, function(resp) {
+    db.sendMessage({ lon, lat, accuracy, text, pub_date, user_id, img, pub_date_milseconds, details_id }, function (resp) {
       res.json(resp)
       return
     })
   })
-     
+
 })
 
 module.exports = router;
