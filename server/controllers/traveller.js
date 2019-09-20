@@ -1,5 +1,7 @@
 const express = require('express');
 const sanitize = require('mongo-sanitize');
+const moment = require('moment');
+
 const DB = require('../db/db');
 const request = require('request');
 
@@ -54,7 +56,6 @@ router.get('/finishedTravellers', function (req, res) {
     end_date: { $ne: "" },
   })
     .then(results => {
-      console.log('results ', results)
       res.json(results);
     })
     .catch(e => {
@@ -95,20 +96,26 @@ router.get('/activeTravellers', function (req, res) {
               if (!published &&
                 startDate.valueOf() < now.valueOf() &&
                 startDate.valueOf() - now.valueOf() >= 259200000) {
+                  msg.completed = 0
+                  msg.pub_date = moment(startDate).format('YYYY-MM-DD')
                   return msg
                 } else if (startDate.valueOf() < now.valueOf() &&
                 now.valueOf() > published.valueOf() &&
                 now.valueOf() - published.valueOf() >= 259200000) {
+                  if (published.valueOf() - startDate.valueOf() >= 864000000) {
+                    msg.completed = 1
+                    msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD')
+                  } else {
+                    msg.completed = 0
+                    msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD')
+                  }
                   return msg
               }
             })
-            .map(msg => {
-              return msg.user_id;
-            });
 
           if (expired.length > 0) {
-            let finishPromises = expired.map(id => {
-              return db.finishTracking(id);
+            let finishPromises = expired.map(({ user_id, completed, pub_date }) => {
+              return db.finishTracking(user_id, completed, pub_date)
             });
             Promise.all(finishPromises)
               .then(function () {

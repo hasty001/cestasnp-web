@@ -485,7 +485,7 @@ DB.prototype = {
     );
   },
 
-  finishTracking: function (userId) {
+  finishTracking: function (userId, completed, endDate) {
     return new Promise(function (resolve, reject) {
       MongoClient.connect(
         process.env.MONGODB_ATLAS_URI,
@@ -501,7 +501,8 @@ DB.prototype = {
                 {
                   $set: {
                     finishedTracking: true,
-                    end_date: moment().format('YYYY-MM-DD')
+                    end_date: endDate,
+                    completed,
                   }
                 }
               )
