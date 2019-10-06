@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment-timezone';
+import { isDecimal } from 'validator';
+
 import Loader from '../reusable/Loader';
 import CloudinaryWidget from '../reusable/CloudinaryWidget';
 
@@ -26,6 +28,7 @@ class Message extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.verifyGPSFormat = this.verifyGPSFormat.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.getMyPosition = this.getMyPosition.bind(this);
     this.triggerEdit = this.triggerEdit.bind(this);
@@ -42,7 +45,8 @@ class Message extends Component {
 
   getMyPosition() {
     this.setState({
-      positionLoading: 1
+      positionLoading: 1,
+      errorMsg: "",
     })
 
     const options = {
@@ -58,14 +62,29 @@ class Message extends Component {
         positionLoading: 0,
       })
     },
-    (err) => {
-      console.error('err ', err.message)
+      (err) => {
+        console.error('err ', err.message)
+        this.setState({
+          errorMsg: <span>Vyzerá to, že nemáš povelené získavanie GPS pozície. Povoľ podľa návodu <a href="https://cestasnp.sk/pred/articles/article/10004" target="_blank">tu</a> alebo zadaj ručne.</span>,
+          positionLoading: 0,
+        })
+      },
+      options)
+  }
+
+  verifyGPSFormat({ target }) {
+    let { value } = target
+
+    if (value === "") {
+      return
+    }
+
+    if (!isDecimal(value)) {
       this.setState({
-        errorMsg: <span>Vyzerá to, že nemáš povelené získavanie GPS pozície. Povoľ podľa návodu <a href="https://cestasnp.sk/pred/articles/article/10004" target="_blank">tu</a> alebo zadaj ručne.</span>,
-        positionLoading: 0,
+        errorMsg: 'GPS súradnica musí byť desatinné číslo oddelené bodkou!',
       })
-    },
-    options)
+      return
+    }
   }
 
   sendMessage() {
@@ -171,7 +190,7 @@ class Message extends Component {
                       name="lat"
                       value={this.state.lat}
                       onBlur={(e) => {
-                        this.handleChange(e)
+                        this.verifyGPSFormat(e)
                         e.preventDefault()
                       }}
                       onChange={this.handleChange}
@@ -190,7 +209,7 @@ class Message extends Component {
                       name="lon"
                       value={this.state.lon}
                       onBlur={(e) => {
-                        this.handleChange(e)
+                        this.verifyGPSFormat(e)
                         e.preventDefault()
                       }}
                       onChange={this.handleChange}
@@ -220,10 +239,10 @@ class Message extends Component {
               this.state.img ?
                 <Fragment>
                   <img src={this.state.img.secure_url} alt="nahrana fotka z cesty" />
-                  <CloudinaryWidget uid={this.props.userId} updateImageDetails={this.updateImageDetails} btnTxt={"Nahraj inú fotku"}/>
+                  <CloudinaryWidget uid={this.props.userId} updateImageDetails={this.updateImageDetails} btnTxt={"Nahraj inú fotku"} />
                 </Fragment>
                 :
-                <CloudinaryWidget uid={this.props.userId} updateImageDetails={this.updateImageDetails} btnTxt={"Nahraj fotku"}/>
+                <CloudinaryWidget uid={this.props.userId} updateImageDetails={this.updateImageDetails} btnTxt={"Nahraj fotku"} />
             }
             <button className="snpBtn" onClick={this.sendMessage} type="submit">Poslať správu</button>
           </Fragment>
