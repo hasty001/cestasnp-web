@@ -98,7 +98,7 @@ class FanAccount extends React.Component {
                 error: "Zabudol si na dátum začiatku cesty!"
             })
             return
-        } else if (moment(start_date).diff(moment(), 'days') < -3) {
+        } else if (moment(start_date).diff(moment(), 'days') < -5) {
             console.log(moment(start_date).diff(moment(), 'days'));
             this.setState({
                 error: "Začiatok cesty je viac než 3 dni v minulosti. Vyber iný dátum!"
