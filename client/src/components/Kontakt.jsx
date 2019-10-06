@@ -37,7 +37,7 @@ const Kontakt = () => {
       <p>Zasielanie z Česka v CZK: CZ2320100000002501407836</p>
       <br />
       <p>
-        Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme v
+        Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme v{' '}
         <NavItem onClick={() => {
           history.push("/pred/articles/article/379")
         }}> zozname darcov</NavItem>
