@@ -67,20 +67,13 @@ router.get('/activeTravellers', function (req, res) {
   db.findBy('traveler_details', { finishedTracking: false })
     .then(activeTravellers => {
 
-      let trvlrIds = activeTravellers.map(trvlr => {
-        return trvlr.user_id;
-      });
-
       let trvlrsObject = {};
 
-      activeTravellers.forEach(trvlr => {
-        trvlrsObject[trvlr.user_id] = {
-          start: trvlr.start_date,
+      let trvlrPromises = activeTravellers.map(({ user_id, start_date }) => {
+        trvlrsObject[user_id] = {
+          start: start_date,
         };
-      });
-
-      let trvlrPromises = trvlrIds.map(id => {
-        return db.getTravellerLastMessage(id);
+        return db.getTravellerLastMessage(user_id);
       });
 
       Promise.all(trvlrPromises)
@@ -89,27 +82,28 @@ router.get('/activeTravellers', function (req, res) {
           let expired = msgs
             .filter(msg => {
               let startDate = new Date(trvlrsObject[msg.user_id].start);
-              let published = 0
-              if (msg.pub_date) {
+              let published = "empty"
+              if (msg.pub_date && msg.pub_date != 0) {
                 published = new Date(msg.pub_date);
               }
-              if (!published &&
+              if (published === "empty" &&
                 startDate.valueOf() < now.valueOf() &&
-                startDate.valueOf() - now.valueOf() >= 259200000) {
-                  msg.completed = 0
-                  msg.pub_date = moment(startDate).format('YYYY-MM-DD')
-                  return msg
-                } else if (startDate.valueOf() < now.valueOf() &&
+                now.valueOf() - startDate.valueOf() >= 259200000) {
+                msg.completed = 0
+                msg.pub_date = moment(startDate).format('YYYY-MM-DD')
+                return msg
+              } else if (published !== "empty" &&
+                startDate.valueOf() < now.valueOf() &&
                 now.valueOf() > published.valueOf() &&
                 now.valueOf() - published.valueOf() >= 259200000) {
-                  if (published.valueOf() - startDate.valueOf() >= 864000000) {
-                    msg.completed = 1
-                    msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD')
-                  } else {
-                    msg.completed = 0
-                    msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD')
-                  }
-                  return msg
+                if (published.valueOf() - startDate.valueOf() >= 864000000) {
+                  msg.completed = 1
+                  msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD')
+                } else {
+                  msg.completed = 0
+                  msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD')
+                }
+                return msg
               }
             })
 

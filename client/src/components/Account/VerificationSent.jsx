@@ -10,7 +10,6 @@ export default ({ email }) => (
             fontSize: '18px',
             textAlign: 'justify',
             padding: '0 50px',
-        }}>Prosím potvrď svoju registráciu kliknutím na link, ktorý sme ti zaslali na {email}
-        a môžeš sa prihlásiť. Mysli na to, že email mohol skončiť aj v tvojom spame.</p>
+        }}>Prosím potvrď svoju registráciu kliknutím na link, ktorý sme ti zaslali na {email} a môžeš sa prihlásiť. Mysli na to, že email mohol skončiť aj v tvojom spame.</p>
     </Fragment>
 )
