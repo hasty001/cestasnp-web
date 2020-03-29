@@ -12,17 +12,8 @@ class SentMessages extends Component {
                 if (new Date(b.pub_date) > new Date(a.pub_date)) return 1
             })
         };
-        // this.triggerEdit = this.triggerEdit.bind(this);
     }
 
-    //   triggerEdit(target) {
-    //     console.log('trigger event ', target)
-    //     let edit = this.state.edit
-    //     edit[target] = this.state.edit[target] === 1 ? 0 : 1
-    //     this.setState({
-    //         edit
-    //     })
-    //   }
     componentDidUpdate(prevProps) {
         if (this.props.msgs != prevProps.msgs) {
             this.setState({

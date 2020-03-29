@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 
 import VerificationSent from './VerificationSent'
 
-import { auth }from '../../helpers/firebase'
+import { auth } from '../../helpers/firebase'
 
 class Register extends React.Component {
     constructor(props) {

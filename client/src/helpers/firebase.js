@@ -2,12 +2,12 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 
 firebase.initializeApp({
-    apiKey: "AIzaSyBJpRnnmBqfGnYXU0N6AVtO3S5X3Ug4_CQ",
-    authDomain: "cestasnp-sk.firebaseapp.com",
-    databaseURL: "https://cestasnp-sk.firebaseio.com",
-    projectId: "cestasnp-sk",
-    storageBucket: "cestasnp-sk.appspot.com",
-    messagingSenderId: "733336663349"
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: `${process.env.FIREBASE_PROJECT_ID}.firebaseapp.com`,
+    databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: `${process.env.FIREBASE_PROJECT_ID}.appspot.com`,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_ID
 });
 
 const auth = firebase.auth()

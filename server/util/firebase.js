@@ -2,7 +2,7 @@
 const admin = require("firebase-admin");
 const serviceAccount = JSON.parse(`{
   "type": "service_account",
-  "project_id": "cestasnp-sk",
+  "project_id": "${process.env.FIREBASE_PROJECT_ID}",
   "private_key_id": "${process.env.FIREBASE_PRIVATE_KEY_ID}",
   "private_key": "-----BEGIN PRIVATE KEY-----${process.env.FIREBASE_PRIVATE_KEY}-----END PRIVATE KEY-----",
   "client_email": "${process.env.FIREBASE_CLIENT_EMAIL}",
@@ -15,7 +15,7 @@ const serviceAccount = JSON.parse(`{
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://cestasnp-sk.firebaseio.com"
+  databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
 });
 
 module.exports = {
