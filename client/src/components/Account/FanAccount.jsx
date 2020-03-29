@@ -72,6 +72,13 @@ class FanAccount extends React.Component {
             return
         }
 
+        if (popis.trim().length < 32) {
+            this.setState({
+                error: "Popis cesty je príliš krátky (min. 32 znakov)!"
+            })
+            return
+        }
+
         if (zaciatok === 'oth' && (!inyZaciatok || inyZaciatok.trim().length === 0)) {
             this.setState({
                 error: "Zabudol si na alternatívny začiatok, kedže nevyrážaš ani z Dukly ani z Devína!"
@@ -91,9 +98,10 @@ class FanAccount extends React.Component {
                 error: "Zabudol si na dátum začiatku cesty!"
             })
             return
-        } else if (moment(start_date).diff(moment(), 'days') < 0) {
+        } else if (moment(start_date).diff(moment(), 'days') < -5) {
+            console.log(moment(start_date).diff(moment(), 'days'));
             this.setState({
-                error: "Začiatok cesty je v minulosti. Vyber iný dátum!"
+                error: "Začiatok cesty je viac než 3 dni v minulosti. Vyber iný dátum!"
             })
             return
         }
@@ -146,6 +154,8 @@ class FanAccount extends React.Component {
                         name="nazov"
                         value={this.state.nazov}
                         type="text"
+                        maxLength="30"
+                        placeholder="(max. 30 znakov)"
                         onBlur={(e) => {
                             this.handleChange(e)
                             e.preventDefault()
@@ -159,6 +169,7 @@ class FanAccount extends React.Component {
                         id="popis"
                         name="popis"
                         value={this.state.popis}
+                        placeholder="(min. 32 znakov)"
                         onBlur={(e) => {
                             this.handleChange(e)
                             e.preventDefault()
@@ -177,7 +188,7 @@ class FanAccount extends React.Component {
                         }}
                         onChange={this.handleChange}
                         >
-                        <option selected value="Dukla">Dukla</option>
+                        <option defaultValue="Dukla">Dukla</option>
                         <option value="Devín">Devín</option>
                         <option value="oth">Inde</option>
                     </select>

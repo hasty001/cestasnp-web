@@ -19,8 +19,6 @@ import Cookies from './components/Cookies';
 import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
 
-import websupport from '../public/img/websupport.png';
-
 const CestaSNP = () => (
   <div className="app">
       <AuthProvider>
@@ -45,9 +43,6 @@ const CestaSNP = () => (
                   <Route path="*" component={NotFound} />
                 </Switch>
               </Router>
-          </div>
-          <div className="app-footer">
-            <img src={websupport} alt="logo sponzora" className="sponzor" />
           </div>
         </div>
       </AuthProvider>
