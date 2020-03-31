@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, NavItem } from 'react-bootstrap';
 import history from '../helpers/history';
 
-import Loader from '../components/reusable/Loader';
+import Loader from './reusable/Loader';
 import PaginationAdvanced from './PaginationAdvanced';
 import ArticleFilter from './ArticleFilter';
 
@@ -33,18 +33,24 @@ const articleCategories = [
   { tag: 'shocart', text: 'Shocart' },
   { tag: 'gps', text: 'GPS' },
   { tag: 'batoh', text: 'Batoh' },
-  { tag: 'dukla-cergov-sarisska-vrchovina', text: 'Dukla, Čergov, Šarišská vrchovina' },
+  {
+    tag: 'dukla-cergov-sarisska-vrchovina',
+    text: 'Dukla, Čergov, Šarišská vrchovina'
+  },
   { tag: 'cierna-hora-volovske-vrchy', text: 'Čierna hora, Volovské vrchy' },
   { tag: 'nizke-tatry', text: 'Nízke Tatry' },
   { tag: 'velka-fatra-kremnicke-vrchy', text: 'Veľká Fatra, Kremnické vrchy' },
-  { tag: 'strazovske-vrchy-biele-karpaty', text: 'Strážovske vrchy, Biele Karpatu' },
+  {
+    tag: 'strazovske-vrchy-biele-karpaty',
+    text: 'Strážovske vrchy, Biele Karpatu'
+  },
   { tag: 'male-karpaty', text: 'Malé Karpaty' },
   { tag: 'recepty', text: 'Recepty' },
   { tag: 'o-strave', text: 'O strave' },
   // { tag: 'nezaradene', text: 'Nezaradené' },
   // { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
   { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' },
-  { tag: 'rozhovory', text: 'Rozhovory' },
+  { tag: 'rozhovory', text: 'Rozhovory' }
 ];
 
 const categoryTags = articleCategories.map(category => {
@@ -57,13 +63,15 @@ class Articles extends Component {
 
     this.state = {
       loading: true,
-      activePage: parseInt(this.props.match.params.page) || 1,
+      activePage: parseInt(this.props.match.params.page, 10) || 1,
       totalArticles: 12,
       articles: [],
-      filters: this.props.match.params.category ? this.props.match.params.category.split('+') : [],
+      filters: this.props.match.params.category
+        ? this.props.match.params.category.split('+')
+        : [],
       categories: articleCategories.map(category => {
         return category;
-      }),
+      })
     };
     this.handlePageSelect = this.handlePageSelect.bind(this);
     this.handleCategorySelect = this.handleCategorySelect.bind(this);
@@ -71,26 +79,26 @@ class Articles extends Component {
   }
 
   componentDidMount() {
-    let { filters, categories } = this.state;
+    const { filters, categories } = this.state;
 
     if (filters.length === 0) {
       fetch('/api/articles/')
         .then(resp => resp.json())
         .then(count => {
-          let pages = Math.round(count / 8);
+          const pages = Math.round(count / 8);
           this.setState({ totalArticles: pages });
         })
         .catch(err => {
           throw err;
         });
 
-      let url = '/api/articles/' + this.props.match.params.page;
+      const url = `/api/articles/${this.props.match.params.page}`;
       fetch(url)
         .then(resp => resp.json())
         .then(data => {
           this.setState({
             articles: data,
-            loading: false,
+            loading: false
           });
         })
         .catch(err => {
@@ -98,7 +106,7 @@ class Articles extends Component {
         });
     } else {
       // get array of filter indeces
-      let filterIndeces = filters.map(filter => {
+      const filterIndeces = filters.map(filter => {
         return categoryTags.indexOf(filter);
       });
       // sort the indeces from higher to lower
@@ -111,27 +119,27 @@ class Articles extends Component {
       });
       // update state
       this.setState({
-        categories,
+        categories
       });
 
-      let filterUrl = filters.join('+');
+      const filterUrl = filters.join('+');
 
-      fetch('/api/articles/category/' + filterUrl)
+      fetch(`/api/articles/category/${filterUrl}`)
         .then(resp => resp.json())
         .then(count => {
-          let pages = Math.round(count / 8);
+          const pages = Math.round(count / 8);
           this.setState({ totalArticles: pages });
         })
         .catch(err => {
           throw err;
         });
-      let url = '/api/articles/category/' + filterUrl + '/' + this.props.match.params.page;
+      const url = `/api/articles/category/${filterUrl}/${this.props.match.params.page}`;
       fetch(url)
         .then(resp => resp.json())
         .then(data => {
           this.setState({
             articles: data,
-            loading: false,
+            loading: false
           });
         })
         .catch(err => {
@@ -141,37 +149,39 @@ class Articles extends Component {
   }
 
   handlePageSelect(eventKey) {
-    let filter = this.state.filters.join('+');
+    const filter = this.state.filters.join('+');
     if (this.state.filters.length === 0) {
-      location.assign('/pred/articles/' + eventKey);
+      window.location.assign(`/pred/articles/${eventKey}`);
     } else {
-      location.assign('/pred/filteredarticles/' + filter + '/' + eventKey);
+      window.location.assign(`/pred/filteredarticles/${filter}/${eventKey}`);
     }
   }
 
   handleCategorySelect(e) {
-    let tag = this.state.categories[e].tag;
-    let { filters } = this.state;
+    const { tag } = this.state.categories[e];
+    const { filters } = this.state;
     filters.splice(filters.length, 0, tag);
     if (tag === 'vsetky') {
-      location.assign('/pred/articles/1');
+      window.location.assign('/pred/articles/1');
     } else {
       this.setState({
+        // Not removing in my first commit :)
+        // eslint-disable-next-line react/no-unused-state
         activeFilter: e,
-        loading: true,
+        loading: true
       });
-      location.assign('/pred/filteredarticles/' + filters.join('+') + '/1');
+      window.location.assign(`/pred/filteredarticles/${filters.join('+')}/1`);
     }
   }
 
   handleFilterClick(e) {
-    let filter = e.target.value;
-    let { filters } = this.state;
+    const filter = e.target.value;
+    const { filters } = this.state;
     if (filters.length > 1) {
       filters.splice(filters.indexOf(filter), 1);
-      location.assign('/pred/filteredarticles/' + filters.join('+') + '/1');
+      window.location.assign(`/pred/filteredarticles/${filters.join('+')}/1`);
     } else {
-      location.assign('/pred/articles/1');
+      window.location.assign('/pred/articles/1');
     }
   }
 
@@ -185,10 +195,15 @@ class Articles extends Component {
           />
           <div style={{ display: 'inline-block' }}>
             {this.state.filters.map((filter, i) => {
-              let filterIndex = categoryTags.indexOf(filter);
-              let filterText = articleCategories[filterIndex].text;
+              const filterIndex = categoryTags.indexOf(filter);
+              const filterText = articleCategories[filterIndex].text;
               return (
-                <Button key={i} type="button" value={filter} onClick={this.handleFilterClick}>
+                <Button
+                  key={i}
+                  type="button"
+                  value={filter}
+                  onClick={this.handleFilterClick}
+                >
                   {filterText}
                 </Button>
               );
@@ -209,7 +224,7 @@ class Articles extends Component {
           {!this.state.loading &&
             this.state.articles.length > 0 &&
             this.state.articles.map((article, i) => {
-              let introtext = () => {
+              const introtext = () => {
                 return { __html: article.introtext };
               };
               return (
@@ -217,25 +232,32 @@ class Articles extends Component {
                   <NavItem
                     className="no-decoration"
                     onClick={() => {
-                      history.push('/pred/articles/article/' + article.sql_article_id)
+                      history.push(
+                        `/pred/articles/article/${article.sql_article_id}`
+                      );
                     }}
                   >
                     <h2 className="no-decoration">{article.title}</h2>
                   </NavItem>
                   <div dangerouslySetInnerHTML={introtext()} />
-                  <NavItem onClick={() => {
-                        history.push('/pred/articles/article/' + article.sql_article_id)
-                      }}>Čítaj viac...</NavItem>
+                  <NavItem
+                    onClick={() => {
+                      history.push(
+                        `/pred/articles/article/${article.sql_article_id}`
+                      );
+                    }}
+                  >
+                    Čítaj viac...
+                  </NavItem>
                 </div>
               );
             })}
           {/* in case of 0 articles found */}
-          {!this.state.loading &&
-            this.state.articles.length === 0 && (
-              <div className="no-article-div">
-                <p>Bohužiaľ vo zvolenej kategórii nie je žiaden článok.</p>
-              </div>
-            )}
+          {!this.state.loading && this.state.articles.length === 0 && (
+            <div className="no-article-div">
+              <p>Bohužiaľ vo zvolenej kategórii nie je žiaden článok.</p>
+            </div>
+          )}
         </div>
         <div style={{ width: '100%', minHeight: '34px' }}>
           <PaginationAdvanced

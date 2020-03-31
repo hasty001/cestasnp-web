@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavItem, } from 'react-bootstrap';
+import { NavItem } from 'react-bootstrap';
 import history from '../helpers/history';
 
 const Kontakt = () => {
@@ -23,12 +23,18 @@ const Kontakt = () => {
       </p>
       <br />
       <p>
-        Všetok vývoj a prevádzku portálu robíme vo svojom voľnom čase. Nakoľko na samotnú
-        každomesačnú prevádzku portálu potrebujeme aj finančné prostriedky, budeme veľmi radi ak
-        našu prácu podporíte aj finančne. Pravidelne aktualizovaný zoznam darcov nájdete na tomto{' '}
-        <NavItem onClick={() => {
-          history.push("/pred/articles/article/379")
-        }}>odkaze</NavItem>.
+        Všetok vývoj a prevádzku portálu robíme vo svojom voľnom čase. Nakoľko
+        na samotnú každomesačnú prevádzku portálu potrebujeme aj finančné
+        prostriedky, budeme veľmi radi ak našu prácu podporíte aj finančne.
+        Pravidelne aktualizovaný zoznam darcov nájdete na tomto{' '}
+        <NavItem
+          onClick={() => {
+            history.push('/pred/articles/article/379');
+          }}
+        >
+          odkaze
+        </NavItem>
+        .
       </p>
       <br />
       <p>Môžete tak urobiť ľubovoľnou čiastkou na účet OZ CestaSNP.sk:</p>
@@ -38,9 +44,14 @@ const Kontakt = () => {
       <br />
       <p>
         Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme v{' '}
-        <NavItem onClick={() => {
-          history.push("/pred/articles/article/379")
-        }}> zozname darcov</NavItem>
+        <NavItem
+          onClick={() => {
+            history.push('/pred/articles/article/379');
+          }}
+        >
+          {' '}
+          zozname darcov
+        </NavItem>
         , kde bude uvedené aj na čo boli prostriedky použité.
       </p>
       <br />

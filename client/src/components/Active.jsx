@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
-import { NavItem, Nav} from 'react-bootstrap';
+import { NavItem } from 'react-bootstrap';
+import format from 'date-fns/format';
 import history from '../helpers/history';
 
 import Map from './Map';
-import Loader from '../components/reusable/Loader';
+import Loader from './reusable/Loader';
 import pin01 from '../../public/img/pins/Cervena.png';
 import pin02 from '../../public/img/pins/Cierna.png';
 import pin03 from '../../public/img/pins/Tmavo_modra.png';
@@ -17,7 +18,6 @@ import pin09 from '../../public/img/pins/Svetlo_zelena.png';
 import pin10 from '../../public/img/pins/Tmavo_cervena.png';
 import pin11 from '../../public/img/pins/Modra.png';
 import { sortByDateAsc } from '../helpers/helpers';
-import format from 'date-fns/format';
 
 const colors = [
   '#ff0000',
@@ -31,12 +31,24 @@ const colors = [
   '#30ff00',
   '#923333',
   '#158ccb',
-  '#ffe401',
+  '#ffe401'
 ];
 
 const grey = '#b19494';
 
-const pins = [pin01, pin02, pin03, pin04, pin05, pin06, pin07, pin08, pin09, pin10, pin11];
+const pins = [
+  pin01,
+  pin02,
+  pin03,
+  pin04,
+  pin05,
+  pin06,
+  pin07,
+  pin08,
+  pin09,
+  pin10,
+  pin11
+];
 
 class Active extends Component {
   constructor(props) {
@@ -45,7 +57,7 @@ class Active extends Component {
     this.state = {
       loading: true,
       error: false,
-      travellers: [],
+      travellers: []
     };
   }
 
@@ -53,11 +65,11 @@ class Active extends Component {
     fetch('/api/traveller/activeTravellers')
       .then(resp => resp.json())
       .then(data => {
-        let travellers = [];
-        let travellerIds = [];
-        let now = format(new Date(), 'YYYY-MM-DD');
+        const travellers = [];
+        const travellerIds = [];
+        const now = format(new Date(), 'YYYY-MM-DD');
         data.forEach(traveller => {
-          let travellerData = {};
+          const travellerData = {};
           travellerData.meno = traveller.meno;
           travellerData.text = traveller.text;
           travellerData.userId = traveller.user_id;
@@ -71,12 +83,14 @@ class Active extends Component {
         if (travellers.length === 0) {
           this.setState({
             travellers,
-            error: true,
+            error: true
           });
         } else {
           let colorCount = 0;
           travellers.forEach(trvlr => {
+            // eslint-disable-next-line no-param-reassign
             trvlr.pin = pins[colorCount];
+            // eslint-disable-next-line no-param-reassign
             trvlr.color = trvlr.startDate <= now ? colors[colorCount] : grey;
             colorCount += 1;
             if (colorCount >= colors.length - 1) {
@@ -84,29 +98,29 @@ class Active extends Component {
             }
           });
           this.setState({
-            travellers,
+            travellers
           });
         }
         return travellerIds;
       })
       .then(travellerIds => {
-        let data = {
-          travellerIds: travellerIds,
+        const data = {
+          travellerIds
         };
         if (travellerIds.length > 0) {
           fetch('/api/traveller/lastMessages', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: new Headers({
-              'Content-Type': 'application/json',
-            }),
+              'Content-Type': 'application/json'
+            })
           })
             .then(resp => {
-              return resp.json()
+              return resp.json();
             })
             .then(messages => {
-              let ids = [];
-              let lastMessages = [];
+              const ids = [];
+              const lastMessages = [];
 
               messages.forEach(msg => {
                 if (ids.length === 0) {
@@ -126,9 +140,10 @@ class Active extends Component {
                 }
               });
 
-              let travellers = this.state.travellers.map(trvlr => {
+              const travellers = this.state.travellers.map(trvlr => {
                 lastMessages.forEach(msg => {
-                  if (msg.user_id == trvlr.userId) {
+                  if (msg.user_id === trvlr.userId) {
+                    // eslint-disable-next-line no-param-reassign
                     trvlr.lastMessage = msg;
                   }
                 });
@@ -137,7 +152,7 @@ class Active extends Component {
 
               this.setState({
                 travellers,
-                loading: false,
+                loading: false
               });
             })
             .catch(err => {
@@ -147,7 +162,7 @@ class Active extends Component {
       })
       .catch(e => {
         this.setState({
-          error: true,
+          error: true
         });
         throw e;
       });
@@ -158,54 +173,69 @@ class Active extends Component {
       <div id="NaCesteActive">
         {this.state.loading && !this.state.error && <Loader />}
 
-        {!this.state.loading &&
-          !this.state.error &&
-          this.state.travellers && (
-            <div>
-              <Map use="na-ceste-map-active" travellers={this.state.travellers} />
-              <div className="active-travellers" style={{ textAlign: 'center' }}>
-                {this.state.travellers.map((traveller, i) => {
-                  return (
-                    <NavItem key={i} onClick={() => {
-                      history.push(`/na/${traveller.userId}`)
-                    }}>
-                      {traveller.color !== grey ? (
-                        <div
-                          className="active-traveller"
-                          style={{ border: `1px solid ${traveller.color}`, textAlign: 'center' }}
+        {!this.state.loading && !this.state.error && this.state.travellers && (
+          <div>
+            <Map use="na-ceste-map-active" travellers={this.state.travellers} />
+            <div className="active-travellers" style={{ textAlign: 'center' }}>
+              {this.state.travellers.map((traveller, i) => {
+                return (
+                  <NavItem
+                    key={i}
+                    onClick={() => {
+                      history.push(`/na/${traveller.userId}`);
+                    }}
+                  >
+                    {traveller.color !== grey ? (
+                      <div
+                        className="active-traveller"
+                        style={{
+                          border: `1px solid ${traveller.color}`,
+                          textAlign: 'center'
+                        }}
+                      >
+                        <p
+                          style={{
+                            color: traveller.color,
+                            margin: '12px 0 0 0'
+                          }}
                         >
-                          <p style={{ color: traveller.color, margin: '12px 0 0 0' }}>
-                            {traveller.meno}{' '}
-                            <img src={traveller.pin} className="mapMarker" alt="Vzor ukazovatela" />
-                          </p>
-                        </div>
-                      ) : (
-                        <div
-                          className="active-traveller"
-                          style={{ border: `1px solid ${grey}`, color: grey }}
-                        >
-                          <p style={{ margin: '8px 0 0 0' }}>{traveller.meno}</p>
-                          <p style={{ margin: '0px', fontSize: '12px' }}>
-                            vyráža {traveller.startDate.substring(8, 10)}
-                            {'.'}
-                            {traveller.startDate.substring(5, 7)}
-                            {'.'}
-                            {traveller.startDate.substring(0, 4)}
-                          </p>
-                        </div>
-                      )}
-                    </NavItem>
-                  );
-                })}
-              </div>
+                          {traveller.meno}{' '}
+                          <img
+                            src={traveller.pin}
+                            className="mapMarker"
+                            alt="Vzor ukazovatela"
+                          />
+                        </p>
+                      </div>
+                    ) : (
+                      <div
+                        className="active-traveller"
+                        style={{ border: `1px solid ${grey}`, color: grey }}
+                      >
+                        <p style={{ margin: '8px 0 0 0' }}>{traveller.meno}</p>
+                        <p style={{ margin: '0px', fontSize: '12px' }}>
+                          vyráža {traveller.startDate.substring(8, 10)}
+                          {'.'}
+                          {traveller.startDate.substring(5, 7)}
+                          {'.'}
+                          {traveller.startDate.substring(0, 4)}
+                        </p>
+                      </div>
+                    )}
+                  </NavItem>
+                );
+              })}
             </div>
-          )}
+          </div>
+        )}
 
         {this.state.error && (
           <div>
             <Map use="na-ceste-map-active" travellers={this.state.travellers} />
             <div className="active-travellers" style={{ textAlign: 'center' }}>
-              <p style={{ marginTop: '10px' }}>Momentálne nie je nikto na ceste.</p>
+              <p style={{ marginTop: '10px' }}>
+                Momentálne nie je nikto na ceste.
+              </p>
             </div>
           </div>
         )}

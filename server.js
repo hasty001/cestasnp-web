@@ -1,10 +1,11 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { admin } = require('./server/util/firebase')
+const { admin } = require('./server/util/firebase');
 
 const app = express();
 const http = require('http').Server(app);
+
 const root = path.join(__dirname, '/client/build');
 
 if (process.env.PORT) {
@@ -39,5 +40,7 @@ app.get('/*', function(req, res) {
 });
 
 http.listen(process.env.PORT || 3000, function() {
-  console.log(`Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`);
+  console.log(
+    `Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`
+  );
 });

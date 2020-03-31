@@ -1,19 +1,16 @@
-import React, { Fragment } from 'react'
+import React from 'react';
 
-import Login from './Login'
-import Register from './Register'
+import Login from './Login';
+import Register from './Register';
 
-class NotLoggedIn extends React.Component {
+const NotLoggedIn = () => {
+  return (
+    <>
+      <Login />
+      <hr />
+      <Register />
+    </>
+  );
+};
 
-    render() {
-        return (
-          <Fragment>
-            <Login />
-            <hr></hr>
-            <Register />
-          </Fragment>
-        )
-    }
-}
-
-export default NotLoggedIn
+export default NotLoggedIn;

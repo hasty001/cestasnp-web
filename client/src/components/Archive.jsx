@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Loader from '../components/reusable/Loader';
-import NotFound from '../components/reusable/NotFound';
+import { NavItem } from 'react-bootstrap';
+import Loader from './reusable/Loader';
+import NotFound from './reusable/NotFound';
 import { sortByDateDesc } from '../helpers/helpers';
 
-import { NavItem, } from 'react-bootstrap';
 import history from '../helpers/history';
 
 class Archive extends Component {
@@ -14,7 +14,7 @@ class Archive extends Component {
       loading: true,
       error: false,
       fullyCompleted: [],
-      partiallyCompleted: [],
+      partiallyCompleted: []
     };
   }
 
@@ -22,11 +22,12 @@ class Archive extends Component {
     fetch('/api/traveller/finishedTravellers')
       .then(resp => resp.json())
       .then(data => {
-        let fully = [];
-        let partially = [];
+        const fully = [];
+        const partially = [];
         data.forEach(traveller => {
-          if (traveller.end_date != 'NULL') {
-            let travellerData = {};
+          // TODO - :)
+          if (traveller.end_date !== 'NULL') {
+            const travellerData = {};
             travellerData.meno = traveller.meno;
             travellerData.text = traveller.text;
             travellerData.userId = traveller.user_id;
@@ -48,12 +49,12 @@ class Archive extends Component {
         this.setState({
           fullyCompleted: fully,
           partiallyCompleted: partially,
-          loading: false,
+          loading: false
         });
       })
       .catch(e => {
         this.setState({
-          error: true,
+          error: true
         });
         throw e;
       });
@@ -64,31 +65,33 @@ class Archive extends Component {
       <div id="NaCesteArchive">
         {this.state.loading && !this.state.error && <Loader />}
 
-        {!this.state.loading &&
-          !this.state.error &&
-          this.state.fullyCompleted && (
-            <div>
-              <h2>Cestu prešli celú:</h2>
-              <div className="archived-travellers">
-                {this.state.fullyCompleted.map((traveller, i) => {
-                  return (
-                    <div key={i} className="archived-traveller">
-                      <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
-                      <p style={{ fontWeight: '400' }}>{traveller.startMiesto}</p>
-                      <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
-                      <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
-                      <div className="archived-traveller-text">
-                        <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
-                      </div>
-                      <NavItem onClick={() => {
-                        history.push(`/na/${traveller.userId}`)
-                      }}>Sleduj celé putovanie...</NavItem>
+        {!this.state.loading && !this.state.error && this.state.fullyCompleted && (
+          <div>
+            <h2>Cestu prešli celú:</h2>
+            <div className="archived-travellers">
+              {this.state.fullyCompleted.map((traveller, i) => {
+                return (
+                  <div key={i} className="archived-traveller">
+                    <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
+                    <p style={{ fontWeight: '400' }}>{traveller.startMiesto}</p>
+                    <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
+                    <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
+                    <div className="archived-traveller-text">
+                      <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
                     </div>
-                  );
-                })}
-              </div>
+                    <NavItem
+                      onClick={() => {
+                        history.push(`/na/${traveller.userId}`);
+                      }}
+                    >
+                      Sleduj celé putovanie...
+                    </NavItem>
+                  </div>
+                );
+              })}
             </div>
-          )}
+          </div>
+        )}
 
         {!this.state.loading &&
           !this.state.error &&
@@ -100,15 +103,23 @@ class Archive extends Component {
                   return (
                     <div key={i} className="archived-traveller">
                       <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
-                      <p style={{ fontWeight: '600' }}>{traveller.startMiesto}</p>
+                      <p style={{ fontWeight: '600' }}>
+                        {traveller.startMiesto}
+                      </p>
                       <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
                       <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
                       <div className="archived-traveller-text">
-                        <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
+                        <p
+                          dangerouslySetInnerHTML={{ __html: traveller.text }}
+                        />
                       </div>
-                      <NavItem onClick={() => {
-                        history.push(`/na/${traveller.userId}`)
-                      }}>Sleduj celé putovanie...</NavItem>
+                      <NavItem
+                        onClick={() => {
+                          history.push(`/na/${traveller.userId}`);
+                        }}
+                      >
+                        Sleduj celé putovanie...
+                      </NavItem>
                     </div>
                   );
                 })}
