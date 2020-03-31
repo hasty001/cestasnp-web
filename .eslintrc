@@ -43,12 +43,8 @@
     //jsx-a11y ones are mainly for accessibilty we can probably ignore those for a while :)
     "import/no-extraneous-dependencies": 0, //Sadly we have node modules outside client folder ..that is not right and should change in future
     "camelcase": 0,
-    "func-names": 0,
     "no-nested-ternary": 0,
-    "react/sort-comp": 0,
-    "no-shadow": 0,
     "react/no-access-state-in-setstate": 0,
-    "eslint/no-array-index-key": 0,
     "react/no-array-index-key": 0,
     "react/destructuring-assignment": 0,
     "react/no-did-update-set-state": 0,

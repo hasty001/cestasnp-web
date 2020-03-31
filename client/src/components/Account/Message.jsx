@@ -34,14 +34,6 @@ class Message extends Component {
     this.updateImageDetails = this.updateImageDetails.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value,
-      errorMsg: '',
-      successMsg: ''
-    });
-  }
-
   getMyPosition() {
     this.setState({
       positionLoading: 1,
@@ -83,6 +75,14 @@ class Message extends Component {
       },
       options
     );
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value,
+      errorMsg: '',
+      successMsg: ''
+    });
   }
 
   verifyGPSFormat({ target }) {

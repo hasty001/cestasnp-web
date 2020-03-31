@@ -7,7 +7,7 @@ class SentMessages extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      msgs: this.props.msgs.sort(function(a, b) {
+      msgs: this.props.msgs.sort((a, b) => {
         if (new Date(b.pub_date) < new Date(a.pub_date)) return -1;
         if (new Date(b.pub_date) > new Date(a.pub_date)) return 1;
 

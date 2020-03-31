@@ -41,9 +41,9 @@ class Traveller extends Component {
     // get user's API address
     fetch('https://api.ipify.org/?format=json')
       .then(resp => resp.json())
-      .then(data => {
+      .then(ipData => {
         this.setState({
-          visitorIp: data.ip
+          visitorIp: ipData.ip
         });
       })
       .catch(err => {
@@ -98,12 +98,13 @@ class Traveller extends Component {
             });
           })
           .then(() => {
-            const data = {};
-            data.articleId = this.state.travellerData.articleID;
-            data.travellerId = this.state.travellerData.travellerId;
+            const commentData = {
+              articleId: this.state.travellerData.articleID,
+              travellerId: this.state.travellerData.travellerId
+            };
             fetch('/api/traveller/comments', {
               method: 'POST',
-              body: JSON.stringify(data),
+              body: JSON.stringify(commentData),
               headers: new Headers({
                 'Content-Type': 'application/json'
               })

@@ -28,21 +28,9 @@ class CommentBox extends Component {
     this.expiredCallback = this.expiredCallback.bind(this);
   }
 
-  updateComment(e) {
-    e.preventDefault();
-    this.setState({
-      comment: e.target.value,
-      commentError: ''
-    });
-  }
-
-  updateName(e) {
-    e.preventDefault();
-    this.setState({
-      name: e.target.value,
-      nameError: ''
-    });
-  }
+  onloadCallback = () => {
+    console.log('captcha loaded');
+  };
 
   addComment() {
     if (this.state.captcha === '') {
@@ -123,9 +111,21 @@ class CommentBox extends Component {
     });
   }
 
-  onloadCallback = () => {
-    console.log('captcha loaded');
-  };
+  updateName(e) {
+    e.preventDefault();
+    this.setState({
+      name: e.target.value,
+      nameError: ''
+    });
+  }
+
+  updateComment(e) {
+    e.preventDefault();
+    this.setState({
+      comment: e.target.value,
+      commentError: ''
+    });
+  }
 
   expiredCallback() {
     this.setState({
