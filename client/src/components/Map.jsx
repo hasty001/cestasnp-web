@@ -160,12 +160,8 @@ class Map extends Component {
       });
     }
 
-    const tileLayer = L.tileLayer(
-      config.tileLayer.uri,
-      config.tileLayer.params
-    ).addTo(map);
-    // eslint-disable-next-line react/no-unused-state
-    this.setState({ map, tileLayer });
+    L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
+    this.setState({ map });
   }
 
   render() {

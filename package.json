@@ -7,8 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js & npm run dev --prefix ./client/ ",
     "build": "npm run build --prefix ./client/",
-    "lint": "eslint ./client/**",
-    "lint:fix": "eslint ./client/** --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "precommit": "lint-staged"
   },
   "repository": {

@@ -1,9 +1,10 @@
 const sanitize = require('mongo-sanitize');
 
+// eslint-disable-next-line func-names
 const Validation = function() {};
 
 Validation.prototype = {
-  checkCommentOldTraveller: function(comment) {
+  checkCommentOldTraveller(comment) {
     if (
       typeof comment.date === 'string' &&
       typeof comment.lang === 'string' &&
@@ -32,12 +33,11 @@ Validation.prototype = {
       typeof comment.article_sql_id === 'number'
     ) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   },
 
-  checkCommentNewTraveller: function(comment) {
+  checkCommentNewTraveller(comment) {
     if (
       typeof comment.date === 'string' &&
       typeof comment.lang === 'string' &&
@@ -48,24 +48,33 @@ Validation.prototype = {
       typeof comment.travellerDetails.name === 'string'
     ) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   },
 
-  sanitizeTravellerMessage: function(msg) {
-    let { lon, lat, accuracy, text, pub_date, user_id, img, pub_date_milseconds, details_id } = msg
+  sanitizeTravellerMessage(msg) {
+    const {
+      lon,
+      lat,
+      accuracy,
+      text,
+      pub_date,
+      user_id,
+      img,
+      pub_date_milseconds,
+      details_id
+    } = msg;
     return {
-      lon: sanitize(lon), 
-      lat: sanitize(lat), 
-      accuracy: sanitize(accuracy), 
-      text: sanitize(text), 
-      pub_date: sanitize(pub_date), 
+      lon: sanitize(lon),
+      lat: sanitize(lat),
+      accuracy: sanitize(accuracy),
+      text: sanitize(text),
+      pub_date: sanitize(pub_date),
       user_id: sanitize(user_id),
       img: sanitize(img),
       pub_date_milseconds: sanitize(pub_date_milseconds),
-      details_id: sanitize(details_id),
-    }
+      details_id: sanitize(details_id)
+    };
   }
 };
 

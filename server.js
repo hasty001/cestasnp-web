@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { admin } = require('./server/util/firebase');
 
 const app = express();
 const http = require('http').Server(app);
@@ -23,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // api controllers
-app.get('/api', function(req, res) {
+app.get('/api', (req, res) => {
   res.json({ status: '200' });
 });
 
@@ -35,11 +34,11 @@ app.use('/api/traveller', require('./server/controllers/traveller'));
 
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
-app.get('/*', function(req, res) {
+app.get('/*', (req, res) => {
   res.sendFile('index.html', { root });
 });
 
-http.listen(process.env.PORT || 3000, function() {
+http.listen(process.env.PORT || 3000, () => {
   console.log(
     `Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`
   );

@@ -7,5 +7,3 @@ client/package.json
 client/package-lock.json
 node_modules
 tools_scripts
-server
-server.js

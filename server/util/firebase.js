@@ -1,5 +1,5 @@
+const admin = require('firebase-admin');
 
-const admin = require("firebase-admin");
 const serviceAccount = JSON.parse(`{
   "type": "service_account",
   "project_id": "${process.env.FIREBASE_PROJECT_ID}",
@@ -11,7 +11,7 @@ const serviceAccount = JSON.parse(`{
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "${process.env.FIREBASE_CLIENT_CERT_URL}"
-}`)
+}`);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -20,4 +20,4 @@ admin.initializeApp({
 
 module.exports = {
   admin
-}
+};
