@@ -14,11 +14,10 @@ class CommentBox extends Component {
       comment: '',
       name: '',
       captcha: '',
-      captchaLoaded: false,
       loading: false,
       captchaError: '',
       commentError: '',
-      nameError: '',
+      nameError: ''
     };
 
     this.addComment = this.addComment.bind(this);
@@ -29,49 +28,37 @@ class CommentBox extends Component {
     this.expiredCallback = this.expiredCallback.bind(this);
   }
 
-  updateComment(e) {
-    e.preventDefault();
-    this.setState({
-      comment: e.target.value,
-      commentError: '',
-    });
-  }
-
-  updateName(e) {
-    e.preventDefault();
-    this.setState({
-      name: e.target.value,
-      nameError: '',
-    });
-  }
+  onloadCallback = () => {
+    console.log('captcha loaded');
+  };
 
   addComment() {
     if (this.state.captcha === '') {
       this.setState({
-        captchaError: 'Prosím potvrď, že nie si robot',
+        captchaError: 'Prosím potvrď, že nie si robot'
       });
       return;
     }
 
     if (this.state.name === '') {
       this.setState({
-        nameError: 'Prosím vyplň svoje meno',
+        nameError: 'Prosím vyplň svoje meno'
       });
       return;
     }
 
     if (this.state.comment === '') {
       this.setState({
-        commentError: 'Prosím napíš komentár',
+        commentError: 'Prosím napíš komentár'
       });
       return;
     }
 
     this.setState({
-      loading: true,
+      loading: true
     });
 
-    let data = {};
+    const data = {};
     data.date = moment().format('YYYY-MM-DD HH:mm:ss');
     data.comment = this.state.comment;
     data.name = this.state.name;
@@ -85,26 +72,24 @@ class CommentBox extends Component {
       method: 'POST',
       body: JSON.stringify(data),
       headers: new Headers({
-        'Content-Type': 'application/json',
-      }),
+        'Content-Type': 'application/json'
+      })
     })
       .then(res => res.json())
       .then(comment => {
         if (comment.error === 'Malicious comment') {
           this.setState({
             loading: false,
-            captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
+            captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
           });
-          return;
         } else if (comment.responseError === 'Failed captcha verification') {
           this.setState({
             loading: false,
-            captchaError: 'Prosím potvrď, že nie si robot',
+            captchaError: 'Prosím potvrď, že nie si robot'
           });
-          return;
         } else {
           this.setState({
-            loading: false,
+            loading: false
           });
           this.props.updateTravellerComments(comment);
           this.props.onHide();
@@ -113,7 +98,7 @@ class CommentBox extends Component {
       .catch(err => {
         this.setState({
           loading: false,
-          captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím',
+          captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
         });
         throw err;
       });
@@ -122,19 +107,29 @@ class CommentBox extends Component {
   verifyCallback(response) {
     this.setState({
       captcha: response,
-      captchaError: '',
+      captchaError: ''
     });
   }
 
-  onloadCallback() {
+  updateName(e) {
+    e.preventDefault();
     this.setState({
-      captchaLoaded: true,
+      name: e.target.value,
+      nameError: ''
+    });
+  }
+
+  updateComment(e) {
+    e.preventDefault();
+    this.setState({
+      comment: e.target.value,
+      commentError: ''
     });
   }
 
   expiredCallback() {
     this.setState({
-      captcha: '',
+      captcha: ''
     });
   }
 
@@ -151,12 +146,18 @@ class CommentBox extends Component {
             style={{ marginTop: '100px' }}
           >
             <Modal.Header closeButton>
-              <Modal.Title id="contained-modal-title-lg">Tvoj komentár</Modal.Title>
+              <Modal.Title id="contained-modal-title-lg">
+                Tvoj komentár
+              </Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <label className="commentLabel">
                 Meno:
-                <input value={this.state.name} onChange={this.updateName} className="nameInput" />
+                <input
+                  value={this.state.name}
+                  onChange={this.updateName}
+                  className="nameInput"
+                />
               </label>
               {this.state.nameError !== '' && (
                 <p className="commentError">{this.state.nameError}</p>

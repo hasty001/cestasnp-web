@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Map from './Map';
-import Loader from '../components/reusable/Loader';
+import Loader from './reusable/Loader';
 
 class Pois extends Component {
   constructor(props) {

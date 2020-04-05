@@ -8,7 +8,7 @@ module.exports = merge(common, {
   devtool: 'source-map',
   plugins: [
     new UglifyJSPlugin({
-      sourceMap: true,
+      sourceMap: true
     }),
     new webpack.DefinePlugin({
       'process.env': {
@@ -16,7 +16,7 @@ module.exports = merge(common, {
         FIREBASE_API_KEY: JSON.stringify(process.env.FIREBASE_API_KEY),
         FIREBASE_PROJECT_ID: JSON.stringify(process.env.FIREBASE_PROJECT_ID),
         FIREBASE_MESSAGING_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_ID)
-      },
-    }),
-  ],
+      }
+    })
+  ]
 });

@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise-polyfill';
 import CestaSNP from './CestaSNP';
 import '../public/index.css';
-
-import Promise from 'promise-polyfill';
 
 // To add to window
 if (!window.Promise) {

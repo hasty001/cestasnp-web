@@ -13,7 +13,7 @@ import defaultPin from '../../public/img/pins/Cervena.png';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
-let config = {
+const config = {
   params: {
     center: [48.73, 19.46],
     zoomControl: false,
@@ -22,16 +22,16 @@ let config = {
     minZoom: 7,
     scrollwheel: false,
     infoControl: false,
-    attributionControl: false,
+    attributionControl: false
   },
   tileLayer: {
     uri: 'https://tiles.freemap.sk/T/{z}/{x}/{y}.png',
     params: {
       minZoom: 7,
       id: '',
-      accessToken: '',
-    },
-  },
+      accessToken: ''
+    }
+  }
 };
 
 class Map extends Component {
@@ -39,12 +39,7 @@ class Map extends Component {
     super(props);
     this.state = {
       map: null,
-      tileLayer: null,
-      geojsonLayer: null,
-      geojson: null,
-      subwayLinesFilter: '*',
-      numEntrances: null,
-      use: this.props.use,
+      use: this.props.use
     };
   }
 
@@ -56,18 +51,18 @@ class Map extends Component {
   init(id) {
     if (this.state.map) return;
     // this function creates the Leaflet map object and is called after the Map component mounts
-    let map = L.map(id, config.params);
+    const map = L.map(id, config.params);
     L.control
       .attribution({
         prefix:
           'Mapa © <a href="https://www.freemap.sk">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
-        position: 'bottomright',
+        position: 'bottomright'
       })
       .addTo(map);
     L.control
       .scale({
         position: 'bottomright',
-        imperial: false,
+        imperial: false
       })
       .addTo(map);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -75,13 +70,13 @@ class Map extends Component {
       style: {
         color: '#fe0000',
         weight: 3,
-        opacity: 0.8,
-      },
+        opacity: 0.8
+      }
     }).addTo(map);
 
-    /// DOLEZITE MIESTA
+    // / DOLEZITE MIESTA
     if (this.props.pois && this.props.pois.length > 0) {
-      this.props.pois.map(poi => {
+      this.props.pois.forEach(poi => {
         let iconUrl = '';
         switch (poi.category) {
           case 'chata':
@@ -109,12 +104,14 @@ class Map extends Component {
             iconUrl = posed;
             break;
         }
-        let icon = L.icon({
-          iconUrl: iconUrl,
+        const icon = L.icon({
+          iconUrl,
           iconSize: [32, 32],
-          iconAnchor: [16, 32],
+          iconAnchor: [16, 32]
         });
-        let marker = L.marker([poi.coordinates[1], poi.coordinates[0]], { icon: icon }).addTo(map);
+        const marker = L.marker([poi.coordinates[1], poi.coordinates[0]], {
+          icon
+        }).addTo(map);
         marker.bindPopup(`<h4>${poi.name}</h4>
           <p>GPS: ${poi.coordinates[1]}, ${poi.coordinates[0]}</p>
           <p>${poi.text}</p>`);
@@ -123,44 +120,48 @@ class Map extends Component {
 
     // TRAVELLER MSGs
     if (this.props.stops && this.props.stops.length > 0) {
-      this.props.stops.map(stop => {
+      this.props.stops.forEach(stop => {
         if (stop.type === 'message') {
-          let icon = L.divIcon({
+          const icon = L.divIcon({
             html: `<img src=${defaultPin} alt="Ukazovatel na mape" class="mapMarker"/>`,
             iconSize: [32, 32],
-            iconAnchor: [16, 32],
+            iconAnchor: [16, 32]
           });
-          let marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
+          const marker = L.marker([stop.lat, stop.lon], { icon }).addTo(map);
           marker.bindPopup(`<p>${stop.date}</p>
           <p>${stop.text}</p>`);
         }
       });
     }
 
-    //ACTIVE TRAVELLERS
-    if (this.props.use === 'na-ceste-map-active' && this.props.travellers.length > 0) {
+    // ACTIVE TRAVELLERS
+    if (
+      this.props.use === 'na-ceste-map-active' &&
+      this.props.travellers.length > 0
+    ) {
       this.props.travellers.forEach(trvlr => {
         if (trvlr.lastMessage && trvlr.color !== '#b19494') {
-          let icon = L.divIcon({
+          const icon = L.divIcon({
             html: `<img src=${trvlr.pin} alt="Ukazovatel na mape" class="mapMarker"/>`,
             iconSize: [32, 32],
-            iconAnchor: [16, 32],
+            iconAnchor: [16, 32]
           });
-          let marker = L.marker([trvlr.lastMessage.lat, trvlr.lastMessage.lon], {
-            icon: icon,
-          }).addTo(map);
+          const marker = L.marker(
+            [trvlr.lastMessage.lat, trvlr.lastMessage.lon],
+            {
+              icon
+            }
+          ).addTo(map);
           marker.bindPopup(`
-          <p><b><a href='/na/${trvlr.userId}' style={text-decoration: none;}>${
-            trvlr.meno
-          }</a></b></p>
+          <p><b><a href='/na/${trvlr.userId}' style={text-decoration: none;}>${trvlr.meno}</a></b></p>
           <p>${trvlr.lastMessage.pub_date}</p>
           <p>${trvlr.lastMessage.text}</p>`);
         }
       });
     }
 
-    const tileLayer = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
-    this.setState({ map, tileLayer });
+    L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
+    this.setState({ map });
   }
 
   render() {

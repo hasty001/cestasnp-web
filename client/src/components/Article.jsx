@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import Loader from '../components/reusable/Loader';
-import Meta from '../components/reusable/Meta';
+import Loader from './reusable/Loader';
+import Meta from './reusable/Meta';
 
 class Article extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: '/api/articles/article/' + this.props.match.params.articleId,
+      url: `/api/articles/article/${this.props.match.params.articleId}`,
       loading: true,
-      article: [],
+      article: []
     };
     this.updateArticleViews = this.updateArticleViews.bind(this);
   }
@@ -19,46 +19,44 @@ class Article extends Component {
       .then(data => {
         this.setState({
           article: data,
-          loading: false,
+          loading: false
         });
-        //increase article count
+        // increase article count
         this.updateArticleViews('/api/articles/increase_article_count', {
-          id: data[0]['_id'],
+          id: data[0]._id
         })
-        .then(() => {
-          return
-        })
-        .catch(err => {
-          throw err;
-        });
+          .then(() => {})
+          .catch(err => {
+            throw err;
+          });
       })
-      .catch(err => {
+      .catch(() => {
         this.setState({
           article: [{ title: '404', fulltext: 'Článok sme nenašli :(' }],
-          loading: false,
+          loading: false
         });
       });
   }
 
-  updateArticleViews(url, data) {
+  updateArticleViews = (url, data) => {
     // Default options are marked with *
     return fetch(url, {
       body: JSON.stringify(data), // must match 'Content-Type' header
       cache: 'no-cache', // *default, cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *omit
       headers: {
-        'content-type': 'application/json',
+        'content-type': 'application/json'
       },
       method: 'PUT', // *GET, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *same-origin
       redirect: 'follow', // *manual, error
-      referrer: 'no-referrer', // *client
+      referrer: 'no-referrer' // *client
     })
-    .then(response => response.json())// parses response to JSON
-    .catch(err => {
-      throw err
-    })
-  }
+      .then(response => response.json()) // parses response to JSON
+      .catch(err => {
+        throw err;
+      });
+  };
 
   render() {
     let header = '';

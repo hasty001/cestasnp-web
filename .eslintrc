@@ -1,0 +1,71 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/strict",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": ["react", "react-hooks", "jsx-a11y", "prettier"],
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-console": "off",
+    "react/prop-types": 0,
+    "prettier/prettier": ["error"],
+    "react/jsx-props-no-spreading": 0,
+    "react/no-danger": 0,
+    //We should incrementaly remove these override and fix errors.
+    //Currently it produces too many errors
+    //jsx-a11y ones are mainly for accessibilty we can probably ignore those for a while :)
+    "import/no-extraneous-dependencies": 0, //Sadly we have node modules outside client folder ..that is not right and should change in future
+    "camelcase": 0,
+    "no-nested-ternary": 0,
+    "react/no-access-state-in-setstate": 0,
+    "react/no-array-index-key": 0,
+    "react/destructuring-assignment": 0,
+    "react/no-did-update-set-state": 0,
+    "no-underscore-dangle": 0,
+
+    "jsx-a11y/no-noninteractive-element-interactions": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/label-has-for": 0,
+    "jsx-a11y/label-has-associated-control": 0,
+    "jsx-a11y/alt-text": 0,
+    "react/jsx-no-target-blank": 0
+  },
+  "globals": {
+    "window": true,
+    "document": true,
+    "localStorage": true,
+    "FormData": true,
+    "FileReader": true,
+    "Blob": true,
+    "navigator": true,
+    "cloudinary": true
+  }
+}
