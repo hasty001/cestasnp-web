@@ -139,8 +139,8 @@ class FanAccount extends React.Component {
       <form
         className="fanAccountWrap"
         onSubmit={e => {
-          this.createTraveller();
           e.preventDefault();
+          this.createTraveller();
         }}
       >
         <h2>Chystáš sa na cestu?</h2>
@@ -247,7 +247,7 @@ class FanAccount extends React.Component {
           .
         </p>
         {this.state.error && <p className="errorMsg">{this.state.error}</p>}
-        <button className="snpBtn" onClick={this.createTraveller} type="submit">
+        <button className="snpBtn" type="submit">
           Vytvoriť cestu
         </button>
       </form>
