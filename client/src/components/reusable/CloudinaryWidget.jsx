@@ -18,6 +18,7 @@ class CloudinaryWidget extends React.Component {
         uploadPreset: 'eo9nitmv',
         sources: ['local', 'camera'],
         multiple: false,
+        maxImageWidth: 1600,
         resourceType: 'image',
         cropping: false,
         tags: ['live_sledovanie'],
