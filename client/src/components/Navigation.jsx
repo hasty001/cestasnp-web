@@ -5,7 +5,7 @@ import logo_screen from '../../public/img/logo_screen.png';
 import logo_mobile from '../../public/img/logo_mobile.png';
 import { AuthContext } from './AuthContext';
 
-const ROUTES = {
+export const ROUTES = {
   domov: '/',
   predCestou: '/pred',
   clanky: '/pred/articles/1',
@@ -14,7 +14,8 @@ const ROUTES = {
   archiv: '/na/archive',
   kontakt: '/kontakt',
   mojaCesta: '/ucet',
-  test: '/test'
+  test: '/test',
+  addPois: '/pridatBod'
 };
 
 const Navigation = () => {

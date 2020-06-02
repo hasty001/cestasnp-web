@@ -4,7 +4,7 @@ import { Router, Switch, Route } from 'react-router';
 import LogRocket from 'logrocket';
 import history from './helpers/history';
 
-import Navigation from './components/Navigation';
+import Navigation, { ROUTES } from './components/Navigation';
 import Archive from './components/Archive';
 import Kontakt from './components/Kontakt';
 import NotFound from './components/reusable/NotFound';
@@ -18,6 +18,7 @@ import Cookies from './components/Cookies';
 import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
 import MyAccount from './components/AccountNew/MyAccount';
+import MyAccountAddPois from './components/AccountNew/MyAccountAddPois';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -49,6 +50,7 @@ const CestaSNP = () => (
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" component={Account} />
               <Route exact path="/test" component={MyAccount} />
+              <Route exact path={ROUTES.addPois} component={MyAccountAddPois} />
               <Route path="*" component={NotFound} />
             </Switch>
           </Router>

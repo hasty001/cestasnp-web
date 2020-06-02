@@ -6,5 +6,8 @@
   "scripts": {
     "dev": "webpack -w --config webpack.config.js",
     "build": "webpack --config webpack.prod.js"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6"
   }
 }
