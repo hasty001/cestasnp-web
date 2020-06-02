@@ -1226,6 +1226,9 @@ nav > .open > a,
 .flex {
   display: flex;
 }
+.flex-column {
+  flex-direction: column;
+}
 .justify-center {
   justify-content: center;
 }
