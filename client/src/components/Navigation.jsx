@@ -13,7 +13,8 @@ const ROUTES = {
   naCeste: '/na/ceste',
   archiv: '/na/archive',
   kontakt: '/kontakt',
-  mojaCesta: '/ucet'
+  mojaCesta: '/ucet',
+  test: '/test'
 };
 
 const Navigation = () => {
@@ -122,6 +123,15 @@ const Navigation = () => {
             }}
           >
             {!authData.isAuth ? 'Prihlásiť sa' : 'Poslať správu'}
+          </NavItem>
+          <NavItem
+            eventKey={5}
+            title="Test"
+            onClick={() => {
+              history.push(ROUTES.test);
+            }}
+          >
+            Test
           </NavItem>
         </Nav>
       </Navbar.Collapse>

@@ -17,6 +17,7 @@ import Active from './components/Active';
 import Cookies from './components/Cookies';
 import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
+import MyAccount from './components/AccountNew/MyAccount';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -47,6 +48,7 @@ const CestaSNP = () => (
               <Route exact path="/kontakt" component={Kontakt} />
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" component={Account} />
+              <Route exact path="/test" component={MyAccount} />
               <Route path="*" component={NotFound} />
             </Switch>
           </Router>
