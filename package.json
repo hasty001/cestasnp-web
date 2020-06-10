@@ -37,6 +37,7 @@
     "react-helmet": "^5.2.0",
     "react-recaptcha": "^2.3.7",
     "react-router": "^4.2.2",
+    "react-select-me": "^1.2.1",
     "request": "^2.88.2",
     "validator": "^13.0.0"
   },

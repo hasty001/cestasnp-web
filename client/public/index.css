@@ -1223,6 +1223,9 @@ nav > .open > a,
 }
 
 /* NEW */
+.Input {
+  height: 33px;
+}
 .flex {
   display: flex;
 }
@@ -1235,6 +1238,21 @@ nav > .open > a,
 .items-center {
   align-items: center;
 }
+.items-end {
+  align-items: flex-end;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
 .mt-6 {
   margin-top: 1.5rem;
+}
+.ml-2 {
+  margin-left: 0.5rem;
+}
+.w-10 {
+  width: 10%;
+}
+.errorText {
+  color: red;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
-import Header from '../reusable/Header';
+import Header from '../reusable/Headers/Header';
 import history from '../../helpers/history';
 import { ROUTES } from '../Navigation';
 import Button from '../reusable/Button';
