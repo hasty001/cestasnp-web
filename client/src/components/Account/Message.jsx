@@ -96,6 +96,14 @@ class Message extends Component {
       this.setState({
         errorMsg: 'GPS súradnica musí byť desatinné číslo oddelené bodkou!'
       });
+      return;
+    }
+
+    if (/^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/.test(value)) {
+      this.setState({
+        errorMsg: 'GPS súradnica má nesprávny formát.'
+      });
+      return;
     }
   }
 
@@ -106,14 +114,19 @@ class Message extends Component {
       });
       return;
     }
+
     if (
       !this.state.lat ||
       this.state.lat.trim().length === 0 ||
       !this.state.lon ||
-      this.state.lon.trim().length === 0
+      this.state.lon.trim().length === 0 ||
+      !isDecimal(this.state.lat.trim()) ||
+      !isDecimal(this.state.lon.trim()) ||
+      /^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/.test(this.state.lat.trim()) ||
+      /^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/.test(this.state.lon.trim())
     ) {
       this.setState({
-        errorMsg: 'Pozícia nemôže ostať prázdna.'
+        errorMsg: 'GPS súradnice majú nesprávny formát.'
       });
       return;
     }
@@ -123,8 +136,8 @@ class Message extends Component {
     });
 
     const data = {};
-    data.lon = this.state.lon;
-    data.lat = this.state.lat;
+    data.lon = this.state.lon.trim();
+    data.lat = this.state.lat.trim();
     data.accuracy = this.state.accuracy;
     data.text = this.state.message;
     data.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -154,7 +167,11 @@ class Message extends Component {
             message: '',
             lat: '',
             lon: '',
-            img: ''
+            img: '',
+            edit: {
+              lat: 0,
+              lon: 0
+            }
           });
           this.props.updateTravellerMsgs(msgRes);
         }
@@ -211,8 +228,8 @@ class Message extends Component {
                       name="lat"
                       value={this.state.lat}
                       onBlur={e => {
-                        this.verifyGPSFormat(e);
                         e.preventDefault();
+                        this.verifyGPSFormat(e);
                       }}
                       onChange={this.handleChange}
                     />
@@ -234,8 +251,8 @@ class Message extends Component {
                       name="lon"
                       value={this.state.lon}
                       onBlur={e => {
-                        this.verifyGPSFormat(e);
                         e.preventDefault();
+                        this.verifyGPSFormat(e);
                       }}
                       onChange={this.handleChange}
                     />
@@ -259,8 +276,8 @@ class Message extends Component {
                 id="message"
                 name="message"
                 onBlur={e => {
-                  this.handleChange(e);
                   e.preventDefault();
+                  this.handleChange(e);
                 }}
                 onChange={this.handleChange}
                 value={this.state.message}
