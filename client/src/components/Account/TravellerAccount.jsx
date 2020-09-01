@@ -186,7 +186,7 @@ class TravellerAccount extends React.Component {
           updateTravellerMsgs={this.updateTravellerMsgs}
         />
         {this.state.travellerMsgs.length > 0 && (
-          <SentMessages msgs={this.state.travellerMsgs} />
+          <SentMessages msgs={this.state.travellerMsgs} userId={this.state.user_id} />
         )}
         <h2>Moja cesta</h2>
         <p>
