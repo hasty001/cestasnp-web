@@ -91,6 +91,7 @@ class Traveller extends Component {
               newMessage.lon = message.lon;
               newMessage.text = message.text;
               newMessage.username = this.state.travellerData.meno;
+              newMessage.id = message._id;
               return newMessage;
             });
             this.setState({
@@ -122,6 +123,7 @@ class Traveller extends Component {
                     newComment.username = comment.name;
                   }
                   newComment.text = comment.comment;
+                  newComment.id = comment._id;
                   travellerMessages.push(newComment);
                 });
                 travellerMessages.sort((a, b) => {
@@ -131,6 +133,12 @@ class Traveller extends Component {
                   travellerMessages,
                   loading: false
                 });
+
+                if (window.location.hash.length > 1) {
+                  var highlighted = document.getElementById(window.location.hash.slice(1));
+                  if (highlighted)
+                    highlighted.scrollIntoView();
+                }
               })
               .catch(e => {
                 this.setState({
@@ -184,6 +192,7 @@ class Traveller extends Component {
     newComment.date = comment.date;
     newComment.username = comment.name;
     newComment.text = comment.comment;
+    newComment.id = comment._id;
     updatedComments.push(newComment);
     updatedComments.sort((a, b) => {
       return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
@@ -222,8 +231,16 @@ class Traveller extends Component {
             <div className="na-ceste-traveller-msgs">
               {this.state.travellerMessages.map((message, i) => {
                 if (message.type === 'message') {
+                  var divClassName = "traveller-message";
+
+                  if (window.location.hash === "#" + message.id)
+                  {
+                    divClassName += " highlighted";
+                  }
+
                   return (
-                    <div key={i} className="traveller-message">
+                    <div key={i} className={divClassName}>
+                      <div id={message.id} className="traveller-message-scrolllink" />
                       {message.img !== 'None' && message.img !== null && (
                         <img
                           src={
@@ -252,21 +269,32 @@ class Traveller extends Component {
                       )}
                       <div className="red-stripe" />
                       <p style={{ display: 'inline-block' }}>
-                        {`${message.date} ${message.username}`}
+                        {`${message.date} ${message.username} `}
+                        <a href={`#${message.id}`} className="traveller-message-link" title="odkaz na správu">🔗</a>
                       </p>
                       <p dangerouslySetInnerHTML={{ __html: message.text }} />
                     </div>
                   );
                 }
+
+                var divClassName = "traveller-comment";
+
+                if (window.location.hash === "#" + message.id)
+                {
+                  divClassName += " highlighted";
+                }
+
                 return (
-                  <div key={i} className="traveller-comment">
+                  <div key={i} className={divClassName}>
+                    <div id={message.id} className="traveller-comment-scrolllink" />
                     <p>
                       <i
                         className="fa fa-comment"
                         aria-hidden="true"
                         style={{ color: '#ccc2c2' }}
                       />
-                      {` ${message.date} ${message.username}`}
+                      {` ${message.date} ${message.username} `}
+                      <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár">🔗</a>
                     </p>
                     <p dangerouslySetInnerHTML={{ __html: message.text }} />
                   </div>
