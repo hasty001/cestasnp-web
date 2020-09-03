@@ -668,6 +668,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding: 10px;
 }
 
+.na-ceste-traveller-sort {
+  display: block;
+  width: 100%;
+  padding: 0px 10px 5px 10px;
+}
+
 .na-ceste-traveller-msgs {
   display: block;
   padding: 0 10px;
