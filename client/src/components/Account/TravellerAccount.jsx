@@ -3,6 +3,7 @@ import moment from 'moment';
 import Loader from '../reusable/Loader';
 import Message from './Message';
 import SentMessages from './SentMessages';
+import { dateToStr } from '../../helpers/helpers';
 
 class TravellerAccount extends React.Component {
   constructor(props) {
@@ -269,7 +270,7 @@ class TravellerAccount extends React.Component {
               onChange={this.handleChange}
             />
           ) : (
-            <p className="travellerP">{this.state.start_date}</p>
+            <p className="travellerP">{dateToStr(this.state.start_date)}</p>
           )}
         </label>
         <label htmlFor="pocet">

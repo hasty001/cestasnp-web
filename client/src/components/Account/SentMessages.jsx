@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment-timezone';
+import { dateTimeToStr } from '../../helpers/helpers';
 
 moment.tz.setDefault('Europe/Vienna');
 
@@ -53,9 +54,9 @@ class SentMessages extends Component {
             )}
             <div className="red-stripe" />
             <p style={{ display: 'inline-block' }}>
-              {message.pub_date} 
+              {dateTimeToStr(message.pub_date)} 
               {' '}<a href={`/na/${this.state.userId}#${message._id}`} className="traveller-message-link" title="odkaz na správu">🔗</a>
-            </p>            
+            </p>
             <p dangerouslySetInnerHTML={{ __html: message.text }} />
           </div>
         ))}
