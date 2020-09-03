@@ -79,8 +79,10 @@ class Article extends Component {
             <Meta
               title={this.state.article[0].title}
               url={this.state.url}
-              metadesc={this.state.article[0].metadesc}
-              img={this.state.img || ''}
+              metadesc={
+                this.state.article[0].ogdesc || this.state.article[0].metadesc
+              }
+              img={this.state.article[0].ogimg || ''}
             />
             <h2>{header}</h2>
             <div dangerouslySetInnerHTML={introText()} />

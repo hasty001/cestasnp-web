@@ -7,3 +7,6 @@ migration_db/
 client/build/bundle.js
 client/build/bundle.js.map
 npm-debug.log
+article-fulltext.html
+article-introtext.html
+article.json

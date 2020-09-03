@@ -8,6 +8,7 @@ class SentMessages extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.userId,
       msgs: this.props.msgs.sort((a, b) => {
         if (new Date(b.pub_date) < new Date(a.pub_date)) return -1;
         if (new Date(b.pub_date) > new Date(a.pub_date)) return 1;
@@ -20,6 +21,7 @@ class SentMessages extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.msgs !== prevProps.msgs) {
       this.setState({
+        userId: this.props.userId,
         msgs: this.props.msgs
       });
     }
@@ -51,7 +53,10 @@ class SentMessages extends Component {
               />
             )}
             <div className="red-stripe" />
-            <p style={{ display: 'inline-block' }}>{dateTimeToStr(message.pub_date)}</p>
+            <p style={{ display: 'inline-block' }}>
+              {dateTimeToStr(message.pub_date)}
+              {' '}<a href={`/na/${this.state.userId}#${message._id}`} className="traveller-message-link" title="odkaz na správu">🔗</a>
+            </p>            
             <p dangerouslySetInnerHTML={{ __html: message.text }} />
           </div>
         ))}
