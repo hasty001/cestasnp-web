@@ -29,15 +29,26 @@ class Traveller extends Component {
       showCommentBox: false,
       showImageBox: false,
       imageUrl: '',
-      visitorIp: ''
+      visitorIp: '',
+      orderFromOld: false
     };
 
     this.handleCommentBox = this.handleCommentBox.bind(this);
     this.handleImageBox = this.handleImageBox.bind(this);
     this.updateTravellerComments = this.updateTravellerComments.bind(this);
+    this.handleOrderClick = this.handleOrderClick.bind(this);
+
+    this.sortMessages = this.sortMessages.bind(this);
   }
 
   componentDidMount() {
+
+    var orderFromOld = (window.location.hash === "#from-old");
+    if (orderFromOld != this.state.orderFromOld)
+      this.setState({
+        orderFromOld: orderFromOld
+      });
+
     // get user's API address
     fetch('https://api.ipify.org/?format=json')
       .then(resp => resp.json())
@@ -91,6 +102,7 @@ class Traveller extends Component {
               newMessage.lon = message.lon;
               newMessage.text = message.text;
               newMessage.username = this.state.travellerData.meno;
+              newMessage.id = message._id;
               return newMessage;
             });
             this.setState({
@@ -122,15 +134,20 @@ class Traveller extends Component {
                     newComment.username = comment.name;
                   }
                   newComment.text = comment.comment;
+                  newComment.id = comment._id;
                   travellerMessages.push(newComment);
                 });
-                travellerMessages.sort((a, b) => {
-                  return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
-                });
+                this.sortMessages(travellerMessages, this.state.orderFromOld);
                 this.setState({
                   travellerMessages,
                   loading: false
                 });
+
+                if (window.location.hash.length > 1) {
+                  var highlighted = document.getElementById(window.location.hash.slice(1));
+                  if (highlighted)
+                    highlighted.scrollIntoView();
+                }
               })
               .catch(e => {
                 this.setState({
@@ -170,6 +187,24 @@ class Traveller extends Component {
     this.setState({ showCommentBox: open });
   }
 
+  sortMessages(msgs, order)
+  {
+    return msgs.sort((a, b) => {
+      return (order ? (b.date > a.date ? -1 : b.date < a.date ? 1 : 0) :
+        (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
+    });
+  }
+
+  handleOrderClick(e) {
+    e.preventDefault();
+
+    var order = !this.state.orderFromOld;
+    this.setState({
+      orderFromOld: order,
+      travellerMessages: this.sortMessages(this.state.travellerMessages, order)
+    });
+  }
+
   handleImageBox(open, url) {
     this.setState({
       showImageBox: open,
@@ -184,10 +219,9 @@ class Traveller extends Component {
     newComment.date = comment.date;
     newComment.username = comment.name;
     newComment.text = comment.comment;
+    newComment.id = comment._id;
     updatedComments.push(newComment);
-    updatedComments.sort((a, b) => {
-      return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
-    });
+    this.sort(updatedComments, this.state.orderFromOld);
     this.setState({
       travellerMessages: updatedComments
     });
@@ -216,14 +250,26 @@ class Traveller extends Component {
                 {this.state.travellerData.start_date.substring(5, 7)}
                 {'.'}
                 {this.state.travellerData.start_date.substring(0, 4)}
-              </p>
+              </p>              
+            </div>
+
+            <div className="na-ceste-traveller-sort" >
+              Zoradiť: <a href="#" onClick={this.handleOrderClick}>{this.state.orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
             </div>
 
             <div className="na-ceste-traveller-msgs">
               {this.state.travellerMessages.map((message, i) => {
                 if (message.type === 'message') {
+                  var divClassName = "traveller-message";
+
+                  if (window.location.hash === "#" + message.id)
+                  {
+                    divClassName += " highlighted";
+                  }
+
                   return (
-                    <div key={i} className="traveller-message">
+                    <div key={i} className={divClassName}>
+                      <div id={message.id} className="traveller-message-scrolllink" />
                       {message.img !== 'None' && message.img !== null && (
                         <img
                           src={
@@ -252,21 +298,32 @@ class Traveller extends Component {
                       )}
                       <div className="red-stripe" />
                       <p style={{ display: 'inline-block' }}>
-                        {`${message.date} ${message.username}`}
+                        {`${message.date} ${message.username} `}
+                        <a href={`#${message.id}`} className="traveller-message-link" title="odkaz na správu">🔗</a>
                       </p>
                       <p dangerouslySetInnerHTML={{ __html: message.text }} />
                     </div>
                   );
                 }
+
+                var divClassName = "traveller-comment";
+
+                if (window.location.hash === "#" + message.id)
+                {
+                  divClassName += " highlighted";
+                }
+
                 return (
-                  <div key={i} className="traveller-comment">
+                  <div key={i} className={divClassName}>
+                    <div id={message.id} className="traveller-comment-scrolllink" />
                     <p>
                       <i
                         className="fa fa-comment"
                         aria-hidden="true"
                         style={{ color: '#ccc2c2' }}
                       />
-                      {` ${message.date} ${message.username}`}
+                      {` ${message.date} ${message.username} `}
+                      <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár">🔗</a>
                     </p>
                     <p dangerouslySetInnerHTML={{ __html: message.text }} />
                   </div>
