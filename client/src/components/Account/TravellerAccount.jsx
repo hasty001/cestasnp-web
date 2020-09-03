@@ -37,12 +37,14 @@ class TravellerAccount extends React.Component {
     if (event.target.name === 'start_date') {
       this.setState({
         [event.target.name]: event.target.value.toString(),
-        error: ''
+        error: '',
+        successMsg: ''
       });
     } else {
       this.setState({
         [event.target.name]: event.target.value,
-        error: ''
+        error: '',
+        successMsg: ''
       });
     }
   }
@@ -101,6 +103,13 @@ class TravellerAccount extends React.Component {
       return;
     }
 
+    if (popis.trim().length < 32) {
+      this.setState({
+        error: 'Popis cesty je príliš krátky (min. 32 znakov)!'
+      });
+      return;
+    }
+
     if (pocet.trim().length < 0 || pocet < 0) {
       this.setState({
         error: 'Počet účasníkov nesmie byť záporný!'
@@ -151,6 +160,7 @@ class TravellerAccount extends React.Component {
             pocet: 0,
             start_date: 0
           },
+          error: '',
           successMsg: 'Detaily tvojej cesty sme úspešne zmenili'
         });
         this.props.traveller.updateTravellerDetails({
@@ -202,6 +212,7 @@ class TravellerAccount extends React.Component {
               name="meno"
               value={this.state.meno}
               type="text"
+              maxLength="30"
               onBlur={e => {
                 this.handleChange(e);
                 e.preventDefault();
