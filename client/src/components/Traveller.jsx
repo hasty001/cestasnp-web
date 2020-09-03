@@ -29,15 +29,26 @@ class Traveller extends Component {
       showCommentBox: false,
       showImageBox: false,
       imageUrl: '',
-      visitorIp: ''
+      visitorIp: '',
+      orderFromOld: false
     };
 
     this.handleCommentBox = this.handleCommentBox.bind(this);
     this.handleImageBox = this.handleImageBox.bind(this);
     this.updateTravellerComments = this.updateTravellerComments.bind(this);
+    this.handleOrderClick = this.handleOrderClick.bind(this);
+
+    this.sortMessages = this.sortMessages.bind(this);
   }
 
   componentDidMount() {
+
+    var orderFromOld = (window.location.hash === "#from-old");
+    if (orderFromOld != this.state.orderFromOld)
+      this.setState({
+        orderFromOld: orderFromOld
+      });
+
     // get user's API address
     fetch('https://api.ipify.org/?format=json')
       .then(resp => resp.json())
@@ -126,9 +137,7 @@ class Traveller extends Component {
                   newComment.id = comment._id;
                   travellerMessages.push(newComment);
                 });
-                travellerMessages.sort((a, b) => {
-                  return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
-                });
+                this.sortMessages(travellerMessages, this.state.orderFromOld);
                 this.setState({
                   travellerMessages,
                   loading: false
@@ -178,6 +187,24 @@ class Traveller extends Component {
     this.setState({ showCommentBox: open });
   }
 
+  sortMessages(msgs, order)
+  {
+    return msgs.sort((a, b) => {
+      return (order ? (b.date > a.date ? -1 : b.date < a.date ? 1 : 0) :
+        (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
+    });
+  }
+
+  handleOrderClick(e) {
+    e.preventDefault();
+
+    var order = !this.state.orderFromOld;
+    this.setState({
+      orderFromOld: order,
+      travellerMessages: this.sortMessages(this.state.travellerMessages, order)
+    });
+  }
+
   handleImageBox(open, url) {
     this.setState({
       showImageBox: open,
@@ -194,9 +221,7 @@ class Traveller extends Component {
     newComment.text = comment.comment;
     newComment.id = comment._id;
     updatedComments.push(newComment);
-    updatedComments.sort((a, b) => {
-      return b.date > a.date ? 1 : b.date < a.date ? -1 : 0;
-    });
+    this.sort(updatedComments, this.state.orderFromOld);
     this.setState({
       travellerMessages: updatedComments
     });
@@ -225,7 +250,11 @@ class Traveller extends Component {
                 {this.state.travellerData.start_date.substring(5, 7)}
                 {'.'}
                 {this.state.travellerData.start_date.substring(0, 4)}
-              </p>
+              </p>              
+            </div>
+
+            <div className="na-ceste-traveller-sort" >
+              Zoradiť: <a href="#" onClick={this.handleOrderClick}>{this.state.orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
             </div>
 
             <div className="na-ceste-traveller-msgs">
