@@ -60,6 +60,27 @@ class Archive extends Component {
       });
   }
 
+  getArchiveCard(traveller, i)
+  {
+    return (
+      <div key={i} className="archived-traveller">
+        <p className="archived-traveller-field name">{traveller.meno}</p>
+        <p className="archived-traveller-field">Začiatok: {traveller.startMiesto + " "} {traveller.startDate.substring(0, 11)}</p>
+        <p className="archived-traveller-field">Koniec: {traveller.endDate.substring(0, 11)}</p>
+        <div className="archived-traveller-text">
+          <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
+        </div>
+        <NavItem
+          onClick={() => {
+            history.push(`/na/${traveller.userId}`);
+          }}
+        >
+          Sleduj celé putovanie...
+        </NavItem>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div id="NaCesteArchive">
@@ -69,26 +90,11 @@ class Archive extends Component {
           <div>
             <h2>Cestu prešli celú:</h2>
             <div className="archived-travellers">
-              {this.state.fullyCompleted.map((traveller, i) => {
-                return (
-                  <div key={i} className="archived-traveller">
-                    <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
-                    <p style={{ fontWeight: '400' }}>{traveller.startMiesto}</p>
-                    <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
-                    <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
-                    <div className="archived-traveller-text">
-                      <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
-                    </div>
-                    <NavItem
-                      onClick={() => {
-                        history.push(`/na/${traveller.userId}`);
-                      }}
-                    >
-                      Sleduj celé putovanie...
-                    </NavItem>
-                  </div>
-                );
-              })}
+              {
+                this.state.fullyCompleted.map((traveller, i) => {
+                  return this.getArchiveCard(traveller, i);
+                })
+              }
             </div>
           </div>
         )}
@@ -99,30 +105,11 @@ class Archive extends Component {
             <div>
               <h2>Cestu prešli čiastočne:</h2>
               <div className="archived-travellers">
-                {this.state.partiallyCompleted.map((traveller, i) => {
-                  return (
-                    <div key={i} className="archived-traveller">
-                      <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
-                      <p style={{ fontWeight: '600' }}>
-                        {traveller.startMiesto}
-                      </p>
-                      <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
-                      <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
-                      <div className="archived-traveller-text">
-                        <p
-                          dangerouslySetInnerHTML={{ __html: traveller.text }}
-                        />
-                      </div>
-                      <NavItem
-                        onClick={() => {
-                          history.push(`/na/${traveller.userId}`);
-                        }}
-                      >
-                        Sleduj celé putovanie...
-                      </NavItem>
-                    </div>
-                  );
-                })}
+                {
+                  this.state.partiallyCompleted.map((traveller, i) => {
+                    return this.getArchiveCard(traveller, i);
+                  })
+                }
               </div>
             </div>
           )}

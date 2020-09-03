@@ -843,7 +843,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .archived-traveller {
-  display: inline-block;
+  display: flex;
+  flex-flow: column;
   position: relative;
   background-color: #ececec70;
   width: 30%;
@@ -858,15 +859,23 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
-.archived-traveller-text {
-  overflow: scroll;
-  height: 200px;
-} @media (max-width: 767px) {
-  .archived-traveller-text {
-    height: 100px;
-  }
+.archived-traveller-field {
+  flex: 0 1 auto
 }
 
+.archived-traveller-field.name {
+  font-weight: 800
+}
+
+.archived-traveller-text {
+  overflow: auto;
+  flex: 1 1 auto;
+  margin: 10px 0px;
+}
+
+.archived-traveller-text p {
+  margin: 0px 5px 0px 0px;
+}
 
 /***    ARCHIVE     ***/
 /**********************/
