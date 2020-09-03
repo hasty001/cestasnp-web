@@ -6,6 +6,7 @@ import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
 import CommentBox from './reusable/CommentBox';
 import ImageBox from './reusable/ImageBox';
+import { dateToStr, dateTimeToStr } from '../helpers/helpers';
 
 class Traveller extends Component {
   constructor(props) {
@@ -211,11 +212,7 @@ class Traveller extends Component {
               <p>{this.state.travellerData.text}</p>
               <p>
                 Začiatok: {this.state.travellerData.start_miesto}{' '}
-                {this.state.travellerData.start_date.substring(8, 10)}
-                {'.'}
-                {this.state.travellerData.start_date.substring(5, 7)}
-                {'.'}
-                {this.state.travellerData.start_date.substring(0, 4)}
+                {dateToStr(this.state.travellerData.start_date)}
               </p>
             </div>
 
@@ -252,7 +249,7 @@ class Traveller extends Component {
                       )}
                       <div className="red-stripe" />
                       <p style={{ display: 'inline-block' }}>
-                        {`${message.date} ${message.username}`}
+                        {`${dateTimeToStr(message.date)} ${message.username}`}
                       </p>
                       <p dangerouslySetInnerHTML={{ __html: message.text }} />
                     </div>
@@ -266,7 +263,7 @@ class Traveller extends Component {
                         aria-hidden="true"
                         style={{ color: '#ccc2c2' }}
                       />
-                      {` ${message.date} ${message.username}`}
+                      {` ${dateTimeToStr(message.date)} ${message.username}`}
                     </p>
                     <p dangerouslySetInnerHTML={{ __html: message.text }} />
                   </div>

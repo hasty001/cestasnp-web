@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment-timezone';
+import { dateTimeToStr } from '../../helpers/helpers';
 
 moment.tz.setDefault('Europe/Vienna');
 
@@ -50,7 +51,7 @@ class SentMessages extends Component {
               />
             )}
             <div className="red-stripe" />
-            <p style={{ display: 'inline-block' }}>{message.pub_date}</p>
+            <p style={{ display: 'inline-block' }}>{dateTimeToStr(message.pub_date)}</p>
             <p dangerouslySetInnerHTML={{ __html: message.text }} />
           </div>
         ))}
