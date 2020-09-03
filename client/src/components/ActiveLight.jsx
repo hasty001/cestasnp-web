@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import format from 'date-fns/format';
+import { dateToStr, dateTimeToStr } from '../helpers/helpers';
 
 import Loader from './reusable/Loader';
 
@@ -79,16 +80,12 @@ class ActiveLight extends Component {
                         <strong>
                           {(!!traveller.lastMessage && (traveller.startDate <= this.state.now)) &&  (
                           <span>
-                            {traveller.lastMessage.pub_date}{' '}
+                            {dateTimeToStr(traveller.lastMessage.pub_date)}{' '}
                           </span>)} 
 
                           {((traveller.startDate > this.state.now) || !traveller.lastMessage) && (
                           <span>
-                            {traveller.startDate.substring(8, 10)}
-                            {'.'}
-                            {traveller.startDate.substring(5, 7)}
-                            {'.'}
-                            {traveller.startDate.substring(0, 4)}
+                            {dateToStr(traveller.startDate)}                           
                             {' '}{traveller.startMiesto}{' '}
                           </span>)}  
 
