@@ -3,8 +3,8 @@ import moment from 'moment';
 import Loader from '../reusable/Loader';
 import Message from './Message';
 import SentMessages from './SentMessages';
-import { dateToStr } from '../../helpers/helpers';
 import AuthContext from '../AuthContext';
+import { dateToStr } from '../../helpers/helpers';
 
 class TravellerAccount extends React.Component {
   constructor(props) {
