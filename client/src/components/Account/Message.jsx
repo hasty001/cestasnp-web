@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment-timezone';
 import { isDecimal } from 'validator';
 
-import Loader from '../reusable/Loader';
+import FloatingLoader from '../reusable/FloatingLoader';
 import CloudinaryWidget from '../reusable/CloudinaryWidget';
 
 moment.tz.setDefault('Europe/Vienna');
@@ -36,8 +36,7 @@ class Message extends Component {
 
   getMyPosition() {
     this.setState({
-      positionLoading: 1,
-      errorMsg: ''
+      positionLoading: 1
     });
 
     const options = {
@@ -51,7 +50,8 @@ class Message extends Component {
           lat: coords.latitude.toFixed(6),
           lon: coords.longitude.toFixed(6),
           accuracy: coords.accuracy,
-          positionLoading: 0
+          positionLoading: 0,
+          errorMsg: ''
         });
       },
       err => {
@@ -199,10 +199,9 @@ class Message extends Component {
 
   render() {
     return (
-      <div id="MessageForm" className="thinRedWrap">
-        {this.state.loading && <Loader />}
-        {!this.state.loading && (
-          <>
+      <div id="MessageForm" className="thinRedWrap for-floating-loader">    
+        {this.state.loading && <FloatingLoader />}    
+        <div className={this.state.loading ? "invisible" : null}>
             <h2>Poslať správu</h2>
             {this.state.errorMsg && (
               <p className="errorMsg">{this.state.errorMsg}</p>
@@ -210,10 +209,9 @@ class Message extends Component {
             {this.state.successMsg && (
               <p className="successMsg">{this.state.successMsg}</p>
             )}
-            {this.state.positionLoading ? (
-              <Loader />
-            ) : (
-              <>
+            <div className="for-floating-loader">
+              {this.state.positionLoading == 1 && <FloatingLoader />}
+              <div className={this.state.positionLoading ? "invisible" : null}>
                 <label htmlFor="lat">
                   <span
                     onClick={() => {
@@ -267,8 +265,8 @@ class Message extends Component {
                 >
                   Získaj pozíciu
                 </button>
-              </>
-            )}
+              </div>
+            </div>
             <label htmlFor="name">
               <span>Text</span>
               <textarea
@@ -305,8 +303,7 @@ class Message extends Component {
             <button className="snpBtn" onClick={this.sendMessage} type="submit">
               Poslať správu
             </button>
-          </>
-        )}
+          </div>
       </div>
     );
   }
