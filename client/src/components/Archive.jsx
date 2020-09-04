@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavItem } from 'react-bootstrap';
 import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
-import { sortByDateDesc } from '../helpers/helpers';
+import { sortByDateDesc, dateToStr } from '../helpers/helpers';
 
 import history from '../helpers/history';
 
@@ -74,8 +74,8 @@ class Archive extends Component {
                   <div key={i} className="archived-traveller">
                     <p style={{ fontWeight: '800' }}>{traveller.meno}</p>
                     <p style={{ fontWeight: '400' }}>{traveller.startMiesto}</p>
-                    <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
-                    <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
+                    <p>Začiatok: {dateToStr(traveller.startDate)}</p>
+                      <p>Koniec: {dateToStr(traveller.endDate)}</p>
                     <div className="archived-traveller-text">
                       <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
                     </div>
@@ -106,8 +106,8 @@ class Archive extends Component {
                       <p style={{ fontWeight: '600' }}>
                         {traveller.startMiesto}
                       </p>
-                      <p>Začiatok: {traveller.startDate.substring(0, 11)}</p>
-                      <p>Koniec: {traveller.endDate.substring(0, 11)}</p>
+                      <p>Začiatok: {dateToStr(traveller.startDate)}</p>
+                      <p>Koniec: {dateToStr(traveller.endDate)}</p>
                       <div className="archived-traveller-text">
                         <p
                           dangerouslySetInnerHTML={{ __html: traveller.text }}
