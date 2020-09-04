@@ -17,7 +17,7 @@ import pin08 from '../../public/img/pins/Svetlo_Ruzova.png';
 import pin09 from '../../public/img/pins/Svetlo_zelena.png';
 import pin10 from '../../public/img/pins/Tmavo_cervena.png';
 import pin11 from '../../public/img/pins/Modra.png';
-import { sortByDateAsc } from '../helpers/helpers';
+import { sortByDateAsc, dateToStr } from '../helpers/helpers';
 
 const colors = [
   '#ff0000',
@@ -214,11 +214,7 @@ class Active extends Component {
                       >
                         <p style={{ margin: '8px 0 0 0' }}>{traveller.meno}</p>
                         <p style={{ margin: '0px', fontSize: '12px' }}>
-                          vyráža {traveller.startDate.substring(8, 10)}
-                          {'.'}
-                          {traveller.startDate.substring(5, 7)}
-                          {'.'}
-                          {traveller.startDate.substring(0, 4)}
+                          vyráža {dateToStr(traveller.startDate, "kdoviekdy")}
                         </p>
                       </div>
                     )}

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import moment from 'moment-timezone';
-import { isDecimal } from 'validator';
 
 import FloatingLoader from '../reusable/FloatingLoader';
 import CloudinaryWidget from '../reusable/CloudinaryWidget';
+import * as Constants from '../Constants';
+import { parseGPSPos } from '../../helpers/GPSPosParser';
 
 moment.tz.setDefault('Europe/Vienna');
 
@@ -15,13 +16,11 @@ class Message extends Component {
       loading: false,
       errorMsg: '',
       message: '',
-      lat: '',
-      lon: '',
+      latlon: '',
       accuracy: '',
       img: '',
       edit: {
-        lat: 0,
-        lon: 0
+        latlon: 0
       },
       positionLoading: 0
     };
@@ -46,13 +45,30 @@ class Message extends Component {
 
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        this.setState({
-          lat: coords.latitude.toFixed(6),
-          lon: coords.longitude.toFixed(6),
-          accuracy: coords.accuracy,
-          positionLoading: 0,
-          errorMsg: ''
-        });
+        var lat = coords.latitude.toFixed(6);
+        var lon = coords.longitude.toFixed(6);
+
+        if (coords.accuracy > Constants.MaxAllowedGPSAccuracy) {
+          console.error('low GPS accuracy ', coords.accuracy);
+
+          this.setState({
+            errorMsg: (
+              <span>
+                Nedostatočná presnosť súradnic. Prosím načítaj pozíciu ešte raz.
+                Skontroluj si nastavenie presnosti lokalizačných služieb v nastavení telefónu. 
+                Taktiež je možné že nemáš priamy výhľad na oblohu pre správne fungovanie GPS. 
+                <br/>Prípadne súradnice zadaj ručne.               
+              </span>
+            ),
+            positionLoading: 0
+          });
+        } else {
+          this.setState({
+            latlon: lat + ", " + lon,
+            accuracy: coords.accuracy,
+            positionLoading: 0
+          });
+        }
       },
       err => {
         console.error('err ', err.message);
@@ -92,14 +108,7 @@ class Message extends Component {
       return;
     }
 
-    if (!isDecimal(value)) {
-      this.setState({
-        errorMsg: 'GPS súradnica musí byť desatinné číslo oddelené bodkou!'
-      });
-      return;
-    }
-
-    if (/^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/.test(value)) {
+    if (!parseGPSPos(value)) {
       this.setState({
         errorMsg: 'GPS súradnica má nesprávny formát.'
       });
@@ -115,15 +124,12 @@ class Message extends Component {
       return;
     }
 
+    var latlon = parseGPSPos(this.state.latlon);
+
     if (
-      !this.state.lat ||
-      this.state.lat.trim().length === 0 ||
-      !this.state.lon ||
-      this.state.lon.trim().length === 0 ||
-      !isDecimal(this.state.lat.trim()) ||
-      !isDecimal(this.state.lon.trim()) ||
-      /^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/.test(this.state.lat.trim()) ||
-      /^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/.test(this.state.lon.trim())
+      !this.state.latlon ||
+      this.state.latlon.trim().length === 0 ||      
+      !latlon
     ) {
       this.setState({
         errorMsg: 'GPS súradnice majú nesprávny formát.'
@@ -136,8 +142,8 @@ class Message extends Component {
     });
 
     const data = {};
-    data.lon = this.state.lon.trim();
-    data.lat = this.state.lat.trim();
+    data.lon = latlon[1].toFixed(6);
+    data.lat = latlon[0].toFixed(6);
     data.accuracy = this.state.accuracy;
     data.text = this.state.message;
     data.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -165,12 +171,10 @@ class Message extends Component {
             loading: false,
             successMsg: 'Správa úspešne poslaná!',
             message: '',
-            lat: '',
-            lon: '',
+            latlon: '',
             img: '',
             edit: {
-              lat: 0,
-              lon: 0
+              latlon: 0
             }
           });
           this.props.updateTravellerMsgs(msgRes);
@@ -212,19 +216,19 @@ class Message extends Component {
             <div className="for-floating-loader">
               {this.state.positionLoading == 1 && <FloatingLoader />}
               <div className={this.state.positionLoading ? "invisible" : null}>
-                <label htmlFor="lat">
+                <label htmlFor="latlon">
                   <span
                     onClick={() => {
-                      this.triggerEdit('lat');
+                      this.triggerEdit('latlon');
                     }}
                   >
-                    Zem. šírka (latitude): <i className="fas fa-edit" />
+                    Zem. šírka, dĺžka (latitude, longitude): <i className="fas fa-edit" />
                   </span>
-                  {this.state.edit.lat ? (
+                  {this.state.edit.latlon ? (
                     <input
-                      id="lat"
-                      name="lat"
-                      value={this.state.lat}
+                      id="latlon"
+                      name="latlon"
+                      value={this.state.latlon}
                       onBlur={e => {
                         e.preventDefault();
                         this.verifyGPSFormat(e);
@@ -232,32 +236,9 @@ class Message extends Component {
                       onChange={this.handleChange}
                     />
                   ) : (
-                    <p className="travellerP">{this.state.lat}</p>
+                    <p className="travellerP">{this.state.latlon}</p>
                   )}
-                </label>
-                <label htmlFor="lon">
-                  <span
-                    onClick={() => {
-                      this.triggerEdit('lon');
-                    }}
-                  >
-                    Zem. dĺžka (longitude): <i className="fas fa-edit" />
-                  </span>
-                  {this.state.edit.lon ? (
-                    <input
-                      id="lon"
-                      name="lon"
-                      value={this.state.lon}
-                      onBlur={e => {
-                        e.preventDefault();
-                        this.verifyGPSFormat(e);
-                      }}
-                      onChange={this.handleChange}
-                    />
-                  ) : (
-                    <p className="travellerP">{this.state.lon}</p>
-                  )}
-                </label>
+                </label>                
                 <button
                   className="snpBtnWhite"
                   onClick={this.getMyPosition}
