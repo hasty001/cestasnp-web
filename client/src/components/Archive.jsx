@@ -81,7 +81,7 @@ class Archive extends Component {
                     </div>
                     <NavItem
                       onClick={() => {
-                        history.push(`/na/${traveller.userId}`);
+                        history.push(`/na/${traveller.userId}#from-old`);
                       }}
                     >
                       Sleduj celé putovanie...
@@ -115,7 +115,7 @@ class Archive extends Component {
                       </div>
                       <NavItem
                         onClick={() => {
-                          history.push(`/na/${traveller.userId}`);
+                          history.push(`/na/${traveller.userId}#from-old`);
                         }}
                       >
                         Sleduj celé putovanie...
