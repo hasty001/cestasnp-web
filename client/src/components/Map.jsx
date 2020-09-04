@@ -10,6 +10,7 @@ import pramen from '../../public/img/pramen.png';
 import krcma_jedlo from '../../public/img/krcma_jedlo.png';
 import posed from '../../public/img/posed.png';
 import defaultPin from '../../public/img/pins/Cervena.png';
+import { dateTimeToStr } from '../helpers/helpers';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -128,7 +129,7 @@ class Map extends Component {
             iconAnchor: [16, 32]
           });
           const marker = L.marker([stop.lat, stop.lon], { icon }).addTo(map);
-          marker.bindPopup(`<p>${stop.date}</p>
+          marker.bindPopup(`<p>${dateTimeToStr(stop.date)}</p>
           <p>${stop.text}</p>`);
         }
       });
@@ -154,7 +155,7 @@ class Map extends Component {
           ).addTo(map);
           marker.bindPopup(`
           <p><b><a href='/na/${trvlr.userId}' style={text-decoration: none;}>${trvlr.meno}</a></b></p>
-          <p>${trvlr.lastMessage.pub_date}</p>
+          <p>${dateTimeToStr(trvlr.lastMessage.pub_date)}</p>
           <p>${trvlr.lastMessage.text}</p>`);
         }
       });
