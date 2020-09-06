@@ -677,6 +677,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .na-ceste-traveller-msgs {
   display: block;
   padding: 0 10px;
+  overflow-y: hidden;
 }
 
 .traveller-message, 
