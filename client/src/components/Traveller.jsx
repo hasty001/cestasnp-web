@@ -221,7 +221,7 @@ class Traveller extends Component {
     newComment.text = comment.comment;
     newComment.id = comment._id;
     updatedComments.push(newComment);
-    this.sort(updatedComments, this.state.orderFromOld);
+    this.sortMessages(updatedComments, this.state.orderFromOld);
     this.setState({
       travellerMessages: updatedComments
     });
