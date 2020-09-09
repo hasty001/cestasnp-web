@@ -437,7 +437,9 @@ DB.prototype = {
                 db.db('cestasnp')
                   .collection('article_comments')
                   .insertOne(comment)
-                  .then(() => {
+                  .then((commentRes) => {
+                    comment._id = commentRes.insertedId;
+                    
                     db.close();
                     callback(comment);
                   })
@@ -473,7 +475,9 @@ DB.prototype = {
             // save comment with new comment id
             resCollection
               .insertOne(comment)
-              .then(() => {
+              .then((commentRes) => {
+                comment._id = commentRes.insertedId;
+
                 db.close();
                 callback(comment);
               })
@@ -679,7 +683,9 @@ DB.prototype = {
           db.db('cestasnp')
             .collection('traveler_messages')
             .insertOne(securityCheck.sanitizeTravellerMessage(message))
-            .then(() => {
+            .then((msgRes) => {
+              message._id = msgRes.insertedId;
+
               db.db('cestasnp')
                 .collection('traveler_details')
                 .findOneAndUpdate(
