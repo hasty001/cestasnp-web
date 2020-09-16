@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { NavItem } from 'react-bootstrap';
 import history from '../helpers/history';
+import ActiveLight from './ActiveLight';
 
 import Loader from './reusable/Loader';
 
@@ -35,6 +36,19 @@ class Home extends Component {
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <div>
+            <div className="active-travellers-box">            
+              <NavItem
+                className="no-decoration"
+                onClick={() => {
+                  history.push(`/na/ceste/light`);
+                }}
+              >
+                <h3 className="no-decoration">LIVE</h3>
+              </NavItem>     
+              
+              <ActiveLight/>
+            </div>
+
             {this.state.articles.map((article, i) => {
               const introtext = () => {
                 return { __html: article.introtext };
