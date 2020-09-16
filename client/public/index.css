@@ -257,7 +257,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 80%;
   margin: 15px auto;
   text-align: justify;
-} @media (max-width: 767px) {
+} @media (max-width: 1024px) {
   #Home {
     width: 100%;
     margin: 0;
@@ -265,21 +265,34 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
+#Home h2.no-decoration {
+  margin-top: 0px;
+}
+
 #home1 {
   display: block;
-  width: 100%;
-  padding: 5px;
+  width: calc(70% - 10px);
+  padding: 10px;
   min-height: 300px;
+} @media(max-width: 767px) {
+  #home1 {
+    width: 100%;
+  }
 }
 
 #home2,
 #home3 {
   display: inline-block;
-  width: 50%;
+  width: calc(35% - 5px);
   padding: 10px;
   min-height: 300px;
   vertical-align: top;
-} @media(max-width: 767px) {
+} @media(max-width: 1024px) {
+  #home2,
+  #home3 {
+    width: calc(70% - 10px);
+  }
+}@media(max-width: 767px) {
   #home2,
   #home3 {
     width: 100%;
@@ -629,6 +642,41 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding: 10px;
   height: 80px;
   vertical-align: top;
+}
+
+.active-travellers-box {
+  float: right;
+  width: 30%;
+  margin-left: 10px;
+  padding: 15px 0px;
+  background-color: #ffdbdb;
+} @media(max-width: 767px) {
+  .active-travellers-box {
+    width: calc(100% - 20px);
+    float: none;
+    margin-right: 10px;   
+  }
+  .active-travellers-box #NaCesteActiveLight {
+    max-height: 200px;
+    overflow-y: auto;    
+  }
+  .active-traveller-item {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+  }
+}
+
+.active-travellers-box h3 {
+  margin: 0px 0px 0px 10px;
+}
+
+.active-travellers-list {
+  padding: 10px;
+}
+
+.active-traveller-item {
+  margin: 5px 0px;
 }
 
 .mapMarker {

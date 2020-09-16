@@ -65,6 +65,29 @@ router.get('/finishedTravellers', (req, res) => {
     });
 });
 
+router.get('/activeTravellersWithLastMessage', (req, res) => {
+  db.findBy('traveler_details', { finishedTracking: false })
+    .then(activeTravellers => {
+      var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
+
+      db.getTravellersMessages(activeTravellersIds, lastMessages =>  
+        {
+          lastMessages.map(msg => 
+            {
+              var i = activeTravellersIds.indexOf(msg.user_id);
+              if (i >= 0 && !activeTravellers[i].lastMessage)
+                activeTravellers[i].lastMessage = msg;
+            }
+            );
+    
+            return res.json(activeTravellers);
+        }
+      );
+    }).catch(e => {
+      console.error('error ', e);
+    });;
+  });
+
 router.get('/activeTravellers', (req, res) => {
   db.findBy('traveler_details', { finishedTracking: false })
     .then(activeTravellers => {
