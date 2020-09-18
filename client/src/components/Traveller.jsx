@@ -295,7 +295,7 @@ class Traveller extends Component {
                       )}
                       <div className="red-stripe" />
                       <p style={{ display: 'inline-block' }}>
-                        {`${dateTimeToStr(message.date)} ${message.username}`}
+                        {`${dateTimeToStr(message.date)} ${message.username} `}
                         <a href={`#${message.id}`} className="traveller-message-link" title="odkaz na správu">🔗</a>
                       </p>
                       <p dangerouslySetInnerHTML={{ __html: message.text }} />
@@ -319,7 +319,7 @@ class Traveller extends Component {
                         aria-hidden="true"
                         style={{ color: '#ccc2c2' }}
                       />
-                      {` ${dateTimeToStr(message.date)} ${message.username}`}
+                      {` ${dateTimeToStr(message.date)} ${message.username} `}
                       <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár">🔗</a>
                     </p>
                     <p dangerouslySetInnerHTML={{ __html: message.text }} />

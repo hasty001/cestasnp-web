@@ -54,9 +54,9 @@ class SentMessages extends Component {
             )}
             <div className="red-stripe" />
             <p style={{ display: 'inline-block' }}>
-              {dateTimeToStr(message.pub_date)}
+              {dateTimeToStr(message.pub_date)} 
               {' '}<a href={`/na/${this.state.userId}#${message._id}`} className="traveller-message-link" title="odkaz na správu">🔗</a>
-            </p>            
+            </p>
             <p dangerouslySetInnerHTML={{ __html: message.text }} />
           </div>
         ))}
