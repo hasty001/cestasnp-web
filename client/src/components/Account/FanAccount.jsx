@@ -110,27 +110,41 @@ class FanAccount extends React.Component {
       return;
     }
 
-    fetch('/api/traveller/setupTraveller', {
-      method: 'POST',
-      body: JSON.stringify({
-        meno: nazov,
-        text: popis,
-        start_date,
-        uid: this.state.fan.userDetails.uid,
-        start_miesto: zaciatok === 'oth' ? inyZaciatok : zaciatok,
-        number: pocet,
-        email: 0
-      }),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    })
+    this.props.fan.user.getIdToken()
+      .then(token => 
+        fetch('/api/traveller/setupTraveller', {
+          method: 'POST',
+          body: JSON.stringify({
+            meno: nazov,
+            text: popis,
+            start_date,
+            uid: this.state.fan.userDetails.uid,
+            start_miesto: zaciatok === 'oth' ? inyZaciatok : zaciatok,
+            number: pocet,
+            email: 0
+          }),
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'X-Auth-Token': token,
+          })
+        })
       .then(resp => resp.json())
       .then(travellerDetails => {
-        this.state.fan.updateTravellerDetails(travellerDetails);
-      })
+        if (travellerDetails.error) {
+          console.error('fanAccount err ', travellerDetails.error);
+
+          this.setState({
+            error: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+          });
+        } else {
+          this.state.fan.updateTravellerDetails(travellerDetails);
+        }
+      }))
       .catch(e => {
         console.error('fanAccount err ', e);
+        this.setState({
+          error: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+        });
       });
   }
 
