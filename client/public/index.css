@@ -271,9 +271,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 #home1 {
   display: block;
-  width: calc(70% - 10px);
+  width: calc(70% - 20px);
   padding: 10px;
-  min-height: 300px;
 } @media(max-width: 767px) {
   #home1 {
     width: 100%;
@@ -283,14 +282,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 #home2,
 #home3 {
   display: inline-block;
-  width: calc(35% - 5px);
+  width: calc(35% - 10px);
   padding: 10px;
-  min-height: 300px;
   vertical-align: top;
 } @media(max-width: 1024px) {
   #home2,
   #home3 {
-    width: calc(70% - 10px);
+    width: calc(70% - 20px);
   }
 }@media(max-width: 767px) {
   #home2,
@@ -648,6 +646,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   float: right;
   width: 30%;
   margin-left: 10px;
+  margin-bottom: 10px;
   padding: 15px 0px;
   background-color: #ffdbdb;
 } @media(max-width: 767px) {
