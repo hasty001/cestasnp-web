@@ -152,16 +152,21 @@ class Message extends Component {
     data.pub_date_milseconds = moment().valueOf();
     data.details_id = this.props.travellerId;
 
-    fetch('/api/traveller/sendMessage', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: new Headers({
-        'Content-Type': 'application/json'
+    this.props.traveller.user.getIdToken()
+      .then(token => 
+      fetch('/api/traveller/sendMessage', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-Auth-Token': token,
+        })
       })
-    })
       .then(res => res.json())
       .then(msgRes => {
         if (msgRes.error) {
+          console.error('send message err ', msgRes.error);
+
           this.setState({
             loading: false,
             errorMsg: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
@@ -179,10 +184,13 @@ class Message extends Component {
           });
           this.props.updateTravellerMsgs(msgRes);
         }
-      })
-      .catch(() => {
+      }))
+      .catch(e => {
+        console.error('send message err ', e);
+
         this.setState({
-          loading: false
+          loading: false,
+          errorMsg: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
         });
       });
   }

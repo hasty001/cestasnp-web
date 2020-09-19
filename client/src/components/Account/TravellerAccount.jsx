@@ -4,6 +4,7 @@ import Loader from '../reusable/Loader';
 import Message from './Message';
 import SentMessages from './SentMessages';
 import { dateToStr } from '../../helpers/helpers';
+import AuthContext from '../AuthContext';
 
 class TravellerAccount extends React.Component {
   constructor(props) {
@@ -132,53 +133,71 @@ class TravellerAccount extends React.Component {
       loading: 1
     });
 
-    fetch('/api/traveller/updateTraveller', {
-      method: 'POST',
-      body: JSON.stringify({
-        meno,
-        text: popis,
-        start_date,
-        uid: user_id,
-        start_miesto: zaciatok,
-        number: pocet,
-        end_date: '',
-        completed: '',
-        email: 0,
-        finishedTracking: false
-      }),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    })
-      .then(resp => resp.json())
-      .then(() => {
-        this.setState({
-          loading: 0,
-          edit: {
-            meno: 0,
-            popis: 0,
-            zaciatok: 0,
-            pocet: 0,
-            start_date: 0
-          },
-          error: '',
-          successMsg: 'Detaily tvojej cesty sme úspešne zmenili'
-        });
-        this.props.traveller.updateTravellerDetails({
-          meno,
-          text: popis,
-          start_date,
-          uid: user_id,
-          start_miesto: zaciatok,
-          number: pocet,
-          end_date: '',
-          completed: '',
-          email: 0,
-          finishedTracking: false
-        });
-      })
+    this.props.traveller.user.getIdToken()
+      .then(token => 
+        fetch('/api/traveller/updateTraveller', {
+          method: 'POST',
+          body: JSON.stringify({
+            meno,
+            text: popis,
+            start_date,
+            uid: user_id,
+            start_miesto: zaciatok,
+            number: pocet,
+            end_date: '',
+            completed: '',
+            email: 0,
+            finishedTracking: false
+          }),
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'X-Auth-Token': token,
+          })
+        })
+          .then(resp => resp.json())
+          .then(msgRes => {
+            if (msgRes.error) {
+              console.error('send message err ', msgRes.error);
+
+              this.setState({
+                loading: 0,
+                error: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+              });
+            } else {
+              this.setState({
+                loading: 0,
+                edit: {
+                  meno: 0,
+                  popis: 0,
+                  zaciatok: 0,
+                  pocet: 0,
+                  start_date: 0
+                },
+                successMsg: 'Detaily tvojej cesty sme úspešne zmenili',
+                error: ''
+              });
+
+              this.props.traveller.updateTravellerDetails({
+                meno,
+                text: popis,
+                start_date,
+                uid: user_id,
+                start_miesto: zaciatok,
+                number: pocet,
+                end_date: '',
+                completed: '',
+                email: 0,
+                finishedTracking: false
+              });
+            }
+          })
+        )
       .catch(e => {
         console.error('fanAccount err ', e);
+        this.setState({
+          loading: 0,
+          error: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
+        });
       });
   }
 
@@ -194,6 +213,7 @@ class TravellerAccount extends React.Component {
         <Message
           userId={this.state.user_id}
           travellerId={this.state.travellerId}
+          traveller={this.props.traveller}
           updateTravellerMsgs={this.updateTravellerMsgs}
         />
         {this.state.travellerMsgs.length > 0 && (
@@ -323,4 +343,5 @@ class TravellerAccount extends React.Component {
     );
   }
 }
+
 export default TravellerAccount;

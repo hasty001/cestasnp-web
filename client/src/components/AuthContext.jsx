@@ -54,7 +54,9 @@ export class AuthProvider extends React.Component {
   }
 
   userMongoCheck(user) {
-    fetch('/api/traveller/userCheck', {
+    user.getIdToken()
+      .then(token => 
+        fetch('/api/traveller/userCheck', {
       method: 'POST',
       body: JSON.stringify({
         email: user.email,
@@ -62,10 +64,17 @@ export class AuthProvider extends React.Component {
         uid: user.uid
       }),
       headers: new Headers({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Auth-Token': token,
       })
     })
       .then(res => res.json())
+      .then(r => {
+        if (r.error) {
+          throw r.error; 
+        } else { 
+          return r; 
+        }})
       .then(({ userDetails, travellerDetails, travellerMessages }) => {
         this.setState({
           isAuth: 1,
@@ -75,7 +84,7 @@ export class AuthProvider extends React.Component {
           travellerMessages,
           authProviderMounted: 1
         });
-      })
+      }))
       .catch(e => {
         console.error('userMongoCheck error ', e);
         const loggedUser = auth.currentUser;
