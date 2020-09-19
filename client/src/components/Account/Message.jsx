@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment-timezone';
 
-import Loader from '../reusable/Loader';
+import FloatingLoader from '../reusable/FloatingLoader';
 import CloudinaryWidget from '../reusable/CloudinaryWidget';
 import * as Constants from '../Constants';
 import { parseGPSPos } from '../../helpers/GPSPosParser';
@@ -35,8 +35,7 @@ class Message extends Component {
 
   getMyPosition() {
     this.setState({
-      positionLoading: 1,
-      errorMsg: ''
+      positionLoading: 1
     });
 
     const options = {
@@ -67,7 +66,8 @@ class Message extends Component {
           this.setState({
             latlon: lat + ", " + lon,
             accuracy: coords.accuracy,
-            positionLoading: 0
+            positionLoading: 0,
+            errorMsg: ''
           });
         }
       },
@@ -204,10 +204,9 @@ class Message extends Component {
 
   render() {
     return (
-      <div id="MessageForm" className="thinRedWrap">
-        {this.state.loading && <Loader />}
-        {!this.state.loading && (
-          <>
+      <div id="MessageForm" className="thinRedWrap for-floating-loader">    
+        {this.state.loading && <FloatingLoader />}    
+        <div className={this.state.loading ? "invisible" : null}>
             <h2>Poslať správu</h2>
             {this.state.errorMsg && (
               <p className="errorMsg">{this.state.errorMsg}</p>
@@ -215,11 +214,10 @@ class Message extends Component {
             {this.state.successMsg && (
               <p className="successMsg">{this.state.successMsg}</p>
             )}
-            {this.state.positionLoading ? (
-              <Loader />
-            ) : (
-              <>
-                <label htmlFor="latlon">
+            <div className="for-floating-loader">
+              {this.state.positionLoading == 1 && <FloatingLoader />}
+              <div className={this.state.positionLoading ? "invisible" : null}>
+              <label htmlFor="latlon">
                   <span
                     onClick={() => {
                       this.triggerEdit('latlon');
@@ -249,8 +247,8 @@ class Message extends Component {
                 >
                   Získaj pozíciu
                 </button>
-              </>
-            )}
+              </div>
+            </div>
             <label htmlFor="name">
               <span>Text</span>
               <textarea
@@ -287,8 +285,7 @@ class Message extends Component {
             <button className="snpBtn" onClick={this.sendMessage} type="submit">
               Poslať správu
             </button>
-          </>
-        )}
+          </div>
       </div>
     );
   }
