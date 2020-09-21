@@ -14,6 +14,7 @@ import Article from './components/Article';
 import Pois from './components/Pois';
 import Traveller from './components/Traveller';
 import Active from './components/Active';
+import ActiveLight from './components/ActiveLight';
 import Cookies from './components/Cookies';
 import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
@@ -42,6 +43,7 @@ const CestaSNP = () => (
               <Route path="/pred/articles/:page" component={Articles} />
               <Route exact path="/pred/pois" component={Pois} />
               <Route exact path="/na/ceste" component={Active} />
+              <Route exact path="/na/ceste/light" component={ActiveLight} />
               <Route exact path="/na/archive" component={Archive} />
               <Route path="/na/:traveller" component={Traveller} />
               <Route exact path="/kontakt" component={Kontakt} />
