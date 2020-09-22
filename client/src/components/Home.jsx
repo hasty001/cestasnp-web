@@ -43,7 +43,7 @@ class Home extends Component {
                   history.push(`/na/ceste/light`);
                 }}
               >
-                <h3 className="no-decoration">LIVE</h3>
+                <h3 className="no-decoration">LIVE sledovanie</h3>
               </NavItem>     
               
               <ActiveLight/>
