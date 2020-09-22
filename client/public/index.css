@@ -642,6 +642,23 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   vertical-align: top;
 }
 
+#NaCesteActiveLight {
+  width: 80%;
+  margin: 15px auto;
+} @media (max-width: 767px) {
+#NaCesteActiveLight {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+}
+}
+
+.active-travellers-box #NaCesteActiveLight { 
+  width: 100%; 
+  padding: 0px; 
+  margin: 0;
+}
+
 .active-travellers-box {
   float: right;
   width: 30%;
@@ -649,7 +666,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-bottom: 10px;
   padding: 15px 0px;
   background-color: #ffdbdb;
-} @media(max-width: 767px) {
+ } @media(max-width: 767px) {
   .active-travellers-box {
     width: calc(100% - 20px);
     float: none;
@@ -657,7 +674,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
   .active-travellers-box #NaCesteActiveLight {
     max-height: 200px;
-    overflow-y: auto;    
+    overflow-y: auto;   
   }
   .active-traveller-item {
     white-space: nowrap;
@@ -667,7 +684,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .active-travellers-box h3 {
-  margin: 0px 0px 0px 10px;
+  margin: 0px 0px 5px 10px;
 }
 
 .active-travellers-list {
@@ -675,7 +692,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .active-traveller-item {
-  margin: 5px 0px;
+  margin: 0px 0px 15px 0px;
 }
 
 .mapMarker {

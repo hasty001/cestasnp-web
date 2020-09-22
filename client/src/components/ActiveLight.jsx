@@ -76,24 +76,26 @@ class ActiveLight extends Component {
                       <div
                         className="active-traveller-item"
                       >
-                        {(!!traveller.lastMessage && (traveller.startDate <= this.state.now)) &&  (
-                        <span>
-                          {traveller.lastMessage.pub_date}{' '}
-                        </span>)} 
+                        <strong>
+                          {(!!traveller.lastMessage && (traveller.startDate <= this.state.now)) &&  (
+                          <span>
+                            {traveller.lastMessage.pub_date}{' '}
+                          </span>)} 
 
-                        {((traveller.startDate > this.state.now) || !traveller.lastMessage) && (
-                        <span>
-                          {traveller.startDate.substring(8, 10)}
-                          {'.'}
-                          {traveller.startDate.substring(5, 7)}
-                          {'.'}
-                          {traveller.startDate.substring(0, 4)}
-                          {' '}{traveller.startMiesto}{' '}
-                        </span>)}  
+                          {((traveller.startDate > this.state.now) || !traveller.lastMessage) && (
+                          <span>
+                            {traveller.startDate.substring(8, 10)}
+                            {'.'}
+                            {traveller.startDate.substring(5, 7)}
+                            {'.'}
+                            {traveller.startDate.substring(0, 4)}
+                            {' '}{traveller.startMiesto}{' '}
+                          </span>)}  
 
-                        <a href={`/na/${traveller.userId}`}>
-                          {traveller.meno}
-                        </a>
+                          <a href={`/na/${traveller.userId}`}>
+                            {traveller.meno}                          
+                          </a>
+                        </strong>
 
                         {!!traveller.lastMessage && (
                         <span>
