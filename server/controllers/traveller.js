@@ -6,9 +6,27 @@ const moment = require('moment');
 
 const request = require('request');
 const DB = require('../db/db');
+const {admin} = require('../util/firebase');
 
 const db = new DB();
 const router = express.Router();
+const auth = admin.auth();
+
+function checkToken(req, res, uid, callback) {
+  const token = req.header("X-Auth-Token");
+
+  if (!token || token.length == 0) {
+    res.status(401).json({ error: 'Authorization token is missing.' });
+  } else {
+    auth.verifyIdToken(token).then(decodedToken => {
+      if (!decodedToken || decodedToken.uid !== uid) {
+        res.status(403).json({ error: 'You are not authorized to perform this operation.' });
+      } else {
+        callback();
+      }
+    });
+  }
+}
 
 // retrieve travellers details
 router.get('/details/:travellerId', (req, res) => {
@@ -257,33 +275,37 @@ router.post('/addComment', (req, res) => {
 
 router.post('/userCheck', (req, res) => {
   const { email, name, uid } = req.body;
-  Promise.all([
-    db.findBy('users', { uid }),
-    db.getTravellerDetails(uid),
-    db.getTravellerMessages(uid)
-  ]).then(([userDetails, travellerDetails, travellerMessages]) => {
-    if (userDetails && userDetails.length > 0) {
-      res.json({
-        userDetails: userDetails[0],
-        travellerDetails: travellerDetails[0] || {},
-        travellerMessages: travellerMessages || []
+
+  checkToken(req, res, uid, () =>
+    Promise.all([
+      db.findBy('users', { uid }),
+      db.getTravellerDetails(uid),
+      db.getTravellerMessages(uid)
+    ]).then(([userDetails, travellerDetails, travellerMessages]) => {
+      if (userDetails && userDetails.length > 0) {
+        res.json({
+          userDetails: userDetails[0],
+          travellerDetails: travellerDetails[0] || {},
+          travellerMessages: travellerMessages || []
+        });
+        return;
+      }
+      db.createUser({ email, name, uid }, creation => {
+        res.json(creation);
       });
-      return;
-    }
-    db.createUser({ email, name, uid }, creation => {
-      res.json(creation);
-    });
-  });
+    }));
 });
 
 router.post('/setupTraveller', (req, res) => {
   const { meno, text, start_date, uid, start_miesto, number, email } = req.body;
+
+  checkToken(req, res, uid, () =>
   db.createTraveller(
     { meno, text, start_date, uid, start_miesto, number, email },
     resp => {
       res.json(resp);
     }
-  );
+  ));
 });
 
 router.post('/updateTraveller', (req, res) => {
@@ -299,23 +321,25 @@ router.post('/updateTraveller', (req, res) => {
     email,
     finishedTracking
   } = req.body;
-  db.updateTraveller(
-    {
-      meno,
-      text,
-      start_date,
-      uid,
-      start_miesto,
-      number,
-      end_date,
-      completed,
-      email,
-      finishedTracking
-    },
-    resp => {
-      res.json(resp);
-    }
-  );
+
+  checkToken(req, res, uid, () =>
+        db.updateTraveller(
+          {
+            meno,
+            text,
+            start_date,
+            uid,
+            start_miesto,
+            number,
+            end_date,
+            completed,
+            email,
+            finishedTracking
+          },
+          resp => {
+            res.json(resp);
+          }
+        ));
 });
 
 router.post('/sendMessage', (req, res) => {
@@ -330,22 +354,24 @@ router.post('/sendMessage', (req, res) => {
     pub_date_milseconds,
     details_id
   } = req.body;
-  db.sendMessage(
-    {
-      lon,
-      lat,
-      accuracy,
-      text,
-      pub_date,
-      user_id,
-      img,
-      pub_date_milseconds,
-      details_id
-    },
-    resp => {
-      res.json(resp);
-    }
-  );
+
+  checkToken(req, res, user_id, () =>
+    db.sendMessage(
+      {
+        lon,
+        lat,
+        accuracy,
+        text,
+        pub_date,
+        user_id,
+        img,
+        pub_date_milseconds,
+        details_id
+      },
+      resp => {
+        res.json(resp);
+      }
+    ));
 });
 
 module.exports = router;
