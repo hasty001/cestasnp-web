@@ -38,12 +38,14 @@ class TravellerAccount extends React.Component {
     if (event.target.name === 'start_date') {
       this.setState({
         [event.target.name]: event.target.value.toString(),
-        error: ''
+        error: '',
+        successMsg: ''
       });
     } else {
       this.setState({
         [event.target.name]: event.target.value,
-        error: ''
+        error: '',
+        successMsg: ''
       });
     }
   }
@@ -98,6 +100,13 @@ class TravellerAccount extends React.Component {
     if (!popis || popis.trim().length === 0) {
       this.setState({
         error: 'Popis nesmie byť prázdny!'
+      });
+      return;
+    }
+
+    if (popis.trim().length < 32) {
+      this.setState({
+        error: 'Popis cesty je príliš krátky (min. 32 znakov)!'
       });
       return;
     }
@@ -223,6 +232,7 @@ class TravellerAccount extends React.Component {
               name="meno"
               value={this.state.meno}
               type="text"
+              maxLength="30"
               onBlur={e => {
                 this.handleChange(e);
                 e.preventDefault();
