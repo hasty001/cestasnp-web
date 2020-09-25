@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavItem } from 'react-bootstrap';
 import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
-import { sortByDateDesc } from '../helpers/helpers';
+import { sortByDateDesc, dateToStr } from '../helpers/helpers';
 
 import history from '../helpers/history';
 
@@ -65,8 +65,8 @@ class Archive extends Component {
     return (
       <div key={i} className="archived-traveller">
         <p className="archived-traveller-field name">{traveller.meno}</p>
-        <p className="archived-traveller-field">Začiatok: {traveller.startMiesto + " "} {traveller.startDate.substring(0, 11)}</p>
-        <p className="archived-traveller-field">Koniec: {traveller.endDate.substring(0, 11)}</p>
+        <p className="archived-traveller-field">Začiatok: {traveller.startMiesto + " "} {dateToStr(traveller.startDate)}</p>
+        <p className="archived-traveller-field">Koniec: {dateToStr(traveller.endDate)}</p>
         <div className="archived-traveller-text">
           <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
         </div>
