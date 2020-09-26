@@ -7,6 +7,7 @@ import NotFound from './reusable/NotFound';
 import CommentBox from './reusable/CommentBox';
 import ImageBox from './reusable/ImageBox';
 import { dateToStr, dateTimeToStr } from '../helpers/helpers';
+import * as Constants from './Constants';
 
 class Traveller extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class Traveller extends Component {
       showImageBox: false,
       imageUrl: '',
       visitorIp: '',
-      orderFromOld: false
+      orderFromOld: false, 
     };
 
     this.handleCommentBox = this.handleCommentBox.bind(this);
@@ -40,6 +41,7 @@ class Traveller extends Component {
     this.handleOrderClick = this.handleOrderClick.bind(this);
 
     this.sortMessages = this.sortMessages.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
@@ -171,17 +173,34 @@ class Traveller extends Component {
         throw e;
       });
 
-    window.addEventListener('scroll', () => {
-      if (!this.state.showCommentBtn && window.pageYOffset > 300) {
-        this.setState({
-          showCommentBtn: true
-        });
-      } else if (this.state.showCommentBtn && window.pageYOffset <= 300) {
-        this.setState({
-          showCommentBtn: false
-        });
-      }
-    });
+    const appBody = this.props.appBody;
+    if (appBody) appBody.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillReceiveProps(newProps){
+    const appBody = newProps.appBody;
+    if (appBody && newProps.appBody !== this.props.appBody) appBody.addEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll() {
+    const appBody = this.props.appBody;
+
+    if (!this.state.showCommentBtn && appBody.scrollTop > Constants.ShowCommentBoxScrollOffset) {
+      this.setState({
+        showCommentBtn: true
+      });
+    } else if (this.state.showCommentBtn && appBody.scrollTop <= Constants.ShowCommentBoxScrollOffset) {
+      this.setState({
+        showCommentBtn: false
+      });
+    }
+  }
+
+  componentWillUnmount()
+  {
+    const appBody = this.props.appBody;
+
+    if (appBody) appBody.removeEventListener('scroll', this.handleScroll);
   }
 
   handleCommentBox(open) {

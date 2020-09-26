@@ -27,9 +27,7 @@ class Pois extends Component {
       <div id="Pois">
         {this.state.loading && <Loader />}
         {!this.state.loading && (
-          <div>
-            <Map pois={this.state.pois} use="pois-map" />
-          </div>
+          <Map pois={this.state.pois} use="pois-map" />
         )}
       </div>
     );

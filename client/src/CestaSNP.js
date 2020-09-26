@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Router, Switch, Route } from 'react-router';
 
 import LogRocket from 'logrocket';
@@ -21,14 +21,48 @@ import { AuthProvider } from './components/AuthContext';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
-const CestaSNP = () => (
+class CestaSNP extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      fillContent: false
+    };
+  }
+
+  removeListener = null;
+
+  pathChanged(path)
+  {
+    const newState = (path == "/na/ceste" || path == "/pred/pois");
+      
+    if (this.state.fillContent != newState)
+      this.setState({
+        fillContent: newState
+      });
+  }
+
+  componentDidMount() {
+    this.pathChanged(window.location.pathname);
+
+    this.removeListener = history.listen((params) => {
+      this.pathChanged(params.pathname);
+    });
+  }
+
+  componentWillUnmount() {
+    this.removeListener();
+  }
+
+  render() {
+    return (
   <div className="app">
     <AuthProvider>
       <div className="app-header">
         <Navigation />
       </div>
-      <div className="app-body">
-        <div className="content-wrap">
+      <div className={this.state.fillContent ? "app-body fill" : "app-body"} ref={(elem)=>{this.appBody=elem}}>
+        <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
           <Router history={history}>
             <Switch>
               <Route exact path="/" component={Home} />
@@ -45,7 +79,7 @@ const CestaSNP = () => (
               <Route exact path="/na/ceste" component={Active} />
               <Route exact path="/na/ceste/light" component={ActiveLight} />
               <Route exact path="/na/archive" component={Archive} />
-              <Route path="/na/:traveller" component={Traveller} />
+              <Route path="/na/:traveller" render={(props) => (<Traveller {...props} appBody={this.appBody} />)}/>
               <Route exact path="/kontakt" component={Kontakt} />
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" component={Account} />
@@ -56,6 +90,7 @@ const CestaSNP = () => (
       </div>
     </AuthProvider>
   </div>
-);
+  );}
+}
 
 export default CestaSNP;
