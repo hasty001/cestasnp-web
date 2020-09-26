@@ -191,9 +191,10 @@ router.get('/activeTravellers', (req, res) => {
 
 router.post('/addComment', (req, res) => {
   if (
-    req.body['g-recaptcha-response'] === undefined ||
+    !req.body.uid &&  
+    (req.body['g-recaptcha-response'] === undefined ||
     req.body['g-recaptcha-response'] === '' ||
-    req.body['g-recaptcha-response'] === null
+    req.body['g-recaptcha-response'] === null)
   ) {
     res.json({ responseError: 'Please select captcha first' });
     return;
@@ -204,11 +205,26 @@ router.post('/addComment', (req, res) => {
   // + '&remoteip=' +
   // req.connection.remoteAddress;
 
-  request(verificationURL, (error, response, body) => {
-    // TODO - new cost
-    // eslint-disable-next-line no-param-reassign
-    body = JSON.parse(body);
-    if (body.success) {
+  const processAddComment = (callback) =>
+    {
+      if (req.body.uid) {
+        checkToken(req, res, req.body.uid, callback);
+      } else {
+       request(verificationURL, (error, response, body) => {
+          // TODO - new cost
+          // eslint-disable-next-line no-param-reassign
+          body = JSON.parse(body);
+          if (body.success) {   
+            callback();
+          } else {
+            res.json({ responseError: 'Failed captcha verification' });
+          }
+        });
+      }
+    };
+
+    processAddComment(() =>
+    {
       const comment = {};
       if (req.body.articleId !== 0 && req.body.articleId !== '') {
         // old system of comments relating to sql article id from Joomla
@@ -262,15 +278,18 @@ router.post('/addComment', (req, res) => {
         comment.travellerDetails.name = sTravellerName;
         const sDate = sanitize(req.body.date);
         comment.date = sDate;
+        const sUid = sanitize(req.body.uid);
+        if (sUid.length <= 3) {
+          sUid = parseInt(sUid, 10);
+        }
+        comment.uid = sUid;
 
         db.addCommentNewTraveller(comment, com => {
+          com.cesta = req.body.cesta;
           res.json(com);
         });
       }
-    } else {
-      res.json({ responseError: 'Failed captcha verification' });
-    }
-  });
+    });
 });
 
 router.post('/userCheck', (req, res) => {

@@ -725,7 +725,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 .modal-header {
   border-bottom: 0px;
-  padding: 5px 15px;
+  padding: 15px 15px 5px 15px;
 }
 
 .modal-body {
@@ -735,7 +735,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .modal-footer {
   border-top: 0px;
   text-align: center;
-  padding: 5px 15px;
+  padding: 10px 15px 15px 15px;
 }
 
 .comment-box {
@@ -769,6 +769,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
   height: 150px;
   border: 1px solid lightgrey;
+  resize: vertical;
 }
 
 .nameInput {
@@ -779,7 +780,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 .commentLabel {
   display: block;
-  margin: 5px;
+  margin: 0 0 15px 0;
 }
 
 /***   COMMENTBOX   ***/

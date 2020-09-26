@@ -306,8 +306,43 @@ DB.prototype = {
               .find({ 'travellerDetails.id': sTravellerId })
               .toArray((toArrayErr, docs) => {
                 if (docs) {
-                  db.close();
-                  callback(docs);
+                  const uids = docs.filter(d => d.uid).map(d => d.uid);
+
+                  db.db('cestasnp')
+                    .collection('users')
+                    .find({ $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] })
+                    .toArray((e, users) => {
+
+                      db.db('cestasnp')
+                        .collection('traveler_details')
+                        .find({ user_id : { $in: uids } })
+                        .toArray((e, details) => {
+
+
+                        users.forEach(u => {
+                          const cesta = details.find(t => t.user_id === u.uid || t.user_id === u.sql_user_id);
+                          if (cesta)
+                          {
+                              u.name = cesta.meno;
+                              u.cesta = true;
+                          }
+                        });
+
+                        docs.forEach(d => {
+                          if (d.uid) {
+                            const user = users.find(u => u.uid === d.uid || u.sql_user_id === d.uid);
+                            if (user) {
+                              d.name = user.name;
+                              d.cesta = user.cesta;
+                            }
+                          }
+
+                        });
+                        
+                        db.close();
+                        callback(docs);
+                      });
+                    });
                 } else {
                   db.close();
                   throw toArrayErr;

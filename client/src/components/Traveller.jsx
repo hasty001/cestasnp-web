@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Button } from 'react-bootstrap';
 
 import Map from './Map';
@@ -137,6 +137,8 @@ class Traveller extends Component {
                   }
                   newComment.text = comment.comment;
                   newComment.id = comment._id;
+                  newComment.uid = comment.uid;
+                  newComment.cesta = comment.cesta;
                   travellerMessages.push(newComment);
                 });
                 this.sortMessages(travellerMessages, this.state.orderFromOld);
@@ -218,6 +220,8 @@ class Traveller extends Component {
     newComment.username = comment.name;
     newComment.text = comment.comment;
     newComment.id = comment._id;
+    newComment.uid = comment.uid;
+    newComment.cesta = comment.cesta;
     updatedComments.push(newComment);
     this.sortMessages(updatedComments, this.state.orderFromOld);
     this.setState({
@@ -316,7 +320,15 @@ class Traveller extends Component {
                         aria-hidden="true"
                         style={{ color: '#ccc2c2' }}
                       />
-                      {` ${dateTimeToStr(message.date)} ${message.username} `}
+                      {` ${dateTimeToStr(message.date)} `}
+                      {message.cesta ? 
+                        (
+                          <Fragment>
+                            <a href={`/na/${message.uid}`}>{message.username}</a>
+                            {` `}
+                          </Fragment>)
+                        : `${message.username} `
+                      }
                       <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár">🔗</a>
                     </p>
                     <p dangerouslySetInnerHTML={{ __html: message.text }} />
