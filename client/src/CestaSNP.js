@@ -26,8 +26,11 @@ class CestaSNP extends Component {
     super(props);
 
     this.state = {
-      fillContent: false
+      fillContent: false,
+      scrollTop: 0,
     };
+
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   removeListener = null;
@@ -54,6 +57,12 @@ class CestaSNP extends Component {
     this.removeListener();
   }
 
+  handleScroll(event) {
+    const scrollTop = event.target.scrollTop;
+    if (scrollTop != this.state.scrollTop)
+      this.setState({ scrollTop: event.target.scrollTop });
+  }
+
   render() {
     return (
   <div className="app">
@@ -61,7 +70,7 @@ class CestaSNP extends Component {
       <div className="app-header">
         <Navigation />
       </div>
-      <div className={this.state.fillContent ? "app-body fill" : "app-body"} ref={(elem)=>{this.appBody=elem}}>
+      <div className={this.state.fillContent ? "app-body fill" : "app-body"} onScroll={this.handleScroll}>
         <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
           <Router history={history}>
             <Switch>
@@ -79,7 +88,7 @@ class CestaSNP extends Component {
               <Route exact path="/na/ceste" component={Active} />
               <Route exact path="/na/ceste/light" component={ActiveLight} />
               <Route exact path="/na/archive" component={Archive} />
-              <Route path="/na/:traveller" render={(props) => (<Traveller {...props} appBody={this.appBody} />)}/>
+              <Route path="/na/:traveller" render={(props) => (<Traveller {...props} scrollTop={this.state.scrollTop} />)}/>
               <Route exact path="/kontakt" component={Kontakt} />
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" component={Account} />

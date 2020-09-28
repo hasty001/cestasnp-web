@@ -27,7 +27,7 @@ class Traveller extends Component {
         completed: ''
       },
       travellerMessages: '',
-      showCommentBtn: false,
+      showCommentBtn: this.props.scrollTop > Constants.ShowCommentBoxScrollOffset,
       showCommentBox: false,
       showImageBox: false,
       imageUrl: '',
@@ -41,7 +41,6 @@ class Traveller extends Component {
     this.handleOrderClick = this.handleOrderClick.bind(this);
 
     this.sortMessages = this.sortMessages.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
@@ -172,35 +171,14 @@ class Traveller extends Component {
         });
         throw e;
       });
-
-    const appBody = this.props.appBody;
-    if (appBody) appBody.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillReceiveProps(newProps){
-    const appBody = newProps.appBody;
-    if (appBody && newProps.appBody !== this.props.appBody) appBody.addEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll() {
-    const appBody = this.props.appBody;
-
-    if (!this.state.showCommentBtn && appBody.scrollTop > Constants.ShowCommentBoxScrollOffset) {
+    const showCommentBtn = newProps.scrollTop > Constants.ShowCommentBoxScrollOffset;
+    if (showCommentBtn != this.state.showCommentBtn)
       this.setState({
-        showCommentBtn: true
+        showCommentBtn: showCommentBtn
       });
-    } else if (this.state.showCommentBtn && appBody.scrollTop <= Constants.ShowCommentBoxScrollOffset) {
-      this.setState({
-        showCommentBtn: false
-      });
-    }
-  }
-
-  componentWillUnmount()
-  {
-    const appBody = this.props.appBody;
-
-    if (appBody) appBody.removeEventListener('scroll', this.handleScroll);
   }
 
   handleCommentBox(open) {
