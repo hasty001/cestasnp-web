@@ -10,13 +10,13 @@ moment.tz.setDefault('Europe/Vienna');
 const CommentBox = (props) => {
   const authData = useContext(AuthContext);
   return (
-    <>
+    <Fragment>
       {!authData.authProviderMounted ? (
         <Loader />
       ) : (
         <CommentBoxWithAuth {...props} userData={authData.isAuth ? authData : null} />
       )}
-    </>
+    </Fragment>
   );
 };
 
@@ -160,14 +160,14 @@ class CommentBoxWithAuth extends Component {
   }
 
   render() {
+    const { userData, articleID, visitorIp, 
+      updateTravellerComments, travellerId, travellerName, ...modalProps } = this.props;
     return (
       <div id="CommentBox">
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <Modal
-            {...this.props}
-            show={this.props.show}
-            onHide={this.props.onHide}
+            {...modalProps}
             dialogClassName="comment-box"
             style={{ marginTop: '100px' }}
           >

@@ -258,8 +258,14 @@ router.post('/addComment', (req, res) => {
         comment.article_sql_id = sArticleId;
         const sDate = sanitize(req.body.date);
         comment.date = sDate;
+        const sUid = sanitize(req.body.uid);
+        if (sUid.length <= 3) {
+          sUid = parseInt(sUid, 10);
+        }
+        comment.uid = sUid;
 
         db.addCommentOldTraveller(comment, com => {
+          com.cesta = req.body.cesta;
           res.json(com);
         });
       } else {
@@ -290,6 +296,18 @@ router.post('/addComment', (req, res) => {
         });
       }
     });
+});
+
+router.post('/deleteComment', (req, res) => {
+  const { id, uid, articleId } = req.body;
+
+  checkToken(req, res, uid, () =>
+  db.deleteComment(
+    id, uid, articleId,
+    resp => {
+      res.json(resp);
+    }
+  ));
 });
 
 router.post('/userCheck', (req, res) => {
@@ -391,6 +409,18 @@ router.post('/sendMessage', (req, res) => {
         res.json(resp);
       }
     ));
-});
+  });
+
+router.post('/deleteMessage', (req, res) => {
+  const { id, uid } = req.body;
+
+  checkToken(req, res, uid, () =>
+    db.deleteMessage(
+      id, uid,
+      resp => {
+        res.json(resp);
+      }
+    ));
+  });
 
 module.exports = router;

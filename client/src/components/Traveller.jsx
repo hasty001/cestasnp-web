@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useContext } from 'react';
 import { Button } from 'react-bootstrap';
 
 import Map from './Map';
@@ -8,8 +8,17 @@ import CommentBox from './reusable/CommentBox';
 import ImageBox from './reusable/ImageBox';
 import { dateToStr, dateTimeToStr } from '../helpers/helpers';
 import * as Constants from './Constants';
+import { AuthContext } from './AuthContext';
+import ConfirmBox from './reusable/ConfirmBox';
 
-class Traveller extends Component {
+const Traveller = (props) => {
+  const authData = useContext(AuthContext);
+  return (
+    <TravellerWithAuth {...props} userData={authData.authProviderMounted && authData.isAuth ? authData : null} />
+  );
+};
+
+class TravellerWithAuth extends Component {
   constructor(props) {
     super(props);
 
@@ -32,14 +41,21 @@ class Traveller extends Component {
       showImageBox: false,
       imageUrl: '',
       visitorIp: '',
-      orderFromOld: false, 
+      orderFromOld: false,
+      deleteCommentId: null,
+      showConfirmDeleteComment: false,
+      deleteMessageId: null,
+      showConfirmDeleteMessage: false,
     };
 
     this.handleCommentBox = this.handleCommentBox.bind(this);
     this.handleImageBox = this.handleImageBox.bind(this);
     this.updateTravellerComments = this.updateTravellerComments.bind(this);
     this.handleOrderClick = this.handleOrderClick.bind(this);
-
+    this.handleDeleteCommentClick = this.handleDeleteCommentClick.bind(this);
+    this.handleDeleteComment = this.handleDeleteComment.bind(this);
+    this.handleDeleteMessageClick = this.handleDeleteMessageClick.bind(this);
+    this.handleDeleteMessage = this.handleDeleteMessage.bind(this);
     this.sortMessages = this.sortMessages.bind(this);
   }
 
@@ -183,6 +199,119 @@ class Traveller extends Component {
       });
   }
 
+  handleDeleteMessageClick(event) {
+    event.preventDefault();
+
+    this.setState({ deleteMessageId: event.currentTarget.dataset.msgid, showConfirmDeleteMessage: !!event.currentTarget.dataset.msgid });
+  }
+
+  handleDeleteMessage(confirmed) {
+    if (confirmed) {
+      const updatedMessages = this.state.travellerMessages;
+
+      var error = "";
+      var success = "";
+
+      this.props.userData.user.getIdToken().then(token => 
+        fetch('/api/traveller/deleteMessage', {
+          method: 'POST',
+          body: JSON.stringify({ 
+            id: this.state.deleteMessageId, 
+            uid: this.props.userData.userDetails.uid }),
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'X-Auth-Token': token,
+          })
+        })
+      .then(res => res.json())
+      .then(msg => {
+        if (msg.error) {
+          console.error(msg.error);
+          error = 'Ups, niekde sa stala chyba. Skús neskôr prosím';
+        } else {
+          success = 'Správa bola uspešne zmazaná.';
+        }
+      }))
+      .catch(err => {
+        console.error(err);
+        error = 'Ups, niekde sa stala chyba. Skús neskôr prosím';
+      }).then(() =>
+      {
+        updatedMessages.forEach(msg => {
+            msg.error = msg.id === this.state.deleteMessageId ? error : "";
+            msg.success = msg.id === this.state.deleteMessageId ? success : "";
+            msg.deleted = msg.deleted || (msg.id === this.state.deleteMessageId && success);
+          });
+        
+        this.setState({
+          travellerMessages: updatedMessages,
+          showConfirmDeleteMessage: false 
+        });
+      });
+    } else {
+      this.setState({
+        showConfirmDeleteMessage: false 
+      });
+    }
+  }
+
+  handleDeleteCommentClick(event) {
+    event.preventDefault();
+
+    this.setState({ deleteCommentId: event.currentTarget.dataset.msgid, showConfirmDeleteComment: !!event.currentTarget.dataset.msgid });
+  }
+
+  handleDeleteComment(confirmed) {
+    if (confirmed) {
+      const updatedComments = this.state.travellerMessages;
+
+      var error = "";
+      var success = "";
+
+      this.props.userData.user.getIdToken().then(token => 
+        fetch('/api/traveller/deleteComment', {
+          method: 'POST',
+          body: JSON.stringify({ 
+            id: this.state.deleteCommentId, 
+            uid: this.props.userData.userDetails.uid,
+            articleId: this.state.travellerData.articleID }),
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'X-Auth-Token': token,
+          })
+        })
+      .then(res => res.json())
+      .then(comment => {
+        if (comment.error) {
+          console.error(comment.error);
+          error = 'Ups, niekde sa stala chyba. Skús neskôr prosím';
+        } else {
+          success = 'Komentár bol uspešne zmazaný.';
+        }
+      }))
+      .catch(err => {
+        console.error(err);
+        error = 'Ups, niekde sa stala chyba. Skús neskôr prosím';
+      }).then(() =>
+      {
+        updatedComments.forEach(msg => {
+            msg.error = msg.id === this.state.deleteCommentId ? error : "";
+            msg.success = msg.id === this.state.deleteCommentId ? success : "";
+            msg.deleted = msg.deleted || (msg.id === this.state.deleteCommentId && success);
+          });
+        
+        this.setState({
+          travellerMessages: updatedComments,
+          showConfirmDeleteComment: false 
+        });
+      });
+    } else {
+      this.setState({
+        showConfirmDeleteComment: false 
+      });
+    }
+  }
+
   handleCommentBox(open) {
     this.setState({ showCommentBox: open });
   }
@@ -214,6 +343,12 @@ class Traveller extends Component {
 
   updateTravellerComments(comment) {
     const updatedComments = this.state.travellerMessages;
+
+    updatedComments.forEach(msg => {
+      msg.error = "";
+      msg.success = "";
+    });
+
     const newComment = {};
     newComment.type = 'comment';
     newComment.date = comment.date;
@@ -224,6 +359,9 @@ class Traveller extends Component {
     newComment.cesta = comment.cesta;
     updatedComments.push(newComment);
     this.sortMessages(updatedComments, this.state.orderFromOld);
+
+    window.location.hash = "#" + newComment.id;
+
     this.setState({
       travellerMessages: updatedComments
     });
@@ -257,8 +395,18 @@ class Traveller extends Component {
 
             <div className="na-ceste-traveller-msgs">
               {this.state.travellerMessages.map((message, i) => {
+                const error = <Fragment>{!!message.error && (<p className="errorMsg">{message.error}</p>)}</Fragment>;
+                const success = <Fragment>{!!message.success && (<p className="successMsg">{message.success}</p>)}</Fragment>;
+                  
                 if (message.type === 'message') {
                   var divClassName = "traveller-message";
+
+                  if (message.deleted) {
+                    return (<div key={i} className={divClassName + "-deleted"}>
+                        {error}
+                        {success}
+                      </div>);
+                  }
 
                   if (window.location.hash === "#" + message.id)
                   {
@@ -268,6 +416,17 @@ class Traveller extends Component {
                   return (
                     <div key={i} className={divClassName}>
                       <div id={message.id} className="traveller-message-scrolllink" />
+                      {error}
+                      {success}
+                      <p>
+                        <span className="red-stripe" />
+                        {`${dateTimeToStr(message.date)} ${message.username}`}
+                        <span className="traveller-message-actions">
+                        {(this.props.userData && (this.state.travellerId == this.props.userData.userDetails.uid)) && 
+                          (<a href="#" data-msgid={message.id} onClick={this.handleDeleteMessageClick} className="traveller-message-delete" title="zmazať správu"><i className="fas fa-trash-alt"/></a>)}
+                        <a href={`#${message.id}`} className="traveller-message-link" title="odkaz na správu"><i className="fas fa-link"/></a>
+                        </span>
+                      </p>
                       {message.img !== 'None' && message.img !== null && (
                         <img
                           src={
@@ -293,18 +452,20 @@ class Traveller extends Component {
                             );
                           }}
                         />
-                      )}
-                      <div className="red-stripe" />
-                      <p style={{ display: 'inline-block' }}>
-                        {`${dateTimeToStr(message.date)} ${message.username} `}
-                        <a href={`#${message.id}`} className="traveller-message-link" title="odkaz na správu">🔗</a>
-                      </p>
+                      )}                      
                       <p dangerouslySetInnerHTML={{ __html: message.text }} />
                     </div>
                   );
                 }
 
                 var divClassName = "traveller-comment";
+
+                if (message.deleted) {
+                  return (<div key={i} className={divClassName + "-deleted"}>
+                      {error}
+                      {success}
+                    </div>);
+                }
 
                 if (window.location.hash === "#" + message.id)
                 {
@@ -314,12 +475,12 @@ class Traveller extends Component {
                 return (
                   <div key={i} className={divClassName}>
                     <div id={message.id} className="traveller-comment-scrolllink" />
+                    {error}
+                    {success}
+                    <div style={{ float: "left", marginRight: "4px" }} >
+                      <i className="fa fa-comment" aria-hidden="true" style={{ color: '#ccc2c2' }} />
+                    </div>
                     <p>
-                      <i
-                        className="fa fa-comment"
-                        aria-hidden="true"
-                        style={{ color: '#ccc2c2' }}
-                      />
                       {` ${dateTimeToStr(message.date)} `}
                       {message.cesta ? 
                         (
@@ -327,9 +488,15 @@ class Traveller extends Component {
                             <a href={`/na/${message.uid}`}>{message.username}</a>
                             {` `}
                           </Fragment>)
-                        : `${message.username} `
+                        : `${message.username}`
                       }
-                      <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár">🔗</a>
+                      <span className="traveller-comment-actions">
+                        {(this.props.userData 
+                          && (message.uid === this.props.userData.userDetails.uid 
+                            || (this.state.travellerId == this.props.userData.userDetails.uid))) && 
+                          (<a href="#" data-msgid={message.id} onClick={this.handleDeleteCommentClick} className="traveller-comment-delete" title="zmazať komentár"><i className="fas fa-trash-alt"/></a>)}
+                        <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár"><i className="fas fa-link"/></a>
+                      </span>
                     </p>
                     <p dangerouslySetInnerHTML={{ __html: message.text }} />
                   </div>
@@ -349,7 +516,6 @@ class Traveller extends Component {
             <CommentBox
               show={this.state.showCommentBox}
               onHide={() => this.handleCommentBox(false)}
-              dialogClassName="comment-box"
               articleID={this.state.travellerData.articleID}
               visitorIp={this.state.visitorIp}
               updateTravellerComments={this.updateTravellerComments}
@@ -361,6 +527,24 @@ class Traveller extends Component {
               show={this.state.showImageBox}
               onHide={() => this.handleImageBox(false)}
               url={this.state.imageUrl}
+            />
+
+            <ConfirmBox
+              title="Zmazať komentár"
+              text="Naozaj chcete zmazať tento komentár?"
+              confirmText="Zmazať"
+              show={this.state.showConfirmDeleteComment}
+              onConfirm={() => this.handleDeleteComment(true)}
+              onHide={() => this.handleDeleteComment(false)}
+            />
+
+            <ConfirmBox
+              title="Zmazať správu"
+              text="Naozaj chcete zmazať túto správu?"
+              confirmText="Zmazať"
+              show={this.state.showConfirmDeleteMessage}
+              onConfirm={() => this.handleDeleteMessage(true)}
+              onHide={() => this.handleDeleteMessage(false)}
             />
           </div>
         )}
