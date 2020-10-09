@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const { getMeta } = require('./server/meta');
 
 const app = express();
 const http = require('http').Server(app);
@@ -40,7 +42,18 @@ app.use('/api/traveller', require('./server/controllers/traveller'));
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
 app.get('/*', (req, res) => {
-  res.sendFile('index.html', { root });
+  fs.readFile(path.join(root, 'index.html'), 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return res.status(500).send('An error occurred')
+    }
+
+    getMeta(req.path, (meta, title) => res.send(
+      data.replace(
+        '<!-- SSR META -->',
+        `<!-- SSR META INSERTED -->
+${meta}`).replace('<title>CestaSNP</title>', `<title>${title}</title>`)));
+  })
 });
 
 http.listen(process.env.PORT || 3000, () => {
