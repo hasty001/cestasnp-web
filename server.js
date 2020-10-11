@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs').promises;
 const { getMeta } = require('./server/meta');
 
 const app = express();
@@ -42,18 +42,34 @@ app.use('/api/traveller', require('./server/controllers/traveller'));
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
 app.get('/*', (req, res) => {
-  fs.readFile(path.join(root, 'index.html'), 'utf8', (err, data) => {
-    if (err) {
-      console.error(err)
-      return res.status(500).send('An error occurred')
-    }
+  fs.readFile(path.join(root, 'index.html'), 'utf8').then((data) => 
+    getMeta(req.path).then(({ meta, title }) => 
+    {
+      var pageTitle = "";
+      if (!pageTitle) {
+        pageTitle = 'CestaSNP';
+      }
+      if (!pageTitle.endsWith('CestaSNP')) {
+        pageTitle += ' - CestaSNP';
+      }
 
-    getMeta(req.path, (meta, title) => res.send(
-      data.replace(
-        '<!-- SSR META -->',
-        `<!-- SSR META INSERTED -->
-${meta}`).replace('<title>CestaSNP</title>', `<title>${title}</title>`)));
-  })
+      res.send(meta ? 
+        data
+          .replace(/<!-- SSR META -->.*<!-- SSR META -->/s,
+            `<!-- SSR META INSERTED -->${meta||''}\n<!-- SSR META INSERTED -->`)
+          .replace('<title>CestaSNP</title>', `<title>${pageTitle}</title>`) :
+          data
+            .replace('<title>CestaSNP</title>', `<title>${pageTitle}</title>`));
+    })
+    .catch((error) => {
+      console.error(error);
+      res.send(data);
+    })
+    )
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('An error occurred');
+    });
 });
 
 http.listen(process.env.PORT || 3000, () => {
