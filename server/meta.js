@@ -1,6 +1,5 @@
 const DB = require('./db/db');
 const sanitize = require('mongo-sanitize');
-const { call } = require('file-loader');
 
 const db = new DB();
 
