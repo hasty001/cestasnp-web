@@ -452,7 +452,7 @@ class TravellerWithAuth extends Component {
                             );
                           }}
                         />
-                      )}                      
+                        )}                 
                       <p dangerouslySetInnerHTML={{ __html: message.text }} />
                     </div>
                   );
@@ -477,17 +477,13 @@ class TravellerWithAuth extends Component {
                     <div id={message.id} className="traveller-comment-scrolllink" />
                     {error}
                     {success}
-                    <div style={{ float: "left", marginRight: "4px" }} >
-                      <i className="fa fa-comment" aria-hidden="true" style={{ color: '#ccc2c2' }} />
-                    </div>
                     <p>
+                      <div style={{ float: "left", marginRight: "4px" }} >
+                        <i className="fa fa-comment" aria-hidden="true" style={{ color: '#ccc2c2' }} />
+                      </div>                    
                       {` ${dateTimeToStr(message.date)} `}
                       {message.cesta ? 
-                        (
-                          <Fragment>
-                            <a href={`/na/${message.uid}`}>{message.username}</a>
-                            {` `}
-                          </Fragment>)
+                        (<a href={`/na/${message.uid}`}>{message.username}</a>)
                         : `${message.username}`
                       }
                       <span className="traveller-comment-actions">
