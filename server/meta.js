@@ -20,7 +20,7 @@ const escapeDate = (date) => {
 }
 
 const getPublisher = () => 
-  `publisher": {
+  `"publisher": {
                   "@type": "Organization",
                     "@id": "cestasnp.sk",
                   "name": "Občianske združenie CestaSNP.sk",
@@ -33,7 +33,7 @@ const getPublisher = () =>
                   },
                   "logo": {
                     "@type": "ImageObject",
-                    "url": "https://cestasnp.sk/img/logo.png",
+                    "url": "https://cestasnp.sk/logo.png",
                     "width": 4544,
                     "height": 1000
                   }
