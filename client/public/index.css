@@ -827,13 +827,16 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     margin-right: 10px;   
   }
   .active-travellers-box #NaCesteActiveLight {
-    max-height: 200px;
+    max-height: 350px;
     overflow-y: auto;   
   }
-  .active-traveller-item {
+  .active-travellers-box .active-traveller-item {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow-x: hidden;
+  }
+  .active-travellers-box .active-travellers-info {
+    white-space: normal;
   }
 }
 
@@ -1516,3 +1519,55 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 .for-floating-loader {
   position: relative;
 }
+
+.simple-masonry {
+  position: relative;
+  margin-bottom: 5px;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.simple-masonry-item {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  margin-right: 5px;
+}
+
+.simple-masonry-item .inner {
+  margin-bottom: 5px;
+}
+
+.simple-masonry-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.simple-masonry-image:hover {
+  filter: brightness(50%);
+}
+
+.simple-masonry-image-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  visibility: hidden;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  white-space: normal;
+  text-align: center;
+  pointer-events: none;
+}
+
+.simple-masonry-image:hover + .simple-masonry-image-title {
+  visibility: visible;
+}
+  

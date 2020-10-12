@@ -5,6 +5,8 @@ const moment = require('moment-timezone');
 const { ObjectId } = require('mongodb');
 const Validation = require('./validation');
 const { getNearGuideposts, findNearestGuideposts, findNearestPoint } = require('../util/gpsUtils');
+const { format } = require('date-fns');
+const _const = require('../../const');
 
 const securityCheck = new Validation();
 
@@ -137,6 +139,14 @@ DB.prototype = {
         .sort(sortBy)
         .limit(1)
         .toArray();
+  },
+  
+  findByWithDB(db, collection, findBy = {}, options = {}, sortBy = {}) {
+    return db.db('cestasnp')
+              .collection(collection)
+              .find(findBy, options)
+              .sort(sortBy)
+              .toArray();
   },
 
   countCollection(collection, findBy = {}, callback) {
@@ -468,6 +478,114 @@ DB.prototype = {
       );
     });
   },
+
+  getInterestingFinishedTravellers(db, maxCount = _const.InterestingShowCount) {
+    const start = format(new Date() - _const.InterestingPrevMonths * 31 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD');
+              
+    return this.findByWithDB(db, 'traveler_details', { 
+      $and: [{ finishedTracking: true}, { $or: [{start_date: { $gte: start }}, {end_date: { $gte: start }}]}] })
+      .then(finished => {
+
+        const finishedIds = finished.map(t => t.articleID ? t.articleID : t._id.toString() );
+        const finishedUserIds = finished.map(t => t.user_id );
+
+        const listCommentsOld = this.findByWithDB(db, 'article_comments', 
+          { $and: [{ article_sql_id: { $in: finishedIds } }, { deleted: { $ne: true }}] });
+        const listCommentsNew = this.findByWithDB(db, 'traveler_comments', 
+          { $and: [{ 'travellerDetails.id': { $in: finishedIds } }, { deleted: { $ne: true }}] });
+        const listMessages = this.findByWithDB(db, 'traveler_messages', 
+          { $and: [{ user_id: { $in: finishedUserIds } }, { deleted: { $ne: true }}] }, {}, { pub_date: 1 });
+
+        return Promise.all([listCommentsOld, listCommentsNew, listMessages])
+        .then(([oldComments, newComments, msgs]) => {
+
+          finished.forEach(f => {
+            f.rating = 0;
+          });
+
+          oldComments.forEach(c => { 
+            const found = finished.find(f => f.articleID === c.article_sql_id);
+            if (found) {
+              found.rating += _const.CommentRating;
+            }
+          });
+
+          newComments.forEach(c => { 
+            const found = finished.find(f => f._id.toString() === c.travellerDetails.id);
+            if (found) {
+              found.rating += _const.CommentRating;
+            }
+          });
+
+          msgs.forEach(m => { 
+            const found = finished.find(f => f.user_id === m.user_id);
+            const hasImg = (m.img && m.img != 'None');
+            if (found) {
+              found.rating += (hasImg ? _const.ImageRating : 0)
+                + m.text.length * _const.TextRatingPerChar;
+              if (hasImg && !found.lastImg && m.pub_date >= start) {
+                found.lastImg = m.img;
+                found.lastImgMsgId = m._id;
+              }
+            }
+          });
+
+          // sort by rating desc and throw out with small rating
+          finished.sort((a, b) => b.rating - a.rating);
+          var best = finished.filter(f => f.rating > _const.MinRating);
+          best = best.slice(0, Math.max(2, best.length / 2));
+          
+          // sort by start date asc
+          best.sort((a, b) => a.start_date > b.start_date ? 1 : (a.start_date == b.start_date ? 0 : -1));
+        
+          // take first three
+          return Promise.resolve(best.slice(0, maxCount));
+        });
+      });
+  },
+
+  getActiveTravellersWithLastMessage() {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,{ useNewUrlParser: true })
+      .then(db => 
+          this.findByWithDB(db, 'traveler_details', { finishedTracking: false })
+          .then(activeTravellers => {
+            var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
+              
+            if (activeTravellersIds.length === 0) {
+              return this.getInterestingFinishedTravellers(db);          
+          } else {
+            return this.findByWithDB(db, 'traveler_messages', { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
+              {}, { pub_date: -1 })
+              .then(lastMessages => {
+                if (lastMessages) { 
+                  lastMessages.map(msg => {
+                      var i = activeTravellersIds.indexOf(msg.user_id);
+
+                      if (i >= 0 && !activeTravellers[i].lastMessage) {
+                        activeTravellers[i].lastMessage = msg;
+                      }
+                      if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
+                        activeTravellers[i].lastImg = msg.img;
+                        activeTravellers[i].lastImgMsgId = msg._id;
+                      }
+                    });
+                }
+                  
+                const now = format(new Date(), 'YYYY-MM-DD');
+                if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < _const.InterestingShowCount) {
+                  // no active only few planning, add some interesting
+
+                  return this.getInterestingFinishedTravellers(db, _const.InterestingShowCount - activeTravellers.length)
+                    .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
+                }
+
+                return Promise.resolve(activeTravellers);
+              });
+          }
+      }).finally(() => db.close())
+    )},
+
 
   addCommentOldTraveller(comment, callback) {
     MongoClient.connect(

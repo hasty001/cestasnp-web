@@ -11,7 +11,6 @@ import { AuthContext } from './AuthContext';
 import ConfirmBox from './reusable/ConfirmBox';
 import UserLabel from './reusable/UserLabel';
 import DocumentTitle from 'react-document-title';
-import { A } from './reusable/Navigate';
 import history from '../helpers/history';
 
 const Traveller = (props) => {
