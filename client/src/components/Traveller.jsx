@@ -10,6 +10,7 @@ import { dateToStr, dateTimeToStr } from '../helpers/helpers';
 import * as Constants from './Constants';
 import { AuthContext } from './AuthContext';
 import ConfirmBox from './reusable/ConfirmBox';
+import history from '../helpers/history';
 
 const Traveller = (props) => {
   const authData = useContext(AuthContext);
@@ -61,7 +62,7 @@ class TravellerWithAuth extends Component {
 
   componentDidMount() {
 
-    var orderFromOld = (window.location.hash === "#from-old");
+    var orderFromOld = (window.location.search == Constants.FromOldQuery);
     if (orderFromOld != this.state.orderFromOld)
       this.setState({
         orderFromOld: orderFromOld
@@ -328,10 +329,17 @@ class TravellerWithAuth extends Component {
     e.preventDefault();
 
     var order = !this.state.orderFromOld;
-    this.setState({
-      orderFromOld: order,
-      travellerMessages: this.sortMessages(this.state.travellerMessages, order)
-    });
+
+    if (!window.history.pushState) {
+      history.push((order ? Constants.FromOldQuery : "?") + window.location.hash);
+    } else {
+      window.history.pushState(null, null, (order ? Constants.FromOldQuery : "?") + window.location.hash);
+
+      this.setState({
+        orderFromOld: order,
+        travellerMessages: this.sortMessages(this.state.travellerMessages, order)
+      });
+    }
   }
 
   handleImageBox(open, url) {

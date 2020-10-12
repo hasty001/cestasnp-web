@@ -46,7 +46,7 @@ class Home extends Component {
                 <h3 className="no-decoration">LIVE sledovanie</h3>
               </NavItem>     
               
-              <ActiveLight/>
+              <ActiveLight box/>
             </div>
 
             {this.state.articles.map((article, i) => {

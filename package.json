@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js & npm run dev --prefix ./client/ ",
-    "devWin": "start nodemon server.js & start npm run dev --prefix ./client/ ",
+    "devWin": "start nodemon server.js && start npm run dev --prefix ./client/ ",
     "build": "npm run build --prefix ./client/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

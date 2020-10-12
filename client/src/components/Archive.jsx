@@ -3,6 +3,7 @@ import { NavItem } from 'react-bootstrap';
 import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
 import { sortByDateDesc, dateToStr } from '../helpers/helpers';
+import * as Constants from './Constants';
 
 import history from '../helpers/history';
 
@@ -72,7 +73,7 @@ class Archive extends Component {
         </div>
         <NavItem
           onClick={() => {
-            history.push(`/na/${traveller.userId}#from-old`);
+            history.push(`/na/${traveller.userId}${Constants.FromOldQuery}`);
           }}
         >
           Sleduj celé putovanie...

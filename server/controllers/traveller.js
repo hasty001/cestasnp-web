@@ -7,6 +7,8 @@ const moment = require('moment');
 const request = require('request');
 const DB = require('../db/db');
 const {admin} = require('../util/firebase');
+const { format } = require('date-fns');
+const { ObjectId } = require('mongodb');
 
 const db = new DB();
 const router = express.Router();
@@ -84,26 +86,11 @@ router.get('/finishedTravellers', (req, res) => {
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {
-  db.findBy('traveler_details', { finishedTracking: false })
-    .then(activeTravellers => {
-      var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
-
-      db.getTravellersMessages(activeTravellersIds, lastMessages =>  
-        {
-          lastMessages.map(msg => 
-            {
-              var i = activeTravellersIds.indexOf(msg.user_id);
-              if (i >= 0 && !activeTravellers[i].lastMessage)
-                activeTravellers[i].lastMessage = msg;
-            }
-            );
-    
-            return res.json(activeTravellers);
-        }
-      );
-    }).catch(e => {
-      console.error('error ', e);
-    });;
+  db.getActiveTravellersWithLastMessage()
+    .then(data => res.json(data))
+    .catch(e => { 
+      console.error(e);
+      res.status(500).json({ error: e.message })});
   });
 
 router.get('/activeTravellers', (req, res) => {
