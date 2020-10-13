@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const { getMeta } = require('./server/meta');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const http = require('http').Server(app);
@@ -43,7 +44,7 @@ app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
 app.get('/*', (req, res) => {
   fs.readFile(path.join(root, 'index.html'), 'utf8').then((data) => 
-    getMeta(req.path).then(({ meta, title }) => 
+    getMeta(req.app.locals.db, req.path).then(({ meta, title }) => 
     {
       var pageTitle = "";
       if (!pageTitle) {
@@ -72,8 +73,16 @@ app.get('/*', (req, res) => {
     });
 });
 
-http.listen(process.env.PORT || 3000, () => {
-  console.log(
-    `Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`
-  );
-});
+MongoClient.connect(
+  process.env.MONGODB_ATLAS_URI,
+  { useNewUrlParser: true }).then(db => {
+    app.locals.db = db;
+
+    http.listen(process.env.PORT || 3000, () => {
+      console.log(
+        `Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`
+      );
+    });
+  }).catch((error) => {
+    console.error(error);
+  });

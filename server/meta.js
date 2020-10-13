@@ -39,31 +39,52 @@ const getPublisher = () =>
                   }
                 }`;
 
-const getArticleMeta = (articleId) => 
+const getArticleMeta = (dbRef, articleId) => 
   db
-    .findBy('articles', { sql_article_id: articleId })
+    .findByWithDB(dbRef, 'articles', { sql_article_id: articleId })
     .then(results => {
       if (results && results.length > 0) {
         const desc = escape(results[0].ogdesc || results[0].metadesc || 'Toto je starší článok z portálu CestaSNP.sk');
         
         return db
-          .findBy('users', { sql_user_id: results[0].created_by_user_sql_id })
+          .findByWithDB(dbRef, 'users', { sql_user_id: results[0].created_by_user_sql_id })
           .then(user => {  
             const author = user && user.length > 0 ? escape(user[0].name || '') : '';
             const title = escape(results[0].title || 'CestaSNP');
             const url = `https://cestasnp.sk/pred/articles/article/${escape(articleId)}`;
 
+            const imgRegEx = 
+              () => {
+                const res = results[0].introtext && results[0].introtext.match(/["'](https:\/\/res.cloudinary.com\/.*?)["']/);
+                return res && res.length > 1 ? res[1] : null;
+              };
+
+            const lat =
+              () => {
+                const res = results[0].fulltext && results[0].fulltext.match(/(&|&amp;|>|\?)+lat=([0-9\.]+)/);
+                return res && res.length > 2 ? res[2] : '';
+              }; 
+
+            const lon =
+              () => {
+                const res = results[0].fulltext && results[0].fulltext.match(/(&|&amp;|>|\?)+lon=([0-9\.]+)/);
+                return res && res.length > 2 ? res[2] : '';
+              }; 
+
             var meta = `
               <meta name="description" content="${desc}" />
               <meta name="author" content="${author}">
+              <meta name="keywords" content="${escape(results[0].metakey || '')}" />
               <meta property="og:url" content="${url}" />
               <meta property="og:title" content="${title}" />
               <meta property="og:type" content="article" />
               <meta property="og:description" content="${desc}"/>
-              <meta property="og:image" content="${escape(results[0].ogimg || '')}" />
+              <meta property="og:image" content="${escape(results[0].ogimg || imgRegEx() || '')}" />
               <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up)}" />
               <meta property="og:article:modified_time" content="${escapeDate(results[0].modified)}" />
-              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down)}" />`;
+              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down)}" />
+              <meta property="place:location:latitude" content="${escape(lat())}">
+              <meta property="place:location:longitude" content="${escape(lon())}">`;
 
             if (results[0].metakey)
               meta += results[0].metakey.split(",").reduce((res, tag) => res + `
@@ -102,18 +123,18 @@ const getArticleMeta = (articleId) =>
       return Promise.resolve({});
   });
 
-const getTravelerMeta = (userId) => 
+const getTravelerMeta = (dbRef, userId) => 
   db
-    .findBy('traveler_details', { user_id: userId })
+    .findByWithDB(dbRef, 'traveler_details', { user_id: userId })
     .then(results => {
       if (results && results.length > 0) {
         const desc = escape(results[0].text || '');
         
         return db
-          .findBy('users', { $or: [{ sql_user_id: userId }, { uid: userId }] })
+          .findByWithDB(dbRef, 'users', { $or: [{ sql_user_id: userId }, { uid: userId }] })
           .then(user =>   
           db
-          .latest('traveler_messages', { $and: [{ user_id: userId }, { deleted: { $ne: true }}] }, { pub_date: -1 })
+          .latestWithDB(dbRef, 'traveler_messages', { $and: [{ user_id: userId }, { deleted: { $ne: true }}] }, { pub_date: -1 })
           .then(msg => {  
             const author = user && user.length > 0 ? escape(user[0].name || '') : '';
             const title = escape(results[0].meno || '');
@@ -176,7 +197,7 @@ const getTravelerMeta = (userId) =>
       return Promise.resolve({});
   });
 
-const getMeta = (url) =>
+const getMeta = (db, url) =>
 {
   const path = url.toLowerCase();
 
@@ -184,7 +205,7 @@ const getMeta = (url) =>
     const articleId = sanitize(parseInt(url.substr(23)));
 
     if (articleId) {
-      return getArticleMeta(articleId);
+      return getArticleMeta(db, articleId);
     }
   }
 
@@ -198,7 +219,7 @@ const getMeta = (url) =>
     userId = sanitize(userId);
 
     if (userId) {
-      return getTravelerMeta(userId);
+      return getTravelerMeta(db, userId);
     }
   }
 

@@ -123,33 +123,20 @@ DB.prototype = {
     });
   },
 
-  latest(collection, findBy = {}, sortBy = {}) {
-    return new Promise((resolve, reject) => {
-      MongoClient.connect(
-        process.env.MONGODB_ATLAS_URI,
-        { useNewUrlParser: true },
-        (err, db) => {
-          if (db) {
-            db.db('cestasnp')
-              .collection(collection)
-              .find(findBy)
-              .sort(sortBy)
-              .limit(1)
-              .toArray((toArrayError, docs) => {
-                if (docs) {
-                  db.close();
-                  resolve(docs);
-                } else {
-                  db.close();
-                  reject(toArrayError);
-                }
-              });
-          } else {
-            reject(err);
-          }
-        }
-      );
-    });
+  findByWithDB(db, collection, findBy = {}) {
+    return db.db('cestasnp')
+        .collection(collection)
+        .find(findBy)
+        .toArray();
+  },
+
+  latestWithDB(db, collection, findBy = {}, sortBy = {}) {
+    return db.db('cestasnp')
+        .collection(collection)
+        .find(findBy)
+        .sort(sortBy)
+        .limit(1)
+        .toArray();
   },
 
   countCollection(collection, findBy = {}, callback) {
