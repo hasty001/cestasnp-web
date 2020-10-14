@@ -35,8 +35,7 @@ class CestaSNP extends Component {
 
   removeListener = null;
 
-  pathChanged(path)
-  {
+  pathChanged(path) {
     const newState = (path == "/na/ceste" || path == "/pred/pois");
       
     if (this.state.fillContent != newState)

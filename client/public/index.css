@@ -40,6 +40,7 @@ html, body, #root {
   box-sizing: border-box;
   background-color: white;
   flex: 0 1 100px; 
+  -ms-flex: 0 1 auto; /* IE fix */
   width: 100%;
   max-height: 100px;
   color: #545454;
@@ -49,6 +50,7 @@ html, body, #root {
 } @media (max-width: 945px) {
   .app-header {
     flex: 0 1 70px; 
+    -ms-flex: 0 1 auto; /* IE fix */
     max-height: 70px;
   }
 }
