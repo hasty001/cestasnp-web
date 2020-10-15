@@ -69,7 +69,7 @@ class CestaSNP extends Component {
       <div className="app-header">
         <Navigation />
       </div>
-      <div className={this.state.fillContent ? "app-body fill" : "app-body"} onScroll={this.handleScroll}>
+      <div className="app-body" onScroll={this.handleScroll}>
         <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
           <Router history={history}>
             <Switch>

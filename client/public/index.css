@@ -30,17 +30,14 @@ html, body, #root {
   height: 100%;
 }
 .app {
-  display: flex;
-  flex-flow: column;
   width: 100%;
   height: 100%;
 }
 
 .app-header {
+  position: absolute;
   box-sizing: border-box;
   background-color: white;
-  flex: 0 1 100px; 
-  -ms-flex: 0 1 auto; /* IE fix */
   width: 100%;
   max-height: 100px;
   color: #545454;
@@ -49,8 +46,6 @@ html, body, #root {
   border-bottom: 2px solid red;
 } @media (max-width: 945px) {
   .app-header {
-    flex: 0 1 70px; 
-    -ms-flex: 0 1 auto; /* IE fix */
     max-height: 70px;
   }
 }
@@ -105,15 +100,15 @@ body {
 }
 
 .app-body {
-  flex: 1 1 auto;
+  position: absolute;
+  top: 100px;
+  bottom: 0px;
   width: 100%;
   overflow-y: auto;
-}
-
-.app-body.fill {
-  display: flex;
-  flex-flow: column;
-  width: 100%;
+} @media (max-width: 945px) {
+  .app-body {
+    top: 70px;
+  }
 }
 
 /***      BODY      ***/
@@ -341,12 +336,17 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 /***     POIS       ***/
 
 #Pois  {
-  flex: 1;
-  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 #pois-map {
-  flex: 1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 /***     POIS       ***/
@@ -424,11 +424,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 /***    NA CESTE    ***/
 
 #NaCesteActive {
-  flex: 1;
-  display: flex;
-  flex-flow: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
   width: 100%;
-  position: relative;
 }
 
 /***    NA CESTE    ***/
@@ -436,33 +435,35 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 /***    ACTIVE      ***/
 
 #na-ceste-map-active {
+  position: absolute;
   width: 100%;
-  min-height: 99px;
-  flex: 1 1 auto;
+  top: 0;
+  bottom: 105px;
 }
 
 .active-travellers {
   display: block;
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  flex: 0 1 auto;
-  min-height: 120px;
+  min-height: 100px;
+  max-height: 105px;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  position: relative;
   z-index: 9998;
   background: white;
-  -ms-overflow-style: none;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 .active-traveller {
   display: inline-block;
+  vertical-align: middle;
   font-size: 16px;
   min-width: 200px;
-  margin: 10px 5px;
+  margin: 5px;
   padding: 10px;
   height: 80px;
-  vertical-align: top;
 }
 
 #NaCesteActiveLight {
@@ -797,16 +798,16 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 /***    FOOTER      ***/
 
 .app-footer {
+  position: absolute;
   width: 100%;
   height: 80px;
-  position: relative;
   bottom: 0;
 }
 
 .content-fill {
-  flex: 1;
-  display: flex;
-  flex-flow: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
   width: 100%;
 }
 
