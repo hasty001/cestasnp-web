@@ -5,9 +5,16 @@ import Loader from './reusable/Loader';
 class Pois extends Component {
   constructor(props) {
     super(props);
+
+    const params = new URLSearchParams(this.props.location.search);
+
     this.state = {
       loading: true,
-      pois: []
+      pois: [],
+      lat: params.get('lat'),
+      lon: params.get('lon'),
+      poi: params.get('poi'),
+      guidepost: params.get('guidepost'),
     };
   }
 
@@ -27,7 +34,9 @@ class Pois extends Component {
       <div id="Pois">
         {this.state.loading && <Loader />}
         {!this.state.loading && (
-          <Map pois={this.state.pois} use="pois-map" />
+          <Map pois={this.state.pois} use="pois-map" 
+            lat={this.state.lat} lon={this.state.lon}
+            poi={this.state.poi} marker={this.state.guidepost} />
         )}
       </div>
     );

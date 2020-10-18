@@ -28,6 +28,8 @@ app.get('/api', (req, res) => {
 
 app.use('/api/pois', require('./server/controllers/pois'));
 
+app.use('/api/itinerary', require('./server/controllers/itinerary'));
+
 app.use('/api/articles', require('./server/controllers/articles'));
 
 app.use('/api/traveller', require('./server/controllers/traveller'));

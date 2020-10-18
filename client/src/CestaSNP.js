@@ -12,6 +12,7 @@ import Home from './components/Home';
 import Articles from './components/Articles';
 import Article from './components/Article';
 import Pois from './components/Pois';
+import Itinerary from './components/Itinerary';
 import Traveller from './components/Traveller';
 import Active from './components/Active';
 import ActiveLight from './components/ActiveLight';
@@ -84,6 +85,7 @@ class CestaSNP extends Component {
               />
               <Route path="/pred/articles/:page" component={Articles} />
               <Route exact path="/pred/pois" component={Pois} />
+              <Route exact path="/pred/itinerar" component={Itinerary} />
               <Route exact path="/na/ceste" component={Active} />
               <Route exact path="/na/ceste/light" component={ActiveLight} />
               <Route exact path="/na/archive" component={Archive} />

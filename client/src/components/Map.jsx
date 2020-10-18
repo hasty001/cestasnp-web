@@ -40,7 +40,12 @@ class Map extends Component {
     super(props);
     this.state = {
       map: null,
-      use: this.props.use
+      use: this.props.use,
+      lat: this.props.lat,
+      lon: this.props.lon,
+      zoom: this.props.zoom,
+      poi: this.props.poi,
+      marker: this.props.marker,
     };
   }
 
@@ -52,7 +57,17 @@ class Map extends Component {
   init(id) {
     if (this.state.map) return;
     // this function creates the Leaflet map object and is called after the Map component mounts
-    const map = L.map(id, config.params);
+
+    const params = Object.assign({}, config.params);
+    if (this.state.lat) { params.center[0] = this.state.lat; }
+    if (this.state.lon) { params.center[1] = this.state.lon; }
+    if (this.state.zoom) { 
+      params.zoom = this.state.zoom; 
+    } else if (this.state.marker || this.state.poi) {
+      params.zoom = 13;
+    }
+
+    const map = L.map(id, params);
     L.control
       .attribution({
         prefix:
@@ -76,6 +91,20 @@ class Map extends Component {
     }).addTo(map);
 
     // / DOLEZITE MIESTA
+    if (this.state.marker && this.state.lat && this.state.lon) {
+      const iconUrl = posed;
+      const icon = L.icon({
+        iconUrl,
+        iconSize: [32, 32],
+        iconAnchor: [16, 32]
+      });
+      const marker = L.marker([this.state.lat, this.state.lon], {
+        icon
+      }).addTo(map);
+      marker.bindTooltip(this.state.marker).openTooltip();
+    }
+
+    // MARKER
     if (this.props.pois && this.props.pois.length > 0) {
       this.props.pois.forEach(poi => {
         let iconUrl = '';
@@ -116,6 +145,10 @@ class Map extends Component {
         marker.bindPopup(`<h4>${poi.name}</h4>
           <p>GPS: ${poi.coordinates[1]}, ${poi.coordinates[0]}</p>
           <p>${poi.text}</p>`);
+
+        if (this.state.poi === poi._id) {
+          marker.openPopup();
+        }
       });
     }
 

@@ -813,7 +813,34 @@ DB.prototype = {
         }
       }
     );
-  }
+  },
+  
+  setPoisItinerary(pois, callback) {
+    MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true },
+      (err, db) => {
+        if (db) {
+          Promise.all(pois.map(item => 
+            db.db('cestasnp')
+              .collection('pois')
+              .findOneAndUpdate({ _id: new ObjectId(item.poi._id) }, 
+                { $set: { 'itinerary.near': item.near.id } },
+                { returnOriginal: false })
+          )).then(r => {
+            db.close();
+            callback(r.map(i => i.value));
+          })
+          .catch(dbError => {
+            db.close();
+            callback({ error: dbError });
+          });
+        } else {
+          callback({ error: err });
+        }
+      }
+    );
+  },
 };
 
 module.exports = DB;

@@ -10,3 +10,4 @@ npm-debug.log
 article-fulltext.html
 article-introtext.html
 article.json
+server/data/snp.json

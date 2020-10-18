@@ -10,6 +10,7 @@ const ROUTES = {
   predCestou: '/pred',
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
+  itinerary: '/pred/itinerar',
   naCeste: '/na/ceste',
   archiv: '/na/archive',
   kontakt: '/kontakt',
@@ -81,6 +82,15 @@ const Navigation = () => {
               }}
             >
               Dôležité miesta
+            </NavItem>
+            <NavItem
+              eventKey={2.3}
+              title="Itinerár"
+              onClick={() => {
+                history.push(ROUTES.itinerary);
+              }}
+            >
+              Itinerár
             </NavItem>
           </NavDropdown>
 
