@@ -17,6 +17,16 @@ a {
   text-decoration: none !important;
 }
 
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+
+  .no-print {
+    display: none;
+  }
+}
+
 li {
   list-style: none !important;
   display: inline-block;
@@ -47,6 +57,10 @@ html, body, #root {
 } @media (max-width: 945px) {
   .app-header {
     max-height: 70px;
+  }
+} @media print {
+  .app-header { 
+    display: none;
   }
 }
 
@@ -108,6 +122,11 @@ body {
 } @media (max-width: 945px) {
   .app-body {
     top: 70px;
+  }
+} @media print {
+  .app-body {
+    top: 0;
+    position: relative;
   }
 }
 
@@ -342,11 +361,24 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
 }
 
+@media print {
+  #Pois {
+    position: relative;
+  }
+}
+
 #pois-map {
   position: absolute;
   top: 0;
   bottom: 0;
   width: 100%;
+}
+
+@media print {
+  #pois-map {
+    position: relative;
+    height: 100vh;
+  }
 }
 
 /***     POIS       ***/
@@ -430,6 +462,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
 }
 
+@media print {
+  #NaCesteActive {
+    position: relative;
+  }
+}
+
 /***    NA CESTE    ***/
 /**********************/
 /***    ACTIVE      ***/
@@ -439,6 +477,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
   top: 0;
   bottom: 105px;
+}
+
+@media print {
+  #na-ceste-map-active {
+    position: relative;
+    height: calc(100vh - 105px);
+  }
 }
 
 .active-travellers {
@@ -454,6 +499,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   z-index: 9998;
   background: white;
   -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+@media print {
+  .active-travellers {
+    position: relative;
+  }
 }
 
 .active-traveller {
@@ -811,8 +862,20 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
 }
 
+@media print {
+  .content-fill {
+    position: relative;
+  }
+}
+
 .content-wrap {
   padding-bottom: 80px;
+} 
+
+@media print {
+  .content-wrap {
+    padding-bottom: 0;
+  }
 }
 
 .sponzor {
