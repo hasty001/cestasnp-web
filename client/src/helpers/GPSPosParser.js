@@ -37,7 +37,7 @@ const parseGPSPos = (text) => {
   if (result[GPSRegeExGroups.lonSym1] === "W" || result[GPSRegeExGroups.lonSym2] === "W")
     lon = -lon;
 
-  if (Number.isNaN(lat) || Number.isNaN(lon))
+  if (isNaN(lat) || isNaN(lon))
     return null;
 
   return new Array(lat, lon);

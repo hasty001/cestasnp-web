@@ -7,6 +7,7 @@ import NotFound from './reusable/NotFound';
 import CommentBox from './reusable/CommentBox';
 import ImageBox from './reusable/ImageBox';
 import { dateToStr, dateTimeToStr } from '../helpers/helpers';
+import * as Constants from './Constants';
 
 class Traveller extends Component {
   constructor(props) {
@@ -26,12 +27,12 @@ class Traveller extends Component {
         completed: ''
       },
       travellerMessages: '',
-      showCommentBtn: false,
+      showCommentBtn: this.props.scrollTop > Constants.ShowCommentBoxScrollOffset,
       showCommentBox: false,
       showImageBox: false,
       imageUrl: '',
       visitorIp: '',
-      orderFromOld: false
+      orderFromOld: false, 
     };
 
     this.handleCommentBox = this.handleCommentBox.bind(this);
@@ -170,18 +171,14 @@ class Traveller extends Component {
         });
         throw e;
       });
+  }
 
-    window.addEventListener('scroll', () => {
-      if (!this.state.showCommentBtn && window.pageYOffset > 300) {
-        this.setState({
-          showCommentBtn: true
-        });
-      } else if (this.state.showCommentBtn && window.pageYOffset <= 300) {
-        this.setState({
-          showCommentBtn: false
-        });
-      }
-    });
+  componentWillReceiveProps(newProps){
+    const showCommentBtn = newProps.scrollTop > Constants.ShowCommentBoxScrollOffset;
+    if (showCommentBtn != this.state.showCommentBtn)
+      this.setState({
+        showCommentBtn: showCommentBtn
+      });
   }
 
   handleCommentBox(open) {

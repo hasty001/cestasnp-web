@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import { NavItem } from 'react-bootstrap';
 import format from 'date-fns/format';
@@ -174,7 +174,7 @@ class Active extends Component {
         {this.state.loading && !this.state.error && <Loader />}
 
         {!this.state.loading && !this.state.error && this.state.travellers && (
-          <div>
+          <Fragment>
             <Map use="na-ceste-map-active" travellers={this.state.travellers} />
             <div className="active-travellers" style={{ textAlign: 'center' }}>
               {this.state.travellers.map((traveller, i) => {
@@ -222,18 +222,18 @@ class Active extends Component {
                 );
               })}
             </div>
-          </div>
+          </Fragment>
         )}
 
         {this.state.error && (
-          <div>
+          <Fragment>
             <Map use="na-ceste-map-active" travellers={this.state.travellers} />
             <div className="active-travellers" style={{ textAlign: 'center' }}>
               <p style={{ marginTop: '10px' }}>
                 Momentálne nie je nikto na ceste.
               </p>
             </div>
-          </div>
+          </Fragment>
         )}
       </div>
     );
