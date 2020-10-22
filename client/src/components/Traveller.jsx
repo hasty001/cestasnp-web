@@ -477,10 +477,10 @@ class TravellerWithAuth extends Component {
                     <div id={message.id} className="traveller-comment-scrolllink" />
                     {error}
                     {success}
-                    <p>
-                      <div style={{ float: "left", marginRight: "4px" }} >
-                        <i className="fa fa-comment" aria-hidden="true" style={{ color: '#ccc2c2' }} />
-                      </div>                    
+                    <div style={{ float: "left", marginRight: "4px" }} >
+                      <i className="fa fa-comment" aria-hidden="true" style={{ color: '#ccc2c2' }} />
+                    </div>    
+                    <p>                
                       {` ${dateTimeToStr(message.date)} `}
                       {message.cesta ? 
                         (<a href={`/na/${message.uid}`}>{message.username}</a>)
