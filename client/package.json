@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "main": "webpack.config.js",
   "author": "Peter Trizuliak",
+  "contributors": ["Tom Gregorovic"],
   "scripts": {
     "dev": "webpack -w --config webpack.config.js",
     "build": "webpack --config webpack.prod.js"

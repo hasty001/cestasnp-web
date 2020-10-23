@@ -7,6 +7,8 @@ import * as Texts from './Texts';
 import { AuthContext } from './AuthContext';
 import history from '../helpers/history';
 import { useStateWithLocalStorage } from '../helpers/reactUtils';
+import DocumentTitle from 'react-document-title';
+import * as Constants from './Constants';
 
 const Pois = (props) => {
 
@@ -115,7 +117,7 @@ const Pois = (props) => {
   };
 
   return (
-    <PageWithLoader pageId="Pois" loading={loading} error={error}>
+    <PageWithLoader pageId="Pois" loading={loading} error={error} pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`}>
       <>
         {!!pois && (
           <Map pois={pois} use="pois-map" 

@@ -1,10 +1,12 @@
 import React from 'react';
-import { NavItem } from 'react-bootstrap';
-import history from '../helpers/history';
+import DocumentTitle from 'react-document-title';
+import { A } from './reusable/Navigate';
+import * as Constants from './Constants';
 
 const Kontakt = () => {
   return (
     <div id="Kontakt">
+      <DocumentTitle title={`Kontakt${Constants.WebTitleSuffix}`} />
       <p>
         <b>CestaSNP.sk pre vás pripravuje a prevádzkuje:</b>
       </p>
@@ -27,13 +29,9 @@ const Kontakt = () => {
         na samotnú každomesačnú prevádzku portálu potrebujeme aj finančné
         prostriedky, budeme veľmi radi ak našu prácu podporíte aj finančne.
         Pravidelne aktualizovaný zoznam darcov nájdete na tomto{' '}
-        <NavItem
-          onClick={() => {
-            history.push('/pred/articles/article/379');
-          }}
-        >
+        <A href={'/pred/articles/article/379'} >
           odkaze
-        </NavItem>
+        </A>
         .
       </p>
       <br />
@@ -44,14 +42,10 @@ const Kontakt = () => {
       <br />
       <p>
         Do správy pre príjemcu uveďte prosím svoje meno, ktoré zverejníme v{' '}
-        <NavItem
-          onClick={() => {
-            history.push('/pred/articles/article/379');
-          }}
-        >
+        <A href={'/pred/articles/article/379'} >
           {' '}
           zozname darcov
-        </NavItem>
+        </A>
         , kde bude uvedené aj na čo boli prostriedky použité.
       </p>
       <br />

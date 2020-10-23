@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-
-import { NavItem } from 'react-bootstrap';
-import history from '../helpers/history';
 import ActiveLight from './ActiveLight';
 
 import Loader from './reusable/Loader';
+import { A } from './reusable/Navigate';
 
 class Home extends Component {
   constructor(props) {
@@ -37,16 +35,14 @@ class Home extends Component {
         {!this.state.loading && (
           <div>
             <div className="active-travellers-box">            
-              <NavItem
+              <A
+                href={`/na/ceste/light`}
                 className="no-decoration"
-                onClick={() => {
-                  history.push(`/na/ceste/light`);
-                }}
               >
                 <h3 className="no-decoration">LIVE sledovanie</h3>
-              </NavItem>     
+              </A>     
               
-              <ActiveLight/>
+              <ActiveLight box />
             </div>
 
             {this.state.articles.map((article, i) => {
@@ -56,29 +52,19 @@ class Home extends Component {
               return (
                 <div id={`home${i + 1}`} key={i}>
                   <div className="article-div">
-                    <NavItem
+                    <A
                       className="no-decoration"
-                      onClick={() => {
-                        history.push(
-                          `/pred/articles/article/${article.sql_article_id}`
-                        );
-                      }}
+                      href={`/pred/articles/article/${article.sql_article_id}`}
                     >
                       <h2 className="no-decoration">{article.title}</h2>
-                    </NavItem>
+                    </A>
                     <div
                       className={`home${i + 1}`}
                       dangerouslySetInnerHTML={introtext()}
                     />
-                    <NavItem
-                      onClick={() => {
-                        history.push(
-                          `/pred/articles/article/${article.sql_article_id}`
-                        );
-                      }}
-                    >
+                    <A href={`/pred/articles/article/${article.sql_article_id}`} >
                       Čítaj viac...
-                    </NavItem>
+                    </A>
                   </div>
                 </div>
               );

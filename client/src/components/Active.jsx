@@ -1,8 +1,5 @@
 import React, { Component, Fragment } from 'react';
-
-import { NavItem } from 'react-bootstrap';
 import format from 'date-fns/format';
-import history from '../helpers/history';
 
 import Map from './Map';
 import Loader from './reusable/Loader';
@@ -19,6 +16,8 @@ import pin10 from '../../public/img/pins/Tmavo_cervena.png';
 import pin11 from '../../public/img/pins/Modra.png';
 import { sortByDateAsc, dateToStr } from '../helpers/helpers';
 import * as Constants from './Constants';
+import { A } from './reusable/Navigate';
+import DocumentTitle from 'react-document-title';
 
 const colors = [
   '#ff0000',
@@ -172,6 +171,7 @@ class Active extends Component {
   render() {
     return (
       <div id="NaCesteActive">
+        <DocumentTitle title={`LIVE sledovanie${Constants.WebTitleSuffix}`} />
         {this.state.loading && !this.state.error && <Loader />}
 
         {!this.state.loading && !this.state.error && this.state.travellers && (
@@ -180,11 +180,9 @@ class Active extends Component {
             <div className="active-travellers" style={{ textAlign: 'center' }}>
               {this.state.travellers.map((traveller, i) => {
                 return (
-                  <NavItem
+                  <A
+                    href={`/na/${traveller.userId}`}
                     key={i}
-                    onClick={() => {
-                      history.push(`/na/${traveller.userId}`);
-                    }}
                   >
                     {traveller.color !== grey ? (
                       <div
@@ -216,7 +214,7 @@ class Active extends Component {
                         </p>
                       </div>
                     )}
-                  </NavItem>
+                  </A>
                 );
               })}
             </div>

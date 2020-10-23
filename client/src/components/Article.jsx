@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import DocumentTitle from 'react-document-title';
 import Loader from './reusable/Loader';
 import Meta from './reusable/Meta';
+import * as Constants from './Constants';
 
 class Article extends Component {
   constructor(props) {
@@ -85,6 +87,7 @@ class Article extends Component {
               }
               img={this.state.article[0].ogimg || ''}
             />
+            <DocumentTitle title={`${this.state.article[0].title}${Constants.WebTitleSuffix}`} />
             <h2>{header}</h2>
             <div dangerouslySetInnerHTML={introText()} />
             <div dangerouslySetInnerHTML={fullText()} />

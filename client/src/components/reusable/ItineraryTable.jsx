@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { useStateProp } from '../../helpers/reactUtils';
-import { findPoiCategory } from '../PoiCategories';
 import PoiIcon from './PoiIcon';
+import { A } from './Navigate';
 
 const ItineraryTable = (props) => {
 
@@ -38,10 +38,10 @@ const ItineraryTable = (props) => {
 
       return (
         <div key={index}>
-          <a id={`p${poi._id}`} 
+          <A id={`p${poi._id}`} 
             href={`/pred/pois${poi._id ? `/${poi._id}` : `#lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}&zoom=13`}`}>
               <PoiIcon value={poi} />{" " + getInfo()}
-          </a>
+          </A>
         </div>);
     };
 
@@ -131,9 +131,9 @@ const ItineraryTable = (props) => {
               <td className="itinerary-value">{formatNumber(item.km, 1)}</td>
               <td className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
               <td colSpan={props.noDetails ? 1 : 6}>
-                <a id={`g${item.id}`} href={`/pred/pois#poi=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
+                <A id={`g${item.id}`} href={`/pred/pois#poi=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
                   <b>{guidepostName}</b>
-                </a>
+                </A>
               </td>
               <td>{item.info}{insertNear == item.id ? 
                 insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertNear(item.id); setInsertAfter(null); }}>vložiť tu</a></div> : "")}</td>

@@ -3,6 +3,8 @@ export const MaxAllowedGPSAccuracy = 100; // in meters
 export const DateTimeViewFormat = "D. M. YYYY H:mm";
 export const DateViewFormat = "D. M. YYYY";
 
+export const FromOldQuery = "?from-old";
+
 export const PoiCategoryOther = "ostatne";
 export const PoiCategoryGuidepost = "razcestnik";
 export const PoiCategoryWater = "pramen";
@@ -15,3 +17,5 @@ export const PoiMarkerIconProps = {
   iconSize: [PoiMarkerSize, PoiMarkerSize],
   iconAnchor: [PoiMarkerSize / 2, PoiMarkerSize]
 };
+export const WebTitle = "CestaSNP";
+export const WebTitleSuffix = " - CestaSNP";

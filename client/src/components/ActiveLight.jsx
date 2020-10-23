@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import format from 'date-fns/format';
 import { dateToStr, dateTimeToStr } from '../helpers/helpers';
+import { A } from './reusable/Navigate'
 
 import Loader from './reusable/Loader';
+import DocumentTitle from 'react-document-title';
+import * as Constants from './Constants';
 
 class ActiveLight extends Component {
   constructor(props) {
@@ -68,6 +71,7 @@ class ActiveLight extends Component {
   render() {
     return (
       <div id="NaCesteActiveLight">
+        {!this.props.box && <DocumentTitle title={`LIVE sledovanie${Constants.WebTitleSuffix}`} />}
         {this.state.loading && !this.state.error && <Loader />}
 
         {!this.state.loading && !this.state.error && this.state.travellers && (
@@ -89,9 +93,9 @@ class ActiveLight extends Component {
                             {' '}{traveller.startMiesto}{' '}
                           </span>)}  
 
-                          <a href={`/na/${traveller.userId}`}>
+                          <A href={`/na/${traveller.userId}`}>
                             {traveller.meno}                          
-                          </a>
+                          </A>
                         </strong>
 
                         {!!traveller.lastMessage && (

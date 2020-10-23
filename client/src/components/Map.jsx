@@ -7,6 +7,7 @@ import { dateTimeToStr } from '../helpers/helpers';
 import { findPoiCategory, PoiCategories } from './PoiCategories';
 import { useStateProp } from '../helpers/reactUtils';
 import * as Constants from './Constants';
+import { generateAnchor } from './reusable/Navigate';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -75,7 +76,7 @@ const Map = (props) => {
     L.control
       .attribution({
         prefix:
-          'Mapa © <a href="https://www.freemap.sk">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
+          'Mapa © <a href="https://www.freemap.sk" target="_blank">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
         position: 'bottomright'
       })
       .addTo(map);
@@ -210,7 +211,7 @@ const Map = (props) => {
         
         const marker = new MapMarker([g.lat, g.lon], {
           icon, poi: g.id, zIndexOffset: -4000,
-          popupContent: `<h4><a href="/pred/itinerar#g${g.id}"><i class="${guidepostIcon}"></i> ${g.name} ${g.ele ? ` ${g.ele}\u00A0m`: ""}</a></h4>`
+          popupContent: `<h4>${generateAnchor(`/pred/itinerar#g${g.id}`, '', `<i class="${guidepostIcon}"></i> ${g.name} ${g.ele ? ` ${g.ele}\u00A0m`: ""}`)}</h4>`
         }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
         newMarkers.push(marker);
   
@@ -253,8 +254,8 @@ const Map = (props) => {
 
           const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
             icon, poi: p._id, zIndexOffset: -i,
-            popupContent: `<h4><a href="/pred/pois/${p._id}">
-              <i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${p.name || poiCategory.label}</a></h4>
+            popupContent: `<h4>${generateAnchor(`/pred/pois/${p._id}`, '',
+              `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${p.name || poiCategory.label}`)}</h4>
             <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
             <p>${p.text}</p>`
           }).addTo(markerLayers[category.value]);
@@ -298,7 +299,7 @@ const Map = (props) => {
             [trvlr.lastMessage.lat, trvlr.lastMessage.lon],
             {
               icon,
-              popupContent: `<p><b><a href='/na/${trvlr.userId}' style={text-decoration: none;}>${trvlr.meno}</a></b></p>
+              popupContent: `<p><b>${generateAnchor(`/na/${trvlr.userId}`, 'style="{text-decoration: none;}"', trvlr.meno)}</b></p>
           <p>${dateTimeToStr(trvlr.lastMessage.pub_date)}</p>
           <p>${trvlr.lastMessage.text}</p>`
             }

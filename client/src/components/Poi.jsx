@@ -13,6 +13,8 @@ import UserLabel from './reusable/UserLabel';
 import * as Texts from './Texts';
 import * as Constants from './Constants';
 import ItineraryTable from './reusable/ItineraryTable';
+import { A } from './reusable/Navigate';
+import DocumentTitle from 'react-document-title';
 
 const Poi = (props) => {
   const [loading, setLoading] = useState(false);
@@ -88,7 +90,7 @@ const Poi = (props) => {
       {!!poi && (
         <>
           <Map use="poi-map" showDeleted pois={[historyPoi || poi]} view={{ lat: (historyPoi || poi).coordinates[1], lon: (historyPoi || poi).coordinates[0], zoom: 13 }}/>
-          
+          <DocumentTitle title={`${(historyPoi || poi).name || findPoiCategory((historyPoi || poi).category).label}${Constants.WebTitleSuffix}`} />
           {!!historyPoi && <div className="warningMsg">
             <>Verzia:{' '}
             {historyPoi.modified ? 
@@ -126,10 +128,10 @@ const Poi = (props) => {
             && <ItineraryTable noTotals noDetails fullKm itinerary={(historyPoi || poi).guideposts} insert={historyPoi || poi}
               insertNear={(historyPoi || poi).itinerary.near} insertAfter={(historyPoi || poi).itinerary.after} />}
           
-          {!historyPoi && !poi.deleted && <a href={`/pred/pois#poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}>na celej mape</a>}
+          {!historyPoi && !poi.deleted && <A href={`/pred/pois#poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}>na celej mape</A>}
           
           {!historyPoi && !poi.deleted && !!poi.itinerary && (poi.itinerary.near || poi.itinerary.after) && (
-            <> | <a href={`/pred/itinerar#p${poi._id}`}>v itinerári</a></>)}
+            <> | <A href={`/pred/itinerar#p${poi._id}`}>v itinerári</A></>)}
 
           {!!authData.isAuth && (
             <>

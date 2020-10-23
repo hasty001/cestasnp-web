@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Button, NavItem } from 'react-bootstrap';
-import history from '../helpers/history';
-
+import { Button } from 'react-bootstrap';
 import Loader from './reusable/Loader';
 import PaginationAdvanced from './PaginationAdvanced';
 import ArticleFilter from './ArticleFilter';
+import { A, navigate } from './reusable/Navigate';
+import DocumentTitle from 'react-document-title';
+import * as Constants from './Constants';
 
 const articleCategories = [
   { tag: 'vsetky', text: 'Všetky' },
@@ -76,9 +77,30 @@ class Articles extends Component {
     this.handlePageSelect = this.handlePageSelect.bind(this);
     this.handleCategorySelect = this.handleCategorySelect.bind(this);
     this.handleFilterClick = this.handleFilterClick.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  componentWillReceiveProps(newProps){
+    const newActivePage = parseInt(newProps.match.params.page, 10) || 1;
+    const newFilter =  newProps.match.params.category
+      ? newProps.match.params.category.split('+')
+      : [];
+
+    if (this.state.activePage != newActivePage
+      || this.state.filters.join("+") != newFilter.join("+") ) {
+      this.setState({ activePage: newActivePage, filters: newFilter,
+        categories: articleCategories.map(category => {
+          return category;
+        }), articles: [], loading: true
+        }, this.fetchData);
+    }
+  }
+
+  fetchData() {
     const { filters, categories } = this.state;
 
     if (filters.length === 0) {
@@ -92,7 +114,7 @@ class Articles extends Component {
           throw err;
         });
 
-      const url = `/api/articles/${this.props.match.params.page}`;
+      const url = `/api/articles/${this.state.activePage}`;
       fetch(url)
         .then(resp => resp.json())
         .then(data => {
@@ -133,7 +155,7 @@ class Articles extends Component {
         .catch(err => {
           throw err;
         });
-      const url = `/api/articles/category/${filterUrl}/${this.props.match.params.page}`;
+      const url = `/api/articles/category/${filterUrl}/${this.state.activePage}`;
       fetch(url)
         .then(resp => resp.json())
         .then(data => {
@@ -151,43 +173,40 @@ class Articles extends Component {
   handlePageSelect(eventKey) {
     const filter = this.state.filters.join('+');
     if (this.state.filters.length === 0) {
-      window.location.assign(`/pred/articles/${eventKey}`);
+      navigate(`/pred/articles/${eventKey}`);
     } else {
-      window.location.assign(`/pred/filteredarticles/${filter}/${eventKey}`);
+      navigate(`/pred/filteredarticles/${filter}/${eventKey}`);
     }
   }
 
   handleCategorySelect(e) {
     const { tag } = this.state.categories[e];
     const { filters } = this.state;
-    filters.splice(filters.length, 0, tag);
+    
     if (tag === 'vsetky') {
-      window.location.assign('/pred/articles/1');
+      navigate('/pred/articles/1');
     } else {
-      this.setState({
-        // Not removing in my first commit :)
-        // eslint-disable-next-line react/no-unused-state
-        activeFilter: e,
-        loading: true
-      });
-      window.location.assign(`/pred/filteredarticles/${filters.join('+')}/1`);
+      navigate(`/pred/filteredarticles/${filters.concat([tag]).join('+')}/1`);
     }
   }
 
   handleFilterClick(e) {
     const filter = e.target.value;
     const { filters } = this.state;
+
     if (filters.length > 1) {
-      filters.splice(filters.indexOf(filter), 1);
-      window.location.assign(`/pred/filteredarticles/${filters.join('+')}/1`);
+      const newFilters = filters.map(f => f);
+      newFilters.splice(filters.indexOf(filter), 1);
+      navigate(`/pred/filteredarticles/${newFilters.join('+')}/1`);
     } else {
-      window.location.assign('/pred/articles/1');
+      navigate('/pred/articles/1');
     }
   }
 
   render() {
     return (
       <div id="Articles">
+        <DocumentTitle title={`Články${Constants.WebTitleSuffix}`} />
         <div>
           <ArticleFilter
             articleCategories={this.state.categories}
@@ -229,26 +248,16 @@ class Articles extends Component {
               };
               return (
                 <div key={i} className="article-div">
-                  <NavItem
+                  <A
                     className="no-decoration"
-                    onClick={() => {
-                      history.push(
-                        `/pred/articles/article/${article.sql_article_id}`
-                      );
-                    }}
+                    href={`/pred/articles/article/${article.sql_article_id}`}
                   >
                     <h2 className="no-decoration">{article.title}</h2>
-                  </NavItem>
+                  </A>
                   <div dangerouslySetInnerHTML={introtext()} />
-                  <NavItem
-                    onClick={() => {
-                      history.push(
-                        `/pred/articles/article/${article.sql_article_id}`
-                      );
-                    }}
-                  >
+                  <A href={`/pred/articles/article/${article.sql_article_id}`} >
                     Čítaj viac...
-                  </NavItem>
+                  </A>
                 </div>
               );
             })}

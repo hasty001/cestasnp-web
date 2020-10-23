@@ -5,6 +5,7 @@ import PoiIcon from './PoiIcon';
 import UserLabel from './UserLabel';
 import { dateTimeToStr } from '../../helpers/helpers';
 import { AuthContext } from '../AuthContext';
+import { A } from './Navigate';
 
 const PoiItem = (props) => {
   const authData = useContext(AuthContext);
@@ -26,16 +27,16 @@ const PoiItem = (props) => {
           <><ItemProp className="poi-modified">{dateTimeToStr(props.value.modified)}</ItemProp>{space}<ItemProp>upravil</ItemProp>{space}<ItemProp><UserLabel uid={props.value.modified_by} name={props.value.modified_by_name}/>{space}</ItemProp></>
           : (props.showCreated ? <ItemProp colSpan={3}/> : <><ItemProp className="poi-created">{dateTimeToStr(props.value.created)}</ItemProp>{space}<ItemProp>pridal</ItemProp>{space}<ItemProp><UserLabel uid={props.value.user_id} name={props.value.created_by_name}/>{space}</ItemProp></>)))}
       <ItemProp className={"poi-name" + (props.value.deleted ? " deleted" : "")}>
-        <a href={`/pred/pois/${props.value._id}`}>
+        <A href={`/pred/pois/${props.value._id}`}>
           <PoiIcon value={props.value} />
           {' '}{props.value.name || findPoiCategory(props.value.category).label}
-        </a>
+        </A>
       </ItemProp>
       {space}
       <ItemProp className="poi-text">{props.value.text}</ItemProp>
       {!!props.showItinerary && <ItemProp className="poi-itinerary">
         {!props.value.deleted && !!props.value.itinerary && (props.value.itinerary.near || props.value.itinerary.after) && (
-              <a href={`/pred/itinerar#p${props.value._id}`}><i className="fas fa-external-link-alt"></i></a>)}
+              <A href={`/pred/itinerar#p${props.value._id}`}><i className="fas fa-external-link-alt"></i></A>)}
         </ItemProp>}
       <ItemProp className="poi-actions">
         {!!authData.isAuth && props.my && props.onMyRemove &&

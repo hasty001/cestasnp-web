@@ -2,6 +2,7 @@ import React, { Component, Fragment, useContext } from 'react';
 import { dateTimeToStr } from '../../helpers/helpers';
 import { AuthContext } from '../AuthContext';
 import ConfirmBox from '../reusable/ConfirmBox';
+import { A } from '../reusable/Navigate';
 
 const SentMessages = (props) => {
   const authData = useContext(AuthContext);
@@ -119,7 +120,7 @@ class SentMessagesWithAuth extends Component {
               <span className="traveller-message-actions">
                 {(this.props.userData && this.props.userData.userDetails.uid) && 
                   (<a href="#" data-msgid={message._id} onClick={this.handleDeleteMessageClick} className="traveller-message-delete" title="zmazať správu"><i className="fas fa-trash-alt"/></a>)}
-                <a href={`/na/${this.state.userId}#${message._id}`} className="traveller-message-link" title="odkaz na správu"><i className="fas fa-link"/></a>
+                <A href={`/na/${this.state.userId}#${message._id}`} className="traveller-message-link" title="odkaz na správu"><i className="fas fa-link"/></A>
               </span>
             </p>     
             {message.img && message.img !== 'None' && message.img !== null && (
@@ -140,7 +141,12 @@ class SentMessagesWithAuth extends Component {
                 // );
                 // }}
               />
-            )}       
+            )}
+            <div className="red-stripe" />
+            <p style={{ display: 'inline-block' }}>
+              {dateTimeToStr(message.pub_date)} 
+              {' '}<A href={`/na/${this.state.userId}#${message._id}`} className="traveller-message-link" title="odkaz na správu">🔗</A>
+            </p>            
             <p dangerouslySetInnerHTML={{ __html: message.text }} />
           </div>);}
         )}
