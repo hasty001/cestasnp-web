@@ -75,6 +75,29 @@ Validation.prototype = {
       pub_date_milseconds: sanitize(pub_date_milseconds),
       details_id: sanitize(details_id)
     };
+  },
+
+  sanitizePoi(poi) {
+    const {
+      coordinates,
+      accuracy,
+      category,
+      name,
+      text,
+      user_id,
+      img_url,
+      created
+    } = poi;
+    return {
+      coordinates: sanitize(coordinates),
+      accuracy: sanitize(accuracy),
+      category: sanitize(category),
+      name: sanitize(name),
+      text: sanitize(text),
+      created: sanitize(created),
+      user_id: sanitize(user_id),
+      img_url: sanitize(img_url)
+    };
   }
 };
 

@@ -19,6 +19,7 @@ import ActiveLight from './components/ActiveLight';
 import Cookies from './components/Cookies';
 import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
+import AddPoi from './components/Account/AddPoi';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -93,6 +94,7 @@ class CestaSNP extends Component {
               <Route exact path="/kontakt" component={Kontakt} />
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" component={Account} />
+              <Route exact path="/ucet/pridatpoi" component={AddPoi} />
               <Route path="*" component={NotFound} />
             </Switch>
           </Router>

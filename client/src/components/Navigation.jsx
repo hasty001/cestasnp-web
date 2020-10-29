@@ -14,7 +14,8 @@ const ROUTES = {
   naCeste: '/na/ceste',
   archiv: '/na/archive',
   kontakt: '/kontakt',
-  mojaCesta: '/ucet'
+  mojaCesta: '/ucet',
+  pridatPOI: '/ucet/pridatpoi'
 };
 
 const Navigation = () => {
@@ -133,6 +134,18 @@ const Navigation = () => {
           >
             {!authData.isAuth ? 'Prihlásiť sa' : 'Poslať správu'}
           </NavItem>
+
+          {!!authData.isAuth && (
+            <NavItem
+              eventKey={4}
+              title="Pridať dôležité miesto"
+              onClick={() => {
+                history.push(ROUTES.pridatPOI);
+              }}
+            >
+              Pridať POI
+            </NavItem>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

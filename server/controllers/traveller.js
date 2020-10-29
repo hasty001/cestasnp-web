@@ -6,27 +6,10 @@ const moment = require('moment');
 
 const request = require('request');
 const DB = require('../db/db');
-const {admin} = require('../util/firebase');
+const checkToken = require('../util/checkToken');
 
 const db = new DB();
 const router = express.Router();
-const auth = admin.auth();
-
-function checkToken(req, res, uid, callback) {
-  const token = req.header("X-Auth-Token");
-
-  if (!token || token.length == 0) {
-    res.status(401).json({ error: 'Authorization token is missing.' });
-  } else {
-    auth.verifyIdToken(token).then(decodedToken => {
-      if (!decodedToken || decodedToken.uid !== uid) {
-        res.status(403).json({ error: 'You are not authorized to perform this operation.' });
-      } else {
-        callback();
-      }
-    });
-  }
-}
 
 // retrieve travellers details
 router.get('/details/:travellerId', (req, res) => {

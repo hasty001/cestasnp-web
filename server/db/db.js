@@ -844,6 +844,34 @@ DB.prototype = {
       }
     );
   },
+
+  addPoi(poi, callback) {
+    MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true },
+      (error, db) => {
+        if (db) {
+          poi.created = moment().format('YYYY-MM-DD HH:mm:ss');
+
+          db.db('cestasnp')
+            .collection('pois')
+            .insertOne(securityCheck.sanitizePoi(poi))
+            .then((poiRes) => {
+              poi._id = poiRes.insertedId;
+
+              db.close();
+              callback(poi);
+            })
+            .catch(err => {
+              db.close();
+              callback({ error: err });
+            });
+        } else {
+          callback({ error });
+        }
+      }
+    );
+  },
 };
 
 module.exports = DB;

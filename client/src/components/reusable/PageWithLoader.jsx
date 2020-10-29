@@ -4,9 +4,14 @@ import Loader from './Loader';
 const PageWithLoader = (props) => {
   
   return (
-    <div id={props.pageId}>
+    <div id={props.pageId} className={props.className} >
       {!!props.loading && !props.error && <Loader />}
-      {!props.loading && !props.error && props.children}
+      {!props.loading && !props.error && (
+        <>
+          {!!props.title && <h2>{props.title}</h2>}
+          {props.children}
+        </>
+      )}
       {!!props.error && (typeof props.error != "string" ? props.error : (
         <p style={{ marginTop: '10px' }}>
           {props.error}

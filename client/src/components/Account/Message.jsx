@@ -1,5 +1,4 @@
-import React, { Component, useState } from 'react';
-import moment from 'moment-timezone';
+import React, { useState } from 'react';
 import { parseGPSPos } from '../../helpers/GPSPosParser';
 import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 import * as Texts from '../Texts';
@@ -85,7 +84,7 @@ const Message = (props) => {
 
       <FormTextArea value={message} valueName="message" valueLabel="Text" onChange={value => { setMessage(value); clearMsg(); }}/>
 
-      <FormImage value={image} onChange={value => { setImage(value); clearMsg(); }} />
+      <FormImage value={image} onChange={value => { setImage(value); clearMsg(); }} imageAlt="nahrana fotka z cesty" />
     </FormWithLoader>
   );
 }
