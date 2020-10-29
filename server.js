@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').Server(app);
 
+const moment = require('moment-timezone');
+moment.tz.setDefault('Europe/Vienna');
+
 const root = path.join(__dirname, '/client/build');
 
 if (process.env.PORT) {

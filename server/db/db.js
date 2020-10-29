@@ -1,7 +1,7 @@
 // TODO - lot of reapeating code refactor when possible
 const { MongoClient } = require('mongodb');
 const sanitize = require('mongo-sanitize');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const { ObjectId } = require('mongodb');
 const Validation = require('./validation');
 
@@ -744,6 +744,9 @@ DB.prototype = {
       { useNewUrlParser: true },
       (error, db) => {
         if (db) {
+          message.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
+          message.pub_date_milseconds = moment().valueOf();
+
           db.db('cestasnp')
             .collection('traveler_messages')
             .insertOne(securityCheck.sanitizeTravellerMessage(message))

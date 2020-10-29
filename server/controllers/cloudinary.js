@@ -1,10 +1,7 @@
 const cloudinary = require('cloudinary');
 const express = require('express');
-const moment = require('moment-timezone');
 
 const router = express.Router();
-
-moment.tz.setDefault('america/new_york');
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,

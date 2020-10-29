@@ -256,7 +256,7 @@ router.post('/addComment', (req, res) => {
         comment.ip = sVisitorIp;
         const sArticleId = sanitize(req.body.articleId);
         comment.article_sql_id = sArticleId;
-        const sDate = sanitize(req.body.date);
+        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
         comment.date = sDate;
         const sUid = sanitize(req.body.uid);
         if (sUid.length <= 3) {
@@ -282,7 +282,7 @@ router.post('/addComment', (req, res) => {
         comment.travellerDetails.id = sTravellerId;
         const sTravellerName = sanitize(req.body.travellerName);
         comment.travellerDetails.name = sTravellerName;
-        const sDate = sanitize(req.body.date);
+        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
         comment.date = sDate;
         const sUid = sanitize(req.body.uid);
         if (sUid.length <= 3) {
@@ -385,10 +385,8 @@ router.post('/sendMessage', (req, res) => {
     lat,
     accuracy,
     text,
-    pub_date,
     user_id,
     img,
-    pub_date_milseconds,
     details_id
   } = req.body;
 
@@ -399,10 +397,8 @@ router.post('/sendMessage', (req, res) => {
         lat,
         accuracy,
         text,
-        pub_date,
         user_id,
         img,
-        pub_date_milseconds,
         details_id
       },
       resp => {

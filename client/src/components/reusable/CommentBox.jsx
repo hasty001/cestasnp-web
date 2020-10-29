@@ -1,11 +1,8 @@
 import React, { Component, Fragment, useContext } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import moment from 'moment-timezone';
 import Recaptcha from 'react-recaptcha';
 import Loader from './Loader';
 import { AuthContext } from '../AuthContext';
-
-moment.tz.setDefault('Europe/Vienna');
 
 const CommentBox = (props) => {
   const authData = useContext(AuthContext);
@@ -73,7 +70,6 @@ class CommentBoxWithAuth extends Component {
     });
 
     const data = {};
-    data.date = moment().format('YYYY-MM-DD HH:mm:ss');
     data.comment = this.state.comment;
     data.name = !this.props.userData ? this.state.name : 
       (this.props.userData.travellerDetails && this.props.userData.travellerDetails.meno) ?
