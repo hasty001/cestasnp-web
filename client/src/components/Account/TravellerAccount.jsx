@@ -219,6 +219,7 @@ class TravellerAccount extends React.Component {
         {this.state.travellerMsgs.length > 0 && (
           <SentMessages msgs={this.state.travellerMsgs} userId={this.state.user_id} />
         )}
+        <div id="MyJourney">
         <h2>Moja cesta</h2>
         <p>
           Tu si môžeš upraviť detaily o svojej ceste a zároveň posielať správy.
@@ -339,6 +340,7 @@ class TravellerAccount extends React.Component {
             Uložiť zmeny
           </button>
         )}
+        </div>
       </form>
     );
   }

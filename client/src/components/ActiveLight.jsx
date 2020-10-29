@@ -74,7 +74,7 @@ class ActiveLight extends Component {
             <div className="active-travellers-list">
               {this.state.travellers.map((traveller, i) => {
                 return (    
-                      <div
+                      <div key={i}
                         className="active-traveller-item"
                       >
                         <strong>

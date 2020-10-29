@@ -274,7 +274,7 @@ DB.prototype = {
           if (db) {
             db.db('cestasnp')
               .collection('traveler_messages')
-              .find({ user_id: sUserId })
+              .find({ $and: [ { user_id: sUserId }, { deleted: {$ne: true} } ] })
               .toArray((toArrayErr, docs) => {
                 if (docs) {
                   db.close();
@@ -297,41 +297,59 @@ DB.prototype = {
     const sTravellerId = sanitize(travellerId);
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          if (sArticleId === 0 || sArticleId === '') {
+      { useNewUrlParser: true }).then((db) => {
+          const getDocs = (sArticleId === 0 || sArticleId === '') ?
             db.db('cestasnp')
               .collection('traveler_comments')
-              .find({ 'travellerDetails.id': sTravellerId })
-              .toArray((toArrayErr, docs) => {
-                if (docs) {
-                  db.close();
-                  callback(docs);
-                } else {
-                  db.close();
-                  throw toArrayErr;
-                }
-              });
-          } else {
-            db.db('cestasnp')
+              .find({ $and: [ { 'travellerDetails.id': sTravellerId }, { deleted: {$ne: true} } ] })
+              .toArray()
+            : db.db('cestasnp')
               .collection('article_comments')
-              .find({ article_sql_id: sArticleId })
-              .toArray((toArrayErr, docs) => {
-                if (docs) {
-                  callback(docs);
-                  db.close();
-                } else {
-                  db.close();
-                  throw toArrayErr;
+              .find({ $and: [ { article_sql_id: sArticleId }, { deleted: {$ne: true} } ] })
+              .toArray();
+
+        return getDocs.then((docs) => {
+          const uids = docs.filter(d => d.uid).map(d => d.uid);
+
+          const getUsers = db.db('cestasnp')
+            .collection('users')
+            .find({ $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] }, { uid: 1, sql_user_id: 1, name: 1 })
+            .toArray();
+
+          const getDetails =  db.db('cestasnp')
+            .collection('traveler_details')
+            .find({ user_id : { $in: uids } }, { user_id: 1, meno: 1 })
+            .toArray();
+
+          return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
+            users.forEach(u => {
+              const cesta = details.find(t => t.user_id === u.uid || t.user_id === u.sql_user_id);
+              if (cesta)
+              {
+                  u.name = cesta.meno;
+                  u.cesta = true;
+              }
+            });
+
+            docs.forEach(d => {
+              if (d.uid) {
+                const user = users.find(u => u.uid === d.uid || u.sql_user_id === d.uid);
+                if (user) {
+                  if (d.username)
+                    d.username = user.name;
+                  d.name = user.name;
+                  d.cesta = user.cesta;
                 }
-              });
-          }
-        } else {
-          throw err;
-        }
-      }
-    );
+              }
+
+            });
+            
+            db.close();
+            callback(docs);
+          });
+        }).catch(e => { db.close(); callback({ error: e}); });
+      })
+    .catch(e => { callback({ error: e }); });
   },
 
   getTravellersMessages(travellerIds, callback) {
@@ -356,7 +374,7 @@ DB.prototype = {
         if (db) {
           db.db('cestasnp')
             .collection('traveler_messages')
-            .find({ user_id: { $in: sTravellerIds } })
+            .find({ $and: [ { user_id: { $in: sTravellerIds } }, { deleted: {$ne: true} } ] })
             .toArray((toArrayError, docs) => {
               if (docs) {
                 docs.sort((a, b) => {
@@ -386,7 +404,7 @@ DB.prototype = {
           if (db) {
             db.db('cestasnp')
               .collection('traveler_messages')
-              .find({ user_id: travellerId })
+              .find({ $and: [ { user_id: travellerId }, { deleted: {$ne: true} } ] })
               .sort({ pub_date: -1 })
               .toArray((toArrayError, docs) => {
                 if (docs) {
@@ -493,6 +511,52 @@ DB.prototype = {
         }
       }
     );
+  },
+
+  deleteComment(id, uid, articleId, callback) {
+    MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true }).then((db) => {
+          return db.db('cestasnp')
+          .collection('traveler_details')
+          .findOne({ user_id : uid })
+          .then((details) =>
+          {          
+            const sDetails = { _id: (details && details._id && details._id.toString()) ? details._id.toString() : "-1", 
+              articleID: (details && details.articleID) ? details.articleID : -1 };
+
+            const update = {
+              $set: {
+                deleted: true,
+                del_date: moment().format('YYYY-MM-DD HH:mm:ss')
+              }
+            };
+            const options = { returnOriginal: false };
+            const deleteComment = (articleId === 0 || articleId === '') ?
+              db.db('cestasnp')
+                .collection('traveler_comments')
+                .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { 'travellerDetails.id': sDetails._id }, { uid: uid } ] } ] },
+                  update, options)
+              : db.db('cestasnp')
+                .collection('article_comments')
+                .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { article_sql_id: sDetails.articleID }, { uid: uid } ] } ] },
+                  update, options);
+
+            return deleteComment.then((res) => {
+              db.close();
+
+              if (res.value) {
+                callback(res.value);
+              } else {
+                callback({ error: 'Komentár nebol nájdený.' });
+              }
+            });
+          })
+          .catch(error => {
+            db.close();
+            callback({ error });
+          });
+      }).catch(error => callback({ error }));
   },
 
   finishTracking(userId, completed, endDate) {
@@ -706,6 +770,39 @@ DB.prototype = {
                   db.close();
                   throw err;
                 });
+            })
+            .catch(err => {
+              db.close();
+              callback({ error: err });
+            });
+        } else {
+          callback({ error });
+        }
+      }
+    );
+  },
+
+  deleteMessage(id, uid, callback) {
+    MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true },
+      (error, db) => {
+        if (db) {
+          db.db('cestasnp')
+            .collection('traveler_messages')
+            .findOneAndUpdate({ $and: [{_id: new ObjectId(id) }, { user_id: uid }] }, { $set: {
+              deleted: true,
+              del_date: moment().format('YYYY-MM-DD HH:mm:ss')
+            }}, 
+            { returnOriginal: false })
+            .then((res) => {
+              db.close();
+
+              if (res.value) {
+                callback(res.value);
+              } else {
+                callback({ error: 'Správa nebola nájdená.' });
+              };
             })
             .catch(err => {
               db.close();

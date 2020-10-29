@@ -1,12 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment, useContext } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import moment from 'moment-timezone';
 import Recaptcha from 'react-recaptcha';
 import Loader from './Loader';
+import { AuthContext } from '../AuthContext';
 
 moment.tz.setDefault('Europe/Vienna');
 
-class CommentBox extends Component {
+const CommentBox = (props) => {
+  const authData = useContext(AuthContext);
+  return (
+    <Fragment>
+      {!authData.authProviderMounted ? (
+        <Loader />
+      ) : (
+        <CommentBoxWithAuth {...props} userData={authData.isAuth ? authData : null} />
+      )}
+    </Fragment>
+  );
+};
+
+class CommentBoxWithAuth extends Component {
   constructor(props) {
     super(props);
 
@@ -33,14 +47,14 @@ class CommentBox extends Component {
   };
 
   addComment() {
-    if (this.state.captcha === '') {
+    if (!this.props.userData && this.state.captcha === '') {
       this.setState({
         captchaError: 'Prosím potvrď, že nie si robot'
       });
       return;
     }
 
-    if (this.state.name === '') {
+    if (!this.props.userData && this.state.name === '') {
       this.setState({
         nameError: 'Prosím vyplň svoje meno'
       });
@@ -61,40 +75,52 @@ class CommentBox extends Component {
     const data = {};
     data.date = moment().format('YYYY-MM-DD HH:mm:ss');
     data.comment = this.state.comment;
-    data.name = this.state.name;
+    data.name = !this.props.userData ? this.state.name : 
+      (this.props.userData.travellerDetails && this.props.userData.travellerDetails.meno) ?
+        this.props.userData.travellerDetails.meno : this.props.userData.userDetails.name;
     data.articleId = this.props.articleID;
     data.visitorIp = this.props.visitorIp;
     data.travellerName = this.props.travellerName;
     data.travellerId = this.props.travellerId;
     data['g-recaptcha-response'] = this.state.captcha;
+    data.uid = this.props.userData ? this.props.userData.userDetails.uid : null;
+    data.cesta = this.props.userData && this.props.userData.travellerDetails && this.props.userData.travellerDetails.meno;
 
-    fetch('/api/traveller/addComment', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: new Headers({
-        'Content-Type': 'application/json'
+    const promise = this.props.userData ? 
+      this.props.userData.user.getIdToken()
+      : Promise.resolve("");
+
+    promise.then(token => 
+      fetch('/api/traveller/addComment', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-Auth-Token': token,
+        })
       })
-    })
       .then(res => res.json())
       .then(comment => {
-        if (comment.error === 'Malicious comment') {
+        if (comment.error) {
           this.setState({
             loading: false,
             captchaError: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
           });
-        } else if (comment.responseError === 'Failed captcha verification') {
+        } else if (comment.responseError) {
           this.setState({
             loading: false,
             captchaError: 'Prosím potvrď, že nie si robot'
           });
         } else {
           this.setState({
-            loading: false
+            loading: false,
+            comment: '',
+            captchaError: ''
           });
           this.props.updateTravellerComments(comment);
           this.props.onHide();
         }
-      })
+      }))
       .catch(err => {
         this.setState({
           loading: false,
@@ -134,14 +160,14 @@ class CommentBox extends Component {
   }
 
   render() {
+    const { userData, articleID, visitorIp, 
+      updateTravellerComments, travellerId, travellerName, ...modalProps } = this.props;
     return (
       <div id="CommentBox">
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <Modal
-            {...this.props}
-            show={this.props.show}
-            onHide={this.props.onHide}
+            {...modalProps}
             dialogClassName="comment-box"
             style={{ marginTop: '100px' }}
           >
@@ -151,13 +177,21 @@ class CommentBox extends Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <label className="commentLabel">
-                Meno:
-                <input
-                  value={this.state.name}
-                  onChange={this.updateName}
-                  className="nameInput"
-                />
+              <label className="commentLabel">    
+                Meno:            
+                {!this.props.userData ?
+                  (<input
+                    value={this.state.name}
+                    onChange={this.updateName}
+                    className="nameInput"
+                    />)
+                  : (<div>
+                    {!!this.props.userData.travellerDetails && !!this.props.userData.travellerDetails.meno ? 
+                      (<a href={`/na/${this.props.userData.travellerDetails.user_id}`}>{this.props.userData.travellerDetails.meno}</a>)
+                      : this.props.userData.userDetails.name
+                    }
+                    </div>)
+                }
               </label>
               {this.state.nameError !== '' && (
                 <p className="commentError">{this.state.nameError}</p>
@@ -173,7 +207,8 @@ class CommentBox extends Component {
               {this.state.commentError !== '' && (
                 <p className="commentError">{this.state.commentError}</p>
               )}
-              <div className="recaptchaWrapper">
+              {!this.props.userData &&
+              (<div className="recaptchaWrapper">
                 <Recaptcha
                   render="explicit"
                   verifyCallback={this.verifyCallback}
@@ -183,7 +218,7 @@ class CommentBox extends Component {
                   hl="sk"
                   size={window.innerWidth <= 390 ? 'compact' : 'normal'}
                 />
-              </div>
+              </div>)}
               {this.state.captchaError !== '' && (
                 <p className="commentError">{this.state.captchaError}</p>
               )}
