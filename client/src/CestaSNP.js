@@ -12,6 +12,7 @@ import Home from './components/Home';
 import Articles from './components/Articles';
 import Article from './components/Article';
 import Pois from './components/Pois';
+import Poi from './components/Poi';
 import Itinerary from './components/Itinerary';
 import Traveller from './components/Traveller';
 import Active from './components/Active';
@@ -85,6 +86,7 @@ class CestaSNP extends Component {
                 component={Articles}
               />
               <Route path="/pred/articles/:page" component={Articles} />
+              <Route path="/pred/pois/:poi" component={Poi} />
               <Route exact path="/pred/pois" component={Pois} />
               <Route exact path="/pred/itinerar" component={Itinerary} />
               <Route exact path="/na/ceste" component={Active} />

@@ -828,7 +828,8 @@ DB.prototype = {
             db.db('cestasnp')
               .collection('pois')
               .findOneAndUpdate({ _id: new ObjectId(item.poi._id) }, 
-                { $set: { 'itinerary.near': item.near.id } },
+                { $set: { 'itinerary.near': item.near ? item.near.id : null,
+                'itinerary.after': item.after ? item.after.id : null } },
                 { returnOriginal: false })
           )).then(r => {
             db.close();

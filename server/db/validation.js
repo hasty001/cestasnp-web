@@ -86,7 +86,10 @@ Validation.prototype = {
       text,
       user_id,
       img_url,
-      created
+      created,
+      itineraryNear,
+      itineraryAfter,
+      itineraryInfo
     } = poi;
     return {
       coordinates: sanitize(coordinates),
@@ -96,7 +99,10 @@ Validation.prototype = {
       text: sanitize(text),
       created: sanitize(created),
       user_id: sanitize(user_id),
-      img_url: sanitize(img_url)
+      img_url: sanitize(img_url),
+      itinerary: (itineraryNear || itineraryAfter || itineraryInfo) ?
+        { near: sanitize(itineraryNear), after: sanitize(itineraryAfter), info: sanitize(itineraryInfo) }
+        : null,
     };
   }
 };

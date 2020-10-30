@@ -2,6 +2,7 @@ const express = require('express');
 const itinerary = require('../data/guideposts.json');
 const WGS84Util = require('wgs84-util');
 const DB = require('../db/db');
+const { findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
 
 const db = new DB();
 
@@ -33,7 +34,7 @@ router.get('/', (req, res) => {
       res.json(resultItinerary);
     } else {
       console.error(error);
-      res.status(500).json({ error });
+      res.status(500).json({ error: error.toString() });
     }
   });
 });
@@ -54,25 +55,31 @@ router.get('/matchPois', (req, res) => {
       });
 
       results.filter(poi => !poi.itinerary).forEach(poi => {
+        if (!poi.coordinates || !poi.coordinates.length || poi.coordinates.length < 2) {
+          warning.push(`Poi ${poi._id} ${poi.name} invalid coordinates!`);
+          return;
+        }
 
-        var minD = 20000;
-        var minG = null;
-        itinerary.forEach(g => {
-          const d = WGS84Util.distanceBetween({ coordinates: [g.lon, g.lat] }, { coordinates: poi.coordinates });
+        const {coordinates, distance} = findNearestPoint(poi.coordinates);
+        
+        if (!coordinates || !coordinates.length || coordinates.length < 2) {
+          warning.push(`Poi ${poi._id} ${poi.name} invalid nearest path coordinates!`);
+          return;
+        }
 
-          if (d < minD) {
-            minD = d;
-            minG = g;
-          }
-        });
+        const guideposts = findNearestGuideposts(coordinates);
 
-        if (!minG) {
-          warning.push({ log: `Nearest guidepost not found for: ${poi._id} ${poi.name}`, poi: poi });
+        if (distance > 100) {
+          warning.push({ log: `Nearest guidepost not found for: ${poi._id} ${poi.name} ${distance} m from path`, poi, pathPoint: coordinates, guideposts });
         } else {
-          if (minD > 100) {
-            warning.push({ log: `Nearest guidepost ${minG.id} ${minG.name} too far: ${poi._id} ${poi.name} ${minD} m`, poi: poi, near: minG });
+          if ((!guideposts.near && !guideposts.after)) {
+            warning.push({ log: `Nearest guidepost ${guideposts.nearest} ${guideposts.nearest.name} too far: ${poi._id} ${poi.name} ${guideposts.nearestDistance} m`, poi, pathPoint: coordinates, guideposts });
           } else {
-            info.push({ log: `Guidepost ${minG.id} ${minG.name} found for: ${poi._id} ${poi.name} ${minD} m`, poi: poi, near: minG });
+            if (guideposts.near) {
+              info.push({ log: `Guidepost ${guideposts.near.id} ${guideposts.near.name} found for: ${poi._id} ${poi.name} ${guideposts.nearestDistance} m`, poi, near: guideposts.near });
+            } else {
+              info.push({ log: `After guidepost ${guideposts.after.id} ${guideposts.after.name} found for: ${poi._id} ${poi.name} ${distance} m from path ${guideposts.afterDistance} m`, poi, after: guideposts.after });
+            }
           }
         }
       });
@@ -84,7 +91,7 @@ router.get('/matchPois', (req, res) => {
       }
     } else {
       console.error(error);
-      res.status(500).json({ error });
+      res.status(500).json({ error: error.toString() });
     }
   });
 });

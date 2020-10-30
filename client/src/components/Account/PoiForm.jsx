@@ -34,6 +34,10 @@ const PoiForm = (props) => {
   const [text, setText] = useStateEx('', clearMsg);
   const [image, setImage] = useStateEx('', clearMsg);
 
+  const [itineraryNear, setItineraryNear] = useState(null);
+  const [itineraryAfter, setItineraryAfter] = useState(null);
+  const [itineraryInfo, setItineraryInfo] = useState('');
+
   const addPoi = () => {
     if ((!name || name.trim().length === 0) 
       && (!text || text.trim().length === 0)) {
@@ -70,13 +74,20 @@ const PoiForm = (props) => {
     data.user_id = props.userId;
     data.img_url = image;
     data.confirmed = confirmed;
+    data.itineraryNear = itineraryNear;
+    data.itineraryAfter = itineraryAfter;
+    data.itineraryInfo = itineraryInfo;
 
     fetchPostJsonWithToken(props.user, '/api/pois/add', data)
       .then(msgRes => {
         setLoading(false);
-
-        if (msgRes.error) { throw msgRes.error; }
+        
         if (msgRes.confirm) {
+          if (msgRes.confirm.itinerary) {
+            setItineraryNear(msgRes.confirm.itinerary.nearId);
+            setItineraryAfter(msgRes.confirm.itinerary.afterId);
+            setItineraryInfo(msgRes.confirm.itinerary.info || '');
+          }
           setWarningMsg(msgRes.confirm); 
           return; 
         }
@@ -87,6 +98,9 @@ const PoiForm = (props) => {
         setName('');
         setText('');
         setImage(''); 
+        setItineraryNear(null);
+        setItineraryAfter(null);
+        setItineraryInfo('');
 
         setSuccessMsg('Dôležité miesto úspešne pridané!');
 
@@ -99,7 +113,11 @@ const PoiForm = (props) => {
         setErrorMsg(Texts.GenericError);
       });
   }
-  
+
+  const guideposts = warningMsg && warningMsg.itinerary ?
+  [warningMsg.itinerary.prev, warningMsg.itinerary.nearest, warningMsg.itinerary.next].filter((t, i, a) => a.findIndex(o => o.id == t.id) == i)
+  : [];
+
   return (
     <FormWithLoader formId="add-poi" title="Pridať dôležité miesto" 
       submitText={warningMsg ? "Naozaj pridať" : "Pridať"}
@@ -118,20 +136,25 @@ const PoiForm = (props) => {
     
       {!!warningMsg && (
         <div className="warningMsg">
-          <Map use="add-poi-map" lat={warningMsg.lat} lon={warningMsg.lon} zoom={warningMsg.zoom} marker=" " pois={warningMsg.pois}/>
-          {!!warningMsg.distance && <p>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</p>}
+          <Map use="add-poi-map" lat={warningMsg.lat} lon={warningMsg.lon} zoom={warningMsg.zoom}
+            marker="nové miesto" pois={warningMsg.pois} guideposts={guideposts} />
+          {!!warningMsg.distance && <h3>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</h3>}
           {!!warningMsg.pois && (
             <>
-              <p>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</p>  
+              <h3>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h3>  
               <PoiTable pois={warningMsg.pois} />
             </>
           )}
           {!!warningMsg.itinerary && (
             <>
-              <p>Skontroluj umiestnení v itinerári:</p>  
+              <h3>Skontroluj a prípadne uprav umiestnení a popis v itinerári:</h3> 
+              <FormText value={[itineraryInfo, setItineraryInfo]}
+                valueName="itineraryInfo" valueLabel="Popis v itineráry:"/> 
               <ItineraryTable noTotals noDetails fullKm select 
-                insertPoi={warningMsg.poi} insert={warningMsg.itinerary.near} insertAfter={warningMsg.itinerary.after}
-                itinerary={[warningMsg.itinerary.prev, warningMsg.itinerary.nearest, warningMsg.itinerary.next].filter((t, i, a) => a.indexOf(t) == i)} />
+                insert={warningMsg.poi} insertInfo={itineraryInfo} 
+                insertNear={[itineraryNear, setItineraryNear]} 
+                insertAfter={[itineraryAfter, setItineraryAfter]}
+                itinerary={guideposts} />              
             </>
           )}
         </div>

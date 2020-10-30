@@ -90,7 +90,7 @@ class Map extends Component {
       }
     }).addTo(map);
 
-    // / DOLEZITE MIESTA
+    // MARKER 
     if (this.state.marker && this.state.lat && this.state.lon) {
       const iconUrl = posed;
       const icon = L.icon({
@@ -101,10 +101,26 @@ class Map extends Component {
       const marker = L.marker([this.state.lat, this.state.lon], {
         icon
       }).addTo(map);
-      marker.bindTooltip(this.state.marker).openTooltip();
+      marker.bindPopup(this.state.marker);
     }
 
-    // MARKER
+    // GUIDEPOSTS 
+    if (this.props.guideposts) {
+      this.props.guideposts.forEach(g => {
+        const iconUrl = posed;
+        const icon = L.icon({
+          iconUrl,
+          iconSize: [32, 32],
+          iconAnchor: [16, 32]
+        });
+        const marker = L.marker([g.lat, g.lon], {
+          icon
+        }).addTo(map);
+        marker.bindPopup(`<h4><a href="/pred/itinerary#g${g.id}">${g.name} ${g.ele ? ` ${g.ele} m`: ""}</a></h4>`);
+      });
+    }
+
+    // DOLEZITE MIESTA
     if (this.props.pois && this.props.pois.length > 0) {
       this.props.pois.forEach(poi => {
         let iconUrl = '';
@@ -142,9 +158,10 @@ class Map extends Component {
         const marker = L.marker([poi.coordinates[1], poi.coordinates[0]], {
           icon
         }).addTo(map);
-        marker.bindPopup(`<h4>${poi.name}</h4>
+        marker.bindPopup(`<h4><a href="/pred/pois/${poi._id}">${poi.name}</a></h4>
           <p>GPS: ${poi.coordinates[1]}, ${poi.coordinates[0]}</p>
-          <p>${poi.text}</p>`);
+          <p>${poi.text}</p>
+          <a href="/pred/pois/${poi._id}">viac</a>`);
 
         if (this.state.poi === poi._id) {
           marker.openPopup();

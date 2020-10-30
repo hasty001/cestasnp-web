@@ -4,6 +4,7 @@ import PageWithLoader from '../reusable/PageWithLoader';
 import { fetchJson } from '../../helpers/fetchUtils';
 import PoiForm from './PoiForm';
 import PoiTable from '../reusable/PoiTable';
+import * as Texts from '../Texts';
 
 const AddPoi = (props) => {
 
@@ -25,9 +26,9 @@ const AddPoi = (props) => {
       })
       .catch(e => {
         setLoading(false);
-        setError(e);
+        setError(Texts.GenericError);
 
-        console.error("Poi loading error: " + e);
+        console.error("Pois loading error: " + e);
       });
   };
 

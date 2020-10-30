@@ -22,6 +22,7 @@ const Itinerary = (props) => {
     })
     .catch(e => {
       console.error(e);
+
       setLoading(false);
       setError(Texts.GenericError);
     });

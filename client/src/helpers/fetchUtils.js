@@ -1,5 +1,11 @@
 const fetchJson = (url) =>
-  fetch(url).then(res => res.json());
+  fetch(url).then(res => res.json())
+  .then(res => { 
+    if (res && res.error) {
+      throw res.error;
+    }
+    return res;
+  });
 
 const fetchPostJsonWithToken = (user, url, data) => 
   user.getIdToken()
@@ -12,6 +18,12 @@ const fetchPostJsonWithToken = (user, url, data) =>
           'X-Auth-Token': token,
         })
       })
-      .then(res => res.json()));
+      .then(res => res.json()))
+      .then(res => { 
+        if (res && res.error) {
+          throw res.error;
+        }
+        return res;
+      });
 
 export { fetchJson, fetchPostJsonWithToken };

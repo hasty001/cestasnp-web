@@ -6,13 +6,14 @@ class Pois extends Component {
   constructor(props) {
     super(props);
 
-    const params = new URLSearchParams(this.props.location.search);
+    const params = new URLSearchParams(this.props.location.hash);
 
     this.state = {
       loading: true,
       pois: [],
       lat: params.get('lat'),
       lon: params.get('lon'),
+      zoom: params.get('zoom'),
       poi: params.get('poi'),
       guidepost: params.get('guidepost'),
     };
@@ -36,7 +37,7 @@ class Pois extends Component {
         {!this.state.loading && (
           <Map pois={this.state.pois} use="pois-map" 
             lat={this.state.lat} lon={this.state.lon}
-            poi={this.state.poi} marker={this.state.guidepost} />
+            poi={this.state.poi} marker={this.state.guidepost} zoom={this.state.zoom} />
         )}
       </div>
     );

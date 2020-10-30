@@ -5,6 +5,7 @@ const PoiCategories = [
   { value: "utulna", label: "útulňa", icon: "fas fa-home"},
   { value: "krcma_jedlo", label: "krčma", icon: "fas fa-utensils"},
   { value: "potraviny", label: "potraviny", icon: "fas fa-shopping-basket"},
+  { value: "posed", label: "posed", icon: "fas fa-map-marker-alt"},
   { value: "ostatne", label: "ostatné", icon: "fas fa-map-marker-alt"},
 ];
 

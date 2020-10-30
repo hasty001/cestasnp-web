@@ -397,6 +397,35 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 /***    ADD POIS    ***/
 /**********************/
+/***      POI       ***/
+
+#PoiDetail {
+  width: 80%;
+  margin: 15px auto;
+} @media (max-width: 767px) {
+  #PoiDetail {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+#poi-map {
+  float: left;
+  width: 30vw;
+  height: 30vw;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  min-height: 140px;
+} @media (max-width: 767px) {
+  #poi-map {
+    width: 100%;
+    margin-right: 0px;
+  }
+}
+
+/***      POI       ***/
+/**********************/
 /***    ITINERARY   ***/
 
 #Itinerary {

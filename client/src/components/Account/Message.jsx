@@ -57,8 +57,6 @@ const Message = (props) => {
       .then(msgRes => {
         setLoading(false);
 
-        if (msgRes.error) { throw msgRes.error; }
-
         setGpsEdit(false);
         setGps({ latlon: '', accuracy: 0 });
         setMessage('');

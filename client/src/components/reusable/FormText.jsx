@@ -4,7 +4,7 @@ import FormItem from './FormItem';
 
 const FormText = (props) => {
 
-  const [value, setValue] = useStateProp(props.value);
+  const [value, setValue] = useStateProp(props.value, '');
   
   return (
     <FormItem {...props} value={value}>

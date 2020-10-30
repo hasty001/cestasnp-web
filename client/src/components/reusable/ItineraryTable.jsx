@@ -1,7 +1,11 @@
 import React, { Fragment } from 'react';
+import { useStateProp } from '../../helpers/reactUtils';
 import { findPoiCategory } from '../PoiCategories';
 
 const ItineraryTable = (props) => {
+
+  const [insertNear, setInsertNear] = useStateProp(props.insertNear);
+  const [insertAfter, setInsertAfter] = useStateProp(props.insertAfter);
   
   var itinerary = [];
   var insertInfo = '';
@@ -21,24 +25,30 @@ const ItineraryTable = (props) => {
       endIndex = t;
     }
 
-    const getPoiInfo = (poi, index, reverse) => {
-      const getInfo = () => poi.itinerary && poi.itinerary.info ? (poi.itinerary.info
+    const getPoiInfo = (poi, index, reverse, info = null) => {
+      const getInfo = () => (info || (poi.itinerary &&  poi.itinerary.info)) ? 
+        ((info || poi.itinerary.info)
         .replace("[pred]", reverse ? "za" : "pred")
         .replace("[za]", reverse ? "pred" : "za")
         .replace("[vľavo]", reverse ? "vpravo" : "vľavo")
         .replace("[vpravo]", reverse ? "vľavo" : "vpravo")) 
         //.replace(/\[(.+?)\|(.+?)\]/gms)
-        : (poi.name + (poi.text ? (" - " + poi.text) : ""));
+        : [poi.name, poi.text].filter(s => s && s.trim().length > 0).join(" - ");
 
       const getIcon = () => {
         return <i className={findPoiCategory(poi.category).icon}/>;
       }
 
-      return (<div key={index}><a id={`P${poi._id}`} href={`/pred/pois?poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}>
-        {getIcon()}{" " + getInfo()}</a></div>);
+      return (
+        <div key={index}>
+          <a id={poi._id ? `p${poi._id}` : null} 
+            href={`/pred/pois${poi._id ? `/${poi._id}` : `#lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}&zoom=13`}`}>
+              {getIcon()}{" " + getInfo()}
+          </a>
+        </div>);
     };
 
-    insertInfo = props.insertPoi ? getPoiInfo(props.insertPoi, -1, reverse) : '';
+    insertInfo = props.insert ? getPoiInfo(props.insert, -1, reverse, props.insertInfo) : '';
 
     var filtered = props.itinerary.slice(startIndex, endIndex + 1);
     itinerary = filtered.map((f, i, items) => { return {
@@ -124,11 +134,12 @@ const ItineraryTable = (props) => {
               <td className="itinerary-value">{formatNumber(item.km, 1)}</td>
               <td className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
               <td colSpan={props.noDetails ? 1 : 6}>
-                <a id={`G${item.id}`} href={`/pred/pois?guidepost=${encodeURIComponent(guidepostName)}&lat=${item.lat}&lon=${item.lon}`}>
+                <a id={`g${item.id}`} href={`/pred/pois#guidepost=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
                   <b>{guidepostName}</b>
                 </a>
               </td>
-              <td>{item.info}{!!props.select && (props.insert == item.id ? insertInfo : <div>vložiť tu</div>)}</td>
+              <td>{item.info}{!!props.select && (insertNear == item.id ? 
+                insertInfo : <div><a href="#" onClick={e => { e.preventDefault(); setInsertNear(item.id); setInsertAfter(null); }}>vložiť tu</a></div>)}</td>
             </tr>
             {i < items.length - 1 ? (
               <tr>
@@ -141,7 +152,8 @@ const ItineraryTable = (props) => {
                 <td className="itinerary-value">{formatNumber(item.altDown)}</td>
                 <td className="itinerary-value">{formatHours(item.time)}</td>
                 </>)}
-                <td>{item.infoAfter}{!!props.select && (props.insertAfter == item.id ? insertInfo : <div>vložiť tu</div>)}</td>
+                <td>{item.infoAfter}{!!props.select && (insertAfter == item.id ? 
+                  insertInfo : <div><a href="#" onClick={e => { e.preventDefault(); setInsertAfter(item.id); setInsertNear(null); }}>vložiť tu</a></div>)}</td>
               </tr>
             ) : null}
           </Fragment>);

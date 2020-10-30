@@ -1,7 +1,9 @@
 const express = require('express');
 const DB = require('../db/db');
 const checkToken = require('../util/checkToken');
+const sanitize = require('mongo-sanitize');
 const { findNearPois, findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
+const { ObjectId } = require('mongodb');
 
 const db = new DB();
 
@@ -13,9 +15,28 @@ router.get('/', (req, res) => {
       res.json(results);
     } else {
       console.error(error);
-      res.status(500).json({ error });
+      res.status(500).json({ error: error.toString() });
     }
   });
+});
+
+router.get('/:poiId', (req, res) => {
+  try
+  {
+    const sPoiId = sanitize(req.params.poiId);
+
+    db.findBy('pois', { _id: new ObjectId(sPoiId) })
+      .then(results => {
+        res.json(results[0]);
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).json({ error: error.toString() });
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.toString() });
+  }
 });
 
 router.post('/add', (req, res) => {
@@ -27,7 +48,10 @@ router.post('/add', (req, res) => {
     text,
     user_id,
     img_url,
-    confirmed
+    confirmed,
+    itineraryNear,
+    itineraryAfter,
+    itineraryInfo
   } = req.body;
 
   const addPoi = () => checkToken(req, res, user_id, () =>
@@ -38,7 +62,10 @@ router.post('/add', (req, res) => {
       name,
       text,
       user_id,
-      img_url
+      img_url,
+      itineraryNear,
+      itineraryAfter,
+      itineraryInfo
     },
     resp => {
       res.json(resp);
@@ -86,7 +113,7 @@ router.post('/add', (req, res) => {
         addPoi();
       } else {
         console.error(error);
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.toString() });
       }
     })
   }
