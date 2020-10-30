@@ -12,6 +12,7 @@ import { PoiCategories } from '../PoiCategories';
 import Map from '../Map';
 import PoiTable from '../reusable/PoiTable';
 import ItineraryTable from '../reusable/ItineraryTable';
+import { useStateEx } from '../../helpers/reactUtils';
 
 const PoiForm = (props) => {
 
@@ -19,19 +20,19 @@ const PoiForm = (props) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [warningMsg, setWarningMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  
-  const [gps, setGps] = useState({ latlon: '', accuracy: 0 });
-  const [gpsEdit, setGpsEdit] = useState(false);
-  const [category, setCategory] = useState('');
-  const [name, setName] = useState('');
-  const [text, setText] = useState('');
-  const [image, setImage] = useState('');
 
   const clearMsg = () => {
     setErrorMsg('');
     setWarningMsg('');
     setSuccessMsg('');
   }
+  
+  const [gps, setGps] = useStateEx({ latlon: '', accuracy: 0 }, clearMsg);
+  const [gpsEdit, setGpsEdit] = useStateEx(false, clearMsg);
+  const [category, setCategory] = useStateEx('', clearMsg);
+  const [name, setName] = useStateEx('', clearMsg);
+  const [text, setText] = useStateEx('', clearMsg);
+  const [image, setImage] = useStateEx('', clearMsg);
 
   const addPoi = () => {
     if ((!name || name.trim().length === 0) 
@@ -80,17 +81,16 @@ const PoiForm = (props) => {
           return; 
         }
          
-        clearMsg();
-        setSuccessMsg('Dôležité miesto úspešne pridané!');
-
-        props.onUpdate(msgRes);
-
         setGpsEdit(false);
         setGps({ latlon: '', accuracy: 0 });
         setCategory('');
         setName('');
         setText('');
         setImage(''); 
+
+        setSuccessMsg('Dôležité miesto úspešne pridané!');
+
+        props.onUpdate(msgRes);
       })
       .catch(e => {
         console.error('Add POI error: ', e);
@@ -105,16 +105,16 @@ const PoiForm = (props) => {
       submitText={warningMsg ? "Naozaj pridať" : "Pridať"}
       onSubmit={addPoi} loading={loading} errorMsg={errorMsg} successMsg={successMsg} >
 
-      <FormLatLon value={gps} edit={gpsEdit} onEdit={setGpsEdit} onChange={value => { setGps(value); clearMsg(); }} onError={setErrorMsg}/>
+      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg}/>
 
-      <FormSelect value={category} valueName="category" valueLabel="Kategória" 
-        options={PoiCategories} onChange={value => { setCategory(value); clearMsg(); }}>
+      <FormSelect value={[category, setCategory]} valueName="category" valueLabel="Kategória" 
+        options={PoiCategories} >
         <option value=" " />
       </FormSelect>
-      <FormText value={name} valueName="name" valueLabel="Meno" onChange={value => { setName(value); clearMsg(); }}/>
-      <FormTextArea value={text} valueName="text" valueLabel="Popis" onChange={value => { setText(value); clearMsg(); }}/>
+      <FormText value={[name, setName]} valueName="name" valueLabel="Meno" />
+      <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" />
 
-      <FormImage value={image} onChange={value => { setImage(value); clearMsg(); }} imageAlt="nahrana fotka miesta" />
+      <FormImage value={[image, setImage]} imageAlt="nahrana fotka miesta" />
     
       {!!warningMsg && (
         <div className="warningMsg">

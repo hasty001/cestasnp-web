@@ -1,20 +1,23 @@
 import React from 'react';
+import { useStateProp } from '../../helpers/reactUtils';
 import FormItem from './FormItem';
 
 const FormTextArea = (props) => {
   
+  const [value, setValue] = useStateProp(props.value);
+  
   return (
-    <FormItem {...props}>
+    <FormItem {...props} value={value}>
       <textarea
         type="text"
         id={props.valueName}
         name={props.valueName}
         onBlur={e => {
           e.preventDefault();
-          (props.onChange|| (() => {}))(e.target.value);
+          setValue(e.target.value);
         }}
-        onChange={e => (props.onChange|| (() => {}))(e.target.value)}
-        value={props.value}
+        onChange={e => setValue(e.target.value)}
+        value={value}
         />
     </FormItem>
   )

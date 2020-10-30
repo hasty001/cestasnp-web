@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useStateProp } from '../../helpers/reactUtils';
 
 const FormItem = (props) => {
-  const [edit, setEdit] = useState(props.edit || false);
-
-  useEffect(() => {
-    if (edit != props.edit) {
-      setEdit(props.edit);
-    }
-  }, [props.edit]);
+  const [edit, setEdit] = useStateProp(props.edit, false);
   
   return (
     <label htmlFor={props.valueName} >
-      <span onClick={() => { const val = !edit; setEdit(val); (props.onEdit || (() => {}))(val) } } >
+      <span onClick={() => setEdit(!edit)} >
         {props.valueLabel} {!!props.useEdit && <i className="fas fa-edit" />}
       </span>
       {!props.useEdit || edit ? 

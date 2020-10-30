@@ -6,22 +6,23 @@ import FormWithLoader from '../reusable/FormWithLoader';
 import FormLatLon from '../reusable/FormLatLon';
 import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
+import { useStateEx } from '../../helpers/reactUtils';
 
 const Message = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  
-  const [gps, setGps] = useState({ latlon: '', accuracy: 0 });
-  const [gpsEdit, setGpsEdit] = useState(false);
-  const [message, setMessage] = useState('');
-  const [image, setImage] = useState('');
 
   const clearMsg = () => {
     setErrorMsg('');
     setSuccessMsg('');
   }
+  
+  const [gps, setGps] = useStateEx({ latlon: '', accuracy: 0 }, clearMsg);
+  const [gpsEdit, setGpsEdit] = useStateEx(false, clearMsg);
+  const [message, setMessage] = useStateEx('', clearMsg);
+  const [image, setImage] = useStateEx('', clearMsg);
 
   const sendMessage = () => {
     if (!message || message.trim().length === 0) {
@@ -57,16 +58,15 @@ const Message = (props) => {
         setLoading(false);
 
         if (msgRes.error) { throw msgRes.error; }
-         
-        clearMsg();
-        setSuccessMsg('Správa úspešne poslaná!');
-
-        props.updateTravellerMsgs(msgRes);
 
         setGpsEdit(false);
         setGps({ latlon: '', accuracy: 0 });
         setMessage('');
         setImage(''); 
+
+        setSuccessMsg('Správa úspešne poslaná!');
+
+        props.updateTravellerMsgs(msgRes);
       })
       .catch(e => {
         console.error('Send message error: ', e);
@@ -80,11 +80,11 @@ const Message = (props) => {
     <FormWithLoader formId="MessageForm" title="Poslať správu" submitText="Poslať správu"
       onSubmit={sendMessage} loading={loading} errorMsg={errorMsg} successMsg={successMsg}>
       
-      <FormLatLon value={gps} edit={gpsEdit} onEdit={setGpsEdit} onChange={value => { setGps(value); clearMsg(); }} onError={setErrorMsg}/>
+      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg}/>
 
-      <FormTextArea value={message} valueName="message" valueLabel="Text" onChange={value => { setMessage(value); clearMsg(); }}/>
-
-      <FormImage value={image} onChange={value => { setImage(value); clearMsg(); }} imageAlt="nahrana fotka z cesty" />
+      <FormTextArea value={[message, setMessage]} valueName="message" valueLabel="Text" />
+      
+      <FormImage value={[image, setImage]} imageAlt="nahrana fotka z cesty" />
     </FormWithLoader>
   );
 }

@@ -1,15 +1,18 @@
 import React from 'react';
+import { useStateProp } from '../../helpers/reactUtils';
 import FormItem from './FormItem';
 
 const FormSelect = (props) => {
+
+  const [value, setValue] = useStateProp(props.value);
   
   return (
-    <FormItem {...props}>
+    <FormItem {...props} value={value} >
       <select
         id={props.valueName}
         name={props.valueName}
-        onChange={e => (props.onChange|| (() => {}))(e.target.value)}
-        value={props.value}>
+        onChange={e => setValue(e.target.value)}
+        value={value}>
         {props.children}
         {!!props.options && props.options.map((option, i) => <option key={i} value={option.value} label={option.label}/>)}
       </select>

@@ -3,16 +3,12 @@ import DivWithLoader from './DivWithLoader';
 import FormItem from './FormItem';
 import * as Constants from '../Constants';
 import { parseGPSPos } from '../../helpers/GPSPosParser';
+import { useStateProp } from '../../helpers/reactUtils';
 
 const FormLatLon = (props) => {
   const [loading, setLoading] = useState(false);
-  const [edit, setEdit] = useState(false);
-
-  useEffect(() => {
-    if (edit != props.edit) {
-      setEdit(props.edit);
-    }
-  }, [props.edit]);
+  const [value, setValue] = useStateProp(props.value, { latlon: '', accuracy: 0});
+  const [edit, setEdit] = useStateProp(props.edit);
 
   const getMyPosition = () => {
 
@@ -44,8 +40,7 @@ const FormLatLon = (props) => {
             );
         } else {
           setEdit(false);
-          (props.onChange || (() => {}))({ latlon: lat + ", " + lon,
-            accuracy: coords.accuracy });
+          setValue({ latlon: lat + ", " + lon, accuracy: coords.accuracy });
         }
       },
       err => {
@@ -86,17 +81,17 @@ const FormLatLon = (props) => {
   return (    
     <DivWithLoader loading={loading}>
       <FormItem valueName="latlon" valueLabel="Zem. šírka, dĺžka (latitude, longitude)" 
-        value={props.value ? props.value.latlon : ''} useEdit valueClass="travellerP" 
-        edit={edit} onEdit={v => { setEdit(v); (props.onEdit || (() => {}))(v) }}>
+        value={value ? value.latlon : ''} useEdit valueClass="travellerP" 
+        edit={[edit, setEdit]}>
           <input
               id="latlon"
               name="latlon"
-              value={props.value ? props.value.latlon : ''}
+              value={value ? value.latlon : ''}
               onBlur={e => {
                 e.preventDefault();
                 verifyGPSFormat(e);
               }}
-              onChange={e => (props.onChange || (() => {}))({ latlon: e.target.value, accuracy: 0 })}
+              onChange={e => setValue({ latlon: e.target.value, accuracy: 0 })}
             />
       </FormItem>
 
