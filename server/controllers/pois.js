@@ -4,6 +4,7 @@ const checkToken = require('../util/checkToken');
 const sanitize = require('mongo-sanitize');
 const { findNearPois, findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
 const { ObjectId } = require('mongodb');
+const itinerary = require('../data/guideposts.json');
 
 const db = new DB();
 
@@ -12,7 +13,8 @@ const router = express.Router();
 router.get('/', (req, res) => {
   db.all('pois', (results, error) => {
     if (results) {
-      res.json(results);
+      // add guideposts
+      res.json(results.concat(itinerary.map(g => Object.assign({ category: "razcestnik" }, g))));
     } else {
       console.error(error);
       res.status(500).json({ error: error.toString() });

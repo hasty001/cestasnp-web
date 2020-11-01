@@ -28,11 +28,11 @@ const ItineraryTable = (props) => {
     const getPoiInfo = (poi, index, reverse, info = null) => {
       const getInfo = () => (info || (poi.itinerary &&  poi.itinerary.info)) ? 
         ((info || poi.itinerary.info)
-        .replace("[pred]", reverse ? "za" : "pred")
-        .replace("[za]", reverse ? "pred" : "za")
-        .replace("[vľavo]", reverse ? "vpravo" : "vľavo")
-        .replace("[vpravo]", reverse ? "vľavo" : "vpravo")) 
-        //.replace(/\[(.+?)\|(.+?)\]/gms)
+        .replaceAll("[pred]", reverse ? "za" : "pred")
+        .replaceAll("[za]", reverse ? "pred" : "za")
+        .replaceAll("[vľavo]", reverse ? "vpravo" : "vľavo")
+        .replaceAll("[vpravo]", reverse ? "vľavo" : "vpravo")) 
+        .replaceAll(/\[(.+?)\|(.+?)\]/gms, reverse ? "$2" : "$1")
         : [poi.name, poi.text].filter(s => s && s.trim().length > 0).join(" - ");
 
       const getIcon = () => {
@@ -41,7 +41,7 @@ const ItineraryTable = (props) => {
 
       return (
         <div key={index}>
-          <a id={poi._id ? `p${poi._id}` : null} 
+          <a id={poi._id} 
             href={`/pred/pois${poi._id ? `/${poi._id}` : `#lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}&zoom=13`}`}>
               {getIcon()}{" " + getInfo()}
           </a>
@@ -134,7 +134,7 @@ const ItineraryTable = (props) => {
               <td className="itinerary-value">{formatNumber(item.km, 1)}</td>
               <td className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
               <td colSpan={props.noDetails ? 1 : 6}>
-                <a id={`g${item.id}`} href={`/pred/pois#guidepost=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
+                <a id={item.id} href={`/pred/pois#poi=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
                   <b>{guidepostName}</b>
                 </a>
               </td>
@@ -174,7 +174,7 @@ const ItineraryTable = (props) => {
         </tr>
       </tfoot>)} 
       </table>
-      <p style={{textAlign: "right"}}><br/><br/>Data: © Prispievatelia <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></p>
+      <p style={{textAlign: "right"}}><small>Dáta: © Prispievatelia <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></small></p>
     </>
   )
 }

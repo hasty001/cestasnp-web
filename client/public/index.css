@@ -395,6 +395,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-bottom: 10px;
 }
 
+#MyPois {
+  margin: 30px 0;
+}
+
 /***    ADD POIS    ***/
 /**********************/
 /***      POI       ***/
@@ -417,11 +421,22 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-right: 10px;
   margin-bottom: 10px;
   min-height: 140px;
-} @media (max-width: 767px) {
+} 
+
+#PoiDetail img {
+  margin: 10px auto;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
   #poi-map {
     width: 100%;
     margin-right: 0px;
   }
+}
+
+.poi-item {
+  margin: 5px 0;
 }
 
 /***      POI       ***/
@@ -1080,11 +1095,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-left: 200px;
 }
 
-.fanAccountWrap h2 {
+.fanAccountWrap h2, #AddPoi h2 {
   text-align: center;
 }
 
-.fanAccountWrap p {
+.fanAccountWrap p, #AddPoi p {
   text-align: justify;
   font-weight: 800;
 }
@@ -1106,7 +1121,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 10px;
 }
 
-.fanAccountWrap input {
+.fanAccountWrap input, #AddPoi input {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1116,7 +1131,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 10px;
 }
 
-.fanAccountWrap select {
+.fanAccountWrap select, #AddPoi select {
   height: 36px;
   border: solid 1px transparent;
   background: #ffdada;
@@ -1124,7 +1139,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin: 5px 0;
 }
 
-.fanAccountWrap textarea {
+.fanAccountWrap textarea, #AddPoi textarea {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1194,12 +1209,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
     width: 95%;
   }
 
-  .fanAccountWrap select {
+  .fanAccountWrap select, #AddPoi select {
     display: block;
     width: 100px;
   }
 
-  .fanAccountWrap h2 {
+  .fanAccountWrap h2, #AddPoi h2 {
     text-align: left;
   }
 

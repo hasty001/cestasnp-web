@@ -4,6 +4,7 @@ import Promise from 'promise-polyfill';
 import URLSearchParams from 'url-search-params-polyfill';
 import findIndex from 'array.prototype.findindex';
 import assign from 'object.assign';
+import values from 'object.values';
 import CestaSNP from './CestaSNP';
 import '../public/index.css';
 
@@ -22,6 +23,10 @@ if (!Array.findIndex) {
 
 if (!Object.assign) {
   assign.shim();
+}
+
+if (!Object.values) {
+  values.shim();
 }
 
 if (process.env.NODE_ENV !== 'production') {

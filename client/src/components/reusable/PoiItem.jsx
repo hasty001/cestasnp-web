@@ -4,10 +4,13 @@ import { findPoiCategory } from '../PoiCategories';
 const PoiItem = (props) => {
   
   return (
-    <div>
+    <div className="poi-item">
       {!!props.value.distance && `${props.value.distance.toFixed(0)} m `}
-      <i className={findPoiCategory(props.value.category).icon}/>
-      {[props.value.name, props.value.text].filter(s => s && s.trim().length > 0).join(" - ")}
+      <a href={`/pred/pois/${props.value._id}`}>
+        <i className={findPoiCategory(props.value.category).icon}/>
+        {' '}{props.value.name || findPoiCategory(props.value.category).label}
+      </a>
+      {' '}{props.value.text}
     </div>
   )
 }

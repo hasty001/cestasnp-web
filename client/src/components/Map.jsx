@@ -1,16 +1,14 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import devinDukla from '../geojson/devin_dukla.json';
-import chata from '../../public/img/chata.png';
-import potraviny from '../../public/img/potraviny.png';
-import pristresok from '../../public/img/pristresok.png';
-import utulna from '../../public/img/utulna.png';
-import pramen from '../../public/img/pramen.png';
-import krcma_jedlo from '../../public/img/krcma_jedlo.png';
-import posed from '../../public/img/posed.png';
+import ostatne from '../../public/img/ostatne.png';
+import razcestnik from '../../public/img/razcestnik.png';
 import defaultPin from '../../public/img/pins/Cervena.png';
 import { dateTimeToStr } from '../helpers/helpers';
+import { findPoiCategory, PoiCategories } from './PoiCategories';
+import { useStateProp } from '../helpers/reactUtils';
+import * as Constants from './Constants';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -19,7 +17,6 @@ const config = {
     center: [48.73, 19.46],
     zoomControl: false,
     zoom: 8,
-    maxZoom: 14,
     minZoom: 8,
     scrollwheel: false,
     infoControl: false,
@@ -29,41 +26,38 @@ const config = {
     uri: 'https://tile.freemap.sk/T/{z}/{x}/{y}.jpeg',
     params: {
       minZoom: 8,
+      maxZoom: 14,
+      id: '',
+      accessToken: ''
+    }
+  },
+  tileLayerNew: {
+    uri: 'https://tile.freemap.sk/X/{z}/{x}/{y}.jpeg',
+    params: {
+      minZoom: 8,
+      maxZoom: 19,
       id: '',
       accessToken: ''
     }
   }
 };
 
-class Map extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      map: null,
-      use: this.props.use,
-      lat: this.props.lat,
-      lon: this.props.lon,
-      zoom: this.props.zoom,
-      poi: this.props.poi,
-      marker: this.props.marker,
-    };
-  }
+const Map = (props) => {
 
-  componentDidMount() {
-    // AJAX call for geodata here
-    if (!this.state.map) this.init(this.state.use);
-  }
+  const [view, setView] = useStateProp(props.view);
 
-  init(id) {
-    if (this.state.map) return;
+  const [mapObj, setMapObj] = useState();
+  const [moving, setMoving] = useState();
+  const [zooming, setZooming] = useState();
+
+  const init = (id) => {
     // this function creates the Leaflet map object and is called after the Map component mounts
 
     const params = Object.assign({}, config.params);
-    if (this.state.lat) { params.center[0] = this.state.lat; }
-    if (this.state.lon) { params.center[1] = this.state.lon; }
-    if (this.state.zoom) { 
-      params.zoom = this.state.zoom; 
-    } else if (this.state.marker || this.state.poi) {
+    if (view && view[0] && view[1]) { params.center = view.slice(0, 2); }
+    if (view && view[2]) { 
+      params.zoom = view[2]; 
+    } else if (props.marker || (view && view[3])) {
       params.zoom = 13;
     }
 
@@ -90,95 +84,134 @@ class Map extends Component {
       }
     }).addTo(map);
 
+    const mapTiles = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
+    const mapTilesNew = L.tileLayer(config.tileLayerNew.uri, config.tileLayerNew.params);
+
+    const posChanged = () => { const c = map.getCenter(); setView([c.lat, c.lng, map.getZoom()]); };
+
+    map.on("zoomend", posChanged);
+    map.on("moveend", posChanged);
+
+    map.on("movestart", () => setMoving(true));
+    map.on("moveend", () => setMoving(false));
+
+    map.on("movestart", () => setZooming(true));
+    map.on("moveend", () => setZooming(false));
+
+    const markerLayer = L.layerGroup();
+    const guidepostZoomedLayer = L.layerGroup();
+
+    const markerLayers = {};
+    const legendLayers = {};
+    PoiCategories.forEach(c => {
+      const layer = L.layerGroup();
+      markerLayers[c.value] = layer;
+      legendLayers[`<span><img src="${c.iconUrl}" width="24" height="24" /> ${c.label}</span>`] = layer;
+    });
+
+    const zoomChanged = () => {
+      if (map.getZoom() >= 12) {
+        markerLayers[Constants.PoiCategoryGuidepost].addLayer(guidepostZoomedLayer);
+      } else {
+        markerLayers[Constants.PoiCategoryGuidepost].removeLayer(guidepostZoomedLayer);
+      }
+    };
+    map.on("zoomend", zoomChanged);
+
+    L.control.layers({"turistická": mapTiles, "turistika + cyklo + běžky": mapTilesNew}, 
+      props.showLayers? legendLayers : {}).addTo(map);
+
+    updateLayers({ map, markerLayer, markerLayers, guidepostZoomedLayer });
+
+    setMapObj({ map, markerLayer, markerLayers, guidepostZoomedLayer });
+    posChanged();
+    zoomChanged();
+  }
+
+  const updateLayers = ({ map, markerLayer, markerLayers, guidepostZoomedLayer }) => {
+    markerLayer.clearLayers();
+    guidepostZoomedLayer.clearLayers();
+
+    Object.values(markerLayers).forEach(l => { l.clearLayers(); markerLayer.addLayer(l); });
+    
     // MARKER 
-    if (this.state.marker && this.state.lat && this.state.lon) {
-      const iconUrl = posed;
+    if (props.marker) {
       const icon = L.icon({
-        iconUrl,
+        iconUrl: ostatne,
         iconSize: [32, 32],
         iconAnchor: [16, 32]
       });
-      const marker = L.marker([this.state.lat, this.state.lon], {
+      const marker = L.marker([props.marker.lat, props.marker.lon], {
         icon
-      }).addTo(map);
-      marker.bindPopup(this.state.marker);
+      }).addTo(markerLayer);
+      marker.bindPopup(props.marker.name);
     }
 
+    const guideposts = (props.guideposts || []).concat((props.pois || []).filter(p => p.category == "razcestnik"));
     // GUIDEPOSTS 
-    if (this.props.guideposts) {
-      this.props.guideposts.forEach(g => {
-        const iconUrl = posed;
+    if (guideposts) {
+      guideposts.forEach(g => {
         const icon = L.icon({
-          iconUrl,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32]
+          iconUrl: razcestnik,
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
         });
+        
         const marker = L.marker([g.lat, g.lon], {
           icon
-        }).addTo(map);
-        marker.bindPopup(`<h4><a href="/pred/itinerary#g${g.id}">${g.name} ${g.ele ? ` ${g.ele} m`: ""}</a></h4>`);
+        }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
+
+        marker.bindPopup(`<h4><a href="/pred/itinerar#${g.id}">${g.name} ${g.ele ? ` ${g.ele} m`: ""}</a></h4>`);
+
+        if (view && view[3] == g.id) {
+          marker.openPopup();
+        }
       });
+
+      if (map.getZoom() >= 12) {
+        markerLayers[Constants.PoiCategoryGuidepost].addLayer(guidepostZoomedLayer);
+      } else {
+        markerLayers[Constants.PoiCategoryGuidepost].removeLayer(guidepostZoomedLayer);
+      }
     }
 
     // DOLEZITE MIESTA
-    if (this.props.pois && this.props.pois.length > 0) {
-      this.props.pois.forEach(poi => {
-        let iconUrl = '';
-        switch (poi.category) {
-          case 'chata':
-            iconUrl = chata;
-            break;
-          case 'pramen':
-            iconUrl = pramen;
-            break;
-          case 'potraviny':
-            iconUrl = potraviny;
-            break;
-          case 'pristresok':
-            iconUrl = pristresok;
-            break;
-          case 'utulna':
-            iconUrl = utulna;
-            break;
-          case 'posed':
-            iconUrl = posed;
-            break;
-          case 'krcma_jedlo':
-            iconUrl = krcma_jedlo;
-            break;
-          default:
-            iconUrl = posed;
-            break;
-        }
+    if (props.pois && props.pois.length > 0) {
+      props.pois.filter(p => p.category != "razcestnik").forEach(p => {
+        
+        const poiCategory = findPoiCategory(p.category);
+
         const icon = L.icon({
-          iconUrl,
+          iconUrl: poiCategory.iconUrl,
           iconSize: [32, 32],
           iconAnchor: [16, 32]
         });
-        const marker = L.marker([poi.coordinates[1], poi.coordinates[0]], {
-          icon
-        }).addTo(map);
-        marker.bindPopup(`<h4><a href="/pred/pois/${poi._id}">${poi.name}</a></h4>
-          <p>GPS: ${poi.coordinates[1]}, ${poi.coordinates[0]}</p>
-          <p>${poi.text}</p>
-          <a href="/pred/pois/${poi._id}">viac</a>`);
 
-        if (this.state.poi === poi._id) {
+        const marker = L.marker([p.coordinates[1], p.coordinates[0]], {
+          icon
+        }).addTo(markerLayers[poiCategory.value]);
+
+        marker.bindPopup(`<h4><a href="/pred/pois/${p._id}">${p.name || poiCategory.label}</a></h4>
+          <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
+          <p>${p.text}</p>`);
+
+        if (view && view[3] == p._id) {
+          console.log("open popup");
           marker.openPopup();
         }
       });
     }
 
     // TRAVELLER MSGs
-    if (this.props.stops && this.props.stops.length > 0) {
-      this.props.stops.forEach(stop => {
+    if (props.stops && props.stops.length > 0) {
+      props.stops.forEach(stop => {
         if (stop.type === 'message') {
           const icon = L.divIcon({
             html: `<img src=${defaultPin} alt="Ukazovatel na mape" class="mapMarker"/>`,
             iconSize: [32, 32],
             iconAnchor: [16, 32]
           });
-          const marker = L.marker([stop.lat, stop.lon], { icon }).addTo(map);
+          const marker = L.marker([stop.lat, stop.lon], { icon }).addTo(markerLayer);
           marker.bindPopup(`<p>${dateTimeToStr(stop.date)}</p>
           <p>${stop.text}</p>`);
         }
@@ -187,10 +220,10 @@ class Map extends Component {
 
     // ACTIVE TRAVELLERS
     if (
-      this.props.use === 'na-ceste-map-active' &&
-      this.props.travellers.length > 0
+      props.use === 'na-ceste-map-active' &&
+      props.travellers.length > 0
     ) {
-      this.props.travellers.forEach(trvlr => {
+      props.travellers.forEach(trvlr => {
         if (trvlr.lastMessage && trvlr.color !== '#b19494') {
           const icon = L.divIcon({
             html: `<img src=${trvlr.pin} alt="Ukazovatel na mape" class="mapMarker"/>`,
@@ -202,7 +235,7 @@ class Map extends Component {
             {
               icon
             }
-          ).addTo(map);
+          ).addTo(markerLayer);
           marker.bindPopup(`
           <p><b><a href='/na/${trvlr.userId}' style={text-decoration: none;}>${trvlr.meno}</a></b></p>
           <p>${dateTimeToStr(trvlr.lastMessage.pub_date)}</p>
@@ -211,13 +244,30 @@ class Map extends Component {
       });
     }
 
-    L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
-    this.setState({ map });
+    markerLayer.addTo(map);
   }
 
-  render() {
-    return <div id={this.state.use} />;
-  }
+  useEffect(() => {
+    init(props.use);
+  }, []);
+
+  useEffect(() => {
+    if (mapObj && !moving && !zooming) {
+      const mapCenter = mapObj.map.getCenter();
+      const mapZoom = mapObj.map.getZoom();
+      if ((view[2] != mapZoom || view[0] != mapCenter.lat || view[1] != mapCenter.lng)) {
+        mapObj.map.setView([view[0] || mapCenter.lat, view[1] || mapCenter.lng], view[2] || mapZoom, view[3]);
+      }
+    }
+  }, [props.view]);
+
+  useEffect(() => {
+    if (mapObj) {
+      updateLayers(mapObj);
+    }
+  }, [props.pois, props.guideposts, props.marker, props.stop, props.travellers]);
+
+  return <div id={props.use}/>;
 }
 
 export default Map;

@@ -126,7 +126,7 @@ const PoiForm = (props) => {
       <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg}/>
 
       <FormSelect value={[category, setCategory]} valueName="category" valueLabel="Kategória" 
-        options={PoiCategories} >
+        options={PoiCategories.filter(c => !c.hidden)} >
         <option value=" " />
       </FormSelect>
       <FormText value={[name, setName]} valueName="name" valueLabel="Meno" />
@@ -136,8 +136,9 @@ const PoiForm = (props) => {
     
       {!!warningMsg && (
         <div className="warningMsg">
-          <Map use="add-poi-map" lat={warningMsg.lat} lon={warningMsg.lon} zoom={warningMsg.zoom}
-            marker="nové miesto" pois={warningMsg.pois} guideposts={guideposts} />
+          <Map use="add-poi-map" view={[warningMsg.lat, warningMsg.lon, warningMsg.zoom, null]}
+            marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto"}} 
+            pois={warningMsg.pois} guideposts={guideposts} />
           {!!warningMsg.distance && <h3>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</h3>}
           {!!warningMsg.pois && (
             <>
