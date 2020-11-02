@@ -1182,6 +1182,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 40px;
 }
 
+.image-preview {
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 10px 0;
+  max-height: 200px;
+}
+
 .errorMsg {
   color: #bb0202;
   background: rgb(255, 210, 210);
