@@ -20,15 +20,15 @@ const config = {
     zoomControl: false,
     zoom: 8,
     maxZoom: 14,
-    minZoom: 7,
+    minZoom: 8,
     scrollwheel: false,
     infoControl: false,
     attributionControl: false
   },
   tileLayer: {
-    uri: 'https://tiles.freemap.sk/T/{z}/{x}/{y}.png',
+    uri: 'https://tile.freemap.sk/T/{z}/{x}/{y}.jpeg',
     params: {
-      minZoom: 7,
+      minZoom: 8,
       id: '',
       accessToken: ''
     }
