@@ -27,7 +27,17 @@ const Itinerary = (props) => {
       setError(Texts.GenericError);
     });
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { 
+    fetchData()
+      .then(() => { 
+        if (window.location.hash && window.location.hash != "#") {
+          const elem = window.document.getElementById(window.location.hash.replace('#', ''));
+          if (elem) {
+            elem.scrollIntoView();
+          }
+        };
+      });
+  }, []);
 
   const showDialog = (e) => {
     e.preventDefault();

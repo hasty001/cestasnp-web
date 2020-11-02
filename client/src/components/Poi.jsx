@@ -48,7 +48,7 @@ const Poi = (props) => {
           <a href={`/pred/pois#poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}>na celej mape</a>
           
           {poi.itinerary && (poi.itinerary.near || poi.itinerary.after) && (
-            <> | <a href={`/pred/itinerar#${poi._id}`}>v itinerári</a></>)}
+            <> | <a href={`/pred/itinerar#p${poi._id}`}>v itinerári</a></>)}
         </>)}
       </>
     </PageWithLoader>

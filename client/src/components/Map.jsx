@@ -174,7 +174,7 @@ const Map = (props) => {
           icon, riseOnHover: true, poi: g.id
         }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
 
-        marker.bindPopup(`<h4><a href="/pred/itinerar#${g.id}">${g.name} ${g.ele ? ` ${g.ele} m`: ""}</a></h4>`);
+        marker.bindPopup(`<h4><a href="/pred/itinerar#g${g.id}">${g.name} ${g.ele ? ` ${g.ele} m`: ""}</a></h4>`);
 
         if (view && view.poi == g.id) {
           marker.once("add", () => {

@@ -41,7 +41,7 @@ const ItineraryTable = (props) => {
 
       return (
         <div key={index}>
-          <a id={poi._id} 
+          <a id={`p${poi._id}`} 
             href={`/pred/pois${poi._id ? `/${poi._id}` : `#lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}&zoom=13`}`}>
               {getIcon()}{" " + getInfo()}
           </a>
@@ -134,7 +134,7 @@ const ItineraryTable = (props) => {
               <td className="itinerary-value">{formatNumber(item.km, 1)}</td>
               <td className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
               <td colSpan={props.noDetails ? 1 : 6}>
-                <a id={item.id} href={`/pred/pois#poi=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
+                <a id={`g${item.id}`} href={`/pred/pois#poi=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
                   <b>{guidepostName}</b>
                 </a>
               </td>
