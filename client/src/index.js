@@ -4,7 +4,8 @@ import Promise from 'promise-polyfill';
 import URLSearchParams from 'url-search-params-polyfill';
 import findIndex from 'array.prototype.findindex';
 import assign from 'object.assign';
-import values from 'object.values';
+import values from 'object.values'
+import replaceAll from 'string.prototype.replaceall';
 import CestaSNP from './CestaSNP';
 import '../public/index.css';
 
@@ -27,6 +28,10 @@ if (!Object.assign) {
 
 if (!Object.values) {
   values.shim();
+}
+
+if (!String.replaceAll) {
+  replaceAll.shim();
 }
 
 if (process.env.NODE_ENV !== 'production') {

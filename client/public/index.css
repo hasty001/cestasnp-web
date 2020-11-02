@@ -32,6 +32,21 @@ li {
   display: inline-block;
 }
 
+[data-tooltip]:before {            
+  position : absolute;
+  content : attr(data-tooltip);
+  opacity : 0;
+  background-color:white;
+  color:black;
+  border: 1px solid red;
+  padding: 4px;
+  transform: translate(5px, 10px); 
+}
+
+[data-tooltip]:hover:before, [data-tooltip]:focus:before, [data-tooltip]:active:before {        
+  opacity : 1;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
@@ -365,6 +380,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
 }
 
+#Pois .snpBtn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10px;
+  z-index: 9998;
+}
+
 @media print {
   #Pois {
     position: relative;
@@ -392,6 +415,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 #add-poi-map {
   width: 100%;
   height: 30vw;
+  min-height: 190px;
   margin-bottom: 10px;
 }
 
@@ -415,23 +439,22 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 #poi-map {
-  float: left;
-  width: 30vw;
-  height: 30vw;
-  margin-right: 10px;
+  width: 100%;
+  height: 30vh;
   margin-bottom: 10px;
-  min-height: 140px;
+  min-height: 190px;
 } 
 
 #PoiDetail img {
-  margin: 10px auto;
-  width: 100%;
-}
-
-@media (max-width: 600px) {
-  #poi-map {
+  float: right;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: 40vw;
+} @media (max-width: 600px) {
+  #PoiDetail img {
+    margin-left: 0px;
+    margin-bottom: 10px;
     width: 100%;
-    margin-right: 0px;
   }
 }
 
@@ -1099,7 +1122,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   text-align: center;
 }
 
-.fanAccountWrap p, #AddPoi p {
+.fanAccountWrap p, #AddPoi p.form {
   text-align: justify;
   font-weight: 800;
 }
@@ -1121,7 +1144,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 10px;
 }
 
-.fanAccountWrap input, #AddPoi input {
+.fanAccountWrap input, #AddPoi input.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1131,7 +1154,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 10px;
 }
 
-.fanAccountWrap select, #AddPoi select {
+.fanAccountWrap select, #AddPoi select.form {
   height: 36px;
   border: solid 1px transparent;
   background: #ffdada;
@@ -1139,7 +1162,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin: 5px 0;
 }
 
-.fanAccountWrap textarea, #AddPoi textarea {
+.fanAccountWrap textarea, #AddPoi textarea.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1209,7 +1232,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
     width: 95%;
   }
 
-  .fanAccountWrap select, #AddPoi select {
+  .fanAccountWrap select, #AddPoi select.form {
     display: block;
     width: 100px;
   }

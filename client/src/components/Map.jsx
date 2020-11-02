@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import devinDukla from '../geojson/devin_dukla.json';
@@ -42,6 +42,8 @@ const config = {
   }
 };
 
+const MapMarker = L.Marker.extend({ poi: '' });
+
 const Map = (props) => {
 
   const [view, setView] = useStateProp(props.view);
@@ -54,10 +56,10 @@ const Map = (props) => {
     // this function creates the Leaflet map object and is called after the Map component mounts
 
     const params = Object.assign({}, config.params);
-    if (view && view[0] && view[1]) { params.center = view.slice(0, 2); }
-    if (view && view[2]) { 
-      params.zoom = view[2]; 
-    } else if (props.marker || (view && view[3])) {
+    if (view && view.lat && view.lat) { params.center = [view.lat, view.lon] }
+    if (view && view.zoom) { 
+      params.zoom = view.zoom; 
+    } else if (props.marker || (view && view.poi)) {
       params.zoom = 13;
     }
 
@@ -87,7 +89,10 @@ const Map = (props) => {
     const mapTiles = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
     const mapTilesNew = L.tileLayer(config.tileLayerNew.uri, config.tileLayerNew.params);
 
-    const posChanged = () => { const c = map.getCenter(); setView([c.lat, c.lng, map.getZoom()]); };
+    const posChanged = () => { 
+      const c = map.getCenter(); 
+      setView(prev => { return {...prev, lat: c.lat, lon: c.lng, zoom: map.getZoom() }; }); 
+    };
 
     map.on("zoomend", posChanged);
     map.on("moveend", posChanged);
@@ -117,6 +122,14 @@ const Map = (props) => {
       }
     };
     map.on("zoomend", zoomChanged);
+    map.on("popupclose", (e) => {
+      setView(prev => { return {...prev, poi: '' }; });
+    });
+
+    map.on("popupopen", (e) => {
+      const poi = e.popup._source.options.poi;
+      setView(prev => { return {...prev, poi }; });
+    });
 
     L.control.layers({"turistická": mapTiles, "turistika + cyklo + běžky": mapTilesNew}, 
       props.showLayers? legendLayers : {}).addTo(map);
@@ -157,14 +170,18 @@ const Map = (props) => {
           iconAnchor: [8, 8],
         });
         
-        const marker = L.marker([g.lat, g.lon], {
-          icon
+        const marker = new MapMarker([g.lat, g.lon], {
+          icon, riseOnHover: true, poi: g.id
         }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
 
         marker.bindPopup(`<h4><a href="/pred/itinerar#${g.id}">${g.name} ${g.ele ? ` ${g.ele} m`: ""}</a></h4>`);
 
-        if (view && view[3] == g.id) {
-          marker.openPopup();
+        if (view && view.poi == g.id) {
+          marker.once("add", () => {
+            marker.getPopup().options.autoPan = false;
+            marker.openPopup();
+            marker.getPopup().options.autoPan = true;
+           });
         }
       });
 
@@ -187,17 +204,20 @@ const Map = (props) => {
           iconAnchor: [16, 32]
         });
 
-        const marker = L.marker([p.coordinates[1], p.coordinates[0]], {
-          icon
+        const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
+          icon, riseOnHover: true, poi: p._id
         }).addTo(markerLayers[poiCategory.value]);
 
         marker.bindPopup(`<h4><a href="/pred/pois/${p._id}">${p.name || poiCategory.label}</a></h4>
           <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
           <p>${p.text}</p>`);
 
-        if (view && view[3] == p._id) {
-          console.log("open popup");
-          marker.openPopup();
+        if (view && view.poi == p._id) {
+          marker.once("add", () => {
+            marker.getPopup().options.autoPan = false;
+            marker.openPopup();
+            marker.getPopup().options.autoPan = true;
+           });
         }
       });
     }
@@ -211,7 +231,7 @@ const Map = (props) => {
             iconSize: [32, 32],
             iconAnchor: [16, 32]
           });
-          const marker = L.marker([stop.lat, stop.lon], { icon }).addTo(markerLayer);
+          const marker = L.marker([stop.lat, stop.lon], { icon, riseOnHover: true }).addTo(markerLayer);
           marker.bindPopup(`<p>${dateTimeToStr(stop.date)}</p>
           <p>${stop.text}</p>`);
         }
@@ -233,7 +253,7 @@ const Map = (props) => {
           const marker = L.marker(
             [trvlr.lastMessage.lat, trvlr.lastMessage.lon],
             {
-              icon
+              icon, riseOnHover: true
             }
           ).addTo(markerLayer);
           marker.bindPopup(`
@@ -251,12 +271,12 @@ const Map = (props) => {
     init(props.use);
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (mapObj && !moving && !zooming) {
       const mapCenter = mapObj.map.getCenter();
       const mapZoom = mapObj.map.getZoom();
-      if ((view[2] != mapZoom || view[0] != mapCenter.lat || view[1] != mapCenter.lng)) {
-        mapObj.map.setView([view[0] || mapCenter.lat, view[1] || mapCenter.lng], view[2] || mapZoom, view[3]);
+      if ((view.zoom != mapZoom || view.lat != mapCenter.lat || view.lon != mapCenter.lng)) {
+        mapObj.map.setView({ lat: view.lat || mapCenter.lat, lon: view.lon || mapCenter.lng, zoom: view.zoom || mapZoom }, { animate: false });
       }
     }
   }, [props.view]);

@@ -9,6 +9,7 @@ const FormText = (props) => {
   return (
     <FormItem {...props} value={value}>
       <input
+        className={props.itemClassName}
         type="text"
         id={props.valueName}
         name={props.valueName}

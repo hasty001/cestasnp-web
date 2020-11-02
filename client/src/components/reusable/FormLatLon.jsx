@@ -84,14 +84,15 @@ const FormLatLon = (props) => {
         value={value ? value.latlon : ''} useEdit valueClass="travellerP" 
         edit={[edit, setEdit]}>
           <input
-              id="latlon"
-              name="latlon"
-              value={value ? value.latlon : ''}
-              onBlur={e => {
-                e.preventDefault();
-                verifyGPSFormat(e);
-              }}
-              onChange={e => setValue({ latlon: e.target.value, accuracy: 0 })}
+            className={props.itemClassName}
+            id="latlon"
+            name="latlon"
+            value={value ? value.latlon : ''}
+            onBlur={e => {
+              e.preventDefault();
+              verifyGPSFormat(e);
+            }}
+            onChange={e => setValue({ latlon: e.target.value, accuracy: 0 })}
             />
       </FormItem>
 

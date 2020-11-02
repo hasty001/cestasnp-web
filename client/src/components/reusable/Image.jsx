@@ -28,7 +28,9 @@ const Image = (props) => {
   return (
     <>
       {!!image && (
-        <a href={imagePreview} onClick={(e) => {e.preventDefault(); setImageVisible(true)}}><img
+        <a href={imagePreview} onClick={(e) => {e.preventDefault(); setImageVisible(true)}}>
+          <img
+            className={props.itemClassName}
             src={imagePreview}
             alt={props.alt}
         /></a>)}

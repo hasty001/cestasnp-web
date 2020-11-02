@@ -1,37 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { fetchJson } from '../helpers/fetchUtils';
 import Map from './Map';
 import PageWithLoader from './reusable/PageWithLoader';
 import * as Texts from './Texts';
+import { AuthContext } from './AuthContext';
+import history from '../helpers/history';
 
 const Pois = (props) => {
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const [pois, setPois] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [pois, setPois] = useState(null);
 
-    const [view, setView] = useState([null, null, null, null]);
-    const [prevHash, setPrevHash] = useState();
+  const [view, setView] = useState({});
+  const [prevHash, setPrevHash] = useState();
 
-    useEffect(() => {
-      if (window.location.hash == prevHash) {
-        return;
-      }
-      setPrevHash(window.location.hash);
-     
-      const params = new URLSearchParams((window.location.hash || '').replace("#", "?"));
+  const authData = useContext(AuthContext);
 
-      const lat = params.get('lat') || view[0];
-      const lon = params.get('lon') || view[1];
-      const zoom = params.get('zoom') || view[2];
-      const poi = params.get('poi') || view[3];
-      if (lat != view[0] || lon != view[1] || zoom != view[2] || poi != view[3]) {
-        setView([lat, lon, zoom, poi]);
-      }
-    }, [window.location.hash]);
+  const updateView = () => {
+    if (window.location.hash == prevHash) {
+      return;
+    }
+    setPrevHash(window.location.hash);
+   
+    const params = new URLSearchParams((window.location.hash || '').replace("#", "?"));
+
+    const lat = params.get('lat') || view.lat;
+    const lon = params.get('lon') || view.lon;
+    const zoom = params.get('zoom') || view.zoom;
+    const poi = params.get('poi');
+    if (lat != view.lat || lon != view.lon || zoom != view.zoom || poi != view.poi) {
+      setView({ lat, lon, zoom, poi });
+    }
+  };
+
+  useEffect(() => { updateView() }, [window.location.hash]);
+
+  if (window.location.hash) {
+    updateView();
+  }
 
   useEffect(() => {
-    const hash = [["poi", view[3]], ["lat", view[0]], ["lon", view[1]], ["zoom", view[2]]].filter(i => i[1]).map(i => i.join("=")).join("&");
+    const hash = [["poi", view.poi], ["lat", view.lat], ["lon", view.lon], ["zoom", view.zoom]].filter(i => i[1]).map(i => i.join("=")).join("&");
 
     setPrevHash(hash ? "#" + hash : "");
 
@@ -61,9 +71,11 @@ const Pois = (props) => {
   return (
     <PageWithLoader pageId="Pois" loading={loading} error={error}>
       <>
-      {!!pois && (
-        <Map pois={pois} use="pois-map" 
-          view={[view, setView]} showLayers />)}
+        {!!pois && (
+          <Map pois={pois} use="pois-map" 
+            view={[view, setView]} setView={null} showLayers />)}
+        {!!authData && !!authData.authProviderMounted && !!authData.isAuth && 
+          <button className="snpBtn no-print" onClick={() => history.push('/ucet/pridatpoi')}>Pridať</button>}
       </>
     </PageWithLoader>);
 }

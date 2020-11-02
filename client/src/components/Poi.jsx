@@ -36,9 +36,12 @@ const Poi = (props) => {
       <>
       {!!poi && (
         <>
-          <Map use="poi-map" pois={[poi]} view={[poi.coordinates[1], poi.coordinates[0], 13]}/>
+          <Map use="poi-map" pois={[poi]} view={{ lat: poi.coordinates[1], lon: poi.coordinates[0], zoom: 13 }}/>
+          
           <h2><i alt="text" className={findPoiCategory(poi.category).icon}/> {poi.name || findPoiCategory(poi.category).label}</h2>
           
+          <Image value={poi.img_url} alt="fotka miesta" />
+
           <p>GPS: {poi.coordinates[1]}, {poi.coordinates[0]}</p>
           <p>{poi.text}</p>
           
@@ -46,9 +49,6 @@ const Poi = (props) => {
           
           {poi.itinerary && (poi.itinerary.near || poi.itinerary.after) && (
             <> | <a href={`/pred/itinerar#${poi._id}`}>v itinerári</a></>)}
-
-          <Image value={poi.img_url} alt="fotka miesta" />
-          
         </>)}
       </>
     </PageWithLoader>

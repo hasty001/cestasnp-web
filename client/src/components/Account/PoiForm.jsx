@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FormWithLoader from '../reusable/FormWithLoader';
 import { parseGPSPos } from '../../helpers/GPSPosParser';
 import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
@@ -8,7 +8,7 @@ import FormText from '../reusable/FormText';
 import FormSelect from '../reusable/FormSelect';
 import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
-import { PoiCategories } from '../PoiCategories';
+import { findPoiCategory, PoiCategories } from '../PoiCategories';
 import Map from '../Map';
 import PoiTable from '../reusable/PoiTable';
 import ItineraryTable from '../reusable/ItineraryTable';
@@ -20,6 +20,7 @@ const PoiForm = (props) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [warningMsg, setWarningMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [categoryDescription, setCategoryDescription] = useState('');
 
   const clearMsg = () => {
     setErrorMsg('');
@@ -114,6 +115,10 @@ const PoiForm = (props) => {
       });
   }
 
+  useEffect(() => {
+    setCategoryDescription(findPoiCategory(category).description);
+  }, [category]);
+
   const guideposts = warningMsg && warningMsg.itinerary ?
   [warningMsg.itinerary.prev, warningMsg.itinerary.nearest, warningMsg.itinerary.next].filter((t, i, a) => a.findIndex(o => o.id == t.id) == i)
   : [];
@@ -123,39 +128,46 @@ const PoiForm = (props) => {
       submitText={warningMsg ? "Naozaj pridať" : "Pridať"}
       onSubmit={addPoi} loading={loading} errorMsg={errorMsg} successMsg={successMsg} >
 
-      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg}/>
+      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg} itemClassName="form"/>
 
       <FormSelect value={[category, setCategory]} valueName="category" valueLabel="Kategória" 
-        options={PoiCategories.filter(c => !c.hidden)} >
+        options={PoiCategories.filter(c => !c.hidden)} itemClassName="form">
         <option value=" " />
       </FormSelect>
-      <FormText value={[name, setName]} valueName="name" valueLabel="Meno" />
-      <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" />
+      <p>{categoryDescription}</p>
+      <FormText value={[name, setName]} valueName="name" valueLabel="Meno" itemClassName="form"/>
+      <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>
 
       <FormImage value={[image, setImage]} imageAlt="nahrana fotka miesta" />
     
       {!!warningMsg && (
         <div className="warningMsg">
-          <Map use="add-poi-map" view={[warningMsg.lat, warningMsg.lon, warningMsg.zoom, null]}
+          {!!warningMsg.distance && <h3>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</h3>}
+          {!!warningMsg.pois && <h3>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h3>  }
+          
+          <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
             marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto"}} 
             pois={warningMsg.pois} guideposts={guideposts} />
-          {!!warningMsg.distance && <h3>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</h3>}
-          {!!warningMsg.pois && (
-            <>
-              <h3>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h3>  
-              <PoiTable pois={warningMsg.pois} />
-            </>
-          )}
+
+          {!!warningMsg.pois && <PoiTable pois={warningMsg.pois} />}
+          
           {!!warningMsg.itinerary && (
             <>
               <h3>Skontroluj a prípadne uprav umiestnení a popis v itinerári:</h3> 
-              <FormText value={[itineraryInfo, setItineraryInfo]}
-                valueName="itineraryInfo" valueLabel="Popis v itineráry:"/> 
+
               <ItineraryTable noTotals noDetails fullKm select 
                 insert={warningMsg.poi} insertInfo={itineraryInfo} 
                 insertNear={[itineraryNear, setItineraryNear]} 
                 insertAfter={[itineraryAfter, setItineraryAfter]}
-                itinerary={guideposts} />              
+                itinerary={guideposts} />    
+
+              <FormText value={[itineraryInfo, setItineraryInfo]} itemClassName="form"
+                valueName="itineraryInfo" valueLabel={
+                  <span>Voliteľný popis v itineráry 
+                    {" "}<span data-tooltip="Popis by mal byť stručný. Ak sa líši podľa smeru putovanie, použij formát: [vľavo smerom od Dukly | vpravo smerom od Devína], prípadne [pred], [za], [vľavo], [vpravo] smerom od Dukly.">
+                      <i className="fas fa-info-circle"/>
+                    </span>:</span>}/> 
+                      
             </>
           )}
         </div>

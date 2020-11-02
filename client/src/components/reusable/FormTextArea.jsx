@@ -9,6 +9,7 @@ const FormTextArea = (props) => {
   return (
     <FormItem {...props} value={value}>
       <textarea
+        className={props.itemClassName}
         type="text"
         id={props.valueName}
         name={props.valueName}

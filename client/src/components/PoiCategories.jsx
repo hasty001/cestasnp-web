@@ -10,7 +10,7 @@ import ostatne from '../../public/img/ostatne.png';
 import razcestnik from '../../public/img/razcestnik.png';
 
 const PoiCategories = [
-  { value: "pramen", label: "prameň", icon: "fas fa-tint", iconUrl: pramen },
+  { value: "pramen", label: "prameň", icon: "fas fa-tint", iconUrl: pramen, description: "zdroj pitnej vody: prameň, studnička alebo verejný kohútik" },
   { value: "pristresok", label: "prístrešok", icon: "fas fa-umbrella", iconUrl: pristresok },
   { value: "chata", label: "chata", icon: "fas fa-bed", iconUrl: chata },
   { value: "utulna", label: "útulňa", icon: "fas fa-home", iconUrl: utulna },

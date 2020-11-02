@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 /**
  * Uses prop state if it is in useState format [value, setValue], otherwise uses new local state with prop as initial value if set. 
@@ -24,4 +24,23 @@ const useStateEx = (initial = undefined, callback = undefined) => {
   return [value, callback ? ((v) => { setValue(v); callback();}) : setValue];
 }
 
-export { useStateProp, useStateEx }
+/**
+ * Log changed props to console.
+ */
+const useTraceUpdate = (props) => {
+  const prev = useRef(props);
+  useEffect(() => {
+    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
+      if (prev.current[k] !== v) {
+        ps[k] = [prev.current[k], v];
+      }
+      return ps;
+    }, {});
+    if (Object.keys(changedProps).length > 0) {
+      console.log('Changed props:', changedProps);
+    }
+    prev.current = props;
+  });
+}
+
+export { useStateProp, useStateEx, useTraceUpdate }

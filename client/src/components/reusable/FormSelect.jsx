@@ -9,6 +9,7 @@ const FormSelect = (props) => {
   return (
     <FormItem {...props} value={value} >
       <select
+        className={props.itemClassName}
         id={props.valueName}
         name={props.valueName}
         onChange={e => setValue(e.target.value)}
