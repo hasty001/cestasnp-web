@@ -40,7 +40,7 @@ const Poi = (props) => {
           
           <h2><i alt="text" className={findPoiCategory(poi.category).icon}/> {poi.name || findPoiCategory(poi.category).label}</h2>
           
-          <Image value={poi.img_url} alt="fotka miesta" />
+          <Image value={poi.img_url} alt="fotka miesta" itemClassName="poi-image" />
 
           <p>GPS: {poi.coordinates[1]}, {poi.coordinates[0]}</p>
           <p>{poi.text}</p>

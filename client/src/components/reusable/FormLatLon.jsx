@@ -81,7 +81,7 @@ const FormLatLon = (props) => {
   return (    
     <DivWithLoader loading={loading}>
       <FormItem valueName="latlon" valueLabel="Zem. šírka, dĺžka (latitude, longitude)" 
-        value={value ? value.latlon : ''} useEdit valueClass="travellerP" 
+        value={value ? value.latlon : ''} useEdit 
         edit={[edit, setEdit]}>
           <input
             className={props.itemClassName}

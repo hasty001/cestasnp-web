@@ -5,7 +5,7 @@ const FormWithLoader = (props) => {
   
   return (
     <DivWithLoader divId={props.formId} loading={props.loading} 
-      className={`${props.className} thinRedWrap`.trim()} >
+      className={`${props.className || ''} thinRedWrap`.trim()} >
       {!!props.title && 
         <h2>{props.title}</h2>
       }

@@ -34,7 +34,7 @@ const Pois = (props) => {
     }
   };
 
-  useEffect(() => { updateView() }, [window.location.hash]);
+  useEffect(() => { updateView() }, [window.location.hash, prevHash, view]);
 
   if (window.location.hash) {
     updateView();

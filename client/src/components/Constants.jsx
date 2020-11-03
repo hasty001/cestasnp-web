@@ -4,3 +4,4 @@ export const DateTimeViewFormat = "D. M. YYYY H:mm";
 export const DateViewFormat = "D. M. YYYY";
 export const PoiCategoryOther = "ostatne";
 export const PoiCategoryGuidepost = "razcestnik";
+export const NearByMarkersDistance = 10; // in map pixels

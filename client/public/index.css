@@ -384,7 +384,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 10px;
+  bottom: 15px;
   z-index: 9998;
 }
 
@@ -445,13 +445,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   min-height: 190px;
 } 
 
-#PoiDetail img {
+#PoiDetail .poi-image {
   float: right;
   margin-left: 10px;
   margin-bottom: 10px;
   width: 40vw;
 } @media (max-width: 600px) {
-  #PoiDetail img {
+  #PoiDetail .poi-image {
     margin-left: 0px;
     margin-bottom: 10px;
     width: 100%;
@@ -483,12 +483,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 }
 
-.table-itinerary {
+.itinerary-table {
   width: 100%;
 }
 
-.table-itinerary td, 
-.table-itinerary th {
+.itinerary-table td, 
+.itinerary-table th {
   vertical-align: baseline;
   padding: 2px 4px;
 }
@@ -503,6 +503,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
 .itinerary-dialog {
   margin-top: 120px;
+}
+
+.itinerary-attribution {
+  margin-top: 10px;
+  font-size: smaller;
+  text-align: right;
 }
 
 .itinerary-dialog-label {
@@ -1093,7 +1099,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .accountWrap, .fanAccountWrap, #AddPoi {
   width: 80%;
   margin: 20px auto;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .accountWrap label, #MessageForm label, #MyJourney label, #AddPoi label {
@@ -1157,8 +1163,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .fanAccountWrap select, #AddPoi select.form {
   height: 36px;
   border: solid 1px transparent;
-  background: #ffdada;
   width: 20%;
+  min-width: 100px;
   margin: 5px 0;
 }
 
@@ -1166,14 +1172,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   display: block;
   width: 100%;
   border: 1px solid lightgray;
-  height: 200px;
+  height: 100px;
   min-width: 240px;
   margin: 5px 0;
   padding-left: 10px;
   resize: vertical;
 }
 
-.travellerP {
+.travellerP, .form-item-value {
   display: block;
   width: 100%;
   min-height: 36px;
@@ -1183,6 +1189,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .image-preview {
+  position: relative;
   left: 50%;
   transform: translateX(-50%);
   margin: 10px 0;
@@ -1246,6 +1253,18 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 
   .fanAccountWrap h2, #AddPoi h2 {
     text-align: left;
+  }
+
+  #AddPoi .itinerary-table {
+    font-size: 12px;
+  }
+
+  #AddPoi .itinerary-attribution {
+    font-size: 10px;
+  }
+
+  .leaflet-control-attribution {
+    font-size: 10px;
   }
 
   #inyZaciatok {

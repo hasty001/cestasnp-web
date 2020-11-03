@@ -4,7 +4,7 @@ import Loader from './Loader';
 const PageWithLoader = (props) => {
   
   return (
-    <div id={props.pageId} className={props.className} >
+    <div id={props.pageId} className={props.className || ''} >
       {!!props.loading && !props.error && <Loader />}
       {!props.loading && !props.error && (
         <>

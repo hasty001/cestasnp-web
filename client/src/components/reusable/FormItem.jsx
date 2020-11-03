@@ -10,7 +10,7 @@ const FormItem = (props) => {
         {props.valueLabel} {!!props.useEdit && <i className="fas fa-edit" />}
       </span>
       {!props.useEdit || edit ? 
-        (props.children) : (<p className={props.valueClass}>{props.value}</p>)
+        (props.children) : (<p className={`${props.valueClass || ''} form-item-value`.trim()}>{props.value}</p>)
       }
     </label>
   )

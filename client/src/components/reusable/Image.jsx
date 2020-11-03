@@ -30,7 +30,7 @@ const Image = (props) => {
       {!!image && (
         <a href={image} onClick={(e) => {e.preventDefault(); setImageVisible(true)}}>
           <img
-            className={`image-preview ${props.itemClassName}`}
+            className={`${props.itemClassName || 'image-preview'}`}
             src={imagePreview}
             alt={props.alt}
         /></a>)}

@@ -108,7 +108,7 @@ const ItineraryTable = (props) => {
 
   return (
     <>
-      <table className="table-itinerary">
+      <table className="itinerary-table">
       <thead>
         <tr>
           <th className="itinerary-value">Km od</th>
@@ -174,7 +174,7 @@ const ItineraryTable = (props) => {
         </tr>
       </tfoot>)} 
       </table>
-      <p style={{textAlign: "right"}}><small>Dáta: © Prispievatelia <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></small></p>
+      <p className="itinerary-attribution">Dáta: © Prispievatelia <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></p>
     </>
   )
 }

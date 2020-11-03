@@ -13,6 +13,7 @@ const FormText = (props) => {
         type="text"
         id={props.valueName}
         name={props.valueName}
+        autoComplete="off"
         onBlur={e => {
           e.preventDefault();
           setValue(e.target.value);

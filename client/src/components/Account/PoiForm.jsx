@@ -134,7 +134,7 @@ const PoiForm = (props) => {
         options={PoiCategories.filter(c => !c.hidden)} itemClassName="form">
         <option value=" " />
       </FormSelect>
-      <p>{categoryDescription}</p>
+      <p>{categoryDescription || <>&nbsp;</>}</p>
       <FormText value={[name, setName]} valueName="name" valueLabel="Meno" itemClassName="form"/>
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>
 
@@ -142,8 +142,8 @@ const PoiForm = (props) => {
     
       {!!warningMsg && (
         <div className="warningMsg">
-          {!!warningMsg.distance && <h3>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</h3>}
-          {!!warningMsg.pois && <h3>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h3>  }
+          {!!warningMsg.distance && <h4>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</h4>}
+          {!!warningMsg.pois && <h4>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h4>  }
           
           <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
             marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto"}} 
@@ -153,7 +153,7 @@ const PoiForm = (props) => {
           
           {!!warningMsg.itinerary && (
             <>
-              <h3>Skontroluj a prípadne uprav umiestnení a popis v itinerári:</h3> 
+              <h4>Skontroluj a prípadne uprav umiestnení a popis v itinerári:</h4> 
 
               <ItineraryTable noTotals noDetails fullKm select 
                 insert={warningMsg.poi} insertInfo={itineraryInfo} 
