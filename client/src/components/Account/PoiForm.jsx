@@ -13,6 +13,7 @@ import Map from '../Map';
 import PoiTable from '../reusable/PoiTable';
 import ItineraryTable from '../reusable/ItineraryTable';
 import { useStateEx } from '../../helpers/reactUtils';
+import FormCheckBox from '../reusable/FormCheckBox';
 
 const PoiForm = (props) => {
 
@@ -34,6 +35,8 @@ const PoiForm = (props) => {
   const [name, setName] = useStateEx('', clearMsg);
   const [text, setText] = useStateEx('', clearMsg);
   const [image, setImage] = useStateEx('', clearMsg);
+  const [water, setWater] = useStateEx('', clearMsg);
+  const [food, setFood] = useStateEx('', clearMsg);
 
   const [itineraryNear, setItineraryNear] = useState(null);
   const [itineraryAfter, setItineraryAfter] = useState(null);
@@ -42,7 +45,7 @@ const PoiForm = (props) => {
   const addPoi = () => {
     if ((!name || name.trim().length === 0) 
       && (!text || text.trim().length === 0)) {
-      setErrorMsg('Vyplň meno alebo text.');
+      setErrorMsg('Vyplň meno alebo popis.');
       return;
     }
 
@@ -74,6 +77,12 @@ const PoiForm = (props) => {
     data.text = text;
     data.user_id = props.userId;
     data.img_url = image;
+    if (category != "krcma_jedlo" && food == "1") {
+      data.food = true;
+    }
+    if (category != "pramen" && water == "1") {
+      data.water = true;
+    }
     data.confirmed = confirmed;
     data.itineraryNear = itineraryNear;
     data.itineraryAfter = itineraryAfter;
@@ -99,6 +108,8 @@ const PoiForm = (props) => {
         setName('');
         setText('');
         setImage(''); 
+        setFood(''); 
+        setWater(''); 
         setItineraryNear(null);
         setItineraryAfter(null);
         setItineraryInfo('');
@@ -135,6 +146,10 @@ const PoiForm = (props) => {
         <option value=" " />
       </FormSelect>
       <p>{categoryDescription || <>&nbsp;</>}</p>
+      
+      {category != "krcma_jedlo" && <FormCheckBox value={[food, setFood]} valueName="food" valueLabel="jedlo" itemClassName="form-checkbox" labelClassName="form-checkbox"/>}
+      {category != "pramen" && <FormCheckBox value={[water, setWater]} valueName="water" valueLabel="voda" itemClassName="form-checkbox" labelClassName="form-checkbox"/>}
+
       <FormText value={[name, setName]} valueName="name" valueLabel="Meno" itemClassName="form"/>
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>
 

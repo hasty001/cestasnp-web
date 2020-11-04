@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { useStateProp } from '../../helpers/reactUtils';
 import { findPoiCategory } from '../PoiCategories';
+import PoiIcon from './PoiIcon';
 
 const ItineraryTable = (props) => {
 
@@ -35,15 +36,11 @@ const ItineraryTable = (props) => {
         .replaceAll(/\[(.+?)\|(.+?)\]/gms, reverse ? "$2" : "$1")
         : [poi.name, poi.text].filter(s => s && s.trim().length > 0).join(" - ");
 
-      const getIcon = () => {
-        return <i className={findPoiCategory(poi.category).icon}/>;
-      }
-
       return (
         <div key={index}>
           <a id={`p${poi._id}`} 
             href={`/pred/pois${poi._id ? `/${poi._id}` : `#lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}&zoom=13`}`}>
-              {getIcon()}{" " + getInfo()}
+              <PoiIcon value={poi} />{" " + getInfo()}
           </a>
         </div>);
     };
@@ -127,7 +124,7 @@ const ItineraryTable = (props) => {
       </thead>
       <tbody>
         {!!itinerary && itinerary.map((item, i, items) => {
-          const guidepostName = item.name + (item.ele ? (` ${formatNumber(item.ele)} m`): "");
+          const guidepostName = item.name + (item.ele ? (` ${formatNumber(item.ele)}\u00A0m`): "");
           return (
           <Fragment key={i}>
             <tr className="itinerary-row-guidepost">

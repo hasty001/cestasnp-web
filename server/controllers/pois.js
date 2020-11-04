@@ -50,6 +50,8 @@ router.post('/add', (req, res) => {
     text,
     user_id,
     img_url,
+    food,
+    water,
     confirmed,
     itineraryNear,
     itineraryAfter,
@@ -65,6 +67,8 @@ router.post('/add', (req, res) => {
       text,
       user_id,
       img_url,
+      food,
+      water,
       itineraryNear,
       itineraryAfter,
       itineraryInfo
@@ -91,7 +95,9 @@ router.post('/add', (req, res) => {
             name,
             text,
             user_id,
-            img_url
+            img_url,
+            food,
+            water
           } };
 
         if (nearPois.length > 0) {

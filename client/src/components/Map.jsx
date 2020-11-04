@@ -121,7 +121,7 @@ const Map = (props) => {
     PoiCategories.forEach(c => {
       const layer = L.layerGroup();
       markerLayers[c.value] = layer;
-      legendLayers[`<span><img src="${c.iconUrl}" width="24" height="24" /> ${c.label}</span>`] = layer;
+      legendLayers[`<span><i class="${c.icon}" style="width: ${Constants.PoiIconSize}px; height: ${Constants.PoiIconSize}px" alt="${c.label}"></i> ${c.label}</span>`] = layer;
     });
 
     const zoomChanged = () => {
@@ -196,10 +196,9 @@ const Map = (props) => {
     
     // MARKER 
     if (props.marker) {
-      const icon = L.icon({
-        iconUrl: ostatne,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32]
+      const icon = L.divIcon({
+        html: `<i class="fas fa-map-marker-alt mapMarkerPos" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px" ></i>`,
+        ...Constants.PoiMarkerIconProps,
       });
       const marker = L.marker([props.marker.lat, props.marker.lon], {
         icon,
@@ -222,8 +221,8 @@ const Map = (props) => {
         });
         
         const marker = new MapMarker([g.lat, g.lon], {
-          icon, poi: g.id,
-          popupContent: `<h4><a href="/pred/itinerar#g${g.id}"><i class="${guidepostIcon}"></i> ${g.name} ${g.ele ? ` ${g.ele} m`: ""}</a></h4>`
+          icon, poi: g.id, zIndexOffset: -10,
+          popupContent: `<h4><a href="/pred/itinerar#g${g.id}"><i class="${guidepostIcon}"></i> ${g.name} ${g.ele ? ` ${g.ele}\u00A0m`: ""}</a></h4>`
         }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
         newMarkers.push(marker);
   
@@ -239,25 +238,43 @@ const Map = (props) => {
 
     // DOLEZITE MIESTA
     if (props.pois && props.pois.length > 0) {
+      const food = findPoiCategory(Constants.PoiCategoryFood);
+      const water = findPoiCategory(Constants.PoiCategoryWater);
+
       props.pois.filter(p => p.category != "razcestnik").forEach(p => {
         
         const poiCategory = findPoiCategory(p.category);
 
-        const icon = L.icon({
-          iconUrl: poiCategory.iconUrl,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32]
+        const categories = [ poiCategory ];
+
+        if (p.food) {
+          categories.push(food);
+        }
+
+        if (p.water) {
+          categories.push(water);
+        }
+
+        categories.forEach((category, i) => {
+          const icon = L.divIcon({
+            html: 
+              `<i class="fas fa-map-marker icon-stack" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px" ></i>
+              <i class="fas ${category.icon} fa-inverse icon-stack" style="width: ${Constants.PoiMarkerSize/2}px; height: ${Constants.PoiMarkerSize/2}px" data-fa-transform="up-4" ></i>`,
+              ...Constants.PoiMarkerIconProps,
+          });
+
+          const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
+            icon, poi: p._id, zIndexOffset: -i,
+            popupContent: `<h4><a href="/pred/pois/${p._id}">
+              <i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${p.name || poiCategory.label}</a></h4>
+            <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
+            <p>${p.text}</p>`
+          }).addTo(markerLayers[category.value]);
+
+          newMarkers.push(marker);
+
+          marker.bindPopup("");
         });
-
-        const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
-          icon, poi: p._id,
-          popupContent: `<h4><a href="/pred/pois/${p._id}"><i class="${poiCategory.icon}"></i> ${p.name || poiCategory.label}</a></h4>
-          <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
-          <p>${p.text}</p>`
-        }).addTo(markerLayers[poiCategory.value]);
-        newMarkers.push(marker);
-
-        marker.bindPopup("");
       });
     }
 
@@ -266,9 +283,8 @@ const Map = (props) => {
       props.stops.forEach(stop => {
         if (stop.type === 'message') {
           const icon = L.divIcon({
-            html: `<img src=${defaultPin} alt="Ukazovatel na mape" class="mapMarker"/>`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape"></i>`,
+            ...Constants.PoiMarkerIconProps,
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
             popupContent: `<p>${dateTimeToStr(stop.date)}</p>
@@ -287,9 +303,8 @@ const Map = (props) => {
       props.travellers.forEach(trvlr => {
         if (trvlr.lastMessage && trvlr.color !== '#b19494') {
           const icon = L.divIcon({
-            html: `<img src=${trvlr.pin} alt="Ukazovatel na mape" class="mapMarker"/>`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape" style="color: ${trvlr.color}"></i>`,
+            ...Constants.PoiMarkerIconProps,
           });
           const marker = L.marker(
             [trvlr.lastMessage.lat, trvlr.lastMessage.lon],

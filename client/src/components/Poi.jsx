@@ -4,6 +4,7 @@ import Map from './Map';
 import { findPoiCategory } from './PoiCategories';
 import Image from './reusable/Image';
 import PageWithLoader from './reusable/PageWithLoader';
+import PoiIcon from './reusable/PoiIcon';
 import * as Texts from './Texts';
 
 const Poi = (props) => {
@@ -38,7 +39,7 @@ const Poi = (props) => {
         <>
           <Map use="poi-map" pois={[poi]} view={{ lat: poi.coordinates[1], lon: poi.coordinates[0], zoom: 13 }}/>
           
-          <h2><i alt="text" className={findPoiCategory(poi.category).icon}/> {poi.name || findPoiCategory(poi.category).label}</h2>
+          <h2><PoiIcon value={poi} /> {poi.name || findPoiCategory(poi.category).label}</h2>
           
           <Image value={poi.img_url} alt="fotka miesta" itemClassName="poi-image" />
 

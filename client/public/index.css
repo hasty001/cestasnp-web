@@ -41,6 +41,7 @@ li {
   border: 1px solid red;
   padding: 4px;
   transform: translate(5px, 10px); 
+  pointer-events: none;
 }
 
 [data-tooltip]:hover:before, [data-tooltip]:focus:before, [data-tooltip]:active:before {        
@@ -706,10 +707,17 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin: 0px 0px 15px 0px;
 }
 
-.mapMarker {
-  position: relative;
-  width: 32px;
-  height: 32px;
+.mapMarker .mapMarkerPos {
+  color: red;
+}
+
+.icon-stack {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 /***    ACTIVE      ***/
@@ -1105,6 +1113,18 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .accountWrap label, #MessageForm label, #MyJourney label, #AddPoi label {
   display: block;
   width: 100%;
+}
+
+#AddPoi label.form-checkbox {
+  display: inline;
+  margin-right: 15px;
+  vertical-align: middle;
+}
+
+#AddPoi input.form-checkbox {
+  height: 16px;
+  width: 16px;
+  margin: 5px 5px 15px 5px;
 }
 
 .accountWrap span {

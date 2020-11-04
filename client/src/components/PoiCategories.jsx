@@ -10,15 +10,15 @@ import ostatne from '../../public/img/ostatne.png';
 import razcestnik from '../../public/img/razcestnik.png';
 
 const PoiCategories = [
-  { value: "pramen", label: "prameň", icon: "fas fa-tint", iconUrl: pramen, description: "zdroj pitnej vody: prameň, studnička alebo verejný kohútik" },
-  { value: "pristresok", label: "prístrešok", icon: "fas fa-umbrella", iconUrl: pristresok },
-  { value: "chata", label: "chata", icon: "fas fa-bed", iconUrl: chata },
-  { value: "utulna", label: "útulňa", icon: "fas fa-home", iconUrl: utulna },
-  { value: "krcma_jedlo", label: "krčma", icon: "fas fa-utensils", iconUrl: krcma_jedlo },
-  { value: "potraviny", label: "potraviny", icon: "fas fa-shopping-basket", iconUrl: potraviny },
-  { value: "posed", label: "posed", icon: "fas fa-map-marker-alt", iconUrl: posed },
+  { value: "pramen", label: "voda", icon: "fas fa-tint", iconUrl: pramen, description: "napr. prameň, studnička alebo verejný kohútik" },
+  { value: "pristresok", label: "prístrešok", icon: "fas fa-umbrella", iconUrl: pristresok, description: "miesto, kde sa dá schovať pred nepriaznivým počasím, pripadne núdzovo prespať" },
+  { value: "chata", label: "ubytovanie", icon: "fas fa-bed", iconUrl: chata, description: "napr. hotel, horská chata, penzión, turistická ubytovňa" },
+  { value: "utulna", label: "útulňa", icon: "fas fa-home", iconUrl: utulna, description: "skromnejší ubytovanie, za dobrovoľný poplatok" },
+  { value: "krcma_jedlo", label: "jedlo", icon: "fas fa-utensils", iconUrl: krcma_jedlo, description: "podnik, kde poskytujú teplé jedlo, napr. reštaurácia, bufet" },
+  { value: "potraviny", label: "potraviny", icon: "fas fa-shopping-basket", iconUrl: potraviny, description: "predajňa potravín" },
+  { value: "posed", label: "posed", icon: "fas fa-map-marker-alt", iconUrl: posed, description: "odomknutý posed, kde sa dá schovať pred nepriaznivým počasím, pripadne núdzovo prespať" },
   { value: Constants.PoiCategoryGuidepost, label: "rázcestník", icon: "fas fa-plus", hidden: true, iconUrl: razcestnik },
-  { value: Constants.PoiCategoryOther, label: "ostatné", icon: "fas fa-map-marker-alt", iconUrl: ostatne },
+  { value: Constants.PoiCategoryOther, label: "ostatné", icon: "fas fa-asterisk", iconUrl: ostatne },
 ];
 
 const findPoiCategory = (category) => {
