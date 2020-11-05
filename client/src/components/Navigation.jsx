@@ -143,7 +143,7 @@ const Navigation = () => {
                 history.push(ROUTES.pridatPOI);
               }}
             >
-              Pridať POI
+              Pridať dôležité miesto
             </NavItem>
           )}
         </Nav>

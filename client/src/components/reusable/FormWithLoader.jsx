@@ -9,6 +9,8 @@ const FormWithLoader = (props) => {
       {!!props.title && 
         <h2>{props.title}</h2>
       }
+      {!!props.description && <div className="form-description">{props.description}</div>}
+      
       {!!props.errorMsg && 
         <p className="errorMsg">{props.errorMsg}</p>
       }
