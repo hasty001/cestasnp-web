@@ -1249,9 +1249,9 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .errorMsg {
   color: #bb0202;
   background: rgb(255, 210, 210);
-  /* margin: 10px 10px 10px 200px; */
   padding: 10px 20px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .warningMsg {
@@ -1259,14 +1259,15 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   background: rgb(255, 228, 210);
   padding: 10px 20px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .successMsg {
   color: #126b12;
   background: rgb(228, 255, 210);
-  /* margin: 10px 10px 10px 200px; */
   padding: 10px 20px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 #inyZaciatok {
@@ -1385,4 +1386,3 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .for-floating-loader {
   position: relative;
 }
-  
