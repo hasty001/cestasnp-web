@@ -866,32 +866,68 @@ DB.prototype = {
     );
   },
 
-  addPoi(poi, callback) {
-    MongoClient.connect(
+  addPoi(poi) {
+    return MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (error, db) => {
-        if (db) {
+      { useNewUrlParser: true })
+      .then( db  => {
           poi.created = moment().format('YYYY-MM-DD HH:mm:ss');
 
-          db.db('cestasnp')
+          return db.db('cestasnp')
             .collection('pois')
             .insertOne(securityCheck.sanitizePoi(poi))
             .then((poiRes) => {
               poi._id = poiRes.insertedId;
 
-              db.close();
-              callback(poi);
-            })
-            .catch(err => {
-              db.close();
-              callback({ error: err });
-            });
-        } else {
-          callback({ error });
-        }
+              return this.addPoiHistory(db, poi._id, poi).then(poi => {
+                return Promise.resolve(poi);
+              });
+            }).finally(() => db.close());
       }
-    );
+    )
+  },
+
+  updatePoi({uid, id, note, ...poi}) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then( db  => {
+          poi.modified_by = uid;
+          poi.modified = moment().format('YYYY-MM-DD HH:mm:ss');
+          poi.modified_note = note;
+
+          return db.db('cestasnp')
+            .collection('pois')
+            .findOne({ _id: new ObjectID(id) }).then(current => {
+              if (!current) {
+                return Promise.reject('Dôležité miesto nebolo nájdené.');
+              }
+              delete current._id;
+              current.poiId = id;
+
+              poi.user_id = current.user_id;
+              poi.created = current.created;
+
+              return db.db('cestasnp')
+                .collection('pois_history').insertOne(current).then(resInsert => {
+                  poi.historyId = resInsert.insertedId.toString();
+
+                  return db.db('cestasnp')
+                    .collection('pois')
+                    .findOneAndUpdate({ _id: new ObjectID(id) }, { $set: securityCheck.sanitizePoi(poi) },
+                      { returnOriginal: false })
+                    .then(res => {
+                      if (res.value) {
+                        return this.addPoiHistory(db, res.value._id, res.value);
+                      } else {
+                        return Promise.reject('Dôležité miesto nebolo nájdené.');
+                      }
+                    });
+                }                  
+                );
+            }).finally(() => db.close());
+      }
+    )
   },
 
   getPois() {
@@ -938,7 +974,7 @@ DB.prototype = {
   addPoiHistory(db, poiId, poiValue) {
     return  Promise.all([
       poiValue,
-      db.db('cestasnp').collection('pois_history').find({ poi: poiId }).sort({ modified_by: -1 }).toArray(),
+      db.db('cestasnp').collection('pois_history').find({ poiId: poiId.toString() }).sort({ modified: -1 }).toArray(),
     ]).then(([poi, history]) => {
       const uids = this.getUids([poi].concat(history), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
 
@@ -963,7 +999,7 @@ DB.prototype = {
       .then(db => {
         const sPoiId = sanitize(poiId);
 
-        return this.addPoiHistory(db, new ObjectID(sPoiId), db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }))
+        return this.addPoiHistory(db, sPoiId, db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }))
           .finally(() => db.close);
       });
   },

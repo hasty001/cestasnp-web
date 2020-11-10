@@ -42,6 +42,24 @@ const PoiForm = (props) => {
   const [itineraryAfter, setItineraryAfter] = useState(null);
   const [itineraryInfo, setItineraryInfo] = useState('');
 
+  const [note, setNote] = useStateEx('', clearMsg);
+
+  useEffect(() => {
+    if (props.poi && props.edit) {
+      const p = props.poi;
+      setGps({ latlon: p.coordinates && p.coordinates.length > 1 ? `${p.coordinates[1]}, ${p.coordinates[0]}` : '', accuracy: p.accuracy });
+      setCategory(p.category);
+      setName(p.name);
+      setText(p.text);
+      setImage(p.img_url);
+      setWater(p.water);
+      setFood(p.food);
+      setItineraryNear(p.itinerary ? p.itinerary.near : null);
+      setItineraryAfter(p.itinerary ? p.itinerary.after : null);
+      setItineraryInfo(p.itinerary ? p.itinerary.info : '');
+    }
+  }, [props.poi, props.edit]);
+
   const addPoi = () => {
     if ((!name || name.trim().length === 0) 
       && (!text || text.trim().length === 0)) {
@@ -51,6 +69,11 @@ const PoiForm = (props) => {
 
     if (!category || category.trim().length === 0) {
       setErrorMsg('Kategória nemôže ostať prázdna.');
+      return;
+    }
+
+    if (props.edit && (!note || note.trim().length === 0)) {
+      setErrorMsg('Poznámka nemôže ostať prázdna.');
       return;
     }
 
@@ -75,8 +98,15 @@ const PoiForm = (props) => {
     data.category = category;
     data.name = name;
     data.text = text;
-    data.user_id = props.userId;
+    if (props.edit) {
+      data.id = props.poi._id;
+      data.uid = props.uid;
+      data.note = note;
+    } else {
+      data.user_id = props.uid;
+    }
     data.img_url = image;
+
     if (category != "krcma_jedlo" && food == "1") {
       data.food = true;
     }
@@ -88,7 +118,7 @@ const PoiForm = (props) => {
     data.itineraryAfter = itineraryAfter;
     data.itineraryInfo = itineraryInfo;
 
-    fetchPostJsonWithToken(props.user, '/api/pois/add', data)
+    fetchPostJsonWithToken(props.user, props.edit ? '/api/pois/update' : '/api/pois/add', data)
       .then(msgRes => {
         setLoading(false);
         
@@ -113,8 +143,11 @@ const PoiForm = (props) => {
         setItineraryNear(null);
         setItineraryAfter(null);
         setItineraryInfo('');
+        setNote('');
 
-        setSuccessMsg('Dôležité miesto úspešne pridané!');
+        msgRes.successMsg = props.edit ? 'Dôležité miesto úspešne upravené!': 
+          'Dôležité miesto úspešne pridané!';
+        setSuccessMsg(msgRes.successMsg);
 
         props.onUpdate(msgRes);
       })
@@ -135,9 +168,9 @@ const PoiForm = (props) => {
   : [];
 
   return (
-    <FormWithLoader formId="add-poi" title="Pridať dôležité miesto" 
-      submitText={warningMsg ? "Naozaj pridať" : "Pridať"}
-      onSubmit={addPoi} loading={loading} errorMsg={errorMsg} successMsg={successMsg} description={(
+    <FormWithLoader formId="add-poi" title={props.edit ? "Upraviť dôležité miesto" : "Pridať dôležité miesto" }
+      submitText={props.edit ? "Upraviť" : (warningMsg ? "Naozaj pridať" : "Pridať")}
+      onSubmit={addPoi} loading={loading} errorMsg={errorMsg} successMsg={successMsg} description={!props.edit && (
       <>
         <p>Pomôž nám vytvoriť databázu dôležitých miest a zberaj body z terénu. Vďaka dôležitým miestam,
           ktoré spolu vytvoríme budú pútnici vedieť kde je na Ceste voda či útulňa a teda kde môžu doplniť energiu.
@@ -147,8 +180,6 @@ const PoiForm = (props) => {
         Knihu je možné zakúpiť aj v bežných kníhkupectvách ako <a target="_blank" href="https://www.martinus.sk/?uItem=732609&z=RM0I28&utm_source=z%3DRM0I28&utm_medium=url&utm_campaign=partner">martinus.sk</a> a iné.</p>
       </>
       )}>
-
-
 
       <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg} itemClassName="form"/>
 
@@ -165,6 +196,8 @@ const PoiForm = (props) => {
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>
 
       <FormImage value={[image, setImage]} imageAlt="nahrana fotka miesta" />
+
+      {!!props.edit && <FormText value={[note, setNote]} valueName="note" valueLabel="Poznámka" itemClassName="form"/>}
     
       {!!warningMsg && (
         <div className="warningMsg">

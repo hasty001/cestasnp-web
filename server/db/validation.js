@@ -91,7 +91,11 @@ Validation.prototype = {
       created,
       itineraryNear,
       itineraryAfter,
-      itineraryInfo
+      itineraryInfo,
+      historyId,
+      modified,
+      modified_by,
+      modified_note
     } = poi;
     return {
       coordinates: sanitize(coordinates),
@@ -107,6 +111,10 @@ Validation.prototype = {
       itinerary: (itineraryNear || itineraryAfter || itineraryInfo) ?
         { near: sanitize(itineraryNear), after: sanitize(itineraryAfter), info: sanitize(itineraryInfo) }
         : null,
+      historyId: sanitize(historyId),
+      modified: sanitize(modified),
+      modified_by: sanitize(modified_by),
+      modified_note: sanitize(modified_note)
     };
   }
 };

@@ -165,7 +165,6 @@ class CommentBoxWithAuth extends Component {
           <Modal
             {...modalProps}
             dialogClassName="comment-box"
-            style={{ marginTop: '100px' }}
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-lg">

@@ -50,6 +50,50 @@ router.post('/delete', (req, res) => {
   });
 });
 
+router.post('/update', (req, res) => {
+  const {
+    uid,
+    id,
+    coordinates,
+    accuracy,
+    category,
+    name,
+    text,
+    img_url,
+    food,
+    water,
+    itineraryNear,
+    itineraryAfter,
+    itineraryInfo,
+    note
+  } = req.body;
+
+  checkToken(req, res, uid, () =>
+    db.updatePoi({
+      uid,
+      id,
+      coordinates,
+      accuracy,
+      category,
+      name,
+      text,
+      img_url,
+      food,
+      water,
+      itineraryNear,
+      itineraryAfter,
+      itineraryInfo,
+      note
+    }).then(poi => {
+      res.json(poi);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({ error: error.toString() });
+    })
+    );
+});
+
 router.post('/add', (req, res) => {
   const {
     coordinates,
@@ -81,11 +125,13 @@ router.post('/add', (req, res) => {
       itineraryNear,
       itineraryAfter,
       itineraryInfo
-    },
-    resp => {
-      res.json(resp);
-    }
-    ));
+    }).then(poi => {
+      res.json(poi);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({ error: error.toString() });
+    }));
 
   if (confirmed) {
     addPoi();

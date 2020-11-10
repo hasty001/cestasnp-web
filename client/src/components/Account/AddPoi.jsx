@@ -49,11 +49,13 @@ const AddPoi = (props) => {
     const list = pois.map(p => p);
     pois.forEach(p => { p.errorMsg = ''; p.successMsg = ''; });
 
-    const index = list.findIndex(p => poi._id === p._id);
-    if (index >= 0) {
-      list.splice(index, 1, poi);
-    } else {
-      list.splice(0, 0, poi);
+    if (poi) {
+      const index = list.findIndex(p => poi._id === p._id);
+      if (index >= 0) {
+        list.splice(index, 1, poi);
+      } else {
+        list.splice(0, 0, poi);
+      } 
     }
 
     setPois(list);
@@ -65,10 +67,10 @@ const AddPoi = (props) => {
     <PageWithLoader pageId="AddPoi" loading={!authData || !authData.authProviderMounted} 
       error={authData && authData.authProviderMounted && !authData.isAuth ? 'Pridať dôležité miesto môže len prihlásený užívateľ.' : ''}>
       
-      <PoiForm userId={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
+      <PoiForm uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
 
       <PageWithLoader pageId="MyPois" loading={loading} error={error} title="Moje dôležité miesta" className="thinRedWrap">
-        <PoiTable my showDeleted showLastChange pois={pois} userId={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
+        <PoiTable my showDeleted showLastChange pois={pois} uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
       </PageWithLoader>
     </PageWithLoader>
   )

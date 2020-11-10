@@ -7,7 +7,6 @@ const ConfirmBox = ({ title, text, confirmText, show, onConfirm, onHide, childre
     show={show}
     onHide={onHide}
     dialogClassName="confirm-box"
-    style={{ marginTop: '100px' }}
   >
     <Modal.Header closeButton>
       <Modal.Title>{title}</Modal.Title>
