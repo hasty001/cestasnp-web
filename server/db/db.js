@@ -1,5 +1,5 @@
 // TODO - lot of reapeating code refactor when possible
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectID } = require('mongodb');
 const sanitize = require('mongo-sanitize');
 const moment = require('moment-timezone');
 const { ObjectId } = require('mongodb');
@@ -292,6 +292,45 @@ DB.prototype = {
     });
   },
 
+  findUserName(uid, users) {
+    const index = users.findIndex(u => u.uid === uid);
+    return index >= 0 ? users[index].name : null;
+  },
+
+  getUids(list, selectProps) {
+    return list.reduce((res, item) => res.concat(selectProps.filter(prop => prop(item)).map(prop => prop(item))), []);
+  },
+
+  /**
+   * Returns list of users with name or journey name for specified uids.
+   */
+  getUserNames(db, uids) {
+    const getUsers = db.db('cestasnp')
+      .collection('users')
+      .find({ $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] }, { uid: 1, sql_user_id: 1, name: 1 })
+      .toArray();
+
+    const getDetails =  db.db('cestasnp')
+      .collection('traveler_details')
+      .find({ user_id : { $in: uids } }, { user_id: 1, meno: 1 })
+      .toArray();
+
+    return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
+      users.forEach(u => {
+        if (!u.uid) {
+          u.uid = u.sql_user_id;
+        }
+
+        const cesta = details.find(t => t.user_id === u.uid);
+        if (cesta) {
+          u.name = cesta.meno;
+        }
+      });
+
+      return Promise.resolve(users);
+    });
+  },
+
   getTravellerComments(articleId, travellerId, callback) {
     const sArticleId = sanitize(articleId);
     const sTravellerId = sanitize(travellerId);
@@ -309,36 +348,17 @@ DB.prototype = {
               .toArray();
 
         return getDocs.then((docs) => {
-          const uids = docs.filter(d => d.uid).map(d => d.uid);
+          const uids = this.getUids(docs, [d => d.uid]);
 
-          const getUsers = db.db('cestasnp')
-            .collection('users')
-            .find({ $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] }, { uid: 1, sql_user_id: 1, name: 1 })
-            .toArray();
-
-          const getDetails =  db.db('cestasnp')
-            .collection('traveler_details')
-            .find({ user_id : { $in: uids } }, { user_id: 1, meno: 1 })
-            .toArray();
-
-          return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
-            users.forEach(u => {
-              const cesta = details.find(t => t.user_id === u.uid || t.user_id === u.sql_user_id);
-              if (cesta)
-              {
-                  u.name = cesta.meno;
-                  u.cesta = true;
-              }
-            });
-
+          return this.getUserNames(db, uids)
+          .then(users => {
             docs.forEach(d => {
               if (d.uid) {
-                const user = users.find(u => u.uid === d.uid || u.sql_user_id === d.uid);
+                const user = users.find(u => u.uid === d.uid);
                 if (user) {
                   if (d.username)
                     d.username = user.name;
                   d.name = user.name;
-                  d.cesta = user.cesta;
                 }
               }
 
@@ -347,9 +367,9 @@ DB.prototype = {
             db.close();
             callback(docs);
           });
-        }).catch(e => { db.close(); callback({ error: e}); });
+        }).catch(e => { db.close(); console.error(e); callback({ error: e.toString() }); });
       })
-    .catch(e => { callback({ error: e }); });
+    .catch(e => { console.error(e); callback({ error: e.toString() }); });
   },
 
   getTravellersMessages(travellerIds, callback) {
@@ -872,6 +892,80 @@ DB.prototype = {
         }
       }
     );
+  },
+
+  getPois() {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => 
+        db.db('cestasnp').collection('pois').find().toArray()
+        .then(pois => {
+          const uids = this.getUids(pois, [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
+
+          return this.getUserNames(db, uids).then(users => {
+            pois.forEach(poi => {
+              poi.created_by_name = this.findUserName(poi.user_id, users);
+              poi.modified_by_name = this.findUserName(poi.modified_by, users);
+              poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
+            });
+
+            return Promise.resolve(pois);
+          });
+        })
+        .finally(() => db.close));
+  },
+
+  deletePoi(uid, id, note) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => {
+        return db.db('cestasnp').collection('pois').findOneAndUpdate({ _id: new ObjectID(id) },
+          { $set: { deleted: moment().format('YYYY-MM-DD HH:mm:ss'), deleted_by: uid, deleted_note: note } }, 
+          { returnOriginal: false })
+        .then(res => {
+          if (res.value) {
+            return this.addPoiHistory(db, res.value._id, res.value);
+          } else {
+            return Promise.reject('Dôležité miesto nebolo nájdené.');
+          }
+        })
+        .finally(() => db.close);
+      });
+  },
+
+  addPoiHistory(db, poiId, poiValue) {
+    return  Promise.all([
+      poiValue,
+      db.db('cestasnp').collection('pois_history').find({ poi: poiId }).sort({ modified_by: -1 }).toArray(),
+    ]).then(([poi, history]) => {
+      const uids = this.getUids([poi].concat(history), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
+
+      return this.getUserNames(db, uids).then(users => {
+        [poi].concat(history).forEach(poi => {
+          poi.created_by_name = this.findUserName(poi.user_id, users);
+          poi.modified_by_name = this.findUserName(poi.modified_by, users);
+          poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
+        });
+
+        poi.history = history;
+
+        return Promise.resolve(poi);
+      });
+    });
+  },
+
+  getPoi(poiId) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => {
+        const sPoiId = sanitize(poiId);
+
+        return this.addPoiHistory(db, new ObjectID(sPoiId), db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }))
+          .finally(() => db.close);
+      });
   },
 };
 

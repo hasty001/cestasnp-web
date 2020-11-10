@@ -10,6 +10,7 @@ import { dateToStr, dateTimeToStr } from '../helpers/helpers';
 import * as Constants from './Constants';
 import { AuthContext } from './AuthContext';
 import ConfirmBox from './reusable/ConfirmBox';
+import UserLabel from './reusable/UserLabel';
 
 const Traveller = (props) => {
   const authData = useContext(AuthContext);
@@ -25,6 +26,7 @@ class TravellerWithAuth extends Component {
     this.state = {
       loading: true,
       error: false,
+      errorMsg: '',
       travellerId: this.props.match.params.traveller,
       travellerData: {
         meno: '',
@@ -79,10 +81,18 @@ class TravellerWithAuth extends Component {
         throw err;
       });
 
+    this.setState({ errorMsg: "" });
+
     fetch(`/api/traveller/details/${this.state.travellerId}`)
       .then(resp => resp.json())
       .then(data => {
         const travellerData = {};
+
+        if (data.length == 0) {
+          this.setState({ errorMsg: "Momentálne nie je na ceste ani cestu neplánuje." });
+          throw "No deatils found.";
+        }
+
         travellerData.meno = data[0].meno;
         travellerData.text = data[0].text;
         travellerData.articleID = data[0].articleID;
@@ -142,6 +152,7 @@ class TravellerWithAuth extends Component {
               .then(res => res.json())
               .then(data => {
                 const { travellerMessages } = this.state;
+
                 data.forEach(comment => {
                   const newComment = {};
                   newComment.type = 'comment';
@@ -154,7 +165,6 @@ class TravellerWithAuth extends Component {
                   newComment.text = comment.comment;
                   newComment.id = comment._id;
                   newComment.uid = comment.uid;
-                  newComment.cesta = comment.cesta;
                   travellerMessages.push(newComment);
                 });
                 this.sortMessages(travellerMessages, this.state.orderFromOld);
@@ -356,7 +366,6 @@ class TravellerWithAuth extends Component {
     newComment.text = comment.comment;
     newComment.id = comment._id;
     newComment.uid = comment.uid;
-    newComment.cesta = comment.cesta;
     updatedComments.push(newComment);
     this.sortMessages(updatedComments, this.state.orderFromOld);
 
@@ -482,10 +491,7 @@ class TravellerWithAuth extends Component {
                     </div>    
                     <p>                
                       {` ${dateTimeToStr(message.date)} `}
-                      {message.cesta ? 
-                        (<a href={`/na/${message.uid}`}>{message.username}</a>)
-                        : `${message.username}`
-                      }
+                      <UserLabel uid={message.uid} name={message.username} />
                       <span className="traveller-comment-actions">
                         {(this.props.userData 
                           && (message.uid === this.props.userData.userDetails.uid 
@@ -545,7 +551,7 @@ class TravellerWithAuth extends Component {
           </div>
         )}
 
-        {this.state.error && <NotFound />}
+        {this.state.error && (this.state.errorMsg ? <p style={{ margin: '10px' }}>{this.state.errorMsg}</p> : <NotFound />)}
       </div>
     );
   }

@@ -248,7 +248,6 @@ router.post('/addComment', (req, res) => {
         comment.uid = sUid;
 
         db.addCommentOldTraveller(comment, com => {
-          com.cesta = req.body.cesta;
           res.json(com);
         });
       } else {
@@ -274,7 +273,6 @@ router.post('/addComment', (req, res) => {
         comment.uid = sUid;
 
         db.addCommentNewTraveller(comment, com => {
-          com.cesta = req.body.cesta;
           res.json(com);
         });
       }

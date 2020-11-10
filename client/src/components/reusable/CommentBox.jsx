@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import Recaptcha from 'react-recaptcha';
 import Loader from './Loader';
 import { AuthContext } from '../AuthContext';
+import UserLabel from './UserLabel';
 
 const CommentBox = (props) => {
   const authData = useContext(AuthContext);
@@ -80,7 +81,6 @@ class CommentBoxWithAuth extends Component {
     data.travellerId = this.props.travellerId;
     data['g-recaptcha-response'] = this.state.captcha;
     data.uid = this.props.userData ? this.props.userData.userDetails.uid : null;
-    data.cesta = this.props.userData && this.props.userData.travellerDetails && this.props.userData.travellerDetails.meno;
 
     const promise = this.props.userData ? 
       this.props.userData.user.getIdToken()
@@ -182,10 +182,9 @@ class CommentBoxWithAuth extends Component {
                     className="nameInput"
                     />)
                   : (<div>
-                    {!!this.props.userData.travellerDetails && !!this.props.userData.travellerDetails.meno ? 
-                      (<a href={`/na/${this.props.userData.travellerDetails.user_id}`}>{this.props.userData.travellerDetails.meno}</a>)
-                      : this.props.userData.userDetails.name
-                    }
+                       <UserLabel uid={this.props.userData.travellerDetails.user_id} 
+                         name={(this.props.userData.travellerDetails && this.props.userData.travellerDetails.meno) ?
+                           this.props.userData.travellerDetails.meno : this.props.userData.userDetails.name} />
                     </div>)
                 }
               </label>

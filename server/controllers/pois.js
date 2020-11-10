@@ -11,34 +11,43 @@ const db = new DB();
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  db.all('pois', (results, error) => {
-    if (results) {
+  db.getPois().then(results => {
       // add guideposts
       res.json(results.concat(itinerary.map(g => Object.assign({ category: "razcestnik" }, g))));
-    } else {
+    }).catch(error => {
       console.error(error);
       res.status(500).json({ error: error.toString() });
-    }
-  });
+    });
 });
 
 router.get('/:poiId', (req, res) => {
-  try
-  {
-    const sPoiId = sanitize(req.params.poiId);
+  db.getPoi(req.params.poiId)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({ error: error.toString() });
+    });
+});
 
-    db.findBy('pois', { _id: new ObjectId(sPoiId) })
-      .then(results => {
-        res.json(results[0]);
-      })
-      .catch(error => {
-        console.error(error);
-        res.status(500).json({ error: error.toString() });
-      });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.toString() });
-  }
+router.post('/delete', (req, res) => {
+  const {
+    uid,
+    id,
+    note
+  } = req.body;
+
+  checkToken(req, res, uid, resp => {
+    db.deletePoi(uid, id, note)
+    .then(poi => {
+      res.json(poi);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({ error: error.toString() });
+    });
+  });
 });
 
 router.post('/add', (req, res) => {

@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     if (results) {
       const resultItinerary = itinerary.map(item => Object.assign({}, item));
 
-      results.filter(poi => poi.itinerary).forEach(poi => {
+      results.filter(poi => !poi.deleted && poi.itinerary).forEach(poi => {
         const itemNear = poi.itinerary.near ? resultItinerary.find(i => i.id == poi.itinerary.near) : null;
         const itemAfter = poi.itinerary.after ? resultItinerary.find(i => i.id == poi.itinerary.after) : null;
 

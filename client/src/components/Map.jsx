@@ -241,7 +241,7 @@ const Map = (props) => {
       const food = findPoiCategory(Constants.PoiCategoryFood);
       const water = findPoiCategory(Constants.PoiCategoryWater);
 
-      props.pois.filter(p => p.category != "razcestnik").forEach(p => {
+      props.pois.filter(p => (!p.deleted || props.showDeleted) && p.category != "razcestnik").forEach(p => {
         
         const poiCategory = findPoiCategory(p.category);
 
@@ -283,7 +283,7 @@ const Map = (props) => {
       props.stops.forEach(stop => {
         if (stop.type === 'message') {
           const icon = L.divIcon({
-            html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape"></i>`,
+            html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px"></i>`,
             ...Constants.PoiMarkerIconProps,
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
@@ -303,7 +303,7 @@ const Map = (props) => {
       props.travellers.forEach(trvlr => {
         if (trvlr.lastMessage && trvlr.color !== '#b19494') {
           const icon = L.divIcon({
-            html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape" style="color: ${trvlr.color}"></i>`,
+            html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape" style="color: ${trvlr.color}; width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px"></i>`,
             ...Constants.PoiMarkerIconProps,
           });
           const marker = L.marker(
