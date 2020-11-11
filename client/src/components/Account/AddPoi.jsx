@@ -70,7 +70,7 @@ const AddPoi = (props) => {
       <PoiForm uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
 
       <PageWithLoader pageId="MyPois" loading={loading} error={error} title="Moje dôležité miesta" className="thinRedWrap">
-        <PoiTable my showDeleted showLastChange pois={pois} uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
+        <PoiTable my showDeleted showLastChange pois={pois} uid={authData.userDetails.uid} user={authData.user}/>
       </PageWithLoader>
     </PageWithLoader>
   )

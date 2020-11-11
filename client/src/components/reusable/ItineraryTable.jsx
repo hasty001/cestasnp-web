@@ -135,8 +135,8 @@ const ItineraryTable = (props) => {
                   <b>{guidepostName}</b>
                 </a>
               </td>
-              <td>{item.info}{!!props.select && (insertNear == item.id ? 
-                insertInfo : <div><a href="#" onClick={e => { e.preventDefault(); setInsertNear(item.id); setInsertAfter(null); }}>vložiť tu</a></div>)}</td>
+              <td>{item.info}{insertNear == item.id ? 
+                insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertNear(item.id); setInsertAfter(null); }}>vložiť tu</a></div> : "\u00A0")}</td>
             </tr>
             {i < items.length - 1 ? (
               <tr>
@@ -149,8 +149,8 @@ const ItineraryTable = (props) => {
                 <td className="itinerary-value">{formatNumber(item.altDown)}</td>
                 <td className="itinerary-value">{formatHours(item.time)}</td>
                 </>)}
-                <td>{item.infoAfter}{!!props.select && (insertAfter == item.id ? 
-                  insertInfo : <div><a href="#" onClick={e => { e.preventDefault(); setInsertAfter(item.id); setInsertNear(null); }}>vložiť tu</a></div>)}</td>
+                <td>{item.infoAfter}{insertAfter == item.id ? 
+                  insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertAfter(item.id); setInsertNear(null); }}>vložiť tu</a></div> : "\u00A0")}</td>
               </tr>
             ) : null}
           </Fragment>);

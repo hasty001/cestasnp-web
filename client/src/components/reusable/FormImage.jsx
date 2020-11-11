@@ -13,7 +13,7 @@ const FormImage = (props) => {
       <CloudinaryWidget
         uid={props.userId}
         updateImageDetails={setValue}
-        btnTxt={value ? "Nahraj inú fotku" : "Nahraj fotku"}
+        btnTxt={value && value != 'None' ? "Nahraj inú fotku" : "Nahraj fotku"}
         />
       </Image>
     </>

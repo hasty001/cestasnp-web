@@ -14,9 +14,9 @@ const FormCheckBox = (props) => {
         name={props.valueName}
         onBlur={e => {
           e.preventDefault();
-          setValue(e.target.value);
+          setValue(!!e.target.checked);
         }}
-        onChange={e => setValue(e.target.value)}
+        onChange={e => setValue(!!e.target.checked)}
         value="1"
         checked={!!value}
         />

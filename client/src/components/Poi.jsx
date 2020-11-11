@@ -11,12 +11,16 @@ import PageWithLoader from './reusable/PageWithLoader';
 import PoiIcon from './reusable/PoiIcon';
 import UserLabel from './reusable/UserLabel';
 import * as Texts from './Texts';
+import * as Constants from './Constants';
+import ItineraryTable from './reusable/ItineraryTable';
+import { useTraceUpdate } from '../helpers/reactUtils';
 
 const Poi = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [poi, setPoi] = useState(null);
   const [historyPoi, setHistoryPoi] = useState(null);
+  const [queryPoiId, setQueryPoiId] = useState(null);
   const [deleteBox, setDeleteBox] = useState(false);
   const [editBox, setEditBox] = useState(false);
 
@@ -51,7 +55,22 @@ const Poi = (props) => {
       });
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); }, [props.match.params.poi]);
+
+  useEffect(() => {
+    if (poi && !historyPoi && authData.authProviderMounted && authData.isAuth && !poi.deleted &&
+        queryPoiId != poi._id) {
+      if (window.location.search == Constants.EditQuery) {
+        setQueryPoiId(poi._id);
+        setEditBox(true);
+      }
+
+      if (window.location.search == Constants.DeleteQuery) {
+        setQueryPoiId(poi._id);
+        setDeleteBox(true);
+      }
+    }
+  }, [poi, historyPoi, queryPoiId, window.location.search, authData]);
 
   useEffect(() => {
     if (!window.location.hash || window.location.hash == "#" || !poi || !poi.history) {
@@ -94,6 +113,10 @@ const Poi = (props) => {
 
           <p>GPS: {(historyPoi || poi).coordinates[1]}, {(historyPoi || poi).coordinates[0]}</p>
           <p>{(historyPoi || poi).text}</p>
+
+          {!!(historyPoi || poi).guideposts && !!(historyPoi || poi).itinerary && !!((historyPoi || poi).itinerary.near || (historyPoi || poi).itinerary.after) 
+            && <ItineraryTable noTotals noDetails fullKm itinerary={(historyPoi || poi).guideposts} insert={historyPoi || poi}
+              insertNear={(historyPoi || poi).itinerary.near} insertAfter={(historyPoi || poi).itinerary.after} />}
           
           {!historyPoi && !poi.deleted && <a href={`/pred/pois#poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}>na celej mape</a>}
           

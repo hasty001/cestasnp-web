@@ -23,6 +23,8 @@ const PoiForm = (props) => {
   const [successMsg, setSuccessMsg] = useState('');
   const [categoryDescription, setCategoryDescription] = useState('');
 
+  const [newPoi, setNewPoi] = useState();
+
   const clearMsg = () => {
     setErrorMsg('');
     setWarningMsg('');
@@ -59,6 +61,12 @@ const PoiForm = (props) => {
       setItineraryInfo(p.itinerary ? p.itinerary.info : '');
     }
   }, [props.poi, props.edit]);
+
+  useEffect(() => {
+    if (props.poi && props.edit) {
+      setNewPoi({ _id: props.poi._id, category, name, text, water, food, guideposts: props.poi.guideposts });
+    }
+  }, [props.poi, props.edit, category, name, text, water, food]);
 
   const addPoi = () => {
     if ((!name || name.trim().length === 0) 
@@ -164,8 +172,24 @@ const PoiForm = (props) => {
   }, [category]);
 
   const guideposts = warningMsg && warningMsg.itinerary ?
-  [warningMsg.itinerary.prev, warningMsg.itinerary.nearest, warningMsg.itinerary.next].filter((t, i, a) => a.findIndex(o => o.id == t.id) == i)
-  : [];
+    warningMsg.itinerary.guideposts : [];
+
+  const addItineraryItems = (insertPoi, itinerary) => (
+    <>
+      <ItineraryTable noTotals noDetails fullKm select 
+        insert={insertPoi} insertInfo={itineraryInfo} 
+        insertNear={[itineraryNear, setItineraryNear]} 
+        insertAfter={[itineraryAfter, setItineraryAfter]}
+        itinerary={itinerary} />
+
+      <FormText value={[itineraryInfo, setItineraryInfo]} itemClassName="form"
+        valueName="itineraryInfo" valueLabel={
+          <span>Voliteľný popis v itineráry 
+            {" "}<span data-tooltip="Popis by mal byť stručný. Ak sa líši podľa smeru putovanie, použij formát: [vľavo smerom od Dukly | vpravo smerom od Devína], prípadne [pred], [za], [vľavo], [vpravo] smerom od Dukly.">
+              <i className="fas fa-info-circle"/>
+            </span>:</span>}/>
+    </> 
+  );
 
   return (
     <FormWithLoader formId="add-poi" title={props.edit ? "Upraviť dôležité miesto" : "Pridať dôležité miesto" }
@@ -197,6 +221,7 @@ const PoiForm = (props) => {
 
       <FormImage value={[image, setImage]} imageAlt="nahrana fotka miesta" />
 
+      {!!props.edit && newPoi && addItineraryItems(newPoi, newPoi.guideposts)}
       {!!props.edit && <FormText value={[note, setNote]} valueName="note" valueLabel="Poznámka" itemClassName="form"/>}
     
       {!!warningMsg && (
@@ -206,27 +231,15 @@ const PoiForm = (props) => {
           
           <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
             marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto"}} 
-            pois={warningMsg.pois} guideposts={guideposts} />
+            pois={warningMsg.pois} guideposts={guideposts} showDeleted />
 
-          {!!warningMsg.pois && <PoiTable pois={warningMsg.pois} />}
+          {!!warningMsg.pois && <PoiTable pois={warningMsg.pois} showDeleted />}
           
           {!!warningMsg.itinerary && (
             <>
               <h4>Skontroluj a prípadne uprav umiestnení a popis v itinerári:</h4> 
 
-              <ItineraryTable noTotals noDetails fullKm select 
-                insert={warningMsg.poi} insertInfo={itineraryInfo} 
-                insertNear={[itineraryNear, setItineraryNear]} 
-                insertAfter={[itineraryAfter, setItineraryAfter]}
-                itinerary={guideposts} />    
-
-              <FormText value={[itineraryInfo, setItineraryInfo]} itemClassName="form"
-                valueName="itineraryInfo" valueLabel={
-                  <span>Voliteľný popis v itineráry 
-                    {" "}<span data-tooltip="Popis by mal byť stručný. Ak sa líši podľa smeru putovanie, použij formát: [vľavo smerom od Dukly | vpravo smerom od Devína], prípadne [pred], [za], [vľavo], [vpravo] smerom od Dukly.">
-                      <i className="fas fa-info-circle"/>
-                    </span>:</span>}/> 
-                      
+              {addItineraryItems(warningMsg.poi, guideposts)}                     
             </>
           )}
         </div>

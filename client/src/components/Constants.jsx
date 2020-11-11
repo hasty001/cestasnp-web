@@ -15,3 +15,6 @@ export const PoiMarkerIconProps = {
   iconSize: [PoiMarkerSize, PoiMarkerSize],
   iconAnchor: [PoiMarkerSize / 2, PoiMarkerSize]
 };
+
+export const EditQuery = "?edit";
+export const DeleteQuery = "?delete";

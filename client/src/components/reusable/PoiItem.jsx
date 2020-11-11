@@ -28,10 +28,10 @@ const PoiItem = (props) => {
         {' '}{props.value.text}
       </span>
       <span className="poi-actions">
-        {!!authData.authProviderMounted && !!authData.isAuth && !props.value.deleted && !!props.onEdit &&
-          (<a href="#" onClick={e => { e.preventDefault(); props.onEdit(props.value); }} className="poi-edit" title="upraviť dôležité miesto"><i className="fas fa-pencil-alt"/></a>)}
-        {!!authData.authProviderMounted && !!authData.isAuth && !props.value.deleted && !!props.onDelete && 
-          (<a href="#" onClick={e => { e.preventDefault(); props.onDelete(props.value); }} className="poi-delete" title="zmazať dôležité miesto"><i className="fas fa-trash-alt"/></a>)}
+        {!!authData.authProviderMounted && !!authData.isAuth && !props.value.deleted &&
+          (<a href={`/pred/pois/${props.value._id}${Constants.EditQuery}`} className="poi-edit" title="upraviť dôležité miesto"><i className="fas fa-pencil-alt"/></a>)}
+        {!!authData.authProviderMounted && !!authData.isAuth && !props.value.deleted && 
+          (<a href={`/pred/pois/${props.value._id}${Constants.DeleteQuery}`} className="poi-delete" title="zmazať dôležité miesto"><i className="fas fa-trash-alt"/></a>)}
       </span>
     </div>
   )

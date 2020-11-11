@@ -83,21 +83,10 @@ const findNearestPoint = (coordinates) => {
 }
 
 /**
- * Returns nearest, prev and next guideposts on SNP to passed point.
+ * Returns nearest, prev and next guideposts on SNP to passed guidepost id.
  */
-const findNearestGuideposts = (coordinates) => {
-  var minDistance = 100 * 1000 * 1000;
+const getNearGuideposts = (gId, coordinates, minDistance = null) => {
   var min = null;
-
-  itinerary.forEach(g => {
-    const distance = WGS84Util.distanceBetween({ coordinates }, { coordinates: [g.lon, g.lat] });
-
-    if (distance < minDistance) {
-      minDistance = distance;
-      min = g;
-    }
-  });
-
   var prev = null;
   var prevDistance = null;
   var next = null;
@@ -108,10 +97,11 @@ const findNearestGuideposts = (coordinates) => {
   var near = null;
   var after = null;
 
-  if (min) {
-    const i = itinerary.findIndex(g => g.id == min.id);
+  if (gId) {
+    const i = itinerary.findIndex(g => g.id == gId);
 
     if (i >= 0) {
+      min =  itinerary[i];
       prev = itinerary[Math.max(0, i - 1)];
       prevDistance = WGS84Util.distanceBetween({ coordinates }, { coordinates: [prev.lon, prev.lat] });
     }
@@ -137,7 +127,28 @@ const findNearestGuideposts = (coordinates) => {
     }
   }
 
-  return { nearest: min, prev, next, nearestDistance: minDistance, prevDistance, nextDistance, nearId, afterId, near, after, afterDistance };
+  const guideposts = [prev, min, next].filter((p, i, a) => p && (a.indexOf(p) == i));
+
+  return { nearest: min, prev, next, nearestDistance: minDistance, prevDistance, nextDistance, nearId, afterId, near, after, afterDistance, guideposts };
 }
 
-module.exports = { findNearPois, findNearestPoint, findNearestGuideposts };
+/**
+ * Returns nearest, prev and next guideposts on SNP to passed point.
+ */
+const findNearestGuideposts = (coordinates) => {
+  var minDistance = 100 * 1000 * 1000;
+  var minId = null;
+
+  itinerary.forEach(g => {
+    const distance = WGS84Util.distanceBetween({ coordinates }, { coordinates: [g.lon, g.lat] });
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      minId = g.id;
+    }
+  });
+
+  return getNearGuideposts(minId, coordinates, minDistance);
+}
+
+module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts };

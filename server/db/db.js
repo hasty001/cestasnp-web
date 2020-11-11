@@ -4,6 +4,7 @@ const sanitize = require('mongo-sanitize');
 const moment = require('moment-timezone');
 const { ObjectId } = require('mongodb');
 const Validation = require('./validation');
+const { getNearGuideposts, findNearestGuideposts, findNearestPoint } = require('../util/gpsUtils');
 
 const securityCheck = new Validation();
 
@@ -879,7 +880,7 @@ DB.prototype = {
             .then((poiRes) => {
               poi._id = poiRes.insertedId;
 
-              return this.addPoiHistory(db, poi._id, poi).then(poi => {
+              return this.fillPoiInfo(db, poi._id, poi).then(poi => {
                 return Promise.resolve(poi);
               });
             }).finally(() => db.close());
@@ -918,7 +919,7 @@ DB.prototype = {
                       { returnOriginal: false })
                     .then(res => {
                       if (res.value) {
-                        return this.addPoiHistory(db, res.value._id, res.value);
+                        return this.fillPoiInfo(db, res.value._id, res.value);
                       } else {
                         return Promise.reject('Dôležité miesto nebolo nájdené.');
                       }
@@ -962,7 +963,7 @@ DB.prototype = {
           { returnOriginal: false })
         .then(res => {
           if (res.value) {
-            return this.addPoiHistory(db, res.value._id, res.value);
+            return this.fillPoiInfo(db, res.value._id, res.value);
           } else {
             return Promise.reject('Dôležité miesto nebolo nájdené.');
           }
@@ -971,7 +972,7 @@ DB.prototype = {
       });
   },
 
-  addPoiHistory(db, poiId, poiValue) {
+  fillPoiInfo(db, poiId, poiValue) {
     return  Promise.all([
       poiValue,
       db.db('cestasnp').collection('pois_history').find({ poiId: poiId.toString() }).sort({ modified: -1 }).toArray(),
@@ -987,6 +988,18 @@ DB.prototype = {
 
         poi.history = history;
 
+        history.forEach(h => {
+          if (h.itinerary && (h.itinerary.near || h.itinerary.after)) {
+            h.guideposts = getNearGuideposts(h.itinerary.near || h.itinerary.after, h.coordinates).guideposts;
+          }
+        });
+
+        if (poi.itinerary && (poi.itinerary.near || poi.itinerary.after)) {
+          poi.guideposts = getNearGuideposts(poi.itinerary.near || poi.itinerary.after, poi.coordinates).guideposts;
+        } else {
+          poi.guideposts = findNearestGuideposts(findNearestPoint(poi.coordinates).coordinates).guideposts;
+        }
+
         return Promise.resolve(poi);
       });
     });
@@ -999,7 +1012,7 @@ DB.prototype = {
       .then(db => {
         const sPoiId = sanitize(poiId);
 
-        return this.addPoiHistory(db, sPoiId, db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }))
+        return this.fillPoiInfo(db, sPoiId, db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }))
           .finally(() => db.close);
       });
   },
