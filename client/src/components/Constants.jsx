@@ -10,7 +10,7 @@ export const PoiCategoryFood = "krcma_jedlo";
 export const NearByMarkersDistance = 10; // in map pixels
 
 export const PoiMarkerSize = 32; // in pixels
-export const PoiIconSize = 16; // in pixels
+export const PoiIconSize = 15; // in pixels
 export const PoiMarkerIconProps = {
   iconSize: [PoiMarkerSize, PoiMarkerSize],
   iconAnchor: [PoiMarkerSize / 2, PoiMarkerSize]

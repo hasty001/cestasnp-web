@@ -259,7 +259,7 @@ const Map = (props) => {
           const icon = L.divIcon({
             html: 
               `<i class="fas fa-map-marker icon-stack" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px" ></i>
-              <i class="fas ${category.icon} fa-inverse icon-stack" style="width: ${Constants.PoiMarkerSize/2}px; height: ${Constants.PoiMarkerSize/2}px" data-fa-transform="up-4" ></i>`,
+              <i class="fas ${category.icon} fa-inverse icon-stack" style="width: ${Constants.PoiMarkerSize/2}px; height: ${Constants.PoiMarkerSize/2}px" data-fa-transform="up-3" ></i>`,
               ...Constants.PoiMarkerIconProps,
           });
 
