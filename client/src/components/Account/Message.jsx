@@ -12,10 +12,12 @@ const Message = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsgFirst, setErrorMsgFirst] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
   const clearMsg = () => {
     setErrorMsg('');
+    setErrorMsgFirst('');
     setSuccessMsg('');
   }
   
@@ -76,9 +78,9 @@ const Message = (props) => {
 
   return (
     <FormWithLoader formId="MessageForm" title="Poslať správu" submitText="Poslať správu"
-      onSubmit={sendMessage} loading={loading} errorMsg={errorMsg} successMsg={successMsg}>
+      onSubmit={sendMessage} loading={loading} errorMsg={errorMsg} successMsg={successMsg} errorMsgFirst={errorMsgFirst}>
       
-      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg}/>
+      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsgFirst}/>
 
       <FormTextArea value={[message, setMessage]} valueName="message" valueLabel="Text" />
       

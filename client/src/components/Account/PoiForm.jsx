@@ -19,6 +19,7 @@ const PoiForm = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsgFirst, setErrorMsgFirst] = useState('');
   const [warningMsg, setWarningMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [categoryDescription, setCategoryDescription] = useState('');
@@ -27,6 +28,7 @@ const PoiForm = (props) => {
 
   const clearMsg = () => {
     setErrorMsg('');
+    setErrorMsgFirst('');
     setWarningMsg('');
     setSuccessMsg('');
   }
@@ -194,7 +196,7 @@ const PoiForm = (props) => {
   return (
     <FormWithLoader formId="add-poi" title={props.edit ? "Upraviť dôležité miesto" : "Pridať dôležité miesto" }
       submitText={props.edit ? "Upraviť" : (warningMsg ? "Naozaj pridať" : "Pridať")}
-      onSubmit={addPoi} loading={loading} errorMsg={errorMsg} successMsg={successMsg} description={!props.edit && (
+      onSubmit={addPoi} loading={loading} errorMsg={errorMsg} errorMsgFirst={errorMsgFirst} successMsg={successMsg} description={!props.edit && (
       <>
         <p>Pomôž nám vytvoriť databázu dôležitých miest a zberaj body z terénu. Vďaka dôležitým miestam,
           ktoré spolu vytvoríme budú pútnici vedieť kde je na Ceste voda či útulňa a teda kde môžu doplniť energiu.
@@ -205,7 +207,7 @@ const PoiForm = (props) => {
       </>
       )}>
 
-      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg} itemClassName="form"/>
+      <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsgFirst} itemClassName="form"/>
 
       <FormSelect value={[category, setCategory]} valueName="category" valueLabel="Kategória" 
         options={PoiCategories.filter(c => !c.hidden)} itemClassName="form">
