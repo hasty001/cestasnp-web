@@ -11,14 +11,14 @@ const FormWithLoader = (props) => {
       }
       {!!props.description && <div className="form-description">{props.description}</div>}
       
+      {props.children}
+
       {!!props.errorMsg && 
         <p className="errorMsg">{props.errorMsg}</p>
       }
       {!!props.successMsg && 
         <p className="successMsg">{props.successMsg}</p>
       }
-      
-      {props.children}
 
       {!!props.submitText && (
         <button className="snpBtn" onClick={props.onSubmit} type="submit">

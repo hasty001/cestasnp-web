@@ -95,8 +95,8 @@ class CestaSNP extends Component {
               <Route path="/na/:traveller" render={(props) => (<Traveller {...props} scrollTop={this.state.scrollTop} />)}/>
               <Route exact path="/kontakt" component={Kontakt} />
               <Route exact path="/cookies" component={Cookies} />
-              <Route exact path="/ucet" component={Account} />
-              <Route exact path="/ucet/pridatpoi" component={AddPoi} />
+              <Route exact path="/ucet" render={(props) => (<Account {...props} />)}/>
+              <Route exact path="/ucet/pridatpoi" render={(props) => (<Account {...props} addPoi />)} />
               <Route path="*" component={NotFound} />
             </Switch>
           </Router>

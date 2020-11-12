@@ -9,7 +9,8 @@ export const AuthContext = React.createContext({
   travellerDetails: {},
   travellerMessages: [],
   authProviderMounted: 0,
-  updateTravellerDetails: () => {}
+  updateTravellerDetails: () => {},
+  updateUserDetails: () => {}
 });
 
 export class AuthProvider extends React.Component {
@@ -22,7 +23,8 @@ export class AuthProvider extends React.Component {
       travellerDetails: {},
       travellerMessages: [],
       authProviderMounted: 0,
-      updateTravellerDetails: this.updateTravellerDetails.bind(this)
+      updateTravellerDetails: this.updateTravellerDetails.bind(this),
+      updateUserDetails: this.updateUserDetails.bind(this)
     };
   }
 
@@ -105,6 +107,12 @@ export class AuthProvider extends React.Component {
   updateTravellerDetails(details) {
     this.setState({
       travellerDetails: details
+    });
+  }
+
+  updateUserDetails(details) {
+    this.setState({
+      userDetails: details
     });
   }
 

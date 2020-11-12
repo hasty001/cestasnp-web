@@ -209,7 +209,7 @@ const PoiForm = (props) => {
 
       <FormSelect value={[category, setCategory]} valueName="category" valueLabel="Kategória" 
         options={PoiCategories.filter(c => !c.hidden)} itemClassName="form">
-        <option value=" " />
+        <option value=" " label="-- vyber --" />
       </FormSelect>
       <p>{categoryDescription || <>&nbsp;</>}</p>
       

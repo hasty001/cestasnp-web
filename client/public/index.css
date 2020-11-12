@@ -453,6 +453,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   font-size: 16px;
 }
 
+.poi-icon {
+  margin: 0 2px;
+}
+
 .poi-history-link {
   float: right;
 }
@@ -528,12 +532,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-top: 10px;
   font-size: smaller;
   text-align: right;
-}
-
-.itinerary-dialog-label {
-  display: block;
-  width: 80px;
-  margin: 5px;
 }
 
 /***    ITINERARY   ***/
@@ -825,10 +823,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .traveller-message-delete,
 .traveller-comment-delete,
 .poi-edit,
-.poi-delete {
+.poi-delete,
+.poi-my {
   color: black;
-  font-size: 14px;
-  margin: 0 2px;
+  font-size: 16px;
+  margin: 0 4px;
   vertical-align: middle;
 }
 
@@ -1132,7 +1131,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .accountWrap label, #MessageForm label, #MyJourney label, #AddPoi label, 
-.edit-poi-box label, .confirm-box label {
+.edit-poi-box label, .confirm-box label, .itinerary-dialog label {
   display: block;
   width: 100%;
 }
@@ -1210,11 +1209,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 10px;
 }
 
-.fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form {
+.fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form,
+.itinerary-dialog select.form {
   height: 36px;
-  border: solid 1px transparent;
+  border: solid 1px lightgray;
   width: 20%;
-  min-width: 100px;
+  min-width: 200px;
   margin: 5px 0;
 }
 
@@ -1297,9 +1297,9 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
     width: 95%;
   }
 
-  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form {
+  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form {
     display: block;
-    width: 100px;
+    min-width: 200px;
   }
 
   .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2 {
@@ -1315,7 +1315,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 
   .leaflet-control-attribution {
-    font-size: 10px;
+    font-size: 10px !important;
   }
 
   #inyZaciatok {

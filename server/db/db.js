@@ -972,6 +972,58 @@ DB.prototype = {
       });
   },
 
+  togglePoiMy(uid, id) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => {
+        return db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(id) }).then(poi => {
+          if (!poi) {
+            return Promise.reject('Dôležité miesto nebolo nájdené.');            
+          }
+
+          return db.db('cestasnp').collection('users').findOne({ uid }).then(userDetails => {
+            if (!userDetails) {
+              return Promise.reject('Neexistujúci užívateľ.');
+            }
+
+            const isMy = 
+              (userDetails.poisMy && userDetails.poisMy.indexOf(id) >= 0)
+              || (poi.user_id == userDetails.uid && !(userDetails.poisNotMy && userDetails.poisNotMy.indexOf(id) >= 0));
+
+            if (isMy) {
+              userDetails.poisMy = (userDetails.poisMy || []).filter(t => t != id);
+              userDetails.poisNotMy = userDetails.poisNotMy || [];
+
+              if (poi.user_id == userDetails.uid && userDetails.poisNotMy.indexOf(id) < 0) {
+                userDetails.poisNotMy.push(id);
+              }
+            } else {
+              userDetails.poisNotMy = (userDetails.poisNotMy || []).filter(t => t != id);
+              userDetails.poisMy = userDetails.poisMy || [];
+
+              if (poi.user_id != userDetails.uid && userDetails.poisMy.indexOf(id) < 0) {
+                userDetails.poisMy.push(id);
+              }
+            }
+
+            return db.db('cestasnp').collection('users').findOneAndUpdate({ uid },
+              { $set: { 
+                poisMy: userDetails.poisMy, 
+                poisNotMy: userDetails.poisNotMy } }, 
+              { returnOriginal: false })
+            .then(res => {
+              if (res.value) {
+                return res.value;
+              } else {
+                return Promise.reject('Neexistujúci užívateľ.');
+              }
+            });
+          });
+        }).finally(() => db.close);
+      });
+  },
+
   fillPoiInfo(db, poiId, poiValue) {
     return  Promise.all([
       poiValue,

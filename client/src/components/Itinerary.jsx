@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { fetchJson } from '../helpers/fetchUtils';
+import FormSelect from './reusable/FormSelect';
 import ItineraryTable from './reusable/ItineraryTable';
 import PageWithLoader from './reusable/PageWithLoader';
 import * as Texts from './Texts';
@@ -76,22 +77,17 @@ const Itinerary = (props) => {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <label htmlFor="start" className="itinerary-dialog-label" >
-              Začiatok:
-              <select id="start" value={dialogStartEnd ? dialogStartEnd[0] : null}
-                onChange={e => setDialogStartEnd([parseInt(e.target.value), dialogStartEnd[1]])} >
-                {!!itinerary && itinerary.filter(item => item.main).map((item, i) => 
-                  (<option key={i} value={item.id} label={item.name + (item.ele ? (` ${item.ele} m`) : '')}/>))}
-              </select>
-            </label>
-            <label htmlFor="end" className="itinerary-dialog-label" >
-              Koniec:
-              <select id="end" value={dialogStartEnd ? dialogStartEnd[1] : null}
-              onChange={e => setDialogStartEnd([dialogStartEnd[0], parseInt(e.target.value)])} >
-                {!!itinerary && itinerary.filter(item => item.main).map((item, i) => 
-                  (<option key={i} value={item.id} label={item.name + (item.ele ? (` ${item.ele} m`) : '')}/>))}
-              </select>
-            </label>
+            <FormSelect value={[dialogStartEnd ? dialogStartEnd[0] : null, (value) => setDialogStartEnd([parseInt(value), dialogStartEnd[1]])]}
+              valueLabel="Začiatok:" valueName="start" itemClassName="form" 
+              options={itinerary ? itinerary.filter(item => item.main).map(item => { 
+                return { value: item.id, label: item.name + (item.ele ? (` ${item.ele} m`) : '') }; }) : null}>
+            </FormSelect>
+
+            <FormSelect value={[dialogStartEnd ? dialogStartEnd[1] : null, (value) => setDialogStartEnd([dialogStartEnd[0], parseInt(value)])]}
+              valueLabel="Koniec:" valueName="end" itemClassName="form" 
+              options={itinerary ? itinerary.filter(item => item.main).map(item => { 
+                return { value: item.id, label: item.name + (item.ele ? (` ${item.ele} m`) : '') }; }) : null}>
+            </FormSelect>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => setDialogStartEnd([dialogStartEnd[1], dialogStartEnd[0]])}>Otoč</Button>

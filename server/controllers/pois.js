@@ -38,8 +38,26 @@ router.post('/delete', (req, res) => {
     note
   } = req.body;
 
-  checkToken(req, res, uid, resp => {
+  checkToken(req, res, uid, () => {
     db.deletePoi(uid, id, note)
+    .then(poi => {
+      res.json(poi);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({ error: error.toString() });
+    });
+  });
+});
+
+router.post('/toggleMy', (req, res) => {
+  const {
+    uid,
+    id
+  } = req.body;
+
+  checkToken(req, res, uid, () => {
+    db.togglePoiMy(uid, id)
     .then(poi => {
       res.json(poi);
     })

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../AuthContext';
 import PageWithLoader from '../reusable/PageWithLoader';
-import { fetchJson } from '../../helpers/fetchUtils';
+import { fetchJson, fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 import PoiForm from './PoiForm';
 import PoiTable from '../reusable/PoiTable';
 import * as Texts from '../Texts';
@@ -63,6 +63,14 @@ const AddPoi = (props) => {
 
   useEffect(() => { fetchData(); }, []);
 
+  const toggleIsMy = (poi) => {
+    fetchPostJsonWithToken(authData.user, "/api/pois/toggleMy", { id: poi._id, uid: authData.userDetails.uid })
+    .then(res => {
+      authData.updateUserDetails(res);
+    })
+    .catch(error => { console.error(error); updatePois(Object.assign({ errorMsg: Texts.GenericError }, poi)) });
+  };
+
   return (
     <PageWithLoader pageId="AddPoi" loading={!authData || !authData.authProviderMounted} 
       error={authData && authData.authProviderMounted && !authData.isAuth ? 'Pridať dôležité miesto môže len prihlásený užívateľ.' : ''}>
@@ -70,7 +78,7 @@ const AddPoi = (props) => {
       <PoiForm uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
 
       <PageWithLoader pageId="MyPois" loading={loading} error={error} title="Moje dôležité miesta" className="thinRedWrap">
-        <PoiTable my showDeleted showLastChange pois={pois} uid={authData.userDetails.uid} user={authData.user}/>
+        <PoiTable my showDeleted showLastChange pois={pois} userDetails={authData.userDetails} onMyRemove={toggleIsMy}/>
       </PageWithLoader>
     </PageWithLoader>
   )

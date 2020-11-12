@@ -125,6 +125,7 @@ const Navigation = () => {
             Kontakt
           </NavItem>
 
+          {!!authData.isAuth && (
           <NavItem
             eventKey={4}
             title="Moja cesta"
@@ -133,19 +134,19 @@ const Navigation = () => {
             }}
           >
             {!authData.isAuth ? 'Prihlásiť sa' : 'Poslať správu'}
-          </NavItem>
-
-          {!!authData.isAuth && (
-            <NavItem
-              eventKey={4}
-              title="Pridať dôležité miesto"
-              onClick={() => {
-                history.push(ROUTES.pridatPOI);
-              }}
-            >
-              Pridať dôležité miesto
-            </NavItem>
+          </NavItem>          
           )}
+
+          
+          <NavItem
+            eventKey={5}
+            title="Pridať dôležité miesto"
+            onClick={() => {
+              history.push(ROUTES.pridatPOI);
+            }}
+          >
+            {!authData.isAuth ? 'Prihlásiť sa' : 'Pridať dôležité miesto'}             
+          </NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -12,6 +12,7 @@ const FormSelect = (props) => {
         className={props.itemClassName}
         id={props.valueName}
         name={props.valueName}
+        onBlur={e => setValue(e.target.value)}
         onChange={e => setValue(e.target.value)}
         value={value}>
         {props.children}

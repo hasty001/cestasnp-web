@@ -10,15 +10,15 @@ import ostatne from '../../public/img/ostatne.png';
 import razcestnik from '../../public/img/razcestnik.png';
 
 const PoiCategories = [
-  { value: "pramen", label: "voda", icon: "fas fa-tint", iconUrl: pramen, description: "napr. prameň, studnička alebo verejný kohútik" },
-  { value: "pristresok", label: "prístrešok", icon: "fac fa-pristresek", iconUrl: pristresok, description: "miesto, kde sa dá schovať pred nepriaznivým počasím, pripadne núdzovo prespať" },
-  { value: "chata", label: "ubytovanie", icon: "fas fa-bed", iconUrl: chata, description: "napr. hotel, horská chata, penzión, turistická ubytovňa" },
-  { value: "utulna", label: "útulňa", icon: "fas fa-home", iconUrl: utulna, description: "skromnejší ubytovanie, za dobrovoľný poplatok" },
-  { value: "krcma_jedlo", label: "jedlo", icon: "fas fa-utensils", iconUrl: krcma_jedlo, description: "podnik, kde poskytujú teplé jedlo, napr. reštaurácia, bufet" },
-  { value: "potraviny", label: "potraviny", icon: "fas fa-shopping-basket", iconUrl: potraviny, description: "predajňa potravín" },
-  { value: "posed", label: "posed", icon: "fac fa-posed", iconUrl: posed, description: "odomknutý posed, kde sa dá schovať pred nepriaznivým počasím, pripadne núdzovo prespať" },
-  { value: Constants.PoiCategoryGuidepost, label: "rázcestník", icon: "fas fa-plus", hidden: true, iconUrl: razcestnik },
-  { value: Constants.PoiCategoryOther, label: "ostatné", icon: "fas fa-asterisk", iconUrl: ostatne },
+  { value: "pramen", label: "voda", icon: "fas fa-tint poi-icon", iconUrl: pramen, description: "napr. prameň, studnička alebo verejný kohútik" },
+  { value: "pristresok", label: "prístrešok", icon: "fac fa-pristresek poi-icon", iconUrl: pristresok, description: "miesto, kde sa dá schovať pred nepriaznivým počasím, pripadne núdzovo prespať" },
+  { value: "chata", label: "ubytovanie", icon: "fas fa-bed poi-icon", iconUrl: chata, description: "napr. hotel, horská chata, penzión, turistická ubytovňa" },
+  { value: "utulna", label: "útulňa", icon: "fas fa-home poi-icon", iconUrl: utulna, description: "skromnejší ubytovanie, za dobrovoľný poplatok" },
+  { value: "krcma_jedlo", label: "jedlo", icon: "fas fa-utensils poi-icon", iconUrl: krcma_jedlo, description: "podnik, kde poskytujú teplé jedlo, napr. reštaurácia, bufet" },
+  { value: "potraviny", label: "potraviny", icon: "fas fa-shopping-basket poi-icon", iconUrl: potraviny, description: "predajňa potravín" },
+  { value: "posed", label: "posed", icon: "fac fa-posed poi-icon", iconUrl: posed, description: "odomknutý posed, kde sa dá schovať pred nepriaznivým počasím, pripadne núdzovo prespať" },
+  { value: Constants.PoiCategoryGuidepost, label: "rázcestník", icon: "fas fa-plus poi-icon", hidden: true, iconUrl: razcestnik },
+  { value: Constants.PoiCategoryOther, label: "ostatné", icon: "fas fa-asterisk poi-icon", iconUrl: ostatne },
 ];
 
 const findPoiCategory = (category) => {
