@@ -16,7 +16,7 @@ const PoiItem = (props) => {
 
       {!!props.value.distance && `${props.value.distance.toFixed(0)} m `}
       {!!props.showLastChange && (props.value.deleted ? 
-        <>{dateTimeToStr(props.value.deleted)} smazal <UserLabel uid={props.value.deleted_by} name={props.value.deleted_by_name}/>{' '}</>
+        <>{dateTimeToStr(props.value.deleted)} zmazal <UserLabel uid={props.value.deleted_by} name={props.value.deleted_by_name}/>{' '}</>
         : (props.value.modified ? 
           <>{dateTimeToStr(props.value.modified)} upravil <UserLabel uid={props.value.modified_by} name={props.value.modified_by_name}/>{' '}</>
           : <>{dateTimeToStr(props.value.created)} pridal <UserLabel uid={props.value.user_id} name={props.value.created_by_name}/>{' '}</>))}
