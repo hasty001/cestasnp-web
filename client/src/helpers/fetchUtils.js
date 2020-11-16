@@ -5,7 +5,7 @@ const fetchJson = (url) =>
       throw res.error;
     }
     return res;
-  });
+  }).catch(error => Promise.reject(error));
 
 const fetchPostJsonWithToken = (user, url, data) => 
   user.getIdToken()
@@ -24,6 +24,6 @@ const fetchPostJsonWithToken = (user, url, data) =>
           throw res.error;
         }
         return res;
-      });
+      }).catch(error => Promise.reject(error));
 
 export { fetchJson, fetchPostJsonWithToken };

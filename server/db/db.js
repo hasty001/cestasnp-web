@@ -950,7 +950,7 @@ DB.prototype = {
             return Promise.resolve(pois);
           });
         })
-        .finally(() => db.close));
+        .finally(() => db.close()));
   },
 
   deletePoi(uid, id, note) {
@@ -968,7 +968,7 @@ DB.prototype = {
             return Promise.reject('Dôležité miesto nebolo nájdené.');
           }
         })
-        .finally(() => db.close);
+        .finally(() => db.close());
       });
   },
 
@@ -1020,27 +1020,31 @@ DB.prototype = {
               }
             });
           });
-        }).finally(() => db.close);
+        }).finally(() => db.close());
       });
   },
 
   fillPoiInfo(db, poiId, poiValue) {
-    return  Promise.all([
+    return Promise.all([
       poiValue,
       db.db('cestasnp').collection('pois_history').find({ poiId: poiId.toString() }).sort({ modified: -1 }).toArray(),
     ]).then(([poi, history]) => {
-      const uids = this.getUids([poi].concat(history), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
+      if (!poi) {
+        return Promise.reject('Dôležité miesto nebolo nájdené.');
+      }
+
+      const uids = this.getUids([poi].concat(history || []), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
 
       return this.getUserNames(db, uids).then(users => {
-        [poi].concat(history).forEach(poi => {
+        [poi].concat(history || []).forEach(poi => {
           poi.created_by_name = this.findUserName(poi.user_id, users);
           poi.modified_by_name = this.findUserName(poi.modified_by, users);
           poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
         });
 
-        poi.history = history;
+        poi.history = history || [];
 
-        history.forEach(h => {
+        poi.history.forEach(h => {
           if (h.itinerary && (h.itinerary.near || h.itinerary.after)) {
             h.guideposts = getNearGuideposts(h.itinerary.near || h.itinerary.after, h.coordinates).guideposts;
           }
@@ -1065,7 +1069,7 @@ DB.prototype = {
         const sPoiId = sanitize(poiId);
 
         return this.fillPoiInfo(db, sPoiId, db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }))
-          .finally(() => db.close);
+          .finally(() => db.close());
       });
   },
 };

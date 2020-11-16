@@ -221,7 +221,7 @@ const Map = (props) => {
         });
         
         const marker = new MapMarker([g.lat, g.lon], {
-          icon, poi: g.id, zIndexOffset: -10,
+          icon, poi: g.id, zIndexOffset: -4000,
           popupContent: `<h4><a href="/pred/itinerar#g${g.id}"><i class="${guidepostIcon}"></i> ${g.name} ${g.ele ? ` ${g.ele}\u00A0m`: ""}</a></h4>`
         }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
         newMarkers.push(marker);

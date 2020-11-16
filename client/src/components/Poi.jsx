@@ -138,7 +138,7 @@ const Poi = (props) => {
               <h4>História</h4>
 
               {!!poi.deleted &&
-                <p>{dateTimeToStr(poi.deleted)} smazal <UserLabel uid={poi.deleted_by} name={poi.deleted_by_name}/>{' Poznámka: '}{poi.deleted_note}
+                <p>{dateTimeToStr(poi.deleted)} zmazal <UserLabel uid={poi.deleted_by} name={poi.deleted_by_name}/>{' Poznámka: '}{poi.deleted_note}
                   {historyPoi && <a className="poi-history-link" href="#">pozrieť akutálnu verziu</a>}</p>}
               {!!poi.modified &&
                 <p>{dateTimeToStr(poi.modified)} upravil <UserLabel uid={poi.modified_by} name={poi.modified_by_name}/>{' Poznámka: '}{poi.modified_note}
