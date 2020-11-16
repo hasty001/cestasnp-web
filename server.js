@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').Server(app);
 
+const moment = require('moment-timezone');
+moment.tz.setDefault('Europe/Vienna');
+
 const root = path.join(__dirname, '/client/build');
 
 if (process.env.PORT) {
@@ -27,6 +30,8 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/api/pois', require('./server/controllers/pois'));
+
+app.use('/api/itinerary', require('./server/controllers/itinerary'));
 
 app.use('/api/articles', require('./server/controllers/articles'));
 

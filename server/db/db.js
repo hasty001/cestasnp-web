@@ -1,9 +1,10 @@
 // TODO - lot of reapeating code refactor when possible
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectID } = require('mongodb');
 const sanitize = require('mongo-sanitize');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const { ObjectId } = require('mongodb');
 const Validation = require('./validation');
+const { getNearGuideposts, findNearestGuideposts, findNearestPoint } = require('../util/gpsUtils');
 
 const securityCheck = new Validation();
 
@@ -292,6 +293,45 @@ DB.prototype = {
     });
   },
 
+  findUserName(uid, users) {
+    const index = users.findIndex(u => u.uid === uid);
+    return index >= 0 ? users[index].name : null;
+  },
+
+  getUids(list, selectProps) {
+    return list.reduce((res, item) => res.concat(selectProps.filter(prop => prop(item)).map(prop => prop(item))), []);
+  },
+
+  /**
+   * Returns list of users with name or journey name for specified uids.
+   */
+  getUserNames(db, uids) {
+    const getUsers = db.db('cestasnp')
+      .collection('users')
+      .find({ $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] }, { uid: 1, sql_user_id: 1, name: 1 })
+      .toArray();
+
+    const getDetails =  db.db('cestasnp')
+      .collection('traveler_details')
+      .find({ user_id : { $in: uids } }, { user_id: 1, meno: 1 })
+      .toArray();
+
+    return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
+      users.forEach(u => {
+        if (!u.uid) {
+          u.uid = u.sql_user_id;
+        }
+
+        const cesta = details.find(t => t.user_id === u.uid);
+        if (cesta) {
+          u.name = cesta.meno;
+        }
+      });
+
+      return Promise.resolve(users);
+    });
+  },
+
   getTravellerComments(articleId, travellerId, callback) {
     const sArticleId = sanitize(articleId);
     const sTravellerId = sanitize(travellerId);
@@ -309,36 +349,17 @@ DB.prototype = {
               .toArray();
 
         return getDocs.then((docs) => {
-          const uids = docs.filter(d => d.uid).map(d => d.uid);
+          const uids = this.getUids(docs, [d => d.uid]);
 
-          const getUsers = db.db('cestasnp')
-            .collection('users')
-            .find({ $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] }, { uid: 1, sql_user_id: 1, name: 1 })
-            .toArray();
-
-          const getDetails =  db.db('cestasnp')
-            .collection('traveler_details')
-            .find({ user_id : { $in: uids } }, { user_id: 1, meno: 1 })
-            .toArray();
-
-          return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
-            users.forEach(u => {
-              const cesta = details.find(t => t.user_id === u.uid || t.user_id === u.sql_user_id);
-              if (cesta)
-              {
-                  u.name = cesta.meno;
-                  u.cesta = true;
-              }
-            });
-
+          return this.getUserNames(db, uids)
+          .then(users => {
             docs.forEach(d => {
               if (d.uid) {
-                const user = users.find(u => u.uid === d.uid || u.sql_user_id === d.uid);
+                const user = users.find(u => u.uid === d.uid);
                 if (user) {
                   if (d.username)
                     d.username = user.name;
                   d.name = user.name;
-                  d.cesta = user.cesta;
                 }
               }
 
@@ -347,9 +368,9 @@ DB.prototype = {
             db.close();
             callback(docs);
           });
-        }).catch(e => { db.close(); callback({ error: e}); });
+        }).catch(e => { db.close(); console.error(e); callback({ error: e.toString() }); });
       })
-    .catch(e => { callback({ error: e }); });
+    .catch(e => { console.error(e); callback({ error: e.toString() }); });
   },
 
   getTravellersMessages(travellerIds, callback) {
@@ -744,6 +765,9 @@ DB.prototype = {
       { useNewUrlParser: true },
       (error, db) => {
         if (db) {
+          message.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
+          message.pub_date_milseconds = moment().valueOf();
+
           db.db('cestasnp')
             .collection('traveler_messages')
             .insertOne(securityCheck.sanitizeTravellerMessage(message))
@@ -813,7 +837,237 @@ DB.prototype = {
         }
       }
     );
-  }
+  },
+  
+  setPoisItinerary(pois, callback) {
+    MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true },
+      (err, db) => {
+        if (db) {
+          Promise.all(pois.map(item => 
+            db.db('cestasnp')
+              .collection('pois')
+              .findOneAndUpdate({ _id: new ObjectId(item.poi._id) }, 
+                { $set: { 'itinerary.near': item.near ? item.near.id : null,
+                'itinerary.after': item.after ? item.after.id : null } },
+                { returnOriginal: false })
+          )).then(r => {
+            db.close();
+            callback(r.map(i => i.value));
+          })
+          .catch(dbError => {
+            db.close();
+            callback({ error: dbError });
+          });
+        } else {
+          callback({ error: err });
+        }
+      }
+    );
+  },
+
+  addPoi(poi) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then( db  => {
+          poi.created = moment().format('YYYY-MM-DD HH:mm:ss');
+
+          return db.db('cestasnp')
+            .collection('pois')
+            .insertOne(securityCheck.sanitizePoi(poi))
+            .then((poiRes) => {
+              poi._id = poiRes.insertedId;
+
+              return this.fillPoiInfo(db, poi._id, poi).then(poi => {
+                return Promise.resolve(poi);
+              });
+            }).finally(() => db.close());
+      }
+    )
+  },
+
+  updatePoi({uid, id, note, ...poi}) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then( db  => {
+          poi.modified_by = uid;
+          poi.modified = moment().format('YYYY-MM-DD HH:mm:ss');
+          poi.modified_note = note;
+
+          return db.db('cestasnp')
+            .collection('pois')
+            .findOne({ _id: new ObjectID(id) }).then(current => {
+              if (!current) {
+                return Promise.reject('Dôležité miesto nebolo nájdené.');
+              }
+              delete current._id;
+              current.poiId = id;
+
+              poi.user_id = current.user_id;
+              poi.created = current.created;
+
+              return db.db('cestasnp')
+                .collection('pois_history').insertOne(current).then(resInsert => {
+                  poi.historyId = resInsert.insertedId.toString();
+
+                  return db.db('cestasnp')
+                    .collection('pois')
+                    .findOneAndUpdate({ _id: new ObjectID(id) }, { $set: securityCheck.sanitizePoi(poi) },
+                      { returnOriginal: false })
+                    .then(res => {
+                      if (res.value) {
+                        return this.fillPoiInfo(db, res.value._id, res.value);
+                      } else {
+                        return Promise.reject('Dôležité miesto nebolo nájdené.');
+                      }
+                    });
+                }                  
+                );
+            }).finally(() => db.close());
+      }
+    )
+  },
+
+  getPois() {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => 
+        db.db('cestasnp').collection('pois').find().toArray()
+        .then(pois => {
+          const uids = this.getUids(pois, [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
+
+          return this.getUserNames(db, uids).then(users => {
+            pois.forEach(poi => {
+              poi.created_by_name = this.findUserName(poi.user_id, users);
+              poi.modified_by_name = this.findUserName(poi.modified_by, users);
+              poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
+            });
+
+            return Promise.resolve(pois);
+          });
+        })
+        .finally(() => db.close));
+  },
+
+  deletePoi(uid, id, note) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => {
+        return db.db('cestasnp').collection('pois').findOneAndUpdate({ _id: new ObjectID(id) },
+          { $set: { deleted: moment().format('YYYY-MM-DD HH:mm:ss'), deleted_by: uid, deleted_note: note } }, 
+          { returnOriginal: false })
+        .then(res => {
+          if (res.value) {
+            return this.fillPoiInfo(db, res.value._id, res.value);
+          } else {
+            return Promise.reject('Dôležité miesto nebolo nájdené.');
+          }
+        })
+        .finally(() => db.close);
+      });
+  },
+
+  togglePoiMy(uid, id) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => {
+        return db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(id) }).then(poi => {
+          if (!poi) {
+            return Promise.reject('Dôležité miesto nebolo nájdené.');            
+          }
+
+          return db.db('cestasnp').collection('users').findOne({ uid }).then(userDetails => {
+            if (!userDetails) {
+              return Promise.reject('Neexistujúci užívateľ.');
+            }
+
+            const isMy = 
+              (userDetails.poisMy && userDetails.poisMy.indexOf(id) >= 0)
+              || (poi.user_id == userDetails.uid && !(userDetails.poisNotMy && userDetails.poisNotMy.indexOf(id) >= 0));
+
+            if (isMy) {
+              userDetails.poisMy = (userDetails.poisMy || []).filter(t => t != id);
+              userDetails.poisNotMy = userDetails.poisNotMy || [];
+
+              if (poi.user_id == userDetails.uid && userDetails.poisNotMy.indexOf(id) < 0) {
+                userDetails.poisNotMy.push(id);
+              }
+            } else {
+              userDetails.poisNotMy = (userDetails.poisNotMy || []).filter(t => t != id);
+              userDetails.poisMy = userDetails.poisMy || [];
+
+              if (poi.user_id != userDetails.uid && userDetails.poisMy.indexOf(id) < 0) {
+                userDetails.poisMy.push(id);
+              }
+            }
+
+            return db.db('cestasnp').collection('users').findOneAndUpdate({ uid },
+              { $set: { 
+                poisMy: userDetails.poisMy, 
+                poisNotMy: userDetails.poisNotMy } }, 
+              { returnOriginal: false })
+            .then(res => {
+              if (res.value) {
+                return res.value;
+              } else {
+                return Promise.reject('Neexistujúci užívateľ.');
+              }
+            });
+          });
+        }).finally(() => db.close);
+      });
+  },
+
+  fillPoiInfo(db, poiId, poiValue) {
+    return  Promise.all([
+      poiValue,
+      db.db('cestasnp').collection('pois_history').find({ poiId: poiId.toString() }).sort({ modified: -1 }).toArray(),
+    ]).then(([poi, history]) => {
+      const uids = this.getUids([poi].concat(history), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
+
+      return this.getUserNames(db, uids).then(users => {
+        [poi].concat(history).forEach(poi => {
+          poi.created_by_name = this.findUserName(poi.user_id, users);
+          poi.modified_by_name = this.findUserName(poi.modified_by, users);
+          poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
+        });
+
+        poi.history = history;
+
+        history.forEach(h => {
+          if (h.itinerary && (h.itinerary.near || h.itinerary.after)) {
+            h.guideposts = getNearGuideposts(h.itinerary.near || h.itinerary.after, h.coordinates).guideposts;
+          }
+        });
+
+        if (poi.itinerary && (poi.itinerary.near || poi.itinerary.after)) {
+          poi.guideposts = getNearGuideposts(poi.itinerary.near || poi.itinerary.after, poi.coordinates).guideposts;
+        } else {
+          poi.guideposts = findNearestGuideposts(findNearestPoint(poi.coordinates).coordinates).guideposts;
+        }
+
+        return Promise.resolve(poi);
+      });
+    });
+  },
+
+  getPoi(poiId) {
+    return MongoClient.connect(
+      process.env.MONGODB_ATLAS_URI,
+      { useNewUrlParser: true })
+      .then(db => {
+        const sPoiId = sanitize(poiId);
+
+        return this.fillPoiInfo(db, sPoiId, db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }))
+          .finally(() => db.close);
+      });
+  },
 };
 
 module.exports = DB;

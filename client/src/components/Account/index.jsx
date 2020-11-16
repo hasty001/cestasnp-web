@@ -5,7 +5,7 @@ import NotLoggedIn from './NotLoggedIn';
 import Loader from '../reusable/Loader';
 import { AuthContext } from '../AuthContext';
 
-const Account = () => {
+const Account = (props) => {
   const authData = useContext(AuthContext);
   return (
     <>
@@ -13,7 +13,7 @@ const Account = () => {
         <Loader />
       ) : (
         <>
-          {authData.isAuth ? <LoggedIn userData={authData} /> : <NotLoggedIn />}
+          {authData.isAuth ? <LoggedIn userData={authData} {...props} /> : <NotLoggedIn />}
         </>
       )}
     </>

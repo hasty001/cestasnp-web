@@ -75,6 +75,47 @@ Validation.prototype = {
       pub_date_milseconds: sanitize(pub_date_milseconds),
       details_id: sanitize(details_id)
     };
+  },
+
+  sanitizePoi(poi) {
+    const {
+      coordinates,
+      accuracy,
+      category,
+      name,
+      text,
+      user_id,
+      img_url,
+      food,
+      water,
+      created,
+      itineraryNear,
+      itineraryAfter,
+      itineraryInfo,
+      historyId,
+      modified,
+      modified_by,
+      modified_note
+    } = poi;
+    return {
+      coordinates: sanitize(coordinates),
+      accuracy: sanitize(accuracy),
+      category: sanitize(category),
+      name: sanitize(name),
+      text: sanitize(text),
+      created: sanitize(created),
+      user_id: sanitize(user_id),
+      img_url: sanitize(img_url),
+      food: sanitize(food),
+      water: sanitize(water),
+      itinerary: (itineraryNear || itineraryAfter || itineraryInfo) ?
+        { near: sanitize(itineraryNear), after: sanitize(itineraryAfter), info: sanitize(itineraryInfo) }
+        : null,
+      historyId: sanitize(historyId),
+      modified: sanitize(modified),
+      modified_by: sanitize(modified_by),
+      modified_note: sanitize(modified_note)
+    };
   }
 };
 

@@ -1,10 +1,7 @@
 import React, { Component, Fragment, useContext } from 'react';
-import moment from 'moment-timezone';
 import { dateTimeToStr } from '../../helpers/helpers';
 import { AuthContext } from '../AuthContext';
 import ConfirmBox from '../reusable/ConfirmBox';
-
-moment.tz.setDefault('Europe/Vienna');
 
 const SentMessages = (props) => {
   const authData = useContext(AuthContext);

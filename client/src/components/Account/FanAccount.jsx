@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import differenceInDays from 'date-fns/difference_in_days';
 
 class FanAccount extends React.Component {
   constructor(props) {
@@ -102,8 +102,8 @@ class FanAccount extends React.Component {
       });
       return;
     }
-    if (moment(start_date).diff(moment(), 'days') < -5) {
-      console.log(moment(start_date).diff(moment(), 'days'));
+    if (differenceInDays(start_date, new Date()) < -5) {
+      console.log(differenceInDays(start_date, new Date()));
       this.setState({
         error: 'Začiatok cesty je viac než 5 dni v minulosti. Vyber iný dátum!'
       });

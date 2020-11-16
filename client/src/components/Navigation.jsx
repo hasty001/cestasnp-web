@@ -10,10 +10,12 @@ const ROUTES = {
   predCestou: '/pred',
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
+  itinerary: '/pred/itinerar',
   naCeste: '/na/ceste',
   archiv: '/na/archive',
   kontakt: '/kontakt',
-  mojaCesta: '/ucet'
+  mojaCesta: '/ucet',
+  pridatPOI: '/ucet/pridatpoi'
 };
 
 const Navigation = () => {
@@ -82,6 +84,15 @@ const Navigation = () => {
             >
               Dôležité miesta
             </NavItem>
+            <NavItem
+              eventKey={2.3}
+              title="Itinerár"
+              onClick={() => {
+                history.push(ROUTES.itinerary);
+              }}
+            >
+              Itinerár
+            </NavItem>
           </NavDropdown>
 
           <NavItem
@@ -114,6 +125,7 @@ const Navigation = () => {
             Kontakt
           </NavItem>
 
+          {!!authData.isAuth && (
           <NavItem
             eventKey={4}
             title="Moja cesta"
@@ -122,6 +134,18 @@ const Navigation = () => {
             }}
           >
             {!authData.isAuth ? 'Prihlásiť sa' : 'Poslať správu'}
+          </NavItem>          
+          )}
+
+          
+          <NavItem
+            eventKey={5}
+            title="Pridať dôležité miesto"
+            onClick={() => {
+              history.push(ROUTES.pridatPOI);
+            }}
+          >
+            {!authData.isAuth ? 'Prihlásiť sa' : 'Pridať dôležité miesto'}             
           </NavItem>
         </Nav>
       </Navbar.Collapse>

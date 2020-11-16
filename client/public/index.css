@@ -9,6 +9,10 @@
   visibility: hidden;
 }
 
+.deleted {
+  text-decoration-line: line-through;
+}
+
 img {
   max-width: 100% !important;
 }
@@ -30,6 +34,22 @@ a {
 li {
   list-style: none !important;
   display: inline-block;
+}
+
+[data-tooltip]:before {            
+  position : absolute;
+  content : attr(data-tooltip);
+  opacity : 0;
+  background-color:white;
+  color:black;
+  border: 1px solid red;
+  padding: 4px;
+  transform: translate(5px, 10px); 
+  pointer-events: none;
+}
+
+[data-tooltip]:hover:before, [data-tooltip]:focus:before, [data-tooltip]:active:before {        
+  opacity : 1;
 }
 
 /***     GENERAL    ***/
@@ -54,12 +74,22 @@ html, body, #root {
   z-index: 9999;
   top: 0;
   border-bottom: 2px solid red;
-} @media (max-width: 945px) {
+}
+#CommentBox, #ConfirmBox, #EditPoiBox {
+  margin-top: 100px;
+} @media (max-width: 1100px) {
   .app-header {
     max-height: 70px;
   }
+  #CommentBox, #ConfirmBox, #EditPoiBox {
+    margin-top: 70px;
+  }
 } @media print {
   .app-header { 
+    display: none;
+  }
+} @media print {
+  .app-header {
     display: none;
   }
 }
@@ -73,14 +103,14 @@ html, body, #root {
   display: block;
 }
 
-@media (max-width: 945px ) {
+@media (max-width: 1100px ) {
   .logo-mobile {
     height: 50px;
     margin-left: 15px;
   }
 }
 
-@media (min-width: 946px) {
+@media (min-width: 1100px) {
   .logo-mobile {
     height: 60px;
   }
@@ -88,7 +118,7 @@ html, body, #root {
 
 .logo-position-screen {
   display: block;
-} @media (max-width: 1200px ) {
+} @media (max-width: 1285px ) {
   .logo-position-screen {
     display: none;
   }
@@ -96,7 +126,7 @@ html, body, #root {
 
 .logo-position-mobile {
   display: none;
-} @media (max-width: 1200px ) {
+} @media (max-width: 1285px ) {
   .logo-position-mobile {
     display: block;
   }
@@ -119,7 +149,7 @@ body {
   bottom: 0px;
   width: 100%;
   overflow-y: auto;
-} @media (max-width: 945px) {
+} @media (max-width: 1100px) {
   .app-body {
     top: 70px;
   }
@@ -144,14 +174,14 @@ body {
 
 .navbar-header {
   height: 96px;
-} @media (max-width: 945px) {
+} @media (max-width: 1100px) {
   .navbar-header {
     /* padding: 0 15px; */
     height: 66px;
   }
 }
 
-@media (max-width: 945px) {
+@media (max-width: 1100px) {
   .navbar .container {
     width: 100%;
     padding: 0;
@@ -185,7 +215,7 @@ body {
   right: 16px;
   background-color: #ffffff;
   border-color: #ffffff;
-} @media(max-width: 946px) {
+} @media(max-width: 1100px) {
   .navbar-toggle {
     top: 10px;
     right: 10px;
@@ -199,7 +229,7 @@ body {
   border-color: #ffffff;  
 }
 
-@media (min-width: 946px) {
+@media (min-width: 1100px) {
   .navbar-right {
     margin-top: 20px;
   }
@@ -213,7 +243,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   background-color: #ff2730;
 }
 
-@media (max-width: 945px) {
+@media (max-width: 1100px) {
   .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
       padding-bottom: 10px;
       padding-top: 10px;
@@ -229,7 +259,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-right: 0px;
   padding-left: 0px;
   width: 90%;
-} @media (max-width: 945px) {
+} @media (max-width: 1100px) {
   .navbar .container {
     width: 100%;
     overflow-x: hidden;
@@ -241,7 +271,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   display: block;
 }
 
-@media (max-width: 945px) {
+@media (max-width: 1100px) {
     .navbar-header {
         float: none;
     }
@@ -361,6 +391,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   width: 100%;
 }
 
+#Pois .snpBtn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 15px;
+  z-index: 9998;
+}
+
 @media print {
   #Pois {
     position: relative;
@@ -382,6 +420,121 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 /***     POIS       ***/
+/**********************/
+/***    ADD POIS    ***/
+
+#add-poi-map {
+  width: 100%;
+  height: 30vw;
+  min-height: 190px;
+  margin-bottom: 10px;
+}
+
+#MyPois {
+  margin: 30px 0;
+}
+
+/***    ADD POIS    ***/
+/**********************/
+/***      POI       ***/
+
+#PoiDetail {
+  width: 80%;
+  margin: 15px auto;
+} @media (max-width: 767px) {
+  #PoiDetail {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+  }
+}
+
+.poi-actions {
+  font-size: 16px;
+}
+
+.poi-icon {
+  margin: 0 2px;
+}
+
+.poi-history-link {
+  float: right;
+}
+
+#poi-map {
+  width: 100%;
+  height: 30vh;
+  margin-bottom: 10px;
+  min-height: 190px;
+} 
+
+#PoiDetail .poi-image {
+  float: right;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: 40vw;
+} @media (max-width: 600px) {
+  #PoiDetail .poi-image {
+    margin-left: 0px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+}
+
+.poi-item {
+  margin: 5px 0;
+}
+
+/***      POI       ***/
+/**********************/
+/***    ITINERARY   ***/
+
+#Itinerary {
+  width: 80%;
+  margin: 15px auto;
+} @media (max-width: 767px) {
+#Itinerary {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+}
+} @media print {
+  #Itinerary {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+  }
+}
+
+.itinerary-table {
+  width: 100%;
+}
+
+.itinerary-table td, 
+.itinerary-table th {
+  vertical-align: baseline;
+  padding: 2px 4px;
+}
+
+.itinerary-value {
+  text-align: right;
+}
+
+.itinerary-row-guidepost {
+  background-color: lightgrey;
+}
+
+.itinerary-dialog {
+  margin-top: 120px;
+}
+
+.itinerary-attribution {
+  margin-top: 10px;
+  font-size: smaller;
+  text-align: right;
+}
+
+/***    ITINERARY   ***/
 /**********************/
 /***    ARTICLES    ***/
 
@@ -570,10 +723,17 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin: 0px 0px 15px 0px;
 }
 
-.mapMarker {
-  position: relative;
-  width: 32px;
-  height: 32px;
+.mapMarker, .mapMarkerPos {
+  color: red;
+}
+
+.icon-stack {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 /***    ACTIVE      ***/
@@ -653,17 +813,21 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 }
 
 .traveller-message-actions,
-.traveller-comment-actions {
+.traveller-comment-actions,
+.poi-actions {
   float: right;
 }
 
 .traveller-message-link, 
 .traveller-comment-link,
 .traveller-message-delete,
-.traveller-comment-delete {
+.traveller-comment-delete,
+.poi-edit,
+.poi-delete,
+.poi-my {
   color: black;
-  font-size: 14px;
-  margin: 0 2px;
+  font-size: 16px;
+  margin: 0 4px;
   vertical-align: middle;
 }
 
@@ -960,15 +1124,36 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   background: transparent;
 }
 
-.accountWrap, .fanAccountWrap {
+.accountWrap, .fanAccountWrap, #AddPoi {
   width: 80%;
   margin: 20px auto;
-  font-size: 18px;
+  font-size: 16px;
 }
 
-.accountWrap label, #MessageForm label, #MyJourney label {
+.accountWrap label, #MessageForm label, #MyJourney label, #AddPoi label, 
+.edit-poi-box label, .confirm-box label, .itinerary-dialog label {
   display: block;
   width: 100%;
+}
+
+.edit-poi-box button.close {
+  margin-bottom: 0;
+}
+
+.confirm-box label {
+  margin: 20px 0;
+}
+
+#AddPoi label.form-checkbox, .edit-poi-box label.form-checkbox {
+  display: inline;
+  margin-right: 15px;
+  vertical-align: middle;
+}
+
+#AddPoi input.form-checkbox, .edit-poi-box input.form-checkbox {
+  height: 16px;
+  width: 16px;
+  margin: 5px 5px 15px 5px;
 }
 
 .accountWrap span {
@@ -988,11 +1173,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-left: 200px;
 }
 
-.fanAccountWrap h2 {
+.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2 {
   text-align: center;
 }
 
-.fanAccountWrap p {
+.fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form {
   text-align: justify;
   font-weight: 800;
 }
@@ -1002,7 +1187,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   margin-left: 200px;
 }
 
-.fanAccountWrap button {
+.fanAccountWrap button, #AddPoi button, .edit-poi-box button {
   display: block;
   margin: 15px auto;
 }
@@ -1014,7 +1199,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 10px;
 }
 
-.fanAccountWrap input {
+.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1024,26 +1209,27 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 10px;
 }
 
-.fanAccountWrap select {
+.fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form,
+.itinerary-dialog select.form {
   height: 36px;
-  border: solid 1px transparent;
-  background: #ffdada;
+  border: solid 1px lightgray;
   width: 20%;
+  min-width: 200px;
   margin: 5px 0;
 }
 
-.fanAccountWrap textarea {
+.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
-  height: 200px;
+  height: 100px;
   min-width: 240px;
   margin: 5px 0;
   padding-left: 10px;
   resize: vertical;
 }
 
-.travellerP {
+.travellerP, .form-item-value {
   display: block;
   width: 100%;
   min-height: 36px;
@@ -1052,20 +1238,36 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   padding-left: 40px;
 }
 
+.image-preview {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 10px 0;
+  max-height: 200px;
+}
+
 .errorMsg {
   color: #bb0202;
   background: rgb(255, 210, 210);
-  /* margin: 10px 10px 10px 200px; */
   padding: 10px 20px;
   border-radius: 10px;
+  overflow: hidden;
+}
+
+.warningMsg {
+  color:  rgb(206, 93, 18);
+  background: rgb(255, 228, 210);
+  padding: 10px 20px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .successMsg {
   color: #126b12;
   background: rgb(228, 255, 210);
-  /* margin: 10px 10px 10px 200px; */
   padding: 10px 20px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 #inyZaciatok {
@@ -1091,17 +1293,29 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
     font-size: 18px;
   }
 
-  .fanAccountWrap {
+  .fanAccountWrap, #AddPoi {
     width: 95%;
   }
 
-  .fanAccountWrap select {
+  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form {
     display: block;
-    width: 100px;
+    min-width: 200px;
   }
 
-  .fanAccountWrap h2 {
+  .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2 {
     text-align: left;
+  }
+
+  #AddPoi .itinerary-table, .edit-poi-box .itinerary-table {
+    font-size: 12px;
+  }
+
+  #AddPoi .itinerary-attribution, .edit-poi-box .itinerary-attribution {
+    font-size: 10px;
+  }
+
+  .leaflet-control-attribution {
+    font-size: 10px !important;
   }
 
   #inyZaciatok {
@@ -1172,4 +1386,3 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
 .for-floating-loader {
   position: relative;
 }
-  

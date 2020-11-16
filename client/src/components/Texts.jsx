@@ -1,0 +1,1 @@
+export const GenericError = "Ups, niekde sa stala chyba. Skús neskôr prosím.";

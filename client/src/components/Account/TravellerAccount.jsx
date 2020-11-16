@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import differenceInDays from 'date-fns/difference_in_days';
 import Loader from '../reusable/Loader';
 import Message from './Message';
 import SentMessages from './SentMessages';
@@ -121,7 +121,7 @@ class TravellerAccount extends React.Component {
 
     if (
       start_date !== this.props.traveller.travellerDetails.start_date &&
-      moment(start_date).diff(moment(), 'days') < 0
+      differenceInDays(start_date, new Date()) < 0
     ) {
       this.setState({
         error: 'Začiatok cesty je v minulosti. Vyber iný dátum!'

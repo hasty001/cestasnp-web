@@ -6,27 +6,10 @@ const moment = require('moment');
 
 const request = require('request');
 const DB = require('../db/db');
-const {admin} = require('../util/firebase');
+const checkToken = require('../util/checkToken');
 
 const db = new DB();
 const router = express.Router();
-const auth = admin.auth();
-
-function checkToken(req, res, uid, callback) {
-  const token = req.header("X-Auth-Token");
-
-  if (!token || token.length == 0) {
-    res.status(401).json({ error: 'Authorization token is missing.' });
-  } else {
-    auth.verifyIdToken(token).then(decodedToken => {
-      if (!decodedToken || decodedToken.uid !== uid) {
-        res.status(403).json({ error: 'You are not authorized to perform this operation.' });
-      } else {
-        callback();
-      }
-    });
-  }
-}
 
 // retrieve travellers details
 router.get('/details/:travellerId', (req, res) => {
@@ -256,7 +239,7 @@ router.post('/addComment', (req, res) => {
         comment.ip = sVisitorIp;
         const sArticleId = sanitize(req.body.articleId);
         comment.article_sql_id = sArticleId;
-        const sDate = sanitize(req.body.date);
+        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
         comment.date = sDate;
         const sUid = sanitize(req.body.uid);
         if (sUid.length <= 3) {
@@ -265,7 +248,6 @@ router.post('/addComment', (req, res) => {
         comment.uid = sUid;
 
         db.addCommentOldTraveller(comment, com => {
-          com.cesta = req.body.cesta;
           res.json(com);
         });
       } else {
@@ -282,7 +264,7 @@ router.post('/addComment', (req, res) => {
         comment.travellerDetails.id = sTravellerId;
         const sTravellerName = sanitize(req.body.travellerName);
         comment.travellerDetails.name = sTravellerName;
-        const sDate = sanitize(req.body.date);
+        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
         comment.date = sDate;
         const sUid = sanitize(req.body.uid);
         if (sUid.length <= 3) {
@@ -291,7 +273,6 @@ router.post('/addComment', (req, res) => {
         comment.uid = sUid;
 
         db.addCommentNewTraveller(comment, com => {
-          com.cesta = req.body.cesta;
           res.json(com);
         });
       }
@@ -385,10 +366,8 @@ router.post('/sendMessage', (req, res) => {
     lat,
     accuracy,
     text,
-    pub_date,
     user_id,
     img,
-    pub_date_milseconds,
     details_id
   } = req.body;
 
@@ -399,10 +378,8 @@ router.post('/sendMessage', (req, res) => {
         lat,
         accuracy,
         text,
-        pub_date,
         user_id,
         img,
-        pub_date_milseconds,
         details_id
       },
       resp => {

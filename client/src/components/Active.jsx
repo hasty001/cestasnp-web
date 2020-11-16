@@ -18,6 +18,7 @@ import pin09 from '../../public/img/pins/Svetlo_zelena.png';
 import pin10 from '../../public/img/pins/Tmavo_cervena.png';
 import pin11 from '../../public/img/pins/Modra.png';
 import { sortByDateAsc, dateToStr } from '../helpers/helpers';
+import * as Constants from './Constants';
 
 const colors = [
   '#ff0000',
@@ -200,11 +201,8 @@ class Active extends Component {
                           }}
                         >
                           {traveller.meno}{' '}
-                          <img
-                            src={traveller.pin}
-                            className="mapMarker"
-                            alt="Vzor ukazovatela"
-                          />
+                          <i className="fas fa-map-marker-alt" 
+                            style={{ width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} alt="Vzor ukazovatela"></i>
                         </p>
                       </div>
                     ) : (
