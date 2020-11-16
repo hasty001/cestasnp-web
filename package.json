@@ -37,6 +37,7 @@
     "mongodb": "^3.5.5",
     "object.assign": "^4.1.1",
     "object.values": "^1.1.1",
+    "promise.prototype.finally": "^3.1.2",
     "react": "16.8",
     "react-bootstrap": "^0.31.5",
     "react-dom": "16.8",

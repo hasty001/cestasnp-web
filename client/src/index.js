@@ -8,11 +8,14 @@ import values from 'object.values'
 import replaceAll from 'string.prototype.replaceall';
 import CestaSNP from './CestaSNP';
 import '../public/index.css';
+import promiseFinally from 'promise.prototype.finally';
 
 // To add to window
 if (!window.Promise) {
   window.Promise = Promise;
 }
+
+promiseFinally.shim();
 
 if (!window.URLSearchParams) {
   window.URLSearchParams = URLSearchParams;

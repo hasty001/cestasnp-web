@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').Server(app);
 
+const promiseFinally = require('promise.prototype.finally');
+promiseFinally.shim();
+
 const moment = require('moment-timezone');
 moment.tz.setDefault('Europe/Vienna');
 
