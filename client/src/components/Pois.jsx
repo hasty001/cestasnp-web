@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { fetchJson } from '../helpers/fetchUtils';
 import Map from './Map';
 import PageWithLoader from './reusable/PageWithLoader';
+import Close from './reusable/Close';
 import * as Texts from './Texts';
 import { AuthContext } from './AuthContext';
 import history from '../helpers/history';
+import { useStateWithLocalStorage } from '../helpers/reactUtils';
 
 const Pois = (props) => {
 
@@ -15,7 +17,45 @@ const Pois = (props) => {
   const [view, setView] = useState({});
   const [prevHash, setPrevHash] = useState();
 
+  const [watchGps, setWatchGps] = useStateWithLocalStorage("watchGps", false);
+  const [watchGpsId, setWatchGpsId] = useState();
+  const [gpsMarker, setGpsMarker] = useState();
+  const [gpsError, setGpsError] = useState('');
+
   const authData = useContext(AuthContext);
+
+  useEffect(() => {
+    if (watchGps) {
+      var first = true;
+      const id = navigator.geolocation.watchPosition(({ coords }) => {
+        setGpsMarker({ lat: coords.latitude.toFixed(6), lon: coords.longitude.toFixed(6), accuracy: coords.accuracy });
+        setView(prevView => {
+          const newView = first && !prevView.poi ? { lat: coords.latitude.toFixed(6), lon: coords.longitude.toFixed(6) } : prevView;
+          first = false;
+          return newView;
+        });
+      }, error => {
+        console.error(error);
+        setGpsError(Texts.GpsError);
+        setWatchGps(false);
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 });
+
+      setWatchGpsId(id);
+
+      return () => { if (watchGps) { navigator.geolocation.clearWatch(id); setWatchGpsId(null); } };
+    }
+  }, [watchGps]);
+
+  useEffect(() => {
+    if (!watchGps) {
+      if (watchGpsId) {
+        navigator.geolocation.clearWatch(watchGpsId);
+      }
+      setWatchGpsId(null);
+      setGpsMarker(null);
+    }
+  }, [watchGps, watchGpsId]);
 
   const updateView = () => {
     if (window.location.hash == prevHash) {
@@ -44,7 +84,6 @@ const Pois = (props) => {
     const hash = [["poi", view.poi], ["lat", view.lat], ["lon", view.lon], ["zoom", view.zoom]].filter(i => i[1]).map(i => i.join("=")).join("&");
 
     setPrevHash(hash ? "#" + hash : "");
-
     window.location.hash = hash;
   }, [view]);
 
@@ -68,14 +107,27 @@ const Pois = (props) => {
 
   useEffect(() => { fetchData(); }, []);
 
+  const toggleWatchGps = () => {
+    if (!watchGps) { 
+      setView(prevView => Object.assign(prevView, { poi: '' })); 
+    } 
+    setWatchGps(!watchGps); 
+  };
+
   return (
     <PageWithLoader pageId="Pois" loading={loading} error={error}>
       <>
         {!!pois && (
           <Map pois={pois} use="pois-map" 
-            view={[view, setView]} setView={null} showLayers />)}
+            view={[view, setView]} setView={null} marker={gpsMarker} showLayers />)}
+        {!!gpsError && <div className="errorMsg">
+            <Close onClose={() => setGpsError('')}/>
+            {gpsError}
+          </div>}
+        <button className="snpBtn pois-map-table-link no-print" onClick={() => history.push('/pred/pois/tabulka')}><i className="fas fa-table"></i></button>
+        <button className={"snpBtn pois-map-watch-gps no-print" + (watchGps ? " down" : "")} onClick={() => toggleWatchGps()}><i className="fas fa-map-marked-alt"></i></button>
         {!!authData && !!authData.authProviderMounted && !!authData.isAuth && 
-          <button className="snpBtn no-print" onClick={() => history.push('/ucet/pridatpoi')}>Pridať</button>}
+          <button className="snpBtn pois-map-add no-print" onClick={() => history.push('/ucet/pridatpoi')}>Pridať</button>}
       </>
     </PageWithLoader>);
 }

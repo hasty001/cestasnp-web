@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { logDev } from "./logDev";
 
 /**
  * Uses prop state if it is in useState format [value, setValue], otherwise uses new local state with prop as initial value if set. 
@@ -37,10 +38,25 @@ const useTraceUpdate = (props) => {
       return ps;
     }, {});
     if (Object.keys(changedProps).length > 0) {
-      console.log('Changed props:', changedProps);
+      logDev('Changed props:', changedProps);
     }
     prev.current = props;
   });
 }
 
-export { useStateProp, useStateEx, useTraceUpdate }
+/**
+ * Get and set prop state from local storage.
+ */
+const useStateWithLocalStorage = (localStorageKey, defValue = null) => {
+  const [value, setValue] = useState(
+    JSON.parse(localStorage.getItem(localStorageKey)) || defValue
+  );
+ 
+  useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(value));
+  }, [value]);
+ 
+  return [value, setValue];
+};
+
+export { useStateProp, useStateEx, useStateWithLocalStorage, useTraceUpdate }

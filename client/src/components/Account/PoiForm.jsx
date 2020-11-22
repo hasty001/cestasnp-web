@@ -10,7 +10,7 @@ import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
 import { findPoiCategory, PoiCategories } from '../PoiCategories';
 import Map from '../Map';
-import PoiTable from '../reusable/PoiTable';
+import PoiList from '../reusable/PoiList';
 import ItineraryTable from '../reusable/ItineraryTable';
 import { useStateEx } from '../../helpers/reactUtils';
 import FormCheckBox from '../reusable/FormCheckBox';
@@ -232,10 +232,10 @@ const PoiForm = (props) => {
           {!!warningMsg.pois && <h4>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h4>  }
           
           <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
-            marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto"}} 
+            marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto", accuracy: warningMsg.poi.accuracy }} 
             pois={warningMsg.pois} guideposts={guideposts} showDeleted />
 
-          {!!warningMsg.pois && <PoiTable pois={warningMsg.pois} showDeleted />}
+          {!!warningMsg.pois && <PoiList pois={warningMsg.pois} showDeleted />}
           
           {!!warningMsg.itinerary && (
             <>
