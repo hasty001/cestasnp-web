@@ -98,6 +98,7 @@ class CestaSNP extends Component {
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" render={(props) => (<Account {...props} />)}/>
               <Route exact path="/ucet/pridatpoi" render={(props) => (<Account {...props} addPoi />)} />
+              <Route exact path="/ucet/pois" render={(props) => (<Account {...props} pois />)} />
               <Route path="*" component={NotFound} />
             </Switch>
           </Router>

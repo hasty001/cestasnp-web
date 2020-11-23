@@ -1,48 +1,39 @@
 import React from 'react';
-
 import auth from '../../helpers/firebase';
+import history from '../../helpers/history';
 import AddPoi from './AddPoi';
 
 import FanAccount from './FanAccount';
 import TravellerAccount from './TravellerAccount';
 
-class LoggedIn extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+const LoggedIn = (props) => {
 
-    this.handleSignOut = this.handleSignOut.bind(this);
+  if (window.location.pathname == "/ucet/pois") {
+    history.replace("/pred/pois");
   }
 
-  handleSignOut = () => {
-    auth.signOut();
-  };
-
-  render() {
-    return (
-      <>
-        {this.props.addPoi ? 
-          <AddPoi />
-          : (this.props.userData.travellerDetails &&
-            Object.keys(this.props.userData.travellerDetails).length > 0 ? (
-              <TravellerAccount traveller={this.props.userData} />
-            ) : (
-              <FanAccount fan={this.props.userData} />
-        ))}
-        <button
-          className="snpBtn"
-          style={{
-            display: 'block',
-            margin: '15px auto'
-          }}
-          onClick={this.handleSignOut}
-          type="submit"
-        >
-          Odhlásiť
-        </button>
-      </>
-    );
-  }
+  return (
+    <>
+      {props.addPoi ? 
+        <AddPoi />
+        : (props.userData.travellerDetails &&
+          Object.keys(props.userData.travellerDetails).length > 0 ? (
+            <TravellerAccount traveller={props.userData} />
+          ) : (props.pois ? <></> : <FanAccount fan={props.userData} />
+      ))}
+      <button
+        className="snpBtn"
+        style={{
+          display: 'block',
+          margin: '15px auto'
+        }}
+        onClick={() => auth.signOut()}
+        type="submit"
+      >
+        Odhlásiť
+      </button>
+    </>
+  );
 }
 
 export default LoggedIn;

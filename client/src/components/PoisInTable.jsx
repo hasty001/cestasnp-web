@@ -24,6 +24,8 @@ const PoisInTable = (props) => {
 
   const authData = useContext(AuthContext);
 
+  const strCompare = (f, a, b) => f * (a || '').localeCompare(b || '');
+
   const sortPois = a => {
     const newPois = [...(a || [])];
 
@@ -32,18 +34,16 @@ const PoisInTable = (props) => {
       switch (sort ? sort.by : null) {
         case "created":
           return f * (new Date(a.created) - new Date(b.created));
-        case "created_by_name":
-          return f * (a.created_by_name || '').localeCompare(b.created_by_name || '');
         case "lastModified":
           return f * (new Date(a.deleted || a.modified || 0) - new Date(b.deleted || b.modified || 0));
         case "lastModified_action":
           return f * ((a.deleted ? 2 : (a.modified ? 1 : 0)) - (b.deleted ? 2 : (b.modified ? 1 : 0)));
         case "lastModified_by_name":
-          return f * (a.deleted_by_name || a.modified_by_name || '').localeCompare(b.deleted_by_name || b.modified_by_name || '');
+          return strCompare(f, a.deleted_by_name || a.modified_by_name, b.deleted_by_name || b.modified_by_name);
         case "name":
-          return f * (a.name || '').localeCompare(b.name || '');
         case "text":
-          return f * (a.text || '').localeCompare(b.text || '');
+        case "created_by_name":
+          return strCompare(f, a[sort.by], b[sort.by]);
         case "itinerary":
           return f * ((a.itinerary ? (a.itinerary.near || a.itinerary.after ? 1 : 0) : 0) - 
             (b.itinerary ? (b.itinerary.near || b.itinerary.after ? 1 : 0) : 0));

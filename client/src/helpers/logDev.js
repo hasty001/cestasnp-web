@@ -1,9 +1,14 @@
 /** 
   * Logs to console only in development mode.
   */
-const logDev = (message = undefined, params = undefined) => {
+function logDev(message) {
+
   if (process.env.NODE_ENV !== 'production') {
-    console.log(message, params);
+    if (arguments.length == 1) {
+      console.log(message); 
+    } else { 
+      console.log(message, ...([...arguments].slice(1))); 
+    }
   }
 }
 

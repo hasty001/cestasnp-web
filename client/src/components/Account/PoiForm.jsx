@@ -3,6 +3,7 @@ import FormWithLoader from '../reusable/FormWithLoader';
 import { parseGPSPos } from '../../helpers/GPSPosParser';
 import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 import * as Texts from '../Texts';
+import * as Constants from '../Constants';
 import FormLatLon from '../reusable/FormLatLon';
 import FormText from '../reusable/FormText';
 import FormSelect from '../reusable/FormSelect';
@@ -47,6 +48,27 @@ const PoiForm = (props) => {
   const [itineraryInfo, setItineraryInfo] = useState('');
 
   const [note, setNote] = useStateEx('', clearMsg);
+
+  useEffect(() => {
+    if (window.location.hash && window.location.hash.replace('#', '')) {
+      const params = new URLSearchParams(window.location.hash.replace("#", "?"));
+
+      const lat = params.get('lat');
+      const lon = params.get('lon');
+      const acc = params.get('acc') || '0';
+
+      if (lat && lon) {
+        if (acc > Constants.MaxAllowedGPSAccuracy) {
+          console.error('low GPS accuracy ', acc);
+
+          setErrorMsgFirst(Texts.GpsLowAccuracyError(lat, lon));
+        } else {
+          setGps({ latlon: lat + ", " + lon ,accuracy: acc });
+        }
+        window.location.hash = "";
+      }
+    }
+  }, [window.location.hash]);
 
   useEffect(() => {
     if (props.poi && props.edit) {

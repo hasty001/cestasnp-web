@@ -127,7 +127,7 @@ const Pois = (props) => {
         <button className="snpBtn pois-map-table-link no-print" onClick={() => history.push('/pred/pois/tabulka')}><i className="fas fa-table"></i></button>
         <button className={"snpBtn pois-map-watch-gps no-print" + (watchGps ? " down" : "")} onClick={() => toggleWatchGps()}><i className="fas fa-map-marked-alt"></i></button>
         {!!authData && !!authData.authProviderMounted && !!authData.isAuth && 
-          <button className="snpBtn pois-map-add no-print" onClick={() => history.push('/ucet/pridatpoi')}>Pridať</button>}
+          <button className="snpBtn pois-map-add no-print" onClick={() => history.push('/ucet/pridatpoi' + (gpsMarker ? (`#lat=${gpsMarker.lat}&lon=${gpsMarker.lon}&acc=${gpsMarker.accuracy}`) : ""))}>Pridať</button>}
       </>
     </PageWithLoader>);
 }
