@@ -13,10 +13,10 @@ const escape = (html) => {
   }
 
 const escapeDate = (date) => {
-    if (!date)
-      return "";
-    const d = new Date(date);
-    return isNaN(d) ? "" : escape(d.toISOString());
+  if (!date)
+    return "";
+  const d = new Date(date);
+  return isNaN(d) ? "" : escape(d.toISOString());
 }
 
 const getPublisher = () => 
@@ -50,7 +50,7 @@ const getArticleMeta = (dbRef, articleId) =>
           .findByWithDB(dbRef, 'users', { sql_user_id: results[0].created_by_user_sql_id })
           .then(user => {  
             const author = user && user.length > 0 ? escape(user[0].name || '') : '';
-            const title = escape(results[0].title || 'CestaSNP');
+            const title = escape('CestaSNP - ' + (results[0].title || 'Článok'));
             const url = `https://cestasnp.sk/pred/articles/article/${escape(articleId)}`;
 
             const imgRegEx = 
@@ -116,7 +116,74 @@ const getArticleMeta = (dbRef, articleId) =>
               }
               </script>`;
 
-            return Promise.resolve({ meta, title });
+            return Promise.resolve({ meta });
+          });
+      }
+
+      return Promise.resolve({});
+  });
+
+const getPoiMeta = (dbRef, poiId) => 
+  db
+    .findByWithDB(dbRef, 'pois', { _id: new ObjectID(poiId) })
+    .then(results => {
+      if (results && results.length > 0) {
+        return db
+          .findByWithDB(dbRef, 'users', { uid: results[0].uid })
+          .then(user => {  
+            const author = user && user.length > 0 ? escape(user[0].name || '') : '';
+            const title = escape('CestaSNP - ' + (results[0].name || 'Dôležité miesto'));
+            const url = `https://cestasnp.sk/pred/pois/${escape(poiId)}`;
+
+            const desc = escape(result[0].text || '');
+            const tags = [result[0].category, result[0].water ? "voda" : null, result[0].food ? "jedlo" : null].filter(s => s);
+
+            var meta = `
+              <meta name="description" content="${desc}" />
+              <meta name="author" content="${author}">
+              <meta name="keywords" content="${escape(tags.join(","))}" />
+              <meta property="og:url" content="${url}" />
+              <meta property="og:title" content="${title}" />
+              <meta property="og:type" content="article" />
+              <meta property="og:description" content="${desc}"/>
+              <meta property="og:image" content="${escape(results[0].img_url || '')}" />
+              <meta property="og:article:published_time" content="${escapeDate(results[0].created)}" />
+              <meta property="og:article:modified_time" content="${escapeDate(results[0].modified)}" />
+              <meta property="og:article:expiration_time" content="${escapeDate(results[0].deleted)}" />
+              <meta property="place:location:latitude" content="${escape(results[0].coordinates[1] || '')}">
+              <meta property="place:location:longitude" content="${escape(results[0].coordinates[0] || '')}">`;
+
+            if (results[0].metakey)
+              meta += tags.reduce((res, tag) => res + `
+              <meta property="og:article:tag" content="${escape(tag.trim())}" />`, "");
+
+            meta += `
+              <script type="application/ld+json">
+              {
+                "@context": "http://schema.org",
+                "@type": "Article",
+                "@id": "${url}",
+                "mainEntityOfPage": {
+                  "@type": "Article",
+                  "@id": "${url}"
+                },
+                "headline": "${title}",
+                "dateCreated": "${escapeDate(results[0].created)}",
+                "datePublished": "${escapeDate(results[0].created)}",
+                "dateModified": "${escapeDate(results[0].modified)}",
+                "expires": "${escapeDate(results[0].deleted)}",
+                "description": "${desc}", 
+                "author": {"@type": "Person",
+                  "name": "${author}"},
+                "image": {
+                  "@type": "ImageObject",
+                  "url": "${escape(results[0].img_url || '')}"
+                },   
+                ${getPublisher()}
+              }
+              </script>`;
+
+            return Promise.resolve({ meta });
           });
       }
 
@@ -190,7 +257,7 @@ const getTravelerMeta = (dbRef, userId) =>
               }
               </script>`;
 
-            return Promise.resolve({ meta, title });
+            return Promise.resolve({ meta });
           }));
       }
 
@@ -209,8 +276,15 @@ const getMeta = (db, url) =>
     }
   }
 
-  if (path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') || path.startsWith('/na/archive')) {
-  } else if (path.startsWith('/na/')) {
+  if (path.startsWith('/pred/pois/') && !path.startsWith('pred/pois/tabulka')) {
+    const poiId = sanitize(parseInt(url.substr(11)));
+
+    if (poiId) {
+      return getPoiMeta(db, poiId);
+    }
+  }
+
+  if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') || path.startsWith('/na/archive'))) {
     var userId = url.substr(4);
 
     if (userId && userId.length <= 3) {

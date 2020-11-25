@@ -44,23 +44,12 @@ app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
 app.get('/*', (req, res) => {
   fs.readFile(path.join(root, 'index.html'), 'utf8').then((data) => 
-    getMeta(req.app.locals.db, req.path).then(({ meta, title }) => 
-    {
-      var pageTitle = "";
-      if (!pageTitle) {
-        pageTitle = 'CestaSNP';
-      }
-      if (!pageTitle.endsWith('CestaSNP')) {
-        pageTitle += ' - CestaSNP';
-      }
-
+    getMeta(req.app.locals.db, req.path).then(({ meta }) => {
       res.send(meta ? 
         data
           .replace(/<!-- SSR META -->.*<!-- SSR META -->/s,
             `<!-- SSR META INSERTED -->${meta||''}\n<!-- SSR META INSERTED -->`)
-          .replace('<title>CestaSNP</title>', `<title>${pageTitle}</title>`) :
-          data
-            .replace('<title>CestaSNP</title>', `<title>${pageTitle}</title>`));
+        : data);
     })
     .catch((error) => {
       console.error(error);
