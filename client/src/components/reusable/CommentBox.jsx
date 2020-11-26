@@ -4,6 +4,7 @@ import Recaptcha from 'react-recaptcha';
 import Loader from './Loader';
 import { AuthContext } from '../AuthContext';
 import UserLabel from './UserLabel';
+import { logDev } from '../../helpers/logDev';
 
 const CommentBox = (props) => {
   const authData = useContext(AuthContext);
@@ -41,7 +42,7 @@ class CommentBoxWithAuth extends Component {
   }
 
   onloadCallback = () => {
-    console.log('captcha loaded');
+    logDev('captcha loaded');
   };
 
   addComment() {

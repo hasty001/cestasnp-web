@@ -1,5 +1,6 @@
 import React from 'react';
 import differenceInDays from 'date-fns/difference_in_days';
+import { logDev } from '../../helpers/logDev';
 
 class FanAccount extends React.Component {
   constructor(props) {
@@ -103,7 +104,8 @@ class FanAccount extends React.Component {
       return;
     }
     if (differenceInDays(start_date, new Date()) < -5) {
-      console.log(differenceInDays(start_date, new Date()));
+      logDev(differenceInDays(start_date, new Date()));
+      
       this.setState({
         error: 'Začiatok cesty je viac než 5 dni v minulosti. Vyber iný dátum!'
       });

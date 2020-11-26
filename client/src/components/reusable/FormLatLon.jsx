@@ -4,6 +4,8 @@ import FormItem from './FormItem';
 import * as Constants from '../Constants';
 import { parseGPSPos } from '../../helpers/GPSPosParser';
 import { useStateProp } from '../../helpers/reactUtils';
+import * as Texts from '../Texts';
+import { logDev } from '../../helpers/logDev';
 
 const FormLatLon = (props) => {
   const [loading, setLoading] = useState(false);
@@ -17,7 +19,8 @@ const FormLatLon = (props) => {
 
     const options = {
       timeout: 8000,
-      enableHighAccuracy: true
+      enableHighAccuracy: true,
+      maximumAge: 0
     };
 
     navigator.geolocation.getCurrentPosition(
@@ -29,15 +32,7 @@ const FormLatLon = (props) => {
 
         if (coords.accuracy > Constants.MaxAllowedGPSAccuracy) {
           console.error('low GPS accuracy ', coords.accuracy);
-
-          (props.onError || (() => {}))(
-              <span>
-                Nedostatočná presnosť súradnic. Prosím načítaj pozíciu ešte raz.
-                Skontroluj si nastavenie presnosti lokalizačných služieb v nastavení telefónu. 
-                Taktiež je možné že nemáš priamy výhľad na oblohu pre správne fungovanie GPS. 
-                <br/>Prípadne súradnice zadaj ručne.               
-              </span>
-            );
+          (props.onError || (() => {}))(Texts.GpsLowAccuracyError(lat, lon));
         } else {
           setEdit(false);
           setValue({ latlon: lat + ", " + lon, accuracy: coords.accuracy });
@@ -47,19 +42,7 @@ const FormLatLon = (props) => {
         setLoading(false);
         console.error('err ', err.message);
 
-        (props.onError || (() => {}))(
-            <span>
-              Vyzerá to, že nemáš povelené získavanie GPS pozície. Povoľ podľa
-              návodu{' '}
-              <a
-                href="https://cestasnp.sk/pred/articles/article/10004"
-                target="_blank"
-              >
-                tu
-              </a>{' '}
-              alebo zadaj ručne.
-            </span>
-          );
+        (props.onError || (() => {}))(Texts.GpsError);
       },
       options
     );

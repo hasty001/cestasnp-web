@@ -3,6 +3,7 @@ import FormWithLoader from '../reusable/FormWithLoader';
 import { parseGPSPos } from '../../helpers/GPSPosParser';
 import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 import * as Texts from '../Texts';
+import * as Constants from '../Constants';
 import FormLatLon from '../reusable/FormLatLon';
 import FormText from '../reusable/FormText';
 import FormSelect from '../reusable/FormSelect';
@@ -10,7 +11,7 @@ import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
 import { findPoiCategory, PoiCategories } from '../PoiCategories';
 import Map from '../Map';
-import PoiTable from '../reusable/PoiTable';
+import PoiList from '../reusable/PoiList';
 import ItineraryTable from '../reusable/ItineraryTable';
 import { useStateEx } from '../../helpers/reactUtils';
 import FormCheckBox from '../reusable/FormCheckBox';
@@ -47,6 +48,27 @@ const PoiForm = (props) => {
   const [itineraryInfo, setItineraryInfo] = useState('');
 
   const [note, setNote] = useStateEx('', clearMsg);
+
+  useEffect(() => {
+    if (window.location.hash && window.location.hash.replace('#', '')) {
+      const params = new URLSearchParams(window.location.hash.replace("#", "?"));
+
+      const lat = params.get('lat');
+      const lon = params.get('lon');
+      const acc = params.get('acc') || '0';
+
+      if (lat && lon) {
+        if (acc > Constants.MaxAllowedGPSAccuracy) {
+          console.error('low GPS accuracy ', acc);
+
+          setErrorMsgFirst(Texts.GpsLowAccuracyError(lat, lon));
+        } else {
+          setGps({ latlon: lat + ", " + lon ,accuracy: acc });
+        }
+        window.location.hash = "";
+      }
+    }
+  }, [window.location.hash]);
 
   useEffect(() => {
     if (props.poi && props.edit) {
@@ -232,10 +254,10 @@ const PoiForm = (props) => {
           {!!warningMsg.pois && <h4>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h4>  }
           
           <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
-            marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto"}} 
+            marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto", accuracy: warningMsg.poi.accuracy }} 
             pois={warningMsg.pois} guideposts={guideposts} showDeleted />
 
-          {!!warningMsg.pois && <PoiTable pois={warningMsg.pois} showDeleted />}
+          {!!warningMsg.pois && <PoiList pois={warningMsg.pois} showDeleted />}
           
           {!!warningMsg.itinerary && (
             <>

@@ -12,6 +12,7 @@ import Home from './components/Home';
 import Articles from './components/Articles';
 import Article from './components/Article';
 import Pois from './components/Pois';
+import PoisInTable from './components/PoisInTable';
 import Poi from './components/Poi';
 import Itinerary from './components/Itinerary';
 import Traveller from './components/Traveller';
@@ -20,7 +21,6 @@ import ActiveLight from './components/ActiveLight';
 import Cookies from './components/Cookies';
 import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
-import AddPoi from './components/Account/AddPoi';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -86,6 +86,7 @@ class CestaSNP extends Component {
                 component={Articles}
               />
               <Route path="/pred/articles/:page" component={Articles} />
+              <Route exact path="/pred/pois/tabulka" component={PoisInTable} />
               <Route path="/pred/pois/:poi" component={Poi} />
               <Route exact path="/pred/pois" component={Pois} />
               <Route exact path="/pred/itinerar" component={Itinerary} />
@@ -97,6 +98,7 @@ class CestaSNP extends Component {
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" render={(props) => (<Account {...props} />)}/>
               <Route exact path="/ucet/pridatpoi" render={(props) => (<Account {...props} addPoi />)} />
+              <Route exact path="/ucet/pois" render={(props) => (<Account {...props} pois />)} />
               <Route path="*" component={NotFound} />
             </Switch>
           </Router>

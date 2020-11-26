@@ -15,7 +15,8 @@ const ROUTES = {
   archiv: '/na/archive',
   kontakt: '/kontakt',
   mojaCesta: '/ucet',
-  pridatPOI: '/ucet/pridatpoi'
+  pridatPOI: '/ucet/pridatpoi',
+  ucetPois: '/ucet/pois'
 };
 
 const Navigation = () => {
@@ -137,7 +138,7 @@ const Navigation = () => {
           </NavItem>          
           )}
 
-          
+          {!!authData.isAuth && (
           <NavItem
             eventKey={5}
             title="Pridať dôležité miesto"
@@ -147,6 +148,18 @@ const Navigation = () => {
           >
             {!authData.isAuth ? 'Prihlásiť sa' : 'Pridať dôležité miesto'}             
           </NavItem>
+          )}
+
+          {!authData.isAuth && (
+          <NavItem
+            eventKey={6}
+            onClick={() => {
+              history.push(ROUTES.ucetPois);
+            }}
+          >
+            Prihlásiť sa             
+          </NavItem>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

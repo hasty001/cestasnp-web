@@ -3,10 +3,9 @@ import { AuthContext } from '../AuthContext';
 import PageWithLoader from '../reusable/PageWithLoader';
 import { fetchJson, fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 import PoiForm from './PoiForm';
-import PoiTable from '../reusable/PoiTable';
+import PoiList from '../reusable/PoiList';
 import * as Texts from '../Texts';
 import { compareDesc } from 'date-fns';
-import DeletePoiBox from '../reusable/DeletePoiBox';
 
 const AddPoi = (props) => {
 
@@ -78,7 +77,7 @@ const AddPoi = (props) => {
       <PoiForm uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
 
       <PageWithLoader pageId="MyPois" loading={loading} error={error} title="Moje dôležité miesta" className="thinRedWrap">
-        <PoiTable my showDeleted showLastChange pois={pois} userDetails={authData.userDetails} onMyRemove={toggleIsMy}/>
+        <PoiList my showDeleted showLastChange pois={pois} userDetails={authData.userDetails} onMyRemove={toggleIsMy}/>
       </PageWithLoader>
     </PageWithLoader>
   )

@@ -2,7 +2,7 @@ import { isMonday } from 'date-fns';
 import React, { useState } from 'react';
 import PoiItem from './PoiItem';
 
-const PoiTable = (props) => {
+const PoiList = (props) => {
 
   const isMy = (poi) => {
     const userDetails = props.userDetails;
@@ -21,4 +21,4 @@ const PoiTable = (props) => {
   )
 }
 
-export default PoiTable;
+export default PoiList;

@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import devinDukla from '../geojson/devin_dukla.json';
-import ostatne from '../../public/img/ostatne.png';
 import razcestnik from '../../public/img/razcestnik.png';
-import defaultPin from '../../public/img/pins/Cervena.png';
 import { dateTimeToStr } from '../helpers/helpers';
 import { findPoiCategory, PoiCategories } from './PoiCategories';
 import { useStateProp } from '../helpers/reactUtils';
@@ -124,6 +122,8 @@ const Map = (props) => {
       legendLayers[`<span><i class="${c.icon}" style="width: ${Constants.PoiIconSize}px; height: ${Constants.PoiIconSize}px" alt="${c.label}"></i> ${c.label}</span>`] = layer;
     });
 
+    markerLayers["marker"] = L.layerGroup();
+
     const zoomChanged = () => {
       if (map.getZoom() >= 12) {
         markerLayers[Constants.PoiCategoryGuidepost].addLayer(guidepostZoomedLayer);
@@ -163,7 +163,9 @@ const Map = (props) => {
     guidepostZoomedLayer.clearLayers();
     const newMarkers = [];
 
-    Object.values(markerLayers).forEach(l => { l.clearLayers(); markerLayer.addLayer(l); });
+    markerLayer.addLayer(markerLayers["marker"]);
+    Object.values(markerLayers).filter(l => l != markerLayers["marker"])
+      .forEach(l => { l.clearLayers(); markerLayer.addLayer(l); });
 
     // join popup content of nearby markers
     const popupOpen = (e) => {
@@ -186,27 +188,13 @@ const Map = (props) => {
         }
       });
 
-      const newContent = newContentItems.join("\n<hr/>");
-      if (content != newContent) {
+      const newContent = newContentItems.filter(i => i).join("\n<hr/>");
+      if (newContent && content != newContent) {
         e.popup.setContent(newContent);
       }
     };
     map.off("popupopen", popupOpen);
     map.on("popupopen", popupOpen);
-    
-    // MARKER 
-    if (props.marker) {
-      const icon = L.divIcon({
-        html: `<i class="fas fa-map-marker-alt mapMarkerPos" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px" ></i>`,
-        ...Constants.PoiMarkerIconProps,
-      });
-      const marker = L.marker([props.marker.lat, props.marker.lon], {
-        icon,
-        popupContent: props.marker.name
-      }).addTo(markerLayer);
-      marker.bindPopup("");
-      newMarkers.push(marker);
-    }
 
     const guideposts = (props.guideposts || []).concat((props.pois || []).filter(p => p.category == "razcestnik"));
     // GUIDEPOSTS 
@@ -339,7 +327,6 @@ const Map = (props) => {
       const mapZoom = mapObj.map.getZoom();
 
       if ((view.zoom != mapZoom || view.lat != mapCenter.lat || view.lon != mapCenter.lng)) {
-        console.log("setView");
         mapObj.map.setView({ lat: parse(view.lat, mapCenter.lat), lon: parse(view.lon, mapCenter.lng) }, 
           parse(view.zoom, mapZoom), { animate: false });
       }
@@ -377,7 +364,40 @@ const Map = (props) => {
     if (mapObj) {
       updateLayers(mapObj);
     }
-  }, [mapObj, props.pois, props.guideposts, props.marker, props.stop, props.travellers]);
+  }, [mapObj, props.pois, props.guideposts, props.stop, props.travellers]);
+
+  useEffect(() => {
+    if (!mapObj || !mapObj.markerLayers || !mapObj.markerLayers["marker"]) {
+      return;
+    }
+
+    const layer = mapObj.markerLayers["marker"];
+    layer.clearLayers();
+
+    // MARKER 
+    if (props.marker ) {
+      const icon = L.divIcon({
+        html: `<i class="fas fa-map-marker-alt" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px; color: ${props.marker.color || "blue"}" ></i>`,
+        ...Constants.PoiMarkerIconProps,
+      });
+      const marker = L.marker([props.marker.lat, props.marker.lon], {
+        icon, zIndexOffset: 2
+      }).addTo(layer);
+      if (props.marker.name) { 
+        marker.bindPopup(props.marker.name);
+      }
+
+      if (props.marker.accuracy) {
+        const circle = L.circle([props.marker.lat, props.marker.lon], { 
+          zIndexOffset: -3999,
+          color: props.marker.color || "blue",
+          opacity: 0.5,
+          fillColor: props.marker.color || "blue",
+          fillOpacity: 0.2,
+          radius: props.marker.accuracy }).addTo(layer);
+      }
+    }
+  }, [mapObj, props.marker]);
 
   return <div id={props.use}/>;
 }
