@@ -62,8 +62,8 @@ class TravellerWithAuth extends Component {
   }
 
   componentDidMount() {
-
-    var orderFromOld = (window.location.hash === "#from-old");
+    var orderFromOld = (window.location.search === Constants.FromOldQuery);
+    
     if (orderFromOld != this.state.orderFromOld)
       this.setState({
         orderFromOld: orderFromOld
