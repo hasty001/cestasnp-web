@@ -43,23 +43,22 @@ app.use('/api/traveller', require('./server/controllers/traveller'));
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
 app.get('/*', (req, res) => {
-  fs.readFile(path.join(root, 'index.html'), 'utf8').then((data) => 
-    getMeta(req.app.locals.db, req.path).then(({ meta }) => {
+  fs.readFile(path.join(root, 'index.html'), 'utf8')
+  .then(data => getMeta(req.app.locals.db, req.path)
+    .then(meta => 
       res.send(meta ? 
         data
           .replace(/<!-- SSR META -->.*<!-- SSR META -->/s,
-            `<!-- SSR META INSERTED -->${meta||''}\n<!-- SSR META INSERTED -->`)
-        : data);
-    })
+            `<!-- SSR META INSERTED -->${meta || ''}\n<!-- SSR META INSERTED -->`)
+        : data))
     .catch((error) => {
       console.error(error);
       res.send(data);
-    })
-    )
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('An error occurred');
-    });
+    }))
+  .catch((error) => {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  });
 });
 
 MongoClient.connect(
