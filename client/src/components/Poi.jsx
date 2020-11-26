@@ -24,10 +24,10 @@ const Poi = (props) => {
 
   const authData = useContext(AuthContext);
 
-  const userDetails = authData.userDetails;
+  const userDetails = authData ? authData.userDetails : null;
       
   const isMyPoi = 
-    (authData && authData.isAuth && authData.userDetails && poi) ? 
+    (authData && authData.isAuth && userDetails && poi) ? 
       (userDetails.poisMy && userDetails.poisMy.indexOf(poi._id) >= 0)
         || (poi.user_id == userDetails.uid && !(userDetails.poisNotMy && userDetails.poisNotMy.indexOf(poi._id) >= 0))
       : false;
@@ -111,7 +111,7 @@ const Poi = (props) => {
               {!historyPoi && !!authData.isAuth && !poi.deleted && 
                 (<a href="#" onClick={e => { e.preventDefault(); setEditBox(true); clearMsg(); }} 
                   className="poi-edit" title="upraviť dôležité miesto"><i className="fas fa-pencil-alt"/></a>)}
-              {!historyPoi && !!authData.isAuth && !poi.deleted && 
+              {!historyPoi && !!authData.isAuth && !poi.deleted && userDetails && (poi.user_id == userDetails.uid) &&
                 (<a href="#" onClick={e => { e.preventDefault(); setDeleteBox(true); clearMsg(); }} 
                   className="poi-delete" title="zmazať dôležité miesto"><i className="fas fa-trash-alt"/></a>)}
             </span>

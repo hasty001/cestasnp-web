@@ -958,7 +958,7 @@ DB.prototype = {
       process.env.MONGODB_ATLAS_URI,
       { useNewUrlParser: true })
       .then(db => {
-        return db.db('cestasnp').collection('pois').findOneAndUpdate({ _id: new ObjectID(id) },
+        return db.db('cestasnp').collection('pois').findOneAndUpdate({ $and: [{ _id: new ObjectID(id) }, { user_id: uid }] },
           { $set: { deleted: moment().format('YYYY-MM-DD HH:mm:ss'), deleted_by: uid, deleted_note: note } }, 
           { returnOriginal: false })
         .then(res => {
