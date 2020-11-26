@@ -213,7 +213,7 @@ const getTravelerMeta = (dbRef, userId) =>
           .latestWithDB(dbRef, 'traveler_messages', { $and: [{ user_id: userId }, { deleted: { $ne: true }}] }, { pub_date: -1 })
           .then(msg => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
-            const title = escape(results[0].meno);
+            const title = escape('CestaSNP - ' + results[0].meno);
             const url = `https://cestasnp.sk/na/${escape(userId)}`;
             const created = escapeDate(results[0].created);
             const published = escapeDate(results[0].start_date);
