@@ -69,14 +69,14 @@ html, body, #root {
   box-sizing: border-box;
   background-color: white;
   width: 100%;
-  max-height: 100px;
-  color: #545454;
+  max-height: 80px;
+  color: black;
   z-index: 9999;
   top: 0;
-  border-bottom: 2px solid red;
+  border-bottom: 1px solid red;
 }
 #CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog {
-  margin-top: 100px;
+  margin-top: 80px;
 } @media (max-width: 1100px) {
   .app-header {
     max-height: 70px;
@@ -96,7 +96,6 @@ html, body, #root {
 
 .logo-screen {
   display: block;
-  height: 50px;
 }
 
 .logo-mobile {
@@ -105,14 +104,8 @@ html, body, #root {
 
 @media (max-width: 1100px ) {
   .logo-mobile {
-    height: 50px;
     margin-left: 15px;
-  }
-}
-
-@media (min-width: 1100px) {
-  .logo-mobile {
-    height: 60px;
+    height: 35px;
   }
 }
 
@@ -145,7 +138,7 @@ body {
 
 .app-body {
   position: absolute;
-  top: 100px;
+  top: 80px;
   bottom: 0px;
   width: 100%;
   overflow-y: auto;
@@ -173,7 +166,7 @@ body {
 }
 
 .navbar-header {
-  height: 96px;
+  height: 76px;
 } @media (max-width: 1100px) {
   .navbar-header {
     /* padding: 0 15px; */
@@ -198,15 +191,27 @@ body {
 }
 
 .navbar, 
-.navbar-inverse, 
+.navbar-inverse {
+  color: black !important;
+  font-size: 15px;
+  line-height: 17px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .navbar-nav>li>a, 
 .navbar-nav .open .dropdown-menu>li>a, 
 .navbar-inverse .navbar-nav>.open>a, 
 .navbar-inverse .navbar-nav>.open>a:focus, 
-.navbar-inverse .navbar-nav>.open>a:hover 
- {
-  color: #505050 !important;
-  font-size: 18px;
+.navbar-inverse .navbar-nav>.open>a:hover {
+  padding-left: 8px;
+  padding-right: 8px;
+  color: black !important;
+  background-color: white;
+  font-size: 15px;
+  line-height: 17px;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .navbar-toggle {
@@ -250,8 +255,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
   }
 
   .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
-    border-color: #505050;
-    border-bottom: #ff2730 solid;
+    border-color: transparent;
+    border-bottom: 1px solid red;
   }
 }
 
