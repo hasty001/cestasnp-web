@@ -7,6 +7,7 @@ class Article extends Component {
     super(props);
     this.state = {
       url: `/api/articles/article/${this.props.match.params.articleId}`,
+      og_url: `/pred/articles/article/${this.props.match.params.articleId}`,
       loading: true,
       article: []
     };
@@ -78,7 +79,7 @@ class Article extends Component {
           <div>
             <Meta
               title={this.state.article[0].title}
-              url={this.state.url}
+              url={this.state.og_url}
               metadesc={
                 this.state.article[0].ogdesc || this.state.article[0].metadesc
               }

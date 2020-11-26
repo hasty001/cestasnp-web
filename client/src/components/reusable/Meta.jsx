@@ -9,7 +9,7 @@ const Meta = ({ title, metadesc, img, url }) => (
       content={metadesc || 'Toto je starší článok z portálu CestaSNP.sk'}
     />
     <meta property="og:image" content={img} />
-    <meta property="og:url" content={`https://cestasnp.sk/${url}`} />
+    <meta property="og:url" content={`https://cestasnp.sk${url}`} />
   </Helmet>
 );
 

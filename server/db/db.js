@@ -123,6 +123,22 @@ DB.prototype = {
     });
   },
 
+  findByWithDB(db, collection, findBy = {}) {
+    return db.db('cestasnp')
+        .collection(collection)
+        .find(findBy)
+        .toArray();
+  },
+
+  latestWithDB(db, collection, findBy = {}, sortBy = {}) {
+    return db.db('cestasnp')
+        .collection(collection)
+        .find(findBy)
+        .sort(sortBy)
+        .limit(1)
+        .toArray();
+  },
+
   countCollection(collection, findBy = {}, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,

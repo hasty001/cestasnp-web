@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const fs = require('fs').promises;
+const { getMeta } = require('./server/meta');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const http = require('http').Server(app);
@@ -43,11 +46,34 @@ app.use('/api/traveller', require('./server/controllers/traveller'));
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
 app.get('/*', (req, res) => {
-  res.sendFile('index.html', { root });
+  fs.readFile(path.join(root, 'index.html'), 'utf8')
+  .then(data => getMeta(req.app.locals.db, req.path)
+    .then(meta => 
+      res.send(meta ? 
+        data
+          .replace(/<!-- SSR META -->.*<!-- SSR META -->/s,
+            `<!-- SSR META INSERTED -->${meta || ''}\n<!-- SSR META INSERTED -->`)
+        : data))
+    .catch((error) => {
+      console.error(error);
+      res.send(data);
+    }))
+  .catch((error) => {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  });
 });
 
-http.listen(process.env.PORT || 3000, () => {
-  console.log(
-    `Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`
-  );
-});
+MongoClient.connect(
+  process.env.MONGODB_ATLAS_URI,
+  { useNewUrlParser: true }).then(db => {
+    app.locals.db = db;
+
+    http.listen(process.env.PORT || 3000, () => {
+      console.log(
+        `Listening on ${process.env.PORT ? process.env.PORT : 'localhost:3000'}`
+      );
+    });
+  }).catch((error) => {
+    console.error(error);
+  });
