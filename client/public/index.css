@@ -213,21 +213,21 @@ body {
 }
 
 @media(min-width: 1170px) {
-  .navbar-collapse>.navbar-nav li>a {
+  .navbar-collapse>.navbar-nav>li>a {
     margin-left: 5px;
     margin-right: 5px;
   }
 }
 
 @media(min-width: 1250px) {
-  .navbar-collapse>.navbar-nav li>a {
+  .navbar-collapse>.navbar-nav>li>a {
     margin-left: 10px;
     margin-right: 10px;
   }
 }
 
 @media(min-width: 1350px) {
-  .navbar-collapse>.navbar-nav li>a {
+  .navbar-collapse>.navbar-nav>li>a {
     margin-left: 14px;
     margin-right: 14px;
   }
