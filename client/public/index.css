@@ -190,28 +190,65 @@ body {
   border: 0px;
 }
 
-.navbar, 
-.navbar-inverse {
-  color: black !important;
-  font-size: 15px;
-  line-height: 17px;
-  text-align: center;
-  text-transform: uppercase;
+.navbar-nav {
+  margin: 0;
 }
 
 .navbar-nav>li>a, 
 .navbar-nav .open .dropdown-menu>li>a, 
-.navbar-inverse .navbar-nav>.open>a, 
-.navbar-inverse .navbar-nav>.open>a:focus, 
-.navbar-inverse .navbar-nav>.open>a:hover {
-  padding-left: 8px;
-  padding-right: 8px;
+.navbar-inverse .navbar-nav>.open>a {
+  padding-left: 7px;
+  padding-right: 7px;
   color: black !important;
   background-color: white;
   font-size: 15px;
   line-height: 17px;
   text-align: center;
   text-transform: uppercase;
+}
+
+.navbar-collapse>.navbar-nav.not-auth>li>a {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.navbar-nav .open .dropdown-menu li>a:focus, 
+.navbar-nav .open .dropdown-menu li>a:hover {
+  background-color: #e0e0e0 !important;
+}
+
+@media(max-width: 1100px) {
+  .navbar-collapse>.navbar-nav li>a {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .navbar-nav li>a:hover {
+    background-color: #e0e0e0 !important;
+  }
+}
+
+li.red-button>a {
+  color: red !important;
+  border: 1px solid red;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin: 5px 21px;
+}
+
+.navbar-nav .open .dropdown-menu li>a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+li.red-button>a:hover,
+li.red-button>a:focus,
+li.red-button>a:active {
+  background-color: red !important;
+  color: white !important;
 }
 
 .navbar-toggle {
@@ -236,11 +273,16 @@ body {
 
 @media (min-width: 1100px) {
   .navbar-right {
-    margin-top: 20px;
+    margin-top: 15px;
   }
 }
 
-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
+.navbar-brand {
+  padding-top: 13px;
+}
+
+nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, 
+.navbar-inverse .navbar-nav>.open>a:hover {
   background-color: #ffb8b8;
 }
 
@@ -292,13 +334,9 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-
     }
     .navbar-nav {
         float: none!important;
-        margin: 7.5px -15px;
     }
     .navbar-nav>li {
         float: none;
-    }
-    .navbar-nav>li>a {
-        padding: 10px 0px 10px 30px;
     }
     .navbar-text {
         float: none;

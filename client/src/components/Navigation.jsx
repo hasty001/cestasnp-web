@@ -54,7 +54,7 @@ const Navigation = () => {
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
-        <Nav pullRight>
+        <Nav pullRight className={!authData.isAuth ? "not-auth" : "auth"}>
           <NavDropdown eventKey={2} title="Pred cestou" id="basic-nav-dropdown">
             <NavItem
               eventKey={2.1}
@@ -145,6 +145,7 @@ const Navigation = () => {
             onClick={() => {
               history.push(ROUTES.ucetPois);
             }}
+            className="red-button"
           >
             Prihlásiť sa             
           </NavItem>
