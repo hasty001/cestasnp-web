@@ -67,7 +67,7 @@ router.get('/finishedTravellers', (req, res) => {
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {
-  db.getActiveTravellersWithLastMessage()
+  db.getActiveTravellersWithLastMessage(req.query.date, req.query.maxCount)
     .then(data => res.json(data))
     .catch(e => { 
       console.error(e);

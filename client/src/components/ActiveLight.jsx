@@ -24,7 +24,7 @@ class ActiveLight extends Component {
   componentDidMount() {
     const now = format(new Date(), 'YYYY-MM-DD');
         
-    fetch('/api/traveller/activeTravellersWithLastMessage')
+    fetch('/api/traveller/activeTravellersWithLastMessage' + window.location.search)
       .then(resp => resp.json())
       .then(data => {
         const travellers = [];

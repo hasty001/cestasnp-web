@@ -479,11 +479,14 @@ DB.prototype = {
     });
   },
 
-  getInterestingFinishedTravellers(db, maxCount = _const.InterestingShowCount) {
-    const start = format(new Date() - _const.InterestingPrevMonths * 31 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD');
+  getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount) {
+    const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
+    const start = format(new Date(date || new Date()) - _const.InterestingPrevMonths * 31 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD');
               
     return this.findByWithDB(db, 'traveler_details', { 
-      $and: [{ finishedTracking: true}, { $or: [{start_date: { $gte: start }}, {end_date: { $gte: start }}]}] })
+      $and: [{ finishedTracking: true}, 
+        { $or: [{start_date: { $lte: now }}, {end_date: { $lte: now }}]},
+        { $or: [{start_date: { $gte: start }}, {end_date: { $gte: start }}]}] })
       .then(finished => {
 
         const finishedIds = finished.map(t => t.articleID ? t.articleID : t._id.toString() );
@@ -544,7 +547,7 @@ DB.prototype = {
       });
   },
 
-  getActiveTravellersWithLastMessage() {
+  getActiveTravellersWithLastMessage(date, maxCount) {
     return MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,{ useNewUrlParser: true })
       .then(db => 
@@ -553,36 +556,36 @@ DB.prototype = {
             var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
               
             if (activeTravellersIds.length === 0) {
-              return this.getInterestingFinishedTravellers(db);          
-          } else {
-            return this.findByWithDB(db, 'traveler_messages', { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
-              {}, { pub_date: -1 })
-              .then(lastMessages => {
-                if (lastMessages) { 
-                  lastMessages.map(msg => {
-                      var i = activeTravellersIds.indexOf(msg.user_id);
+              return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
+            } else {
+              return this.findByWithDB(db, 'traveler_messages', { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
+                {}, { pub_date: -1 })
+                .then(lastMessages => {
+                  if (lastMessages) { 
+                    lastMessages.map(msg => {
+                        var i = activeTravellersIds.indexOf(msg.user_id);
 
-                      if (i >= 0 && !activeTravellers[i].lastMessage) {
-                        activeTravellers[i].lastMessage = msg;
-                      }
-                      if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
-                        activeTravellers[i].lastImg = msg.img;
-                        activeTravellers[i].lastImgMsgId = msg._id;
-                      }
-                    });
-                }
-                  
-                const now = format(new Date(), 'YYYY-MM-DD');
-                if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < _const.InterestingShowCount) {
-                  // no active only few planning, add some interesting
+                        if (i >= 0 && !activeTravellers[i].lastMessage) {
+                          activeTravellers[i].lastMessage = msg;
+                        }
+                        if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
+                          activeTravellers[i].lastImg = msg.img;
+                          activeTravellers[i].lastImgMsgId = msg._id;
+                        }
+                      });
+                  }
+                    
+                  const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
+                  if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < maxCount || _const.InterestingShowCoun) {
+                    // no active only few planning, add some interesting
 
-                  return this.getInterestingFinishedTravellers(db, _const.InterestingShowCount - activeTravellers.length)
-                    .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
-                }
+                    return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCoun) - activeTravellers.length)
+                      .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
+                  }
 
-                return Promise.resolve(activeTravellers);
-              });
-          }
+                  return Promise.resolve(activeTravellers);
+                });
+            }
       }).finally(() => db.close())
     )},
 
