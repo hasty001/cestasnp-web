@@ -9,7 +9,11 @@ const useStateProp = (prop, defValue = undefined) => {
     if (prop && typeof prop == "object" && prop.length && prop.length == 2 && typeof prop[1] == "function") {
       return prop;
     } else {
-      return useState(prop);
+      const [state, setState] = useState(prop);
+
+      useEffect(() => { setState(prop); }, [prop]);
+
+      return [state, setState];
     }
   } else {
     return useState(defValue);
