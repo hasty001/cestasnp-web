@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ImageBox from './ImageBox';
+import { A, isNormalClickEvent } from './Navigate';
 
 const Image = (props) => {
 
@@ -28,12 +29,12 @@ const Image = (props) => {
   return (
     <>
       {!!image && (
-        <a href={image} onClick={(e) => {e.preventDefault(); setImageVisible(true)}}>
+        <A href={image} onClick={(e) => { if (isNormalClickEvent(e)) { e.preventDefault(); setImageVisible(true); } }}>
           <img
             className={`${props.itemClassName || 'image-preview'}`}
             src={imagePreview}
             alt={props.alt}
-        /></a>)}
+        /></A>)}
       {props.children}
       <ImageBox
         show={imageVisible}

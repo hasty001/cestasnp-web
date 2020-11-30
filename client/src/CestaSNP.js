@@ -21,6 +21,8 @@ import ActiveLight from './components/ActiveLight';
 import Cookies from './components/Cookies';
 import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
+import DocumentTitle from 'react-document-title';
+import * as Constants from './components/Constants';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -34,11 +36,23 @@ class CestaSNP extends Component {
     };
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.appBodyRef = React.createRef();
+    this.prevPath = '';
   }
 
   removeListener = null;
 
   pathChanged(path) {
+    if (path != this.prevPath && this.appBodyRef.current) {
+      if (this.appBodyRef.current.scrollTo) {
+        this.appBodyRef.current.scrollTo(0, 0);
+      } else {
+        this.appBodyRef.current.scrollTop = 0;
+        this.appBodyRef.current.scrollLeft = 0;
+      }
+    }
+    this.prevPath = path;
+
     const newState = (path == "/na/ceste" || path == "/pred/pois");
       
     if (this.state.fillContent != newState)
@@ -67,14 +81,15 @@ class CestaSNP extends Component {
 
   render() {
     return (
-  <div className="app">
-    <AuthProvider>
-      <div className="app-header">
-        <Navigation />
-      </div>
-      <div className="app-body" onScroll={this.handleScroll}>
-        <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
-          <Router history={history}>
+  <AuthProvider>
+    <DocumentTitle title={Constants.WebTitle}>
+    <Router history={history}>
+      <div className="app">
+        <div className="app-header">
+          <Navigation />
+        </div>
+        <div className="app-body" onScroll={this.handleScroll} ref={this.appBodyRef}>
+          <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
             <Switch>
               <Route exact path="/" component={Home} />
               <Route
@@ -101,11 +116,12 @@ class CestaSNP extends Component {
               <Route exact path="/ucet/pois" render={(props) => (<Account {...props} pois />)} />
               <Route path="*" component={NotFound} />
             </Switch>
-          </Router>
+          </div>
         </div>
       </div>
-    </AuthProvider>
-  </div>
+    </Router>
+    </DocumentTitle>
+  </AuthProvider>
   );}
 }
 

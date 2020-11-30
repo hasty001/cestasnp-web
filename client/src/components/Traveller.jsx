@@ -1,6 +1,5 @@
 import React, { Component, Fragment, useContext } from 'react';
 import { Button } from 'react-bootstrap';
-
 import Map from './Map';
 import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
@@ -11,6 +10,9 @@ import * as Constants from './Constants';
 import { AuthContext } from './AuthContext';
 import ConfirmBox from './reusable/ConfirmBox';
 import UserLabel from './reusable/UserLabel';
+import DocumentTitle from 'react-document-title';
+import { A } from './reusable/Navigate';
+import history from '../helpers/history';
 
 const Traveller = (props) => {
   const authData = useContext(AuthContext);
@@ -59,11 +61,15 @@ class TravellerWithAuth extends Component {
     this.handleDeleteMessageClick = this.handleDeleteMessageClick.bind(this);
     this.handleDeleteMessage = this.handleDeleteMessage.bind(this);
     this.sortMessages = this.sortMessages.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
     var orderFromOld = (window.location.search === Constants.FromOldQuery);
-    
     if (orderFromOld != this.state.orderFromOld)
       this.setState({
         orderFromOld: orderFromOld
@@ -207,6 +213,16 @@ class TravellerWithAuth extends Component {
       this.setState({
         showCommentBtn: showCommentBtn
       });
+
+    if (this.state.travellerId != newProps.match.params.traveller) {
+      this.setState({ travellerId: newProps.match.params.traveller,
+        travellerData: {}, travellerMessages: [], 
+        showCommentBox: false,
+        showImageBox: false,
+        orderFromOld: false, 
+        loading: true, error: false
+        }, this.fetchData);
+    }
   }
 
   handleDeleteMessageClick(event) {
@@ -335,13 +351,18 @@ class TravellerWithAuth extends Component {
   }
 
   handleOrderClick(e) {
-    e.preventDefault();
-
     var order = !this.state.orderFromOld;
-    this.setState({
-      orderFromOld: order,
-      travellerMessages: this.sortMessages(this.state.travellerMessages, order)
-    });
+
+    if (!window.history.pushState) {
+      history.push((order ? Constants.FromOldQuery : "?") + window.location.hash);
+    } else {
+      window.history.pushState(null, null, (order ? Constants.FromOldQuery : "?") + window.location.hash);
+
+      this.setState({
+        orderFromOld: order,
+        travellerMessages: this.sortMessages(this.state.travellerMessages, order)
+      });
+    }
   }
 
   handleImageBox(open, url) {
@@ -388,6 +409,8 @@ class TravellerWithAuth extends Component {
               start={this.state.travellerData.start_miesto}
               stops={this.state.travellerMessages}
             />
+
+            <DocumentTitle title={`${this.state.travellerData.meno}${Constants.WebTitleSuffix}`} />
 
             <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
               <p>{this.state.travellerData.meno}</p>

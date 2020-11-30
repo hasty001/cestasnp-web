@@ -19,6 +19,7 @@
     "url": "git+https://github.com/hasty001/cestasnp-web.git"
   },
   "author": "Peter Trizuliak",
+  "contributors": ["Tom Gregorovic"],
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
     "array.prototype.findindex": "^2.1.0",
@@ -40,6 +41,7 @@
     "promise.prototype.finally": "^3.1.2",
     "react": "16.8",
     "react-bootstrap": "^0.31.5",
+    "react-document-title": "^2.0.3",
     "react-dom": "16.8",
     "react-helmet": "^5.2.0",
     "react-recaptcha": "^2.3.7",

@@ -5,6 +5,7 @@ import { fetchJson, fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 import PoiForm from './PoiForm';
 import PoiList from '../reusable/PoiList';
 import * as Texts from '../Texts';
+import * as Constants from '../Constants';
 import { compareDesc } from 'date-fns';
 
 const AddPoi = (props) => {
@@ -72,6 +73,7 @@ const AddPoi = (props) => {
 
   return (
     <PageWithLoader pageId="AddPoi" loading={!authData || !authData.authProviderMounted} 
+      pageTitle={`Pridať dôležité miesto${Constants.WebTitleSuffix}`}
       error={authData && authData.authProviderMounted && !authData.isAuth ? 'Pridať dôležité miesto môže len prihlásený užívateľ.' : ''}>
       
       <PoiForm uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>

@@ -5,6 +5,7 @@ import FormSelect from './reusable/FormSelect';
 import ItineraryTable from './reusable/ItineraryTable';
 import PageWithLoader from './reusable/PageWithLoader';
 import * as Texts from './Texts';
+import * as Constants from './Constants';
 
 const Itinerary = (props) => {
 
@@ -56,7 +57,7 @@ const Itinerary = (props) => {
   }
 
   return (
-    <PageWithLoader pageId="Itinerary" loading={loading} error={error} >
+    <PageWithLoader pageId="Itinerary" loading={loading} error={error} pageTitle={`Itinerár${Constants.WebTitleSuffix}`} >
       <>
         <div className="no-print">
           <button

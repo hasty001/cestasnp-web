@@ -109,7 +109,7 @@ const PoisInTable = (props) => {
     }}>{props.children}{` `}{!!sort && (sort.by == props.col) && (sort.asc ? "▲" : "▼")}</a>;
 
   return (
-    <PageWithLoader pageId="PoisInTable" loading={loading} error={error}>
+    <PageWithLoader pageId="PoisInTable" loading={loading} error={error} pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`} >
       <>
         <button className="snpBtn no-print" onClick={e => { e.preventDefault(); setShowSettings(true); }}>Nastavenie</button>
 

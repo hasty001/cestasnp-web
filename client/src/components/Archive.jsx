@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { NavItem } from 'react-bootstrap';
 import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
 import { sortByDateDesc, dateToStr } from '../helpers/helpers';
-
-import history from '../helpers/history';
+import { A } from './reusable/Navigate';
+import * as Constants from './Constants';
+import DocumentTitle from 'react-document-title';
 
 class Archive extends Component {
   constructor(props) {
@@ -70,13 +70,9 @@ class Archive extends Component {
         <div className="archived-traveller-text">
           <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
         </div>
-        <NavItem
-          onClick={() => {
-            history.push(`/na/${traveller.userId}#from-old`);
-          }}
-        >
+        <A href={`/na/${traveller.userId}${Constants.FromOldQuery}`} >
           Sleduj celé putovanie...
-        </NavItem>
+        </A>
       </div>
     );
   }
@@ -84,6 +80,7 @@ class Archive extends Component {
   render() {
     return (
       <div id="NaCesteArchive">
+        <DocumentTitle title={`Archív${Constants.WebTitleSuffix}`} />
         {this.state.loading && !this.state.error && <Loader />}
 
         {!this.state.loading && !this.state.error && this.state.fullyCompleted && (

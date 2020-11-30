@@ -1,10 +1,12 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import Loader from './Loader';
 
 const PageWithLoader = (props) => {
   
   return (
     <div id={props.pageId} className={props.className || ''} >
+      {!!props.pageTitle && <DocumentTitle title={props.pageTitle} />}
       {!!props.loading && !props.error && <Loader />}
       {!props.loading && !props.error && (
         <>

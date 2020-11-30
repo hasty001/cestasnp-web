@@ -5,6 +5,8 @@ import Message from './Message';
 import SentMessages from './SentMessages';
 import AuthContext from '../AuthContext';
 import { dateToStr } from '../../helpers/helpers';
+import DocumentTitle from 'react-document-title';
+import * as Constants from '../Constants';
 
 class TravellerAccount extends React.Component {
   constructor(props) {
@@ -210,6 +212,7 @@ class TravellerAccount extends React.Component {
           e.preventDefault();
         }}
       >
+        <DocumentTitle title={`Poslať správu${Constants.WebTitleSuffix}`} />
         <Message
           userId={this.state.user_id}
           travellerId={this.state.travellerId}

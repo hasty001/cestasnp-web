@@ -8,7 +8,7 @@ const ImageBox = ({ url, show, onHide }) => (
     onHide={onHide}
     dialogClassName="travellerPhotoModal"
   >
-    <Modal.Body close>
+    <Modal.Body>
       <img src={url} width="100%" />
     </Modal.Body>
   </Modal>
