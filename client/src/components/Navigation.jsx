@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { Navbar, Nav, NavDropdown, NavItem } from 'react-bootstrap';
 import history from '../helpers/history';
-import logo_screen from '../../public/img/logo_screen.png';
-import logo_mobile from '../../public/img/logo_mobile.png';
+import logo from '../../public/img/logo.svg';
 import { AuthContext } from './AuthContext';
 
 const ROUTES = {
@@ -33,7 +32,7 @@ const Navigation = () => {
             }}
           >
             <img
-              src={logo_mobile}
+              src={logo}
               className="logo-mobile"
               alt="Cesta SNP logo pre mobil"
             />
@@ -46,7 +45,7 @@ const Navigation = () => {
             }}
           >
             <img
-              src={logo_screen}
+              src={logo}
               className="logo-screen"
               alt="Cesta SNP logo pre obrazovku"
             />
@@ -55,17 +54,7 @@ const Navigation = () => {
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
-        <Nav pullRight>
-          <NavItem
-            eventKey={1}
-            title="Domov"
-            onClick={() => {
-              history.push(ROUTES.domov);
-            }}
-          >
-            Domov
-          </NavItem>
-
+        <Nav pullRight className={!authData.isAuth ? "not-auth" : "auth"}>
           <NavDropdown eventKey={2} title="Pred cestou" id="basic-nav-dropdown">
             <NavItem
               eventKey={2.1}
@@ -156,6 +145,7 @@ const Navigation = () => {
             onClick={() => {
               history.push(ROUTES.ucetPois);
             }}
+            className="red-button"
           >
             Prihlásiť sa             
           </NavItem>
