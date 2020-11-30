@@ -1,35 +1,54 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import ActiveLight from './ActiveLight';
-
-import Loader from './reusable/Loader';
+import { fetchJson } from '../helpers/fetchUtils';
+import DivWithLoader from './reusable/DivWithLoader';
 import { A } from './reusable/Navigate';
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
+const Home = (props) => {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    this.state = {
-      articles: [],
-      loading: true
-    };
-  }
-
-  componentDidMount() {
-    fetch('/api/articles/for/home')
-      .then(resp => resp.json())
+  useEffect(() => {
+    setLoading(true);
+    
+    fetchJson('/api/articles/for/home')
       .then(data => {
-        this.setState({
-          articles: data,
-          loading: false
-        });
+        setArticles(data);
+        setLoading(false);
       })
       .catch(err => {
-        throw err;
+        setLoading(false);
+        console.error(err);
       });
-  }
+  }, []);
 
-  render() {
-    return (
+  const month = (new Date()).getMonth + 1;
+
+  return (
+    <div id="Home">
+      <div className="active-travellers-box">            
+        <A
+          href={`/na/ceste/light`}
+          className="no-decoration"
+        >
+          <h3 className="no-decoration">LIVE sledovanie</h3>
+        </A>     
+        
+        <ActiveLight box />
+      </div>
+
+      <DivWithLoader className="home-articles" loading={loading}>
+        Articles
+      </DivWithLoader>
+
+      <div className="home banner">
+        { (month >= 5 && mont <= 10)
+          ? <A href="/na/ceste">LIVE sledovanie</A>
+          : <A href="/pred/pois">Dôležité miesta</A>}
+      </div>
+    </div>
+  );
+  /*return (
       <div id="Home">
         {this.state.loading && <Loader />}
         {!this.state.loading && (
@@ -73,7 +92,7 @@ class Home extends Component {
         )}
       </div>
     );
-  }
+  }*/
 }
 
 export default Home;
