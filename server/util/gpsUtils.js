@@ -104,25 +104,23 @@ const getNearGuideposts = (gId, coordinates, minDistance = null) => {
       min =  itinerary[i];
       prev = itinerary[Math.max(0, i - 1)];
       prevDistance = WGS84Util.distanceBetween({ coordinates }, { coordinates: [prev.lon, prev.lat] });
-    }
 
-    if (i >= 0) {
       next = itinerary[Math.min(itinerary.length - 1, i + 1)];
       nextDistance = WGS84Util.distanceBetween({ coordinates }, { coordinates: [next.lon, next.lat] });
-    }
 
-    if (minDistance < 100) {
-      nearId = min.id;
-      near = min;
-    } else {
-      if (prevDistance < nextDistance) {
-        afterId = prev.id;
-        after = prev;
-        afterDistance = prevDistance;
+      if (minDistance < 100) {
+        nearId = min.id;
+        near = min;
       } else {
-        afterId = next ? next.id : null;
-        after = next;
-        afterDistance = nextDistance;
+        if (prevDistance < nextDistance) {
+          afterId = prev.id;
+          after = prev;
+          afterDistance = prevDistance;
+        } else {
+          afterId = min.id;
+          after = min;
+          afterDistance = minDistance;
+        }
       }
     }
   }
