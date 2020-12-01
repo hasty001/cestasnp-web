@@ -19,5 +19,3 @@ export const PoiMarkerIconProps = {
 };
 export const WebTitle = "CestaSNP";
 export const WebTitleSuffix = " - CestaSNP";
-
-export const LiveBoxMaxTextLength = 200;

@@ -17,6 +17,10 @@ img {
   max-width: 100% !important;
 }
 
+img.round {
+  border-radius: 8px;
+}
+
 a {
   text-decoration: none !important;
 }
@@ -46,10 +50,52 @@ li {
   padding: 4px;
   transform: translate(5px, 10px); 
   pointer-events: none;
+  transition: 0.4s;
 }
 
 [data-tooltip]:hover:before, [data-tooltip]:focus:before, [data-tooltip]:active:before {        
   opacity : 1;
+}
+
+a.red-button {
+  display: block;
+  width: fit-content;
+  color: red !important;
+  border: 1px solid red;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin: 40px auto 15px auto;
+  text-transform: uppercase;
+  transition: 0.4s;
+}
+
+a.red-button:hover,
+a.red-button:focus,
+a.red-button:active {
+  background-color: red !important;
+  color: white !important;
+}
+
+a.white-button {
+  display: block;
+  width: fit-content;
+  color: white !important;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid white;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin: 25px auto 15px auto;
+  text-transform: uppercase;
+  transition: 0.4s;
+}
+
+a.white-button:hover,
+a.white-button:focus,
+a.white-button:active {
+  color: red !important;
+  border-color: red;
 }
 
 /***     GENERAL    ***/
@@ -205,6 +251,18 @@ body {
   line-height: 17px;
   text-align: center;
   text-transform: uppercase;
+  transition: 0.4s;
+}
+
+.navbar-nav>li>a {
+  padding-bottom: 28px;
+}
+
+.navbar-nav>li>a:hover,
+.navbar-nav>li>a:active,
+.navbar-nav>li>a:focus {
+  border-bottom: 2px solid red;
+  transition: 0.1s;
 }
 
 .navbar-collapse>.navbar-nav.not-auth>li>a {
@@ -239,6 +297,16 @@ body {
 }
 
 @media(max-width: 1100px) {
+  .navbar-nav>li>a {
+    padding-bottom: 15px;
+  }
+  
+  .navbar-nav>li>a:hover,
+  .navbar-nav>li>a:active,
+  .navbar-nav>li>a:focus {
+    border-bottom: none;
+  }
+
   .navbar-collapse>.navbar-nav li>a {
     margin-left: 0;
     margin-right: 0;
@@ -258,6 +326,7 @@ li.red-button>a {
   border-radius: 20px;
   padding: 10px 20px;
   margin: 5px 21px;
+  transition: 0.4s;
 }
 
 .navbar-nav .open .dropdown-menu li>a {
@@ -397,15 +466,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /***     HOME       ***/
 
 #Home {
-  max-width: 1500px;
   margin: 0;
-  text-align: justify;
-} @media (max-width: 1024px) {
-  #Home {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
+  font-size: 15px;
 }
 
 .banner {
@@ -420,6 +482,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   background-size: cover;
   border-top: 1px solid red;
   border-bottom: 1px solid red;
+  transition: 0.4s;
 }
 
 .banner>a {
@@ -429,24 +492,23 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: calc(7.7vw);
   color: white;
   text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25);
+  transition: 0.4s;
 }
 
 .banner>a:hover,
 .banner>a:focus,
 .banner>a:active {
   color: red;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .home.banner {
   background-image: url("/img/mapa.jpg");
 } 
 
-@media (max-width: 660px) {
+@media (max-width: 659px) {
   .banner>a {
-    text-transform: uppercase;
     font-size: 50px;
-    color: white;
-    text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25);
   }
 
   .banner {
@@ -464,12 +526,72 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
+.home-articles-and-box {
+  max-width: calc(100vw - 100px);
+  min-width: calc(100vw - 100px);
+  margin: 0 50px;
+  overflow: hidden;
+}
+
+@media (min-width: 1600px) {
+  .home-articles-and-box {
+    max-width: 1500px;
+    min-width: 1500px;
+    margin: 0 auto;
+  }
+}
+
 .home-articles {
   display: table-cell;
-  min-width: calc(100vw - 560px - 40px - 100px);
-  max-width: calc(100vw - 560px - 40px - 100px);
-  padding: 0 40px 0 50px;
   margin-bottom: 0px;
+}
+
+@media (min-width: 1920px) {
+  .banner {
+    min-height: 860px;
+    max-height: 860px;
+  }
+}
+
+.home-intro {
+  max-width: 800px;
+  min-height: 270px;
+  max-height: 270px;
+  background-image: url("/img/cesta-snp-hory.jpg");
+  background-repeat: no-repeat;
+  background-position: bottom;
+  border-radius: 8px;
+  margin: 0 auto;
+  transform: translate(0, 0);
+}
+
+.home-intro .read-more {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.home-intro-text {
+  color: #FFFFFF;
+  text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 90px;
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 659px) {
+  .home-intro {
+    min-width: 85vw;
+    max-width: 85vw;
+    background-image: url("/img/cesta-snp-hory-small.jpg");
+  }
+
+  .home-intro-text,
+  .home-intro .read-more {
+    display: none;
+  }
 }
 
 .active-travellers-box {
@@ -477,19 +599,62 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   display: table-cell;
   min-width: 560px;
   max-width: 560px;
-  margin-left: 40px;
-  margin-right: 50px;
+  margin-left: 80px;
   margin-bottom: 0px;
   padding: 0px;
+}
+
+.active-travellers-box h3 {
+  font-size: 30px;
+  color: #58595B;
+  text-align: center;
+  margin: 40px 0 30px 0;
+  text-transform: uppercase;
+}
+
+.active-travellers-info {
+  font-size: 15px;
+  margin: 15px 0;
+}
+
+.active-traveller-item {
+  font-size: 15px;
+  border-bottom: 1px solid red;
+  margin: 15px 0 30px 0;
+  padding-bottom: 15px;
+}
+
+.traveller-item-header {
+  overflow-y: hidden;
+  margin-bottom: 15px;
+}
+
+.traveller-name {
+  font-size: 20px;
+  color: red;
+}
+
+.traveller-date {
+  display: table-cell;
+  float: right;
+  line-height: 30px;
+}
+
+.active-travellers-box .traveller-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  max-height: 88px;
 }
 
 @media(max-width: 1300px) {
   .home-articles {
     display: block;
-    min-width: calc(100vw - 100px);
-    max-width: calc(100vw - 100px);
-    margin-left: 50px;
-    margin-right: 50px;
+    min-width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     padding: 0;
   }
   
@@ -503,8 +668,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-@media(max-width: 660px) {
-  .home-articles {
+#home1 {
+  display: none;
+}
+
+@media(max-width: 659px) {
+  .home-articles-and-box {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -512,10 +681,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
   
   .active-travellers-box {
-    min-width: 85vw;
-    max-width: 85vw;
-    margin-left: auto;
-    margin-right: auto;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  #home1 {
+    display: block;
   }
 }
 
@@ -525,56 +696,76 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 0;
 }
 
-@media(max-width: 767px) {
-  .active-travellers-box #NaCesteActiveLight {
-    max-height: 350px;
-    overflow-y: auto;   
-  }
-  .active-travellers-box .active-traveller-item {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-  }
-  .active-travellers-box .active-travellers-info {
-    white-space: normal;
-  }
+#Home .article-div {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  min-height: 20px;
+  overflow: hidden;
 }
 
-#Home h2.no-decoration {
+#Home .article-div h2 {
   margin-top: 0px;
+  margin-bottom: 30px;
+  font-size: 25px;
+  color: #58595B;
 }
 
-#home1 {
-  display: block;
-  width: calc(70% - 20px);
-  padding: 10px;
-} @media(max-width: 767px) {
-  #home1 {
-    width: 100%;
-  }
+#Home .article-image {
+  float: left;
+  min-width: 240px;
+  max-width: 240px;
+  min-height: 240px;
+  max-height: 240px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  margin-right: 30px;
 }
 
-#home2,
-#home3 {
-  display: inline-block;
-  width: calc(35% - 10px);
-  padding: 10px;
-  vertical-align: top;
-} @media(max-width: 1024px) {
-  #home2,
-  #home3 {
-    width: calc(70% - 20px);
-  }
-}@media(max-width: 767px) {
-  #home2,
-  #home3 {
-    width: 100%;
-  }
-}
-
-.home2 > p > img, 
-.home3 > p > img {
+#Home .article-image.before {
   display: none;
+}
+
+#Home .article-text-col {
+  display: table-cell;
+}
+
+#Home .article-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  max-height: 132px;
+}
+
+#Home .article-text img {
+  display: none;
+}
+
+@media(max-width: 659px) {
+  #Home #home1 .article-div {
+    margin-top: 30px;
+  }
+
+  #Home .article-image {
+    display: none;
+  }
+
+  #Home .article-image.before {
+    display: block;
+    min-width: 85vw;
+    min-height: 85vw;
+    margin: 0 0 30px 0;
+    max-width: unset;
+    max-height: unset;
+  }
+
+  #Home .article-text-col {
+    display: block;
+    width: 100%;
+    margin: 30px 0 0 0;
+  }
 }
 
 /***     HOME       ***/
@@ -937,18 +1128,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     margin: 0;
     padding: 15px;
 }
-}
-
-.active-travellers-box h3 {
-  margin: 0px 0px 5px 10px;
-}
-
-.active-travellers-list {
-  padding: 10px;
-}
-
-.active-traveller-item {
-  margin: 0px 0px 15px 0px;
 }
 
 .mapMarker, .mapMarkerPos {
@@ -1621,20 +1800,24 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 .simple-masonry {
   position: relative;
-  margin-bottom: 5px;
   overflow-x: hidden;
   white-space: nowrap;
+  margin-bottom: 15px;
 }
 
 .simple-masonry-item {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  margin-right: 5px;
+  margin-right: 15px;
 }
 
-.simple-masonry-item .inner {
-  margin-bottom: 5px;
+.simple-masonry-item.inner {
+  margin-bottom: 15px;
+}
+
+.simple-masonry-br {
+  margin-top: -4px;
 }
 
 .simple-masonry-image {
@@ -1646,6 +1829,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  border-radius: 8px;
+  transition: 0.4s;
 }
 
 .simple-masonry-image:hover {
@@ -1654,16 +1839,25 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 .simple-masonry-image-title {
   position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  visibility: hidden;
+  color: white;
+  font-size: 15px;
+  white-space: normal;
+  pointer-events: none;
+  transition: 0.4s;
+}
+
+.simple-masonry-image-title>span {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  visibility: hidden;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  white-space: normal;
-  text-align: center;
-  pointer-events: none;
+  font-size: 50px;
 }
 
 .simple-masonry-image:hover + .simple-masonry-image-title {

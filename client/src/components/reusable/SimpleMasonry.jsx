@@ -66,7 +66,7 @@ class SimpleMasonry extends Component {
           pos += itemsPerRow;
         }
 
-        const gap = 5;
+        const gap = 15;
 
         var sumHeight = 0;
         rows.forEach(row => {
@@ -146,13 +146,14 @@ class SimpleMasonry extends Component {
                 return (
                   <div key={i} className={`simple-masonry-item${innerRow ? ' inner' : ''}`} 
                     style={{ width: item.width, height: item.height, maxHeight: this.state.targetHeight }}>
-                    <a href={img.url} title={item.width < 150 ? img.title : ""} >
+                    <a href={img.url} title={item.width < 100 ? img.title : ""} >
                       <div className="simple-masonry-image" style={{ backgroundImage: "url(" + img.src + ")"}}/>
-                      {item.width >= 150 && (<div className="simple-masonry-image-title"  style={{ maxWidth: item.width }}>{img.title}</div>)}
+                      {item.width >= 100 && (<div className="simple-masonry-image-title"  style={{ maxWidth: item.width }}>
+                        {item.height >= 100 ? img.title : ""}<span><i className="fas fa-external-link-alt"/></span></div>)}
                     </a>
                   </div>
                   );})}
-              {innerRow && (<br/>)}
+              {innerRow && (<div className="simple-masonry-br"/>)}
             </Fragment>)}
           )}
       </div>);

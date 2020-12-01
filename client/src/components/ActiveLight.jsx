@@ -95,11 +95,6 @@ class ActiveLight extends Component {
     const hasPlanning =  this.state.travellers ? 
       this.state.travellers.reduce((r, t) => r || !t.finishedTracking && t.startDate > this.state.now, false) : false;
 
-    const limit = (text, use) => {
-      return use && text && text.length > Constants.LiveBoxMaxTextLength ? 
-        text.slice(0, Constants.LiveBoxMaxTextLength) + "…" : text;
-    }
-
     return (
       <div id="NaCesteActiveLight">
         {!this.props.box && <DocumentTitle title={`LIVE sledovanie${Constants.WebTitleSuffix}`} />}
@@ -108,49 +103,49 @@ class ActiveLight extends Component {
             <div className="active-travellers-list">
               {!hasActive && (
                 <div className="active-travellers-info">
-                  <p>
-                    {hasPlanning ?
-                      "Momentálne nie je nikto na ceste, ale môžeš si pozrieť, kto cestu plánuje, alebo nedávna zaujímavá putovanie:"
-                      : "Momentálne nie je nikto na ceste ani cestu neplánuje, ale môžeš si pozrieť nedávna zaujímavá putovanie:"}</p>
+                  {hasPlanning ?
+                    "Momentálne nie je nikto na ceste, ale môžeš si pozrieť, kto cestu plánuje, alebo nedávna zaujímavá putovanie:"
+                    : "Momentálne nie je nikto na ceste ani cestu neplánuje, ale môžeš si pozrieť nedávna zaujímavá putovanie:"}
                 </div>
               )}
-
-              {this.state.box && images && images.length > 0 && 
-                (<SimpleMasonry images={images} targetHeight={250} />)}
 
               {this.state.travellers.map((traveller, i) => {
                 return (    
                       <div className="active-traveller-item" key={i} >
-                        <strong>                       
-                          {(!traveller.finishedTracking && !!traveller.lastMessage && (traveller.startDate <= this.state.now)) &&  (
-                          <span>
-                            {dateTimeToStr(traveller.lastMessage.pub_date)}{' '}
-                          </span>)} 
-
-                          {((traveller.startDate > this.state.now) || !traveller.lastMessage) && (
-                          <span>
-                            {dateToStr(traveller.startDate)}                           
-                            {' '}{traveller.startMiesto}{' '}
-                          </span>)}  
-                          {traveller.finishedTracking && (
-                          <span>
-                            {'- '}{dateToStr(traveller.endDate)}{' '}
-                          </span>)}  
-
-                          <A href={`/na/${traveller.userId}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
+                        <div className="traveller-item-header"> 
+                          <A className="traveller-name" href={`/na/${traveller.userId}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
                             {traveller.meno}                          
                           </A>
-                        </strong>
 
-                        <span>
-                          <br/>
-                          <span dangerouslySetInnerHTML={{ __html: 
+                          <span className="traveller-date">              
+                            {(!traveller.finishedTracking && !!traveller.lastMessage && (traveller.startDate <= this.state.now)) &&  (
+                            <span>
+                              {dateTimeToStr(traveller.lastMessage.pub_date)}
+                            </span>)} 
+
+                            {((traveller.startDate > this.state.now) || !traveller.lastMessage) && (
+                            <span>
+                              {dateToStr(traveller.startDate)}                           
+                              {' '}{traveller.startMiesto}
+                            </span>)}  
+
+                            {traveller.finishedTracking && (
+                            <span>
+                              {' - '}{dateToStr(traveller.endDate)}
+                            </span>)} 
+                          </span>
+                        </div>
+
+                        <div className="traveller-text"
+                          dangerouslySetInnerHTML={{ __html: 
                               traveller.finishedTracking || !traveller.lastMessage ? 
-                                limit(traveller.text, this.state.box) : limit(traveller.lastMessage.text, this.state.box) }} />
-                        </span>                       
+                                traveller.text : traveller.lastMessage.text }} />
                       </div>                          
                 );
               })}
+
+              {this.state.box && images && images.length > 0 && 
+                (<SimpleMasonry images={images} targetHeight={560} />)}
             </div>
         )}
 
