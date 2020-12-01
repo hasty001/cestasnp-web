@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { A } from './Navigate';
 
 class SimpleMasonry extends Component {
   constructor(props) {
@@ -146,11 +147,11 @@ class SimpleMasonry extends Component {
                 return (
                   <div key={i} className={`simple-masonry-item${innerRow ? ' inner' : ''}`} 
                     style={{ width: item.width, height: item.height, maxHeight: this.state.targetHeight }}>
-                    <a href={img.url} title={item.width < 100 ? img.title : ""} >
+                    <A href={img.url} title={item.width < 100 ? img.title : ""} >
                       <div className="simple-masonry-image" style={{ backgroundImage: "url(" + img.src + ")"}}/>
                       {item.width >= 100 && (<div className="simple-masonry-image-title"  style={{ maxWidth: item.width }}>
                         {item.height >= 100 ? img.title : ""}<span><i className="fas fa-external-link-alt"/></span></div>)}
-                    </a>
+                    </A>
                   </div>
                   );})}
               {innerRow && (<div className="simple-masonry-br"/>)}
