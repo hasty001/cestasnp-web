@@ -59,6 +59,7 @@ li {
 
 a.red-button {
   display: block;
+  width: 120px; /*for IE*/
   width: fit-content;
   color: red !important;
   border: 1px solid red;
@@ -75,6 +76,15 @@ a.red-button:focus,
 a.red-button:active {
   background-color: red !important;
   color: white !important;
+}
+
+a.red-button.x2 {
+  width: 280px; /*for IE*/
+  width: fit-content;
+  border-width: 2px;
+  border-radius: 40px;
+  padding: 20px 40px;
+  font-size: 200%;
 }
 
 a.white-button {
@@ -544,6 +554,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 .home-articles {
   display: table-cell;
   margin-bottom: 0px;
+  width: calc(100vw - 600px);
 }
 
 @media (min-width: 1920px) {
@@ -768,6 +779,48 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
+.site-footer > .col1,
+.site-footer > .col2,
+.site-footer > .col3 {
+  display: table-cell;
+  width: 1%;
+  text-align: center;
+}
+
+@media(max-width: 1299px) {
+  .site-footer > .col1,
+  .site-footer > .col2,
+  .site-footer > .col3 {
+    display: block;
+    width: 100%;
+  }
+}
+
+.logo-footer {
+  display: block;
+  color: #58595B;
+  width: 208px;
+  margin: 60px auto;
+}
+
+.site-footer h2 {
+  color: #58595B;
+  font-size: 200%;
+  text-transform: uppercase;
+  margin: 60px auto;
+}
+
+.site-footer p {
+  line-height: 22px;
+}
+
+.footer-link {
+  display: block;
+  text-transform: uppercase;
+  margin: 15px auto;
+  color: black;
+}
+
 /***     HOME       ***/
 /**********************/
 /***    KONTAKT     ***/
@@ -843,7 +896,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   text-align: center;
 }
 
-.pois-map-table-link {
+.pois-map-table-link,
+.active-kind-link {
   position: absolute;
   left: 10px;
   top: 10px;
@@ -1101,6 +1155,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   z-index: 9998;
   background: white;
   -ms-overflow-style: -ms-autohiding-scrollbar;
+  text-align: center;
 }
 
 @media print {
@@ -1119,11 +1174,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   height: 80px;
 }
 
-#NaCesteActiveLight {
+#NaCesteActiveLight,
+#NaCesteFotky {
   width: 80%;
   margin: 15px auto;
 } @media (max-width: 767px) {
-#NaCesteActiveLight {
+#NaCesteActiveLight,
+#NaCesteFotky {
     width: 100%;
     margin: 0;
     padding: 15px;

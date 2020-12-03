@@ -1,23 +1,14 @@
-import React, { Component, Fragment } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import format from 'date-fns/format';
-
 import Map from './Map';
-import Loader from './reusable/Loader';
-import pin01 from '../../public/img/pins/Cervena.png';
-import pin02 from '../../public/img/pins/Cierna.png';
-import pin03 from '../../public/img/pins/Tmavo_modra.png';
-import pin04 from '../../public/img/pins/Fialova.png';
-import pin05 from '../../public/img/pins/Hneda.png';
-import pin06 from '../../public/img/pins/Oranzova.png';
-import pin07 from '../../public/img/pins/Ruzova.png';
-import pin08 from '../../public/img/pins/Svetlo_Ruzova.png';
-import pin09 from '../../public/img/pins/Svetlo_zelena.png';
-import pin10 from '../../public/img/pins/Tmavo_cervena.png';
-import pin11 from '../../public/img/pins/Modra.png';
 import { sortByDateAsc, dateToStr } from '../helpers/helpers';
 import * as Constants from './Constants';
-import { A } from './reusable/Navigate';
-import DocumentTitle from 'react-document-title';
+import { A, navigate } from './reusable/Navigate';
+import { fetchJson, fetchPostJson } from '../helpers/fetchUtils';
+import * as Texts from './Texts';
+import PageWithLoader from './reusable/PageWithLoader';
+import DivWithLoader from './reusable/DivWithLoader';
+import { LocalSettingsContext } from './LocalSettingsContext';
 
 const colors = [
   '#ff0000',
@@ -36,36 +27,18 @@ const colors = [
 
 const grey = '#b19494';
 
-const pins = [
-  pin01,
-  pin02,
-  pin03,
-  pin04,
-  pin05,
-  pin06,
-  pin07,
-  pin08,
-  pin09,
-  pin10,
-  pin11
-];
+const Active = (props) => {
 
-class Active extends Component {
-  constructor(props) {
-    super(props);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
+  const [travellers, setTravellers] = useState([]);
 
-    this.state = {
-      loading: true,
-      error: false,
-      travellers: []
-    };
-  }
+  const fetchData = () => {
+    setLoading(true);
 
-  componentDidMount() {
-    fetch('/api/traveller/activeTravellers')
-      .then(resp => resp.json())
+    fetchJson('/api/traveller/activeTravellers')
       .then(data => {
-        const travellers = [];
+        const activeTravellers = [];
         const travellerIds = [];
         const now = format(new Date(), 'YYYY-MM-DD');
         data.forEach(traveller => {
@@ -76,48 +49,31 @@ class Active extends Component {
           travellerData.startMiesto = traveller.start_miesto;
           travellerData.startDate = format(traveller.start_date, 'YYYY-MM-DD');
           travellerData.endDate = traveller.end_date;
-          travellers.push(travellerData);
+          activeTravellers.push(travellerData);
           travellerIds.push(traveller.user_id);
         });
-        sortByDateAsc(travellers, 'startDate');
-        if (travellers.length === 0) {
-          this.setState({
-            travellers,
-            error: true
-          });
+        sortByDateAsc(activeTravellers, 'startDate');
+        if (activeTravellers.length === 0) {
+          setTravellers([]);
+          setError(Texts.NoTravellersError);
+          setLoading(false);
         } else {
           let colorCount = 0;
-          travellers.forEach(trvlr => {
-            // eslint-disable-next-line no-param-reassign
-            trvlr.pin = pins[colorCount];
-            // eslint-disable-next-line no-param-reassign
+          
+          activeTravellers.forEach(trvlr => {
             trvlr.color = trvlr.startDate <= now ? colors[colorCount] : grey;
             colorCount += 1;
             if (colorCount >= colors.length - 1) {
               colorCount = 0;
             }
           });
-          this.setState({
-            travellers
-          });
         }
-        return travellerIds;
+        return { activeTravellers, travellerIds };
       })
-      .then(travellerIds => {
-        const data = {
-          travellerIds
-        };
+      .then(({ activeTravellers, travellerIds }) => {
+
         if (travellerIds.length > 0) {
-          fetch('/api/traveller/lastMessages', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: new Headers({
-              'Content-Type': 'application/json'
-            })
-          })
-            .then(resp => {
-              return resp.json();
-            })
+          return fetchPostJson('/api/traveller/lastMessages', { travellerIds })
             .then(messages => {
               const ids = [];
               const lastMessages = [];
@@ -140,100 +96,82 @@ class Active extends Component {
                 }
               });
 
-              const travellers = this.state.travellers.map(trvlr => {
+              const activeTravellersWithMessage = activeTravellers.map(trvlr => {
                 lastMessages.forEach(msg => {
                   if (msg.user_id === trvlr.userId) {
                     // eslint-disable-next-line no-param-reassign
                     trvlr.lastMessage = msg;
                   }
                 });
+
                 return trvlr;
               });
 
-              this.setState({
-                travellers,
-                loading: false
-              });
-            })
-            .catch(err => {
-              throw err;
+              setTravellers(activeTravellersWithMessage);
+              setLoading(false);
             });
         }
       })
       .catch(e => {
-        this.setState({
-          error: true
-        });
-        throw e;
+        console.error(e);
+        setError(Texts.GenericError);
+        setLoading(false);
       });
-  }
+  };
 
-  render() {
-    return (
-      <div id="NaCesteActive">
-        <DocumentTitle title={`LIVE sledovanie${Constants.WebTitleSuffix}`} />
-        {this.state.loading && !this.state.error && <Loader />}
+  useEffect(() => { fetchData(); }, []);
 
-        {!this.state.loading && !this.state.error && this.state.travellers && (
-          <Fragment>
-            <Map use="na-ceste-map-active" travellers={this.state.travellers} />
-            <div className="active-travellers" style={{ textAlign: 'center' }}>
-              {this.state.travellers.map((traveller, i) => {
-                return (
-                  <A
-                    href={`/na/${traveller.userId}`}
-                    key={i}
+  const settingsData = useContext(LocalSettingsContext);
+  
+  return (
+    <PageWithLoader pageId="NaCesteActive" pageTitle={`LIVE sledovanie${Constants.WebTitleSuffix}`} >
+      <Map use="na-ceste-map-active" travellers={travellers} />
+      <button className="snpBtn active-kind-link no-print" 
+        onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/light'); }}><i className="fas fa-align-justify"></i></button>
+      <DivWithLoader absolute className="active-travellers" 
+        loading={loading} error={error} style={{ position: "absolute" }}>
+        {travellers.map((traveller, i) => {
+          return (
+            <A
+              href={`/na/${traveller.userId}`}
+              key={i}
+            >
+              {traveller.color !== grey ? (
+                <div
+                  className="active-traveller"
+                  style={{
+                    border: `1px solid ${traveller.color}`,
+                    textAlign: 'center'
+                  }}
+                >
+                  <p
+                    style={{
+                      color: traveller.color,
+                      margin: '12px 0 0 0'
+                    }}
                   >
-                    {traveller.color !== grey ? (
-                      <div
-                        className="active-traveller"
-                        style={{
-                          border: `1px solid ${traveller.color}`,
-                          textAlign: 'center'
-                        }}
-                      >
-                        <p
-                          style={{
-                            color: traveller.color,
-                            margin: '12px 0 0 0'
-                          }}
-                        >
-                          {traveller.meno}{' '}
-                          <i className="fas fa-map-marker-alt" 
-                            style={{ width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} alt="Vzor ukazovatela"></i>
-                        </p>
-                      </div>
-                    ) : (
-                      <div
-                        className="active-traveller"
-                        style={{ border: `1px solid ${grey}`, color: grey }}
-                      >
-                        <p style={{ margin: '8px 0 0 0' }}>{traveller.meno}</p>
-                        <p style={{ margin: '0px', fontSize: '12px' }}>
-                          vyráža {dateToStr(traveller.startDate, "kdoviekdy")}
-                        </p>
-                      </div>
-                    )}
-                  </A>
-                );
-              })}
-            </div>
-          </Fragment>
-        )}
-
-        {this.state.error && (
-          <Fragment>
-            <Map use="na-ceste-map-active" travellers={this.state.travellers} />
-            <div className="active-travellers" style={{ textAlign: 'center' }}>
-              <p style={{ marginTop: '10px' }}>
-                Momentálne nie je nikto na ceste.
-              </p>
-            </div>
-          </Fragment>
-        )}
-      </div>
-    );
-  }
+                    {traveller.meno}{' '}
+                    <i className="fas fa-map-marker-alt" 
+                      style={{ width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} alt="Vzor ukazovatela"></i>
+                  </p>
+                </div>
+              ) : (
+                <div
+                  className="active-traveller"
+                  style={{ border: `1px solid ${grey}`, color: grey }}
+                >
+                  <p style={{ margin: '8px 0 0 0' }}>{traveller.meno}</p>
+                  <p style={{ margin: '0px', fontSize: '12px' }}>
+                    vyráža {dateToStr(traveller.startDate, "kdoviekdy")}
+                  </p>
+                </div>
+              )}
+            </A>
+          );
+        })}
+      </DivWithLoader>
+    </PageWithLoader>
+  );
 }
 
 export default Active;

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ActiveLight from './ActiveLight';
 import { fetchJson } from '../helpers/fetchUtils';
 import DivWithLoader from './reusable/DivWithLoader';
 import { A } from './reusable/Navigate';
 import ButtonReadMore from './reusable/ButtonReadMore';
+import { LocalSettingsContext } from './LocalSettingsContext';
 
 const Home = (props) => {
   const [articles, setArticles] = useState([]);
@@ -23,6 +24,8 @@ const Home = (props) => {
       });
   }, []);
 
+  const settingsData = useContext(LocalSettingsContext);
+
   const month = (new Date()).getMonth + 1;
 
   const getArticleImage = (intro) => {
@@ -35,7 +38,7 @@ const Home = (props) => {
       <div className="home-articles-and-box">
         <div className="active-travellers-box">            
           <A
-            href={`/na/ceste/light`}
+            href={settingsData.activeLink.href}
             className="no-decoration"
           >
             <h3 className="no-decoration">Info z cesty</h3>
@@ -78,7 +81,7 @@ const Home = (props) => {
 
       <div className="home banner">
         { (month >= 5 && mont <= 10)
-          ? <A href="/na/ceste">LIVE sledovanie</A>
+          ? <A href={settingsData.activeLink.href}>LIVE sledovanie</A>
           : <A href="/pred/pois">Dôležité miesta</A>}
       </div>
     </div>

@@ -4,6 +4,7 @@ import NavRouterItem from './reusable/NavRouterItem'
 import logo from '../../public/img/logo.svg';
 import { AuthContext } from './AuthContext';
 import { A } from './reusable/Navigate';
+import { LocalSettingsContext } from './LocalSettingsContext';
 
 const ROUTES = {
   domov: '/',
@@ -21,6 +22,7 @@ const ROUTES = {
 
 const Navigation = () => {
   const authData = useContext(AuthContext);
+  const settingsData = useContext(LocalSettingsContext);
   return (
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
@@ -77,7 +79,7 @@ const Navigation = () => {
           </NavDropdown>
 
           <NavRouterItem
-            href={ROUTES.naCeste}
+            href={settingsData.activeLink.href}
             eventKey={3}
             title="LIVE sledovanie"
           >

@@ -9,7 +9,7 @@ import * as Texts from './Texts';
 import PageWithLoader from './reusable/PageWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
 
-const ActiveLight = (props) => {
+const ActivePhotos = (props) => {
   const now = format(new Date(), 'YYYY-MM-DD');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
@@ -46,12 +46,11 @@ const ActiveLight = (props) => {
          activeTravellers.sort((a, b) => getSortValue(a) > getSortValue(b));
         
         if (activeTravellers.length === 0) {
-          setTravellers([]);
           setError(Texts.NoTravellersError);
           setLoading(false);
-        } else {            
-          setTravellers(activeTravellers);  
-          setLoading(false);      
+        } else {  
+          setTravellers(activeTravellers);   
+          setLoading(false);     
         }
       })
       .catch(e => {
@@ -80,73 +79,19 @@ const ActiveLight = (props) => {
       }
     }) : [];
 
-  const hasActive = travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && t.startDate <= now, false) : false;
-
-  const hasPlanning =  travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && t.startDate > now, false) : false;
-
   const settingsData = useContext(LocalSettingsContext);
 
   return (
-    <PageWithLoader pageId="NaCesteActiveLight" 
+    <PageWithLoader pageId="NaCesteFotky" 
       pageTitle={props.box ? null : `LIVE sledovanie${Constants.WebTitleSuffix}`}
       loading={loading} error={error}>
 
-      {!props.box && <button className="snpBtn active-kind-link no-print"
-        onClick={() => { settingsData.setActiveLink("fotky"); navigate('/na/ceste/fotky'); }}><i className="far fa-images"></i></button>}
-          
-      {!!travellers && travellers.length > 0 && (
-          <div className="active-travellers-list">
-            {!hasActive && (
-              <div className="active-travellers-info">
-                {hasPlanning ?
-                  "Momentálne nie je nikto na ceste, ale môžeš si pozrieť, kto cestu plánuje, alebo nedávna zaujímavá putovanie:"
-                  : "Momentálne nie je nikto na ceste ani cestu neplánuje, ale môžeš si pozrieť nedávna zaujímavá putovanie:"}
-              </div>
-            )}
+      <button className="snpBtn active-kind-link no-print"
+        onClick={() => { settingsData.setActiveLink(""); navigate('/na/ceste'); }}><i className="fas fa-map"></i></button>
 
-            {travellers.map((traveller, i) => {
-              return (    
-                    <div className="active-traveller-item" key={i} >
-                      <div className="traveller-item-header"> 
-                        <A className="traveller-name" href={`/na/${traveller.userId}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
-                          {traveller.meno}                          
-                        </A>
-
-                        <span className="traveller-date">              
-                          {(!traveller.finishedTracking && !!traveller.lastMessage && (traveller.startDate <= now)) &&  (
-                          <span>
-                            {dateTimeToStr(traveller.lastMessage.pub_date)}
-                          </span>)} 
-
-                          {((traveller.startDate > now) || !traveller.lastMessage) && (
-                          <span>
-                            {dateToStr(traveller.startDate)}                           
-                            {' '}{traveller.startMiesto}
-                          </span>)}  
-
-                          {traveller.finishedTracking && (
-                          <span>
-                            {' - '}{dateToStr(traveller.endDate)}
-                          </span>)} 
-                        </span>
-                      </div>
-
-                      <div className="traveller-text"
-                        dangerouslySetInnerHTML={{ __html: 
-                            traveller.finishedTracking || !traveller.lastMessage ? 
-                              traveller.text : traveller.lastMessage.text }} />
-                    </div>                          
-              );
-            })}
-
-            {!!props.box && images && images.length > 0 && 
-              (<SimpleMasonry images={images} targetHeight={560} />)}
-          </div>
-      )}
-    </PageWithLoader>
-  );
+      {!!images && images.length > 0 && 
+              (<SimpleMasonry images={images} targetHeight={1024} />)}
+    </PageWithLoader>);
 }
 
-export default ActiveLight;
+export default ActivePhotos;

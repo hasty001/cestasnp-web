@@ -24,6 +24,9 @@ import Account from './components/Account/index';
 import { AuthProvider } from './components/AuthContext';
 import DocumentTitle from 'react-document-title';
 import * as Constants from './components/Constants';
+import SiteFooter from './components/SiteFooter';
+import ActivePhotos from './components/ActivePhotos';
+import { LocalSettingsProvider } from './components/LocalSettingsContext';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -54,7 +57,7 @@ class CestaSNP extends Component {
     }
     this.prevPath = path;
 
-    const newState = (path == "/na/ceste" || path == "/pred/pois");
+    const newState = (path == "/na/ceste" || path == "/pred/pois" || path == "/na/ceste/fotky");
       
     if (this.state.fillContent != newState)
       this.setState({
@@ -85,6 +88,7 @@ class CestaSNP extends Component {
   render() {
     return (
   <AuthProvider>
+    <LocalSettingsProvider>
     <DocumentTitle title={Constants.WebTitle}>
     <Router history={history}>
       <div className="app">
@@ -110,6 +114,7 @@ class CestaSNP extends Component {
               <Route exact path="/pred/itinerar" component={Itinerary} />
               <Route exact path="/na/ceste" component={Active} />
               <Route exact path="/na/ceste/light" component={ActiveLight} />
+              <Route exact path="/na/ceste/fotky" component={ActivePhotos} />
               <Route exact path="/na/archive" component={Archive} />
               <Route path="/na/:traveller" render={(props) => (<Traveller {...props} scrollTop={this.state.scrollTop} />)}/>
               <Route exact path="/kontakt" component={Kontakt} />
@@ -119,11 +124,13 @@ class CestaSNP extends Component {
               <Route exact path="/ucet/pois" render={(props) => (<Account {...props} pois />)} />
               <Route path="*" component={NotFound} />
             </Switch>
+            {!this.state.fillContent && <SiteFooter/>}
           </div>
         </div>
       </div>
     </Router>
     </DocumentTitle>
+    </LocalSettingsProvider>
   </AuthProvider>
   );}
 }

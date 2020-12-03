@@ -4,7 +4,7 @@ import FloatingLoader from './FloatingLoader';
 const DivWithLoader = (props) => {
   
   return (
-    <div id={props.divId} className={`${props.className || ''} for-floating-loader`.trim()}>    
+    <div id={props.divId} className={`${props.className || ''} ${props.absolute ? "" : "for-floating-loader"}`.trim()}>    
       {!!props.loading && <FloatingLoader />}    
       <div className={props.loading ? "invisible" : null}>
         {props.children}
