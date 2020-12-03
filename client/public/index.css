@@ -68,7 +68,7 @@ a.red-button {
   padding: 10px 20px;
   margin: 40px auto 15px auto;
   text-transform: uppercase;
-  transition: 0.4s;
+  transition: background-color 0.4s, color 0.4s;
 }
 
 a.red-button:hover,
@@ -98,7 +98,7 @@ a.white-button {
   padding: 10px 20px;
   margin: 25px auto 15px auto;
   text-transform: uppercase;
-  transition: 0.4s;
+  transition: border-color 0.4s, color 0.4s;
 }
 
 a.white-button:hover,
@@ -261,7 +261,8 @@ body {
   line-height: 17px;
   text-align: center;
   text-transform: uppercase;
-  transition: 0.4s;
+  border-bottom: 2px solid transparent;
+  transition: 0.4s, margin 0s, padding 0s;
 }
 
 .navbar-nav>li>a {
@@ -272,7 +273,7 @@ body {
 .navbar-nav>li>a:active,
 .navbar-nav>li>a:focus {
   border-bottom: 2px solid red;
-  transition: 0.1s;
+  transition: 0.1s, margin 0s, padding 0s, border-width 0s;
 }
 
 .navbar-collapse>.navbar-nav.not-auth>li>a {
@@ -336,7 +337,7 @@ li.red-button>a {
   border-radius: 20px;
   padding: 10px 20px;
   margin: 5px 21px;
-  transition: 0.4s;
+  transition: color 0.4s, background-color 0.4s;
 }
 
 .navbar-nav .open .dropdown-menu li>a {
