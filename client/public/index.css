@@ -84,7 +84,15 @@ a.red-button.x2 {
   border-width: 2px;
   border-radius: 40px;
   padding: 20px 40px;
-  font-size: 200%;
+  font-size: 30px;
+}
+
+@media (max-width: 659px) {
+  a.red-button.x2 {
+    width: 215px; /*for IE*/
+    width: fit-content;
+    font-size: 20px;
+  }
 }
 
 a.white-button {
@@ -780,21 +788,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.site-footer > .col1,
-.site-footer > .col2,
-.site-footer > .col3 {
-  display: table-cell;
-  width: 1%;
+.site-footer .col1,
+.site-footer .col2,
+.site-footer .col3 {
+  display: inline-block;
+  width: 33%;
   text-align: center;
-}
-
-@media(max-width: 1299px) {
-  .site-footer > .col1,
-  .site-footer > .col2,
-  .site-footer > .col3 {
-    display: block;
-    width: 100%;
-  }
+  vertical-align: top;
 }
 
 .logo-footer {
@@ -802,6 +802,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
   width: 208px;
   margin: 60px auto;
+}
+
+.site-footer .red-button {
+  margin-top: 90px;
+  margin-bottom: 0px;
 }
 
 .site-footer h2 {
@@ -820,6 +825,40 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   text-transform: uppercase;
   margin: 15px auto;
   color: black;
+}
+
+@media(max-width: 1299px) {
+  .site-footer .col1,
+  .site-footer .col2,
+  .site-footer .col3 {
+    display: block;
+    width: 100%;
+  }
+
+  .logo-footer {
+    margin-top: 90px;
+  }
+
+  .site-footer .red-button.x2 {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+  
+  .site-footer .col1 .red-button.x2 {
+    margin-top: 90px;
+  }
+
+  .site-footer .col3 .red-button.x2 {
+    margin-bottom: 90px;
+  }
+
+  .site-footer > .row1 {
+    border-bottom: 1px solid red;
+  }
+  
+  .site-footer h2 {
+    margin-top: 90px;
+  }
 }
 
 /***     HOME       ***/
@@ -1185,6 +1224,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     width: 100%;
     margin: 0;
     padding: 15px;
+    padding-top: 60px;
 }
 }
 
@@ -1860,7 +1900,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   position: relative;
   overflow-x: hidden;
   white-space: nowrap;
-  margin-bottom: 15px;
+  margin: 15px 0;
 }
 
 .simple-masonry-item {
