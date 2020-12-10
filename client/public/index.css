@@ -261,12 +261,12 @@ body {
   line-height: 17px;
   text-align: center;
   text-transform: uppercase;
-  border-bottom: 2px solid transparent;
   transition: 0.4s, margin 0s, padding 0s;
 }
 
 .navbar-nav>li>a {
   padding-bottom: 28px;
+  border-bottom: 2px solid transparent;
 }
 
 .navbar-nav>li>a:hover,
@@ -310,6 +310,7 @@ body {
 @media(max-width: 1100px) {
   .navbar-nav>li>a {
     padding-bottom: 15px;
+    border-bottom: none;
   }
   
   .navbar-nav>li>a:hover,

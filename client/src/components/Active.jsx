@@ -130,7 +130,8 @@ const Active = (props) => {
         onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/light'); }}><i className="fas fa-align-justify"></i></button>
       <DivWithLoader absolute className="active-travellers" 
         loading={loading} error={error} style={{ position: "absolute" }}>
-        {travellers.map((traveller, i) => {
+        {!!error && error}
+        {!loading && !error && !!travellers && travellers.map((traveller, i) => {
           return (
             <A
               href={`/na/${traveller.userId}`}
