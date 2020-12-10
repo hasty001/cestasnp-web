@@ -17,7 +17,7 @@ const SiteFooter = (props) => {
           <A href="/pred/articles/article/10003" className="red-button x2" >Daruj 2%</A>
         </div>
         <div className="col3">
-          <A href="/pred/articles/article/10003" className="red-button x2" >Podpor nás</A>
+          <A href="/pred/articles/article/379" className="red-button x2" >Podpor nás</A>
         </div>
       </div>
       <div>

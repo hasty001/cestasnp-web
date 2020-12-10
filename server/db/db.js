@@ -51,7 +51,7 @@ DB.prototype = {
             .collection(collection)
             .find(filterBy)
             .sort(sortBy)
-            .limit(3)
+            .limit(2)
             .toArray((toArrErr, docs) => {
               if (docs) {
                 db.close();

@@ -13,9 +13,9 @@ const Home = (props) => {
   useEffect(() => {
     setLoading(true);
     
-    fetchJson('/api/articles/for/home')
-      .then(data => {
-        setArticles(data);
+    Promise.all([fetchJson('/api/articles/for/home'), fetchJson('/api/articles/article/60')])
+      .then(([data, article]) => {
+        setArticles(article.concat(data));
         setLoading(false);
       })
       .catch(err => {
@@ -50,7 +50,7 @@ const Home = (props) => {
         <DivWithLoader className="home-articles" loading={loading}>
           <div className="home-intro">
             <div className="home-intro-text">najdlhšia pešia trasa na Slovensku je zážitok na celý život</div>
-            <ButtonReadMore white href="/pred/articles/article/72"/>
+            <ButtonReadMore white href="/pred/articles/article/60"/>
           </div>
         
           {articles && articles.map((article, i) => { 
