@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Router, Switch, Route } from 'react-router';
+import detectIt from 'detect-it';
 
 import LogRocket from 'logrocket';
 import history from './helpers/history';
@@ -67,6 +68,8 @@ class CestaSNP extends Component {
     this.removeListener = history.listen((params) => {
       this.pathChanged(params.pathname);
     });
+
+    this.appBodyRef.current.addEventListener('scroll', e => this.handleScroll(e), detectIt.passiveEvents ? { passive: true } : null);
   }
 
   componentWillUnmount() {
@@ -88,7 +91,7 @@ class CestaSNP extends Component {
         <div className="app-header">
           <Navigation />
         </div>
-        <div className="app-body" onScroll={this.handleScroll} ref={this.appBodyRef}>
+        <div className="app-body" ref={this.appBodyRef}>
           <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
             <Switch>
               <Route exact path="/" component={Home} />
