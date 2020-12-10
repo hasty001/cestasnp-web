@@ -19,12 +19,15 @@
     "url": "git+https://github.com/hasty001/cestasnp-web.git"
   },
   "author": "Peter Trizuliak",
-  "contributors": ["Tom Gregorovic"],
+  "contributors": [
+    "Tom Gregorovic"
+  ],
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
     "array.prototype.findindex": "^2.1.0",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.20.0",
+    "compression": "^1.7.4",
     "date-fns": "^1.29.0",
     "express": "^4.16.3",
     "firebase": "^7.14.3",
