@@ -61,6 +61,8 @@ app.use('/api/traveller', require('./server/controllers/traveller'));
 
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
+app.use('/sitemap.xml', require('./server/controllers/sitemap'));
+
 app.get('/*', (req, res) => {
   fs.readFile(path.join(root, 'index.html'), 'utf8')
   .then(data => getMeta(req.app.locals.db, req.path)
