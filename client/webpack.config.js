@@ -1,9 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   mode: 'development',
-  entry: ['whatwg-fetch', './src/index.js'],
+  entry: ['whatwg-fetch', './src/index.js', "./public/index.css"],
   output: {
     path: path.resolve('./build'),
     filename: 'bundle.js'
@@ -24,7 +27,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader']
+        loaders: [MiniCssExtractPlugin.loader, 'css-loader']
       }
     ]
   },
@@ -35,6 +38,9 @@ module.exports = {
         FIREBASE_PROJECT_ID: JSON.stringify(process.env.FIREBASE_PROJECT_ID),
         FIREBASE_MESSAGING_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_ID)
       }
-    })
+    }),
+    new MiniCssExtractPlugin({filename: "[name].css"}),
+    new FixStyleOnlyEntriesPlugin(),
+    new OptimizeCSSAssetsPlugin({})
   ]
 };
