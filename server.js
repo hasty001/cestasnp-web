@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const { getMeta } = require('./server/meta');
 const { MongoClient } = require('mongodb');
+const compression = require('compression');
 
 const app = express();
 const http = require('http').Server(app);
@@ -26,6 +27,21 @@ if (process.env.PORT) {
   });
 }
 
+const shouldCompress = (req, res) => {
+  if (req.headers['x-no-compression']) {
+    // Will not compress responses, if this header is present
+    return false;
+  }
+  // Resort to standard compression
+  return compression.filter(req, res);
+};
+
+// Compress all HTTP responses
+app.use(compression({
+  filter: shouldCompress,
+  threshold: 1024
+}));
+
 app.use(express.static(root));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -44,6 +60,8 @@ app.use('/api/articles', require('./server/controllers/articles'));
 app.use('/api/traveller', require('./server/controllers/traveller'));
 
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
+
+app.use('/sitemap.xml', require('./server/controllers/sitemap'));
 
 app.get('/*', (req, res) => {
   fs.readFile(path.join(root, 'index.html'), 'utf8')

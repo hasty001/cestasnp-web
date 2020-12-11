@@ -11,3 +11,5 @@ article-fulltext.html
 article-introtext.html
 article.json
 server/data/snp.json
+client/build/main.css
+client/build/main.css.map
