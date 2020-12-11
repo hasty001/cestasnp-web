@@ -24,6 +24,9 @@
   ],
   "homepage": "https://github.com/hasty001/cestasnp-web#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-regular-svg-icons": "^5.15.1",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "array.prototype.findindex": "^2.1.0",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.20.0",

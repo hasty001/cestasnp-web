@@ -10,6 +10,7 @@ import CestaSNP from './CestaSNP';
 import '../public/index.css';
 import promiseFinally from 'promise.prototype.finally';
 import { logDev } from './helpers/logDev';
+import { faIconsRegister } from './helpers/faIcons'
 
 // To add to window
 if (!window.Promise) {
@@ -37,6 +38,8 @@ if (!Object.values) {
 if (!String.replaceAll) {
   replaceAll.shim();
 }
+
+faIconsRegister();
 
 logDev('Looks like we are in development mode!');
 
