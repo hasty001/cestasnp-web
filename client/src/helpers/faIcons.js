@@ -1,7 +1,8 @@
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import { faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExternalLinkAlt,
-  faStar, faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
-  faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk } from '@fortawesome/free-solid-svg-icons';
+  faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
+  faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faImages } from '@fortawesome/free-regular-svg-icons';
 
 var faPristresek = {
   prefix: 'fac',
@@ -21,9 +22,11 @@ var faPosed = {
  */
 const faIconsRegister = () => {
   library.add(faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExternalLinkAlt,
-    faStar, faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
-    faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk);
-    
+    faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
+    faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap);
+
+  library.add(faStar, faImages);
+  
   library.add(faPristresek, faPosed);
 
   dom.watch();
