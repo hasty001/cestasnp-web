@@ -3,6 +3,7 @@ import { faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExterna
   faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
   faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faImages } from '@fortawesome/free-regular-svg-icons';
+import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 var faPristresek = {
   prefix: 'fac',
@@ -26,6 +27,8 @@ const faIconsRegister = () => {
     faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap);
 
   library.add(faStar, faImages);
+
+  library.add(faFacebookF, faInstagram);
   
   library.add(faPristresek, faPosed);
 

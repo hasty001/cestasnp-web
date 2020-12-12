@@ -818,8 +818,29 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 60px auto;
 }
 
+.site-footer h3 {
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 40px auto;
+}
+
+.site-footer a.facebook,
+.site-footer a.instagram {
+  display: inline;
+  border-radius: 8px;
+  background-color: #58595B;
+  color: #fff;
+  padding: 4px 8px;
+  margin-left: 14px;
+}
+
+.site-footer a.instagram {
+  padding: 4px 6px;
+}
+
 .site-footer p {
   line-height: 22px;
+  margin: 15px auto;
 }
 
 .footer-link {
