@@ -19,10 +19,21 @@ const Image = (props) => {
       imagePreview = image;
 
     } else {
-      if (props.value.eager && props.value.eager.length > 0) {
-        imagePreview = props.value.eager[0].secure_url;
-        image = props.value.secure_url;
-      } 
+      image = props.value.secure_url;
+      imagePreview = image;
+
+      if (props.large) {
+        if (props.value.eager) {
+          const i = props.value.eager.findIndex(e => e.width >= 800);
+          if ( i >= 0) {
+            imagePreview = props.value.eager[i].secure_url;
+          }
+        } 
+      } else {
+        if (props.value.eager && props.value.eager.length > 0) {
+          imagePreview = props.value.eager[0].secure_url;
+        } 
+      }
     }
   }
 

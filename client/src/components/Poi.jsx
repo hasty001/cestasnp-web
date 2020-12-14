@@ -119,7 +119,7 @@ const Poi = (props) => {
             </span>
           </h2>
           
-          <Image value={(historyPoi || poi).img_url} alt="fotka miesta" itemClassName="poi-image" />
+          <Image value={(historyPoi || poi).img_url} alt="fotka miesta" itemClassName="poi-image" large />
 
           <p>GPS: {(historyPoi || poi).coordinates[1]}, {(historyPoi || poi).coordinates[0]}</p>
           <p>{(historyPoi || poi).text}</p>
