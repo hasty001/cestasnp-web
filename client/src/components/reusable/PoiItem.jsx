@@ -14,6 +14,17 @@ const PoiItem = (props) => {
   const ItemProp = props.tableRow ? `td` : `span`;
   const space = props.tableRow ? null : ` `;
 
+  const getImgUrl = (image) => {
+    if (image && image != "None") {
+      return image.secure_url ||
+        (image.indexOf('res.cloudinary.com') === -1 
+        ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${image}`
+        : image);
+    } else {
+      return "";
+    }
+  };
+
   return (
     <ItemElement key={props.value._id} className="poi-item">
       {!!props.value.errorMsg && <div className="errorMsg">{props.value.errorMsg}</div>}
@@ -37,6 +48,10 @@ const PoiItem = (props) => {
       {!!props.showItinerary && <ItemProp className="poi-itinerary">
         {!props.value.deleted && !!props.value.itinerary && (props.value.itinerary.near || props.value.itinerary.after) && (
               <A href={`/pred/itinerar#p${props.value._id}`}><i className="fas fa-external-link-alt"></i></A>)}
+        </ItemProp>}
+      {!!props.showImage && <ItemProp className="poi-image">
+        {!!props.value.img_url && props.value.img_url != "None" && 
+          <A href={getImgUrl(props.value.img_url)}><i className="fas fa-external-link-alt"></i></A>}
         </ItemProp>}
       <ItemProp className="poi-actions">
         {!!authData.isAuth && props.my && props.onMyRemove &&

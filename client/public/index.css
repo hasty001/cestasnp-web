@@ -790,6 +790,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
+.site-footer {
+  font-size: 15px;
+  color: #58595B;
+}
+
 .site-footer .col1,
 .site-footer .col2,
 .site-footer .col3 {
@@ -801,7 +806,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 .logo-footer {
   display: block;
-  color: #58595B;
   width: 208px;
   margin: 60px auto;
 }
@@ -812,16 +816,15 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .site-footer h2 {
-  color: #58595B;
   font-size: 25px;
   text-transform: uppercase;
   margin: 60px auto;
 }
 
 .site-footer h3 {
-  font-size: 16px;
+  font-size: 15px;
   text-transform: uppercase;
-  margin: 40px auto;
+  margin: 30px auto;
 }
 
 .site-footer a.facebook,
@@ -830,12 +833,19 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   border-radius: 8px;
   background-color: #58595B;
   color: #fff;
-  padding: 4px 8px;
-  margin-left: 14px;
+  padding: 6px 11px;
+  margin: 10px;
+  font-size: 20px;
 }
 
 .site-footer a.instagram {
-  padding: 4px 6px;
+  padding: 6px 8px;
+}
+
+.site-footer .col1 .list {
+  margin: 0 auto;
+  max-width: 235px;
+  text-align: left;
 }
 
 .site-footer p {
@@ -843,11 +853,46 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 15px auto;
 }
 
+.site-footer .col1 p {
+  margin: 30px 0;
+}
+
+.site-footer .col1 p a {
+  color: #58595B;
+}
+
+.site-footer .col1 p span {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: start;
+}
+
+.site-footer .icon {
+  font-size: 25px;
+  vertical-align: middle;
+}
+
+.site-footer span.icon {
+  position: relative;
+  margin-right: 15px;
+  min-width: 25px;
+  text-align: center !important;
+}
+
+.site-footer .icon-stack {
+  margin-left: 5px;
+}
+
+.site-footer .icon-small {
+  font-size: 12.5px;
+  margin-left: 10px;
+}
+
 .footer-link {
   display: block;
   text-transform: uppercase;
   margin: 15px auto;
-  color: black;
+  color: #58595B;
 }
 
 @media(max-width: 1299px) {
@@ -1009,6 +1054,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 #PoiDetail {
   width: 80%;
   margin: 15px auto;
+  overflow: hidden;
 } @media (max-width: 767px) {
   #PoiDetail {
     width: 100%;

@@ -23,13 +23,14 @@ const SiteFooter = (props) => {
       <div>
         <div className="col1">
           <h2>Prečo sa registrovať</h2>
-          <p>Ako registrovaný úživateľ môžeš prispievať do databázy <A href="/pred/pois">Dôležitých miest</A>,</p>
-          <p>komentovať LIVE Sledovanie bez ďalšieho overenia</p>
-          <p>a vyvoriť si LIVE Sledovanie a posielať správy.</p>
-          <h3>Sleduj nás na: 
-            <a className="facebook" title="Facebook CestaSNP.sk" href="https://www.facebook.com/cestasnp.sk" target="_blank"><i className="fab fa-facebook-f"/></a>
-            <a className="instagram" title="Instagram CestaSNP.sk" href="https://www.instagram.com/cestasnp.sk/" target="_blank"><i className="fab fa-instagram"/></a>
-          </h3>
+          <div className="list">
+            <p>Ako registrovaný úživateľ môžeš</p>
+            <p><span className="icon"><i className="fas fa-map-marker icon-stack"></i>
+              <i className="fas fa-tint fa-inverse icon-stack icon-small" data-fa-transform="up-3" ></i></span>
+              <span>prispievať do databázy<br/><A href="/pred/pois">DÔLEŽITÝCH MIEST</A></span></p>
+            <p><span className="icon"><i className="fas fa-comment icon"/></span><span>komentovať LIVE Sledovanie<br/>bez ďalšieho overenia</span></p>
+            <p><span className="icon"><i className="fas fa-map-marker-alt icon"/></span><span>vyvoriť si LIVE Sledovanie<br/>a posielať správy</span></p>
+          </div>
         </div>
         <div className="col2">
           <A href="/"><img src={logoFooter} className="logo-footer"/></A>
@@ -40,6 +41,11 @@ const SiteFooter = (props) => {
           <A className="footer-link" href={settingsData.activeLink.href}>LIVE sledovanie</A>
           <A className="footer-link" href="/na/archive">Archív</A>
           <A className="footer-link" href="/pred/articles/article/379">Zoznam darcov</A>
+
+          <h3>
+            <a className="facebook" title="Facebook CestaSNP.sk" href="https://www.facebook.com/cestasnp.sk" target="_blank"><i className="fab fa-facebook-f"/></a>
+            <a className="instagram" title="Instagram CestaSNP.sk" href="https://www.instagram.com/cestasnp.sk/" target="_blank"><i className="fab fa-instagram"/></a>
+          </h3>
         </div>
         <div className="col3">
           <h2>Kontakt</h2>
