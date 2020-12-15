@@ -99,6 +99,8 @@ const Map = (props) => {
     const mapTiles = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
     const mapTilesNew = L.tileLayer(config.tileLayerNew.uri, config.tileLayerNew.params);
 
+    map.addLayer(props.tilesNew ? mapTilesNew : mapTiles);
+
     const posChanged = () => { 
       const c = map.getCenter(); 
       setView(prev => { return {...prev, lat: c.lat, lon: c.lng, zoom: map.getZoom() }; }); 
@@ -401,7 +403,7 @@ const Map = (props) => {
     }
   }, [mapObj, props.marker]);
 
-  return <div id={props.use} data-nosnippet/>;
+  return <div id={props.use} data-nosnippet>{props.children}</div>;
 }
 
 export default Map;

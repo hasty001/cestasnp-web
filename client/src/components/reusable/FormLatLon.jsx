@@ -6,11 +6,15 @@ import { parseGPSPos } from '../../helpers/GPSPosParser';
 import { useStateProp } from '../../helpers/reactUtils';
 import * as Texts from '../Texts';
 import { logDev } from '../../helpers/logDev';
+import Map from '../Map';
+import { Button, Modal } from 'react-bootstrap';
 
 const FormLatLon = (props) => {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useStateProp(props.value, { latlon: '', accuracy: 0});
   const [edit, setEdit] = useStateProp(props.edit);
+  const [mapSelect, setMapSelect] = useState(false);
+  const [mapCenter, setMapCenter] = useState({ lat: '', lon: '', accuracy: 0});
 
   const getMyPosition = () => {
 
@@ -79,9 +83,30 @@ const FormLatLon = (props) => {
             />
       </FormItem>
 
-      <button className="snpBtnWhite" onClick={getMyPosition} type="button">
-        Získaj pozíciu
+      <button className="snpBtn" onClick={getMyPosition} type="button">
+        Načítať automaticky
       </button>
+      <button className="snpBtnWhite" onClick={() => { var latlon = parseGPSPos(value.latlon) || [0, 0]; setMapCenter({ lat: latlon[0], lon: latlon[1], zoom: latlon[0] ? 13 : 0 }); setMapSelect(true); }} type="button">
+        Vybrať na mape
+      </button>
+
+      <Modal show={mapSelect}
+          onHide={() => setMapSelect(false)}
+          dialogClassName="map-dialog" >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Vyber polohu
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Map use="select-pos-map" view={[mapCenter, setMapCenter]} tilesNew>
+              <i className="fas fa-map-marker-alt map-pos"/>
+            </Map>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={() => { setValue({ latlon: mapCenter.lat.toFixed(6) + ", " + mapCenter.lon.toFixed(6), accuracy: 0 }); setMapSelect(false); }}>Vybrať</Button>
+          </Modal.Footer>
+        </Modal>
     </DivWithLoader>
   )
 }

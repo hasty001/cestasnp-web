@@ -131,13 +131,13 @@ html, body, #root {
   top: 0;
   border-bottom: 1px solid red;
 }
-#CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog {
+#CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog, .map-dialog {
   margin-top: 80px;
 } @media (max-width: 1000px) {
   .app-header {
     max-height: 70px;
   }
-  #CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog {
+  #CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog, .map-dialog {
     margin-top: 70px;
   }
 } @media print {
@@ -1109,6 +1109,20 @@ span.poi-text {
 /***     POIS       ***/
 /**********************/
 /***    ADD POIS    ***/
+
+#select-pos-map {
+  min-height: 60vh;
+}
+
+.map-pos {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -32px);
+  pointer-events: none;
+  z-index: 9998;
+  font-size: 32px;
+}
 
 #add-poi-map {
   width: 100%;

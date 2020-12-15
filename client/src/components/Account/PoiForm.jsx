@@ -119,6 +119,11 @@ const PoiForm = (props) => {
       setErrorMsg('GPS súradnice majú nesprávny formát.');
       return;
     }
+
+    if (!gps.accuracy && !props.edit && !image) {
+      setErrorMsg('Pre GPS súradnice zadané ručne alebo vybrané na mape je nutné pridať fotku miesta.');
+      return;
+    }
      
     const confirmed = !!warningMsg;
     setLoading(true);
