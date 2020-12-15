@@ -548,6 +548,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   min-width: calc(100vw - 100px);
   margin: 0 50px;
   overflow: hidden;
+  min-height: 800px;
 }
 
 @media (min-width: 1600px) {
@@ -833,13 +834,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   border-radius: 8px;
   background-color: #58595B;
   color: #fff;
-  padding: 6px 11px;
-  margin: 10px;
+  padding: 6px 5px 2px 13px;
+  margin: 12px;
   font-size: 20px;
 }
 
 .site-footer a.instagram {
-  padding: 6px 8px;
+  padding: 2px 4.5px;
+  font-size: 24px;
 }
 
 .site-footer .col1 .list {
@@ -877,15 +879,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin-right: 15px;
   min-width: 25px;
   text-align: center !important;
-}
-
-.site-footer .icon-stack {
-  margin-left: 5px;
-}
-
-.site-footer .icon-small {
-  font-size: 12.5px;
-  margin-left: 10px;
 }
 
 .footer-link {

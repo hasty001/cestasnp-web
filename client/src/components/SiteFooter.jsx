@@ -25,9 +25,10 @@ const SiteFooter = (props) => {
           <h2>Prečo sa registrovať</h2>
           <div className="list">
             <p>Ako registrovaný úživateľ môžeš</p>
-            <p><span className="icon"><i className="fas fa-map-marker icon-stack"></i>
-              <i className="fas fa-tint fa-inverse icon-stack icon-small" data-fa-transform="up-3" ></i></span>
-              <span>prispievať do databázy<br/><A href="/pred/pois">DÔLEŽITÝCH MIEST</A></span></p>
+            <p>
+              <span className="icon"><i className="fas fa-tint icon"></i></span>
+              <span>prispievať do databázy<br/><A href="/pred/pois">DÔLEŽITÝCH MIEST</A></span>
+            </p>
             <p><span className="icon"><i className="fas fa-comment icon"/></span><span>komentovať LIVE Sledovanie<br/>bez ďalšieho overenia</span></p>
             <p><span className="icon"><i className="fas fa-map-marker-alt icon"/></span><span>vyvoriť si LIVE Sledovanie<br/>a posielať správy</span></p>
           </div>
