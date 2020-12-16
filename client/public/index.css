@@ -2025,6 +2025,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   visibility: hidden;
   color: white;
   font-size: 15px;
+  font-weight: 500;
   white-space: normal;
   pointer-events: none;
   transition: 0.4s;
@@ -2036,6 +2037,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 50px;
+  font-weight: 900;
 }
 
 .simple-masonry-image:hover + .simple-masonry-image-title {
