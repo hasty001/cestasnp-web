@@ -141,12 +141,7 @@ class SentMessagesWithAuth extends Component {
                 // );
                 // }}
               />
-            )}
-            <div className="red-stripe" />
-            <p style={{ display: 'inline-block' }}>
-              {dateTimeToStr(message.pub_date)} 
-              {' '}<A href={`/na/${this.state.userId}#${message._id}`} className="traveller-message-link" title="odkaz na správu">🔗</A>
-            </p>            
+            )}          
             <p dangerouslySetInnerHTML={{ __html: message.text }} />
           </div>);}
         )}
