@@ -12,6 +12,7 @@ import ConfirmBox from './reusable/ConfirmBox';
 import UserLabel from './reusable/UserLabel';
 import DocumentTitle from 'react-document-title';
 import history from '../helpers/history';
+import DOMPurify from 'dompurify';
 
 const Traveller = (props) => {
   const authData = useContext(AuthContext);
@@ -484,7 +485,7 @@ class TravellerWithAuth extends Component {
                           }}
                         />
                         )}                 
-                      <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }} />
                     </div>
                   );
                 }
@@ -522,7 +523,7 @@ class TravellerWithAuth extends Component {
                         <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár"><i className="fas fa-link"/></a>
                       </span>
                     </p>
-                    <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }} />
                   </div>
                 );
               })}

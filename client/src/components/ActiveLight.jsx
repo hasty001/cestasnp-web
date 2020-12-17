@@ -8,6 +8,7 @@ import * as Constants from './Constants';
 import * as Texts from './Texts';
 import PageWithLoader from './reusable/PageWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
+import DOMPurify from 'dompurify';
 
 const ActiveLight = (props) => {
   const now = format(new Date(), 'YYYY-MM-DD');
@@ -134,9 +135,9 @@ const ActiveLight = (props) => {
                       </div>
 
                       <div className="traveller-text"
-                        dangerouslySetInnerHTML={{ __html: 
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(
                             traveller.finishedTracking || !traveller.lastMessage ? 
-                              traveller.text : traveller.lastMessage.text }} />
+                              traveller.text : traveller.lastMessage.text) }} />
                     </div>                          
               );
             })}

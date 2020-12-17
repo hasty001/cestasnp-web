@@ -5,6 +5,7 @@ import { sortByDateDesc, dateToStr } from '../helpers/helpers';
 import { A } from './reusable/Navigate';
 import * as Constants from './Constants';
 import DocumentTitle from 'react-document-title';
+import DOMPurify from 'dompurify';
 
 class Archive extends Component {
   constructor(props) {
@@ -68,7 +69,7 @@ class Archive extends Component {
         <p className="archived-traveller-field">Začiatok: {traveller.startMiesto + " "} {dateToStr(traveller.startDate)}</p>
         <p className="archived-traveller-field">Koniec: {dateToStr(traveller.endDate)}</p>
         <div className="archived-traveller-text">
-          <p dangerouslySetInnerHTML={{ __html: traveller.text }} />
+          <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(traveller.text) }} />
         </div>
         <A href={`/na/${traveller.userId}${Constants.FromOldQuery}`} >
           Sleduj celé putovanie...
