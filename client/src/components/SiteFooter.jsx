@@ -8,7 +8,7 @@ const SiteFooter = (props) => {
   const settingsData = useContext(LocalSettingsContext);
   
   return (
-    <div className="site-footer no-print">
+    <div className="site-footer no-print" data-nosnippet>
       <div className="row1">
         <div className="col1">
           <A href="/ucet/pridatpoi" className="red-button x2" >Registruj sa</A>

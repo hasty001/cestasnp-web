@@ -400,7 +400,7 @@ const Map = (props) => {
     }
   }, [mapObj, props.marker]);
 
-  return <div id={props.use}/>;
+  return <div id={props.use} data-nosnippet/>;
 }
 
 export default Map;

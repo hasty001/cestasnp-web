@@ -420,7 +420,7 @@ class TravellerWithAuth extends Component {
               </p>              
             </div>
 
-            <div className="na-ceste-traveller-sort" >
+            <div className="na-ceste-traveller-sort" data-nosnippet >
               Zoradiť: <a href="#" onClick={this.handleOrderClick}>{this.state.orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
             </div>
 
@@ -473,7 +473,7 @@ class TravellerWithAuth extends Component {
                             maxWidth: '100%',
                             maxHeight: '80vh'
                           }}
-                          alt="fotka z putovania"
+                          alt={`${this.state.travellerData.meno} - fotka z putovania`}
                           onClick={() => {
                             this.handleImageBox(
                               true,

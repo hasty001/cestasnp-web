@@ -92,7 +92,7 @@ class CestaSNP extends Component {
     <DocumentTitle title={Constants.WebTitle}>
     <Router history={history}>
       <div className="app">
-        <div className="app-header">
+        <div className="app-header" data-nosnippet>
           <Navigation />
         </div>
         <div className="app-body" ref={this.appBodyRef}>

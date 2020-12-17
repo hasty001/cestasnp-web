@@ -84,13 +84,15 @@ const Poi = (props) => {
     .catch(error => { console.error(error); setPoi(Object.assign({ errorMsg: Texts.GenericError }, poi)) });
   };
 
+  const caption = poi ? (historyPoi || poi).name || findPoiCategory((historyPoi || poi).category).label : "";
+
   return (
     <PageWithLoader pageId="PoiDetail" loading={loading} error={error}>
       <>
       {!!poi && (
         <>
           <Map use="poi-map" showDeleted pois={[historyPoi || poi]} view={{ lat: (historyPoi || poi).coordinates[1], lon: (historyPoi || poi).coordinates[0], zoom: 13 }}/>
-          <DocumentTitle title={`${(historyPoi || poi).name || findPoiCategory((historyPoi || poi).category).label}${Constants.WebTitleSuffix}`} />
+          <DocumentTitle title={`${caption}${Constants.WebTitleSuffix}`} />
           {!!historyPoi && <div className="warningMsg">
             <>Verzia:{' '}
             {historyPoi.modified ? 
@@ -101,7 +103,7 @@ const Poi = (props) => {
           {!historyPoi && !!poi.errorMsg && <div className="errorMsg">{poi.errorMsg}</div>}
           {!historyPoi && !!poi.successMsg && <div className="successMsg">{poi.successMsg}</div>}
 
-          <h2 className={(historyPoi || poi).deleted ? "deleted" : ""}><PoiIcon value={historyPoi || poi} /> {(historyPoi || poi).name || findPoiCategory((historyPoi || poi).category).label}
+          <h2 className={(historyPoi || poi).deleted ? "deleted" : ""}><PoiIcon value={historyPoi || poi} /> {caption}
             <span className="poi-actions">
               {!historyPoi && !!authData.isAuth && 
                 (<a href="#" onClick={e => { e.preventDefault(); toggleIsMy(); clearMsg(); }} 
@@ -119,19 +121,19 @@ const Poi = (props) => {
             </span>
           </h2>
           
-          <Image value={(historyPoi || poi).img_url} alt="fotka miesta" itemClassName="poi-image" large />
+          <Image value={(historyPoi || poi).img_url} alt={`${caption} - fotka miesta`} itemClassName="poi-image" large />
 
-          <p>GPS: {(historyPoi || poi).coordinates[1]}, {(historyPoi || poi).coordinates[0]}</p>
+          <p><span data-nosnippet>GPS: {(historyPoi || poi).coordinates[1]}, {(historyPoi || poi).coordinates[0]}</span></p>
           <p>{(historyPoi || poi).text}</p>
 
           {!!(historyPoi || poi).guideposts && !!(historyPoi || poi).itinerary && !!((historyPoi || poi).itinerary.near || (historyPoi || poi).itinerary.after) 
             && <ItineraryTable noTotals noDetails fullKm itinerary={(historyPoi || poi).guideposts} insert={historyPoi || poi}
               insertNear={(historyPoi || poi).itinerary.near} insertAfter={(historyPoi || poi).itinerary.after} />}
           
-          {!historyPoi && !poi.deleted && <A href={`/pred/pois#poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}>na celej mape</A>}
+          {!historyPoi && !poi.deleted && <A href={`/pred/pois#poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}><span data-nosnippet>na celej mape</span></A>}
           
           {!historyPoi && !poi.deleted && !!poi.itinerary && (poi.itinerary.near || poi.itinerary.after) && (
-            <> | <A href={`/pred/itinerar#p${poi._id}`}>v itinerári</A></>)}
+            <span data-nosnippet> | <A href={`/pred/itinerar#p${poi._id}`}>v itinerári</A></span>)}
 
           {!!authData.isAuth && (
             <>

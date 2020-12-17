@@ -104,7 +104,7 @@ const ItineraryTable = (props) => {
   }
 
   return (
-    <>
+    <div data-nosnippet>
       <table className="itinerary-table">
       <thead>
         <tr>
@@ -172,7 +172,7 @@ const ItineraryTable = (props) => {
       </tfoot>)} 
       </table>
       <p className="itinerary-attribution">Dáta: © Prispievatelia <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></p>
-    </>
+    </div>
   )
 }
 export default ItineraryTable;
