@@ -807,6 +807,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: 15px;
   font-weight: 400;
   color: #58595B;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .site-footer .col1,
