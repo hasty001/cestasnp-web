@@ -16,6 +16,16 @@ const DB = function() {
 };
 
 DB.prototype = {
+  connect(dbRef) {
+    return dbRef ?
+      Promise.resolve(dbRef) 
+      : (MongoClient.connect(
+        process.env.MONGODB_ATLAS_URI,
+        { useNewUrlParser: true })
+        .then(db => Promise.resolve(db))
+        .finally(() => db.close()));
+  },
+
   all(collection, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
@@ -41,30 +51,16 @@ DB.prototype = {
     );
   },
 
-  newestSorted(collection, sortBy = {}, callback, filterBy = {}) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
+  newestSorted(dbRef, collection, sortBy = {}, filterBy = {}, limit = 2) {
+    return this.connect(dbRef)
+      .then(db =>
           db.db('cestasnp')
             .collection(collection)
             .find(filterBy)
             .sort(sortBy)
-            .limit(2)
-            .toArray((toArrErr, docs) => {
-              if (docs) {
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw toArrErr;
-              }
-            });
-        } else {
-          throw err;
-        }
-      }
+            .limit(limit)
+            .toArray() 
+            .then(docs => Promise.resolve(docs))
     );
   },
 
@@ -225,34 +221,27 @@ DB.prototype = {
 
   // traveller related
 
-  getTravellerDetails(travellerId) {
+  getTravellerDetails(travellerId, dbRef = null) {
     return new Promise((resolve, reject) => {
       let sTravellerId = sanitize(travellerId);
       // for before FIREBASE users
       if (sTravellerId.length <= 3) {
         sTravellerId = parseInt(sTravellerId, 10);
       }
-      MongoClient.connect(
-        process.env.MONGODB_ATLAS_URI,
-        { useNewUrlParser: true },
-        (err, db) => {
-          if (db) {
+
+      return this.connect(dbRef)
+        .then(db => {
             db.db('cestasnp')
               .collection('traveler_details')
               .find({ user_id: sTravellerId })
               .toArray((toArrayError, docs) => {
                 if (docs) {
-                  db.close();
                   resolve(docs);
                 } else {
-                  db.close();
                   reject(toArrayError);
                 }
               });
-          } else {
-            reject(err);
           }
-        }
       );
     });
   },
@@ -287,35 +276,26 @@ DB.prototype = {
     );
   },
 
-  getTravellerMessages(userId) {
-    const connectionURL = process.env.MONGODB_ATLAS_URI;
+  getTravellerMessages(userId, dbRef = null) {
     return new Promise((resolve, reject) => {
       let sUserId = sanitize(userId);
       // for before FIREBASE users
       if (sUserId.length <= 3) {
         sUserId = parseInt(sUserId, 10);
       }
-      MongoClient.connect(
-        connectionURL,
-        { useNewUrlParser: true },
-        (err, db) => {
-          if (db) {
-            db.db('cestasnp')
-              .collection('traveler_messages')
-              .find({ $and: [ { user_id: sUserId }, { deleted: {$ne: true} } ] })
-              .toArray((toArrayErr, docs) => {
-                if (docs) {
-                  db.close();
-                  resolve(docs);
-                } else {
-                  db.close();
-                  reject(toArrayErr);
-                }
-              });
-          } else {
-            reject(err);
-          }
-        }
+
+      return this.connect(dbRef)
+        .then(db =>
+          db.db('cestasnp')
+            .collection('traveler_messages')
+            .find({ $and: [ { user_id: sUserId }, { deleted: {$ne: true} } ] })
+            .toArray((toArrayErr, docs) => {
+              if (docs) {
+                resolve(docs);
+              } else {
+                reject(toArrayErr);
+              }
+            })
       );
     });
   },
@@ -548,47 +528,43 @@ DB.prototype = {
       });
   },
 
-  getActiveTravellersWithLastMessage(date, maxCount) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,{ useNewUrlParser: true })
-      .then(db => 
-          this.findByWithDB(db, 'traveler_details', { finishedTracking: false })
-          .then(activeTravellers => {
-            var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
-              
-            if (activeTravellersIds.length === 0) {
-              return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
-            } else {
-              return this.findByWithDB(db, 'traveler_messages', { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
-                {}, { pub_date: -1 })
-                .then(lastMessages => {
-                  if (lastMessages) { 
-                    lastMessages.map(msg => {
-                        var i = activeTravellersIds.indexOf(msg.user_id);
+  getActiveTravellersWithLastMessage(db, date, maxCount) {
+    return this.findByWithDB(db, 'traveler_details', { finishedTracking: false })
+      .then(activeTravellers => {
+        var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
+          
+        if (activeTravellersIds.length === 0) {
+          return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
+        } else {
+          return this.findByWithDB(db, 'traveler_messages', { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
+            {}, { pub_date: -1 })
+            .then(lastMessages => {
+              if (lastMessages) { 
+                lastMessages.map(msg => {
+                    var i = activeTravellersIds.indexOf(msg.user_id);
 
-                        if (i >= 0 && !activeTravellers[i].lastMessage) {
-                          activeTravellers[i].lastMessage = msg;
-                        }
-                        if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
-                          activeTravellers[i].lastImg = msg.img;
-                          activeTravellers[i].lastImgMsgId = msg._id;
-                        }
-                      });
-                  }
-                    
-                  const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
-                  if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < maxCount || _const.InterestingShowCount) {
-                    // no active only few planning, add some interesting
+                    if (i >= 0 && !activeTravellers[i].lastMessage) {
+                      activeTravellers[i].lastMessage = msg;
+                    }
+                    if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
+                      activeTravellers[i].lastImg = msg.img;
+                      activeTravellers[i].lastImgMsgId = msg._id;
+                    }
+                  });
+              }
+                
+              const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
+              if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < maxCount || _const.InterestingShowCount) {
+                // no active only few planning, add some interesting
 
-                    return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length)
-                      .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
-                  }
+                return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length)
+                  .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
+              }
 
-                  return Promise.resolve(activeTravellers);
-                });
-            }
-      }).finally(() => db.close())
-    )},
+              return Promise.resolve(activeTravellers);
+            });
+        }
+  })},
 
 
   addCommentOldTraveller(comment, callback) {

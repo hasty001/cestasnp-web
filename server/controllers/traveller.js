@@ -67,7 +67,7 @@ router.get('/finishedTravellers', (req, res) => {
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {
-  db.getActiveTravellersWithLastMessage(req.query.date, req.query.maxCount)
+  db.getActiveTravellersWithLastMessage(req.app.locals.db, req.query.date, req.query.maxCount)
     .then(data => res.json(data))
     .catch(e => { 
       console.error(e);
@@ -281,21 +281,25 @@ router.post('/userCheck', (req, res) => {
 
   checkToken(req, res, uid, () =>
     Promise.all([
-      db.findBy('users', { uid }),
-      db.getTravellerDetails(uid),
-      db.getTravellerMessages(uid)
+      db.findByWithDB(req.app.locals.db, 'users', { uid }),
+      db.getTravellerDetails(uid, req.app.locals.db),
+      db.getTravellerMessages(uid, req.app.locals.db)
     ]).then(([userDetails, travellerDetails, travellerMessages]) => {
       if (userDetails && userDetails.length > 0) {
-        res.json({
+        return res.json({
           userDetails: userDetails[0],
           travellerDetails: travellerDetails[0] || {},
           travellerMessages: travellerMessages || []
         });
-        return;
       }
+
       db.createUser({ email, name, uid }, creation => {
         res.json(creation);
       });
+    }).catch(error => {
+      console.error(error);
+
+      res.status(500).json({ error: error.toString() });
     }));
 });
 

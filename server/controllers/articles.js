@@ -165,6 +165,7 @@ router.get('/:page', (req, res) => {
 // returns single article by ID
 router.get('/article/:articleId', (req, res) => {
   const articleId = sanitize(parseInt(req.params.articleId, 10));
+
   query
     .findByWithDB(req.app.locals.db, 'articles', { sql_article_id: articleId })
     .then(results => query.fillArticleInfo(req.app.locals.db, articleId, results[0]))
@@ -214,14 +215,14 @@ router.put('/increase_article_count', (req, res) => {
 
 // returns 2 newest articles for homepage
 router.get('/for/home', (req, res) => {
-  query.newestSorted(
-    'articles',
-    ORDER.newestFirst,
-    results => {
-      res.json(results);
-    },
-    _const.ArticlesFilterBy
-  );
+  query.newestSorted(req.app.locals.db,
+    'articles', ORDER.newestFirst, _const.ArticlesFilterBy, 2)
+  .then(results => res.json(results))
+  .catch(error => {
+    console.error(error);
+
+    res.status(500).json({ error: error.toString() });
+  });
 });
 
 module.exports = router;
