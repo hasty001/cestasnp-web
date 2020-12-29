@@ -11,7 +11,7 @@ const db = new DB();
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  db.getPois().then(results => {
+  db.getPois(req.app.locals.db).then(results => {
       // add guideposts
       res.json(results.concat(itinerary.map(g => Object.assign({ category: "razcestnik" }, g))));
     }).catch(error => {
@@ -35,7 +35,7 @@ router.post('/my', (req, res) => {
 });
 
 router.get('/:poiId', (req, res) => {
-  db.getPoi(req.params.poiId)
+  db.getPoi(req.app.locals.db, req.params.poiId)
     .then(result => {
       res.json(result);
     })

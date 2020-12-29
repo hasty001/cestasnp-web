@@ -16,16 +16,6 @@ const DB = function() {
 };
 
 DB.prototype = {
-  connect(dbRef) {
-    return dbRef ?
-      Promise.resolve(dbRef) 
-      : (MongoClient.connect(
-        process.env.MONGODB_ATLAS_URI,
-        { useNewUrlParser: true })
-        .then(db => Promise.resolve(db))
-        .finally(() => db.close()));
-  },
-
   all(collection, callback) {
     MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
@@ -51,17 +41,14 @@ DB.prototype = {
     );
   },
 
-  newestSorted(dbRef, collection, sortBy = {}, filterBy = {}, limit = 2) {
-    return this.connect(dbRef)
-      .then(db =>
-          db.db('cestasnp')
-            .collection(collection)
-            .find(filterBy)
-            .sort(sortBy)
-            .limit(limit)
-            .toArray() 
-            .then(docs => Promise.resolve(docs))
-    );
+  newestSorted(db, collection, sortBy = {}, filterBy = {}, limit = 2) {
+    return db.db('cestasnp')
+      .collection(collection)
+      .find(filterBy)
+      .sort(sortBy)
+      .limit(limit)
+      .toArray() 
+      .then(docs => Promise.resolve(docs));
   },
 
   nextSorted(collection, sortBy = {}, next = 0, callback, filterBy = {}) {
@@ -221,7 +208,7 @@ DB.prototype = {
 
   // traveller related
 
-  getTravellerDetails(travellerId, dbRef = null) {
+  getTravellerDetails(db, travellerId) {
     return new Promise((resolve, reject) => {
       let sTravellerId = sanitize(travellerId);
       // for before FIREBASE users
@@ -229,20 +216,16 @@ DB.prototype = {
         sTravellerId = parseInt(sTravellerId, 10);
       }
 
-      return this.connect(dbRef)
-        .then(db => {
-            db.db('cestasnp')
-              .collection('traveler_details')
-              .find({ user_id: sTravellerId })
-              .toArray((toArrayError, docs) => {
-                if (docs) {
-                  resolve(docs);
-                } else {
-                  reject(toArrayError);
-                }
-              });
+      return db.db('cestasnp')
+        .collection('traveler_details')
+        .find({ user_id: sTravellerId })
+        .toArray((toArrayError, docs) => {
+          if (docs) {
+            resolve(docs);
+          } else {
+            reject(toArrayError);
           }
-      );
+        });
     });
   },
 
@@ -276,7 +259,7 @@ DB.prototype = {
     );
   },
 
-  getTravellerMessages(userId, dbRef = null) {
+  getTravellerMessages(db, userId) {
     return new Promise((resolve, reject) => {
       let sUserId = sanitize(userId);
       // for before FIREBASE users
@@ -284,19 +267,16 @@ DB.prototype = {
         sUserId = parseInt(sUserId, 10);
       }
 
-      return this.connect(dbRef)
-        .then(db =>
-          db.db('cestasnp')
-            .collection('traveler_messages')
-            .find({ $and: [ { user_id: sUserId }, { deleted: {$ne: true} } ] })
-            .toArray((toArrayErr, docs) => {
-              if (docs) {
-                resolve(docs);
-              } else {
-                reject(toArrayErr);
-              }
-            })
-      );
+      return db.db('cestasnp')
+        .collection('traveler_messages')
+        .find({ $and: [ { user_id: sUserId }, { deleted: {$ne: true} } ] })
+        .toArray((toArrayErr, docs) => {
+          if (docs) {
+            resolve(docs);
+          } else {
+            reject(toArrayErr);
+          }
+        })
     });
   },
 
@@ -339,45 +319,40 @@ DB.prototype = {
     });
   },
 
-  getTravellerComments(articleId, travellerId, callback) {
+  getTravellerComments(db, articleId, travellerId, callback) {
     const sArticleId = sanitize(articleId);
     const sTravellerId = sanitize(travellerId);
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true }).then((db) => {
-          const getDocs = (sArticleId === 0 || sArticleId === '') ?
-            db.db('cestasnp')
-              .collection('traveler_comments')
-              .find({ $and: [ { 'travellerDetails.id': sTravellerId }, { deleted: {$ne: true} } ] })
-              .toArray()
-            : db.db('cestasnp')
-              .collection('article_comments')
-              .find({ $and: [ { article_sql_id: sArticleId }, { deleted: {$ne: true} } ] })
-              .toArray();
+   
+    const getDocs = (sArticleId === 0 || sArticleId === '') ?
+      db.db('cestasnp')
+        .collection('traveler_comments')
+        .find({ $and: [ { 'travellerDetails.id': sTravellerId }, { deleted: {$ne: true} } ] })
+        .toArray()
+      : db.db('cestasnp')
+        .collection('article_comments')
+        .find({ $and: [ { article_sql_id: sArticleId }, { deleted: {$ne: true} } ] })
+        .toArray();
 
-        return getDocs.then((docs) => {
-          const uids = this.getUids(docs, [d => d.uid]);
+    return getDocs.then((docs) => {
+      const uids = this.getUids(docs, [d => d.uid]);
 
-          return this.getUserNames(db, uids)
-          .then(users => {
-            docs.forEach(d => {
-              if (d.uid) {
-                const user = users.find(u => u.uid === d.uid);
-                if (user) {
-                  if (d.username)
-                    d.username = user.name;
-                  d.name = user.name;
-                }
+      return this.getUserNames(db, uids)
+        .then(users => {
+          docs.forEach(d => {
+            if (d.uid) {
+              const user = users.find(u => u.uid === d.uid);
+              if (user) {
+                if (d.username)
+                  d.username = user.name;
+                d.name = user.name;
               }
+            }
 
-            });
-            
-            db.close();
-            callback(docs);
           });
-        }).catch(e => { db.close(); console.error(e); callback({ error: e.toString() }); });
-      })
-    .catch(e => { console.error(e); callback({ error: e.toString() }); });
+          
+          return Promise.resolve(docs);
+        });
+    });
   },
 
   getTravellersMessages(travellerIds, callback) {
@@ -1046,26 +1021,21 @@ DB.prototype = {
     )
   },
 
-  getPois() {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then(db => 
-        db.db('cestasnp').collection('pois').find().toArray()
-        .then(pois => {
-          const uids = this.getUids(pois, [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
+  getPois(db) {
+    return db.db('cestasnp').collection('pois').find().toArray()
+      .then(pois => {
+        const uids = this.getUids(pois, [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
 
-          return this.getUserNames(db, uids).then(users => {
-            pois.forEach(poi => {
-              poi.created_by_name = this.findUserName(poi.user_id, users);
-              poi.modified_by_name = this.findUserName(poi.modified_by, users);
-              poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
-            });
-
-            return Promise.resolve(pois);
+        return this.getUserNames(db, uids).then(users => {
+          pois.forEach(poi => {
+            poi.created_by_name = this.findUserName(poi.user_id, users);
+            poi.modified_by_name = this.findUserName(poi.modified_by, users);
+            poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
           });
-        })
-        .finally(() => db.close()));
+
+          return Promise.resolve(pois);
+        });
+      });
   },
 
   getPoisMy(db, uid) {
@@ -1205,16 +1175,11 @@ DB.prototype = {
     });
   },
 
-  getPoi(poiId) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then(db => {
-        const sPoiId = sanitize(poiId);
+  getPoi(db, poiId) { 
+    const sPoiId = sanitize(poiId);
 
-        return this.fillPoiInfo(db, sPoiId, db.db('cestasnp').collection('pois').findOne({ _id: new ObjectId(sPoiId) }))
-          .finally(() => db.close());
-      });
+    return this.fillPoiInfo(db, sPoiId, 
+      db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }));
   },
 
   toggleArticleMy(uid, id) {

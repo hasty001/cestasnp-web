@@ -14,12 +14,14 @@ const router = express.Router();
 // retrieve travellers details
 router.get('/details/:travellerId', (req, res) => {
   const travellerId = sanitize(req.params.travellerId);
-  db.getTravellerDetails(travellerId)
+  db.getTravellerDetails(req.app.locals.db, travellerId)
     .then(results => {
       res.json(results);
     })
-    .catch(e => {
-      console.error('err ', e);
+    .catch(error => {
+      console.error(error);
+
+      res.status(500).json({ error: error.toString() });
     });
 });
 
@@ -32,12 +34,15 @@ router.get('/article/:travellerId', (req, res) => {
 
 router.get('/messages/:travellerId', (req, res) => {
   const travellerId = sanitize(req.params.travellerId);
-  db.getTravellerMessages(travellerId)
+
+  db.getTravellerMessages(req.app.locals.db, travellerId)
     .then(results => {
       res.json(results);
     })
-    .catch(e => {
-      console.error('err ', e);
+    .catch(error => {
+      console.error(error);
+
+      res.status(500).json({ error: error.toString() });
     });
 });
 
@@ -48,8 +53,14 @@ router.post('/lastMessages', (req, res) => {
 });
 
 router.post('/comments', (req, res) => {
-  db.getTravellerComments(req.body.articleId, req.body.travellerId, results => {
+  db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId)
+  .then( results => {
     res.json(results);
+  })
+  .catch(error => {
+    console.error(error);
+
+    res.status(500).json({ error: error.toString() });
   });
 });
 
@@ -282,8 +293,8 @@ router.post('/userCheck', (req, res) => {
   checkToken(req, res, uid, () =>
     Promise.all([
       db.findByWithDB(req.app.locals.db, 'users', { uid }),
-      db.getTravellerDetails(uid, req.app.locals.db),
-      db.getTravellerMessages(uid, req.app.locals.db)
+      db.getTravellerDetails(req.app.locals.db, uid),
+      db.getTravellerMessages(req.app.locals.db, uid)
     ]).then(([userDetails, travellerDetails, travellerMessages]) => {
       if (userDetails && userDetails.length > 0) {
         return res.json({
