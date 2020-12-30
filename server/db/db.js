@@ -16,29 +16,11 @@ const DB = function() {
 };
 
 DB.prototype = {
-  all(collection, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          db.db('cestasnp')
-            .collection(collection)
-            .find()
-            .toArray((toArrErr, docs) => {
-              if (docs) {
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw toArrErr;
-              }
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
+  all(db, collection) {
+    return db.db('cestasnp')
+      .collection(collection)
+      .find()
+      .toArray();
   },
 
   newestSorted(db, collection, sortBy = {}, filterBy = {}, limit = 2) {
@@ -47,38 +29,20 @@ DB.prototype = {
       .find(filterBy)
       .sort(sortBy)
       .limit(limit)
-      .toArray() 
-      .then(docs => Promise.resolve(docs));
+      .toArray();
   },
 
-  nextSorted(collection, sortBy = {}, next = 0, callback, filterBy = {}) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        let page = next - 1;
-        page = page < 0 ? 0 : page;
-        if (db) {
-          db.db('cestasnp')
-            .collection(collection)
-            .find(filterBy)
-            .sort(sortBy)
-            .limit(8)
-            .skip(8 * page)
-            .toArray((toArrErr, docs) => {
-              if (docs) {
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw toArrErr;
-              }
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
+  nextSorted(db, collection, sortBy = {}, next = 0, filterBy = {}, pageSize = 8) {
+    let page = next - 1;
+    page = page < 0 ? 0 : page;
+
+    return db.db('cestasnp')
+        .collection(collection)
+        .find(filterBy)
+        .sort(sortBy)
+        .limit(pageSize)
+        .skip(pageSize * page)
+        .toArray();
   },
 
   findBy(collection, findBy = {}, sortBy = {}) {
@@ -133,28 +97,10 @@ DB.prototype = {
               .toArray();
   },
 
-  countCollection(collection, findBy = {}, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          db.db('cestasnp')
+  countCollection(db, collection, findBy = {}) {
+    return db.db('cestasnp')
             .collection(collection)
-            .count(findBy)
-            .then(data => {
-              db.close();
-              callback(data);
-            })
-            .catch(dbError => {
-              db.close();
-              throw dbError;
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
+            .countDocuments(findBy);
   },
 
   addArticle(article, collection) {
@@ -229,34 +175,17 @@ DB.prototype = {
     });
   },
 
-  getTravellerArticle(travellerId, callback) {
+  getTravellerArticle(db, travellerId) {
     let sTravellerId = sanitize(travellerId);
     // for before FIREBASE users
     if (sTravellerId.length <= 3) {
       sTravellerId = parseInt(sTravellerId, 10);
     }
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          db.db('cestasnp')
-            .collection('articles')
-            .find({ created_by_user_sql_id: sTravellerId })
-            .toArray((toArrayError, docs) => {
-              if (docs) {
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw toArrayError;
-              }
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
+    
+    return db.db('cestasnp')
+      .collection('articles')
+      .find({ created_by_user_sql_id: sTravellerId })
+      .toArray();
   },
 
   getTravellerMessages(db, userId) {
@@ -355,9 +284,9 @@ DB.prototype = {
     });
   },
 
-  getTravellersMessages(travellerIds, callback) {
+  getTravellersMessages(db, travellerIds) {
     if (!Array.isArray(travellerIds)) {
-      throw new Error('Traveller IDs not an array');
+      return Promise.reject('Traveller IDs not an array');
     }
 
     let typeCheck = 0;
@@ -367,72 +296,36 @@ DB.prototype = {
     });
 
     if (typeCheck !== 0) {
-      throw new Error('Traveller IDs not numbers');
+      return Promise.reject('Traveller IDs not numbers');
     }
 
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          db.db('cestasnp')
-            .collection('traveler_messages')
-            .find({ $and: [ { user_id: { $in: sTravellerIds } }, { deleted: {$ne: true} } ] })
-            .toArray((toArrayError, docs) => {
-              if (docs) {
-                docs.sort((a, b) => {
-                  return new Date(b.pub_date) - new Date(a.pub_date);
-                });
-                db.close();
-                callback(docs);
-              } else {
-                db.close();
-                throw toArrayError;
-              }
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
+    return db.db('cestasnp')
+      .collection('traveler_messages')
+      .find({ $and: [ { user_id: { $in: sTravellerIds } }, { deleted: {$ne: true} } ] })
+      .toArray().then(docs => {
+          docs.sort((a, b) => {
+            return new Date(b.pub_date) - new Date(a.pub_date);
+          });
+
+          return Promise.resolve(docs);
+      });
   },
 
-  getTravellerLastMessage(travellerId) {
-    const connectionURL = process.env.MONGODB_ATLAS_URI;
-    return new Promise((resolve, reject) => {
-      MongoClient.connect(
-        connectionURL,
-        { useNewUrlParser: true },
-        (err, db) => {
-          if (db) {
-            db.db('cestasnp')
-              .collection('traveler_messages')
-              .find({ $and: [ { user_id: travellerId }, { deleted: {$ne: true} } ] })
-              .sort({ pub_date: -1 })
-              .toArray((toArrayError, docs) => {
-                if (docs) {
-                  if (docs && docs.length > 0) {
-                    db.close();
-                    resolve(docs[0]);
-                  } else if (docs && docs.length === 0) {
-                    db.close();
-                    resolve({
-                      message: `No messages found for ${travellerId}`,
-                      pub_date: 0,
-                      user_id: travellerId
-                    });
-                  } else {
-                    db.close();
-                    reject(toArrayError);
-                  }
-                }
-              });
-          } else {
-            reject(err);
-          }
-        }
-      );
-    });
+  getTravellerLastMessage(db, travellerId) {
+    return db.db('cestasnp')
+      .collection('traveler_messages')
+      .find({ $and: [ { user_id: travellerId }, { deleted: {$ne: true} } ] })
+      .sort({ pub_date: -1 })
+      .toArray().then(docs => {
+          if (docs && docs.length > 0) {
+            return Promise.resolve(docs[0]);
+          } else if (docs && docs.length === 0) {
+            return Promise.resolve({
+              message: `No messages found for ${travellerId}`,
+              pub_date: 0,
+              user_id: travellerId
+            });
+          }});
   },
 
   getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount) {
@@ -929,13 +822,12 @@ DB.prototype = {
     );
   },
   
-  setPoisItinerary(pois, callback) {
-    MongoClient.connect(
+  setPoisItinerary(pois) {
+    return MongoClient.connect(
       process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          Promise.all(pois.map(item => 
+      { useNewUrlParser: true })
+      .then(db => {
+          return Promise.all(pois.map(item => 
             db.db('cestasnp')
               .collection('pois')
               .findOneAndUpdate({ _id: new ObjectId(item.poi._id) }, 
@@ -944,17 +836,13 @@ DB.prototype = {
                 { returnOriginal: false })
           )).then(r => {
             db.close();
-            callback(r.map(i => i.value));
+            return Promise.resolve(r.map(i => i.value));
           })
           .catch(dbError => {
             db.close();
-            callback({ error: dbError });
+            return Promise.reject(dbError);
           });
-        } else {
-          callback({ error: err });
-        }
-      }
-    );
+        });
   },
 
   addPoi(poi) {

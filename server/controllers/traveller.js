@@ -7,6 +7,7 @@ const moment = require('moment');
 const request = require('request');
 const DB = require('../db/db');
 const { checkToken } = require('../util/checkUtils');
+const promiseAsJson = require('../util/promiseUtils');
 
 const db = new DB();
 const router = express.Router();
@@ -14,79 +15,44 @@ const router = express.Router();
 // retrieve travellers details
 router.get('/details/:travellerId', (req, res) => {
   const travellerId = sanitize(req.params.travellerId);
-  db.getTravellerDetails(req.app.locals.db, travellerId)
-    .then(results => {
-      res.json(results);
-    })
-    .catch(error => {
-      console.error(error);
 
-      res.status(500).json({ error: error.toString() });
-    });
+  promiseAsJson(() => db.getTravellerDetails(req.app.locals.db, travellerId), res);
 });
 
 router.get('/article/:travellerId', (req, res) => {
   const travellerId = sanitize(req.params.travellerId);
-  db.getTravellerArticle(travellerId, results => {
-    res.json(results);
-  });
+
+  promiseAsJson(() => db.getTravellerArticle(req.app.locals.db, travellerId), res);
 });
 
 router.get('/messages/:travellerId', (req, res) => {
   const travellerId = sanitize(req.params.travellerId);
 
-  db.getTravellerMessages(req.app.locals.db, travellerId)
-    .then(results => {
-      res.json(results);
-    })
-    .catch(error => {
-      console.error(error);
-
-      res.status(500).json({ error: error.toString() });
-    });
+  promiseAsJson(() => db.getTravellerMessages(req.app.locals.db, travellerId), res);
 });
 
 router.post('/lastMessages', (req, res) => {
-  db.getTravellersMessages(req.body.travellerIds, results => {
-    res.json(results);
-  });
+  promiseAsJson(() => db.getTravellersMessages(req.app.locals.db, req.body.travellerIds), res);
 });
 
 router.post('/comments', (req, res) => {
-  db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId)
-  .then( results => {
-    res.json(results);
-  })
-  .catch(error => {
-    console.error(error);
-
-    res.status(500).json({ error: error.toString() });
-  });
+  promiseAsJson(() => db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId), res);
 });
 
 router.get('/finishedTravellers', (req, res) => {
-  db.findBy('traveler_details', {
+  promiseAsJson(() => db.findByWithDB(req.app.locals.db, 'traveler_details', {
     finishedTracking: true,
     end_date: { $ne: '' }
-  })
-    .then(results => {
-      res.json(results);
-    })
-    .catch(e => {
-      console.error('error ', e);
-    });
+  }), res);
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {
-  db.getActiveTravellersWithLastMessage(req.app.locals.db, req.query.date, req.query.maxCount)
-    .then(data => res.json(data))
-    .catch(e => { 
-      console.error(e);
-      res.status(500).json({ error: e.message })});
-  });
+  promiseAsJson(() => 
+    db.getActiveTravellersWithLastMessage(req.app.locals.db, req.query.date, req.query.maxCount),res);
+});
 
 router.get('/activeTravellers', (req, res) => {
-  db.findBy('traveler_details', { finishedTracking: false })
+  promiseAsJson(() => db.findByWithDB(req.app.locals.db, 'traveler_details', { finishedTracking: false })
     .then(activeTravellers => {
       const trvlrsObject = {};
 
@@ -94,10 +60,10 @@ router.get('/activeTravellers', (req, res) => {
         trvlrsObject[user_id] = {
           start: start_date
         };
-        return db.getTravellerLastMessage(user_id);
+        return db.getTravellerLastMessage(req.app.locals.db, user_id);
       });
 
-      Promise.all(trvlrPromises)
+      return Promise.all(trvlrPromises)
         .then(msgs => {
           const now = new Date();
           // TODO - why filter ?
@@ -148,24 +114,16 @@ router.get('/activeTravellers', (req, res) => {
                 return db.finishTracking(user_id, completed, pub_date);
               }
             );
-            Promise.all(finishPromises)
+
+            return Promise.all(finishPromises)
               .then(() => {
-                res.json(activeTravellers);
+                return Promise.resolve(activeTravellers);
               })
-              .catch(e => {
-                throw e;
-              });
           } else {
-            res.json(activeTravellers);
+            return Promise.resolve(activeTravellers);
           }
-        })
-        .catch(e => {
-          throw e;
         });
-    })
-    .catch(e => {
-      console.error('error ', e);
-    });
+    }), res);
 });
 
 router.post('/addComment', (req, res) => {

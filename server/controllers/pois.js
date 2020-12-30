@@ -5,19 +5,17 @@ const sanitize = require('mongo-sanitize');
 const { findNearPois, findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
 const { ObjectId } = require('mongodb');
 const itinerary = require('../data/guideposts.json');
+const promiseAsJson = require('../util/promiseUtils');
 
 const db = new DB();
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  db.getPois(req.app.locals.db).then(results => {
+  promiseAsJson(() => db.getPois(req.app.locals.db).then(results => {
       // add guideposts
-      res.json(results.concat(itinerary.map(g => Object.assign({ category: "razcestnik" }, g))));
-    }).catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    });
+      return Promise.resolve(results.concat(itinerary.map(g => Object.assign({ category: "razcestnik" }, g))));
+    }), res);
 });
 
 router.post('/my', (req, res) => {
@@ -35,14 +33,7 @@ router.post('/my', (req, res) => {
 });
 
 router.get('/:poiId', (req, res) => {
-  db.getPoi(req.app.locals.db, req.params.poiId)
-    .then(result => {
-      res.json(result);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    });
+  promiseAsJson(() => db.getPoi(req.app.locals.db, req.params.poiId), res);
 });
 
 router.post('/delete', (req, res) => {
@@ -168,49 +159,47 @@ router.post('/add', (req, res) => {
   if (confirmed) {
     addPoi();
   } else {
-    db.all('pois', (pois, error) => {
-      if (pois) {
-        const nearPois = findNearPois(coordinates, pois, 500);
-        const nearest = findNearestPoint(coordinates);
-        const itinerary = nearest.coordinates ? findNearestGuideposts(nearest.coordinates) : null;
+    db.all(req.app.locals.db, 'pois').then(pois => {
+      const nearPois = findNearPois(coordinates, pois, 500);
+      const nearest = findNearestPoint(coordinates);
+      const itinerary = nearest.coordinates ? findNearestGuideposts(nearest.coordinates) : null;
 
-        const confirm = { lat: coordinates[1], lon: coordinates[0], zoom: 13, 
-          poi: {
-            coordinates,
-            accuracy,
-            category,
-            name,
-            text,
-            user_id,
-            img_url,
-            food,
-            water
-          } };
+      const confirm = { lat: coordinates[1], lon: coordinates[0], zoom: 13, 
+        poi: {
+          coordinates,
+          accuracy,
+          category,
+          name,
+          text,
+          user_id,
+          img_url,
+          food,
+          water
+        } };
 
-        if (nearPois.length > 0) {
-          nearPois.sort((a, b) => a.distance - b.distance);
-          confirm.pois = nearPois;
-        }
-
-        if (nearest.distance > 1000) {
-          confirm.distance = nearest.distance;
-        }
-
-        if (itinerary && itinerary.nearest) {
-          confirm.itinerary = itinerary;
-        }
-
-        if (confirm.pois || confirm.distance || confirm.itinerary) {
-          res.json({ confirm });
-          return;
-        }
-
-        addPoi();
-      } else {
-        console.error(error);
-        res.status(500).json({ error: error.toString() });
+      if (nearPois.length > 0) {
+        nearPois.sort((a, b) => a.distance - b.distance);
+        confirm.pois = nearPois;
       }
-    })
+
+      if (nearest.distance > 1000) {
+        confirm.distance = nearest.distance;
+      }
+
+      if (itinerary && itinerary.nearest) {
+        confirm.itinerary = itinerary;
+      }
+
+      if (confirm.pois || confirm.distance || confirm.itinerary) {
+        res.json({ confirm });
+        return;
+      }
+
+      addPoi();
+    }).catch(error => {
+      console.error(error);
+      res.status(500).json({ error: error.toString() });
+    });
   }
 });
 
