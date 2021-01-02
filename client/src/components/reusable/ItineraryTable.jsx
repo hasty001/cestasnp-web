@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import { useStateProp } from '../../helpers/reactUtils';
 import PoiIcon from './PoiIcon';
 import { A } from './Navigate';
+import { escapeHtml } from '../../helpers/helpers';
+import DOMPurify from 'dompurify';
 
 const ItineraryTable = (props) => {
 
@@ -28,19 +30,19 @@ const ItineraryTable = (props) => {
 
     const getPoiInfo = (poi, index, reverse, info = null) => {
       const getInfo = () => (info || (poi.itinerary &&  poi.itinerary.info)) ? 
-        ((info || poi.itinerary.info)
-        .replaceAll("[pred]", reverse ? "za" : "pred")
-        .replaceAll("[za]", reverse ? "pred" : "za")
-        .replaceAll("[vľavo]", reverse ? "vpravo" : "vľavo")
-        .replaceAll("[vpravo]", reverse ? "vľavo" : "vpravo")) 
-        .replaceAll(/\[(.+?)\|(.+?)\]/gms, reverse ? "$2" : "$1")
-        : [poi.name, poi.text].filter(s => s && s.trim().length > 0).join(" - ");
+        escapeHtml(((info || poi.itinerary.info)
+          .replaceAll("[pred]", reverse ? "za" : "pred")
+          .replaceAll("[za]", reverse ? "pred" : "za")
+          .replaceAll("[vľavo]", reverse ? "vpravo" : "vľavo")
+          .replaceAll("[vpravo]", reverse ? "vľavo" : "vpravo")) 
+          .replaceAll(/\[(.+?)\|(.+?)\]/gms, reverse ? "$2" : "$1"))
+        : [escapeHtml(poi.name), DOMPurify.sanitize(poi.text)].filter(s => s && s.trim().length > 0).join(" - ");
 
       return (
         <div key={index}>
           <A id={`p${poi._id}`} 
             href={`/pred/pois${poi._id ? `/${poi._id}` : `#lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}&zoom=13`}`}>
-              <PoiIcon value={poi} />{" " + getInfo()}
+              <PoiIcon value={poi} />{` `}<span dangerouslySetInnerHTML={{ __html: getInfo() }}></span>
           </A>
         </div>);
     };

@@ -414,7 +414,7 @@ class TravellerWithAuth extends Component {
 
             <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
               <p>{this.state.travellerData.meno}</p>
-              <p>{this.state.travellerData.text}</p>
+              <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.state.travellerData.text) }}></p>
               <p>
                 Začiatok: {this.state.travellerData.start_miesto}{' '}
                 {dateToStr(this.state.travellerData.start_date)}

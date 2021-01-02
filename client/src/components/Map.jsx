@@ -3,11 +3,12 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
-import { dateTimeToStr } from '../helpers/helpers';
+import { dateTimeToStr, escapeHtml } from '../helpers/helpers';
 import { findPoiCategory, PoiCategories } from './PoiCategories';
 import { useStateProp } from '../helpers/reactUtils';
 import * as Constants from './Constants';
 import { generateAnchor } from './reusable/Navigate';
+import DOMPurify from 'dompurify';
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
@@ -211,7 +212,7 @@ const Map = (props) => {
         
         const marker = new MapMarker([g.lat, g.lon], {
           icon, poi: g.id, zIndexOffset: -4000,
-          popupContent: `<h4>${generateAnchor(`/pred/itinerar#g${g.id}`, '', `<i class="${guidepostIcon}"></i> ${g.name} ${g.ele ? ` ${g.ele}\u00A0m`: ""}`)}</h4>`
+          popupContent: `<h4>${generateAnchor(`/pred/itinerar#g${g.id}`, '', `<i class="${guidepostIcon}"></i> ${escapeHtml(g.name)} ${g.ele ? ` ${g.ele}\u00A0m`: ""}`)}</h4>`
         }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
         newMarkers.push(marker);
   
@@ -255,9 +256,9 @@ const Map = (props) => {
           const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
             icon, poi: p._id, zIndexOffset: -i,
             popupContent: `<h4>${generateAnchor(`/pred/pois/${p._id}`, '',
-              `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${p.name || poiCategory.label}`)}</h4>
+              `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
             <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
-            <p>${p.text}</p>`
+            <p>${DOMPurify.sanitize(p.text)}</p>`
           }).addTo(markerLayers[category.value]);
 
           newMarkers.push(marker);
@@ -277,7 +278,7 @@ const Map = (props) => {
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
             popupContent: `<p>${dateTimeToStr(stop.date)}</p>
-          <p>${stop.text}</p>` }).addTo(markerLayer);
+          <p>${DOMPurify.sanitize(stop.text)}</p>` }).addTo(markerLayer);
           newMarkers.push(marker);
           marker.bindPopup("");
         }
@@ -299,9 +300,9 @@ const Map = (props) => {
             [trvlr.lastMessage.lat, trvlr.lastMessage.lon],
             {
               icon,
-              popupContent: `<p><b>${generateAnchor(`/na/${trvlr.userId}`, 'style="{text-decoration: none;}"', trvlr.meno)}</b></p>
+              popupContent: `<p><b>${generateAnchor(`/na/${trvlr.userId}`, 'style="{text-decoration: none;}"', escapeHtml(trvlr.meno))}</b></p>
           <p>${dateTimeToStr(trvlr.lastMessage.pub_date)}</p>
-          <p>${trvlr.lastMessage.text}</p>`
+          <p>${DOMPurify.sanitize(trvlr.lastMessage.text)}</p>`
             }
           ).addTo(markerLayer);
           newMarkers.push(marker);

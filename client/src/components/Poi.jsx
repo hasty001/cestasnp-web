@@ -15,6 +15,7 @@ import * as Constants from './Constants';
 import ItineraryTable from './reusable/ItineraryTable';
 import { A } from './reusable/Navigate';
 import DocumentTitle from 'react-document-title';
+import DOMPurify from 'dompurify';
 
 const Poi = (props) => {
   const [loading, setLoading] = useState(false);
@@ -124,7 +125,7 @@ const Poi = (props) => {
           <Image value={(historyPoi || poi).img_url} alt={`${caption} - fotka miesta`} itemClassName="poi-image" large />
 
           <p><span data-nosnippet>GPS: {(historyPoi || poi).coordinates[1]}, {(historyPoi || poi).coordinates[0]}</span></p>
-          <p>{(historyPoi || poi).text}</p>
+          <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize((historyPoi || poi).text) }}></p>
 
           {!!(historyPoi || poi).guideposts && !!(historyPoi || poi).itinerary && !!((historyPoi || poi).itinerary.near || (historyPoi || poi).itinerary.after) 
             && <ItineraryTable noTotals noDetails fullKm itinerary={(historyPoi || poi).guideposts} insert={historyPoi || poi}

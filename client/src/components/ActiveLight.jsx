@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import format from 'date-fns/format';
-import { dateToStr, dateTimeToStr } from '../helpers/helpers';
+import { dateToStr, dateTimeToStr, escapeHtml } from '../helpers/helpers';
 import { fetchJson } from '../helpers/fetchUtils';
 import { A, navigate } from './reusable/Navigate'
 import SimpleMasonry from './reusable/SimpleMasonry';
