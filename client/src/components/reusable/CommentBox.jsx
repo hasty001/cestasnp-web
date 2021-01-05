@@ -160,10 +160,11 @@ class CommentBoxWithAuth extends Component {
     const { userData, articleID, visitorIp, 
       updateTravellerComments, travellerId, travellerName, ...modalProps } = this.props;
     return (
-      <div id="CommentBox">
+      <div>
         {this.state.loading && <Loader />}
         {!this.state.loading && (
           <Modal
+            id="CommentBox"
             {...modalProps}
             dialogClassName="comment-box"
           >

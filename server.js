@@ -17,12 +17,18 @@ moment.tz.setDefault('Europe/Vienna');
 
 const root = path.join(__dirname, '/client/build');
 
+app.disable('x-powered-by');
+
 if (process.env.PORT) {
   app.use((req, res, next) => {
     if (req.header('x-forwarded-proto') !== 'https') {
       res.redirect(`https://${req.header('host')}${req.url}`);
     } else {
-      next();
+      if (req.header('host').startsWith("www.")) {
+        res.redirect(301, `https://${req.header('host').slice(4)}${req.url}`);
+      } else {
+        next();
+      }
     }
   });
 

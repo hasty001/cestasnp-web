@@ -1256,7 +1256,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: 16px;
 }
 
-.accountWrap label, #MessageForm label, #MyJourney label, #AddPoi label, 
+.accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, 
 .edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label {
   display: block;
   width: 100%;

@@ -1,4 +1,4 @@
 User-agent: *
-Allow: /
+Disallow: /*from-old
 
 Sitemap: https://cestasnp.sk/sitemap.xml

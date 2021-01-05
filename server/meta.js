@@ -1,32 +1,11 @@
 const DB = require('./db/db');
 const sanitize = require('mongo-sanitize');
 const { ObjectID } = require('mongodb');
+const { escape, escapeImg, escapeDate } = require('./util/escapeUtils');
 
 const db = new DB();
 
-const escape = (html) => {
-  return !html ? '' : String(html)
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
-const escapeImg = (img) => {
-  if (img && img.indexOf('res.cloudinary.com') === -1) {
-    return escape(`https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${img}`);
-  }
-
-  return escape(img);
-}
-
-const escapeDate = (date) => {
-  if (!date)
-    return "";
-  const d = new Date(date);
-  return isNaN(d) ? "" : escape(d.toISOString());
-}
+const WebSuffix = " - CestaSNP";
 
 const getPublisher = () => 
   `"publisher": {
@@ -59,7 +38,7 @@ const getArticleMeta = (dbRef, articleId) =>
           .findByWithDB(dbRef, 'users', { sql_user_id: results[0].created_by_user_sql_id })
           .then(user => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
-            const title = escape('CestaSNP - ' + (results[0].title || 'Článok'));
+            const title = escape((results[0].title || 'Článok') + WebSuffix);
             const url = `https://cestasnp.sk/pred/articles/article/${escape(articleId)}`;
 
             const imgRegEx = 
@@ -141,7 +120,7 @@ const getPoiMeta = (dbRef, poiId) =>
           .findByWithDB(dbRef, 'users', { uid: results[0].uid })
           .then(user => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
-            const title = escape('CestaSNP - ' + (results[0].name || 'Dôležité miesto'));
+            const title = escape((results[0].name || 'Dôležité miesto') + WebSuffix);
             const url = `https://cestasnp.sk/pred/pois/${escape(poiId)}`;
 
             const desc = escape(results[0].text);
@@ -213,7 +192,7 @@ const getTravelerMeta = (dbRef, userId) =>
           .latestWithDB(dbRef, 'traveler_messages', { $and: [{ user_id: userId }, { deleted: { $ne: true }}] }, { pub_date: -1 })
           .then(msg => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
-            const title = escape('CestaSNP - ' + results[0].meno);
+            const title = escape(results[0].meno + WebSuffix);
             const url = `https://cestasnp.sk/na/${escape(userId)}`;
             const created = escapeDate(results[0].created);
             const published = escapeDate(results[0].start_date);
