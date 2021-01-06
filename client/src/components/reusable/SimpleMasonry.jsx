@@ -139,6 +139,24 @@ class SimpleMasonry extends Component {
         {imageRows.map((row, r) => {
           const innerRow = r < imageRows.length - 1;
           
+          const getImage = (img, width, height) => {
+            if (!img.eager) {
+              return img.src;
+            }
+
+            var minSrc = img.src;
+            var minW = 10000;
+
+            img.eager.forEach(e => {
+              if (e,width >= width && e.height >= height && e.width < minW) {
+                minW = e.width;
+                minSrc = e.secure_url;
+              }
+            });
+
+            return minSrc;
+          };
+
           return (
             <Fragment key={r}>
               {row.map((item, i) => {
@@ -148,7 +166,7 @@ class SimpleMasonry extends Component {
                   <div key={i} className={`simple-masonry-item${innerRow ? ' inner' : ''}`} 
                     style={{ width: item.width, height: item.height, maxHeight: this.state.targetHeight }}>
                     <A href={img.url} title={item.width < 100 ? img.title : ""} >
-                      <div className="simple-masonry-image" style={{ backgroundImage: "url(" + img.src + ")"}}/>
+                      <div className="simple-masonry-image" style={{ backgroundImage: "url(" + getImage(img, item.width, item.height) + ")"}}/>
                       {item.width >= 100 && (<div className="simple-masonry-image-title"  style={{ maxWidth: item.width }}>
                         {item.height >= 100 ? img.title : ""}<span><i className="fas fa-external-link-alt"/></span></div>)}
                     </A>

@@ -70,14 +70,12 @@ const ActiveLight = (props) => {
       const url = `/na/${t.userId}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
       const title = t.meno;
 
-      if (t.lastImg.eager && t.lastImg.eager.length > 1) {
-        return { url: url, title: title, src: t.lastImg.eager[1].secure_url, aspect: t.lastImg.height / t.lastImg.width };
-      } if (t.lastImg.eager) {
-        return { url: url, title: title, src: t.lastImg.eager[0].secure_url, aspect: t.lastImg.height / t.lastImg.width };
+      if (t.lastImg.eager && t.lastImg.eager.length > 0) {
+        return { url: url, title: title, src: t.lastImg.secure_url, eager: t.lastImg.eager, aspect: t.lastImg.height / t.lastImg.width };
       } else {
         return { url: url, title: title, src: t.lastImg.indexOf('res.cloudinary.com') === -1
             ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${t.lastImg}`
-            : t.lastImg, aspect: 2 / 3}
+            : t.lastImg, aspect: 1}
       }
     }) : [];
 
