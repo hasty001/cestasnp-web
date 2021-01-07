@@ -93,7 +93,7 @@ const ActiveLight = (props) => {
       pageTitle={props.box ? null : `LIVE sledovanie${Constants.WebTitleSuffix}`}
       loading={loading} error={error}>
 
-      {!props.box && <button className="snpBtn active-kind-link no-print"
+      {!props.box && <button className="snpBtn active-kind-link no-print" title="Fotky"
         onClick={() => { settingsData.setActiveLink("fotky"); navigate('/na/ceste/fotky'); }}><i className="far fa-images"></i></button>}
           
       {!!travellers && travellers.length > 0 && (

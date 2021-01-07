@@ -1053,6 +1053,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   z-index: 9998;
 }
 
+.pois-map-itinerary-link,
+.pois-map-link {
+  padding: 5px 15px !important;
+}
+
 .pois-map-watch-gps {
   position: absolute;
   left: 65px;

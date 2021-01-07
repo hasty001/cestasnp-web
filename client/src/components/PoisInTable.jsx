@@ -9,6 +9,7 @@ import { Modal } from 'react-bootstrap';
 import FormCheckBox from './reusable/FormCheckBox';
 import { useStateWithLocalStorage } from '../helpers/reactUtils';
 import { PoiCategories } from './PoiCategories';
+import { navigate } from './reusable/Navigate';
 
 const PoisInTable = (props) => {
 
@@ -114,6 +115,7 @@ const PoisInTable = (props) => {
   return (
     <PageWithLoader pageId="PoisInTable" loading={loading} error={error} pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`} >
       <>
+        <button className="snpBtn pois-map-itinerary-link no-print" title="V itineráry" onClick={() => navigate('/pred/itinerar')}><i className="fas fa-table"></i></button>
         <button className="snpBtn no-print" onClick={e => { e.preventDefault(); setShowSettings(true); }}>Nastavenie</button>
 
         <Modal dialogClassName="pois-table-dalog" show={showSettings} onHide={() => setShowSettings(false)}>

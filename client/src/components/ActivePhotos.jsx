@@ -84,7 +84,7 @@ const ActivePhotos = (props) => {
       pageTitle={props.box ? null : `LIVE sledovanie${Constants.WebTitleSuffix}`}
       loading={loading} error={error}>
 
-      <button className="snpBtn active-kind-link no-print"
+      <button className="snpBtn active-kind-link no-print" title="Na mape"
         onClick={() => { settingsData.setActiveLink(""); navigate('/na/ceste'); }}><i className="fas fa-map"></i></button>
 
       {!!images && images.length > 0 && 
