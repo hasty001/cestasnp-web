@@ -9,6 +9,7 @@ import * as Texts from './Texts';
 import PageWithLoader from './reusable/PageWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
 import DOMPurify from 'dompurify';
+import ButtonReadMore from './reusable/ButtonReadMore';
 
 const ActiveLight = (props) => {
   const now = format(new Date(), 'YYYY-MM-DD');
@@ -105,6 +106,7 @@ const ActiveLight = (props) => {
               </div>
             )}
 
+            <div className="active-travellers-items">
             {travellers.map((traveller, i) => {
               return (    
                     <div className="active-traveller-item" key={i} >
@@ -139,6 +141,10 @@ const ActiveLight = (props) => {
                     </div>                          
               );
             })}
+              <div className="active-travellers-items-more">
+                <ButtonReadMore href="/na/ceste/light"/>
+              </div>
+            </div>
 
             {!!props.box && images && images.length > 0 && 
               (<SimpleMasonry images={images} targetHeight={560} />)}
