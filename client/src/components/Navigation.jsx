@@ -5,6 +5,7 @@ import logo from '../../public/img/logo.svg';
 import { AuthContext } from './AuthContext';
 import { A } from './reusable/Navigate';
 import { LocalSettingsContext } from './LocalSettingsContext';
+import auth from '../helpers/firebase';
 
 const ROUTES = {
   domov: '/',
@@ -54,29 +55,60 @@ const Navigation = () => {
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav pullRight className={!authData.isAuth ? "not-auth" : "auth"}>
-          <NavDropdown eventKey={2} title="Pred cestou" id="basic-nav-dropdown">
+        {!authData.isAuth && (
+          <NavRouterItem
+            href={ROUTES.ucetPois}
+            eventKey={0}
+            className="red-button mobile"
+          >
+            Prihlásiť sa             
+          </NavRouterItem>)}
+
+          {!!authData.isAuth && (
+          <>
             <NavRouterItem
-              href={ROUTES.clanky}
-              eventKey={2.1}
-              title="Články"
+              href={ROUTES.mojaCesta}
+              eventKey={0.1}
+              title="Moja cesta"
+              className="mobile"
             >
-              Články
-            </NavRouterItem>
+              Poslať správu
+            </NavRouterItem>          
+
             <NavRouterItem
-              href={ROUTES.pois}
-              eventKey={2.2}
-              title="Dôležité miesta"
+              href={ROUTES.pridatPOI}
+              eventKey={0.2}
+              title="Pridať dôležité miesto"
+              className="mobile"
             >
-              Dôležité miesta
+              Pridať dôležité miesto             
             </NavRouterItem>
+
             <NavRouterItem
-              href={ROUTES.itinerary}
-              eventKey={2.3}
-              title="Itinerár"
+              href="#"
+              eventKey={0.3}
+              title="Odhlásiť"
+              onClick={() => auth.signOut()}
+              className="mobile"
             >
-              Itinerár
+              Odhlásiť             
             </NavRouterItem>
-          </NavDropdown>
+          </>)}
+
+          <NavRouterItem
+            href={ROUTES.clanky}
+            eventKey={1}
+            title="Články"
+          >
+            Pred cestou
+          </NavRouterItem>
+          <NavRouterItem
+            href={ROUTES.pois}
+            eventKey={2}
+            title="Dôležité miesta"
+          >
+            Mapa
+          </NavRouterItem>
 
           <NavRouterItem
             href={settingsData.activeLink.href}
@@ -94,43 +126,45 @@ const Navigation = () => {
             Archív
           </NavRouterItem>
 
-          <NavRouterItem
-            href={ROUTES.kontakt}
-            eventKey={6}
-            title="Kontakt"
-          >
-            Kontakt
-          </NavRouterItem>
-
-          {!!authData.isAuth && (
-          <NavRouterItem
-            href={ROUTES.mojaCesta}
-            eventKey={4}
-            title="Moja cesta"
-          >
-            {!authData.isAuth ? 'Prihlásiť sa' : 'Poslať správu'}
-          </NavRouterItem>          
-          )}
-
-          {!!authData.isAuth && (
-          <NavRouterItem
-            href={ROUTES.pridatPOI}
-            eventKey={5}
-            title="Pridať dôležité miesto"
-          >
-            {!authData.isAuth ? 'Prihlásiť sa' : 'Pridať dôležité miesto'}             
-          </NavRouterItem>
-          )}
-
           {!authData.isAuth && (
           <NavRouterItem
             href={ROUTES.ucetPois}
             eventKey={6}
-            className="red-button"
+            className="red-button desktop"
           >
             Prihlásiť sa             
-          </NavRouterItem>
-          )}
+          </NavRouterItem>)}
+
+          {!!authData.isAuth && (
+          <NavDropdown eventKey={7} title="Môj účet" id="basic-nav-dropdown" className="desktop">
+            <NavRouterItem
+              href={ROUTES.mojaCesta}
+              eventKey={7.1}
+              title="Moja cesta"
+              className="desktop"
+            >
+              Poslať správu
+            </NavRouterItem>          
+
+            <NavRouterItem
+              href={ROUTES.pridatPOI}
+              eventKey={7.2}
+              title="Pridať dôležité miesto"
+              className="desktop"
+            >
+              Pridať dôležité miesto             
+            </NavRouterItem>
+
+            <NavRouterItem
+              href="#"
+              eventKey={7.3}
+              title="Odhlásiť"
+              onClick={() => auth.signOut()}
+              className="desktop"
+            >
+              Odhlásiť             
+            </NavRouterItem>
+          </NavDropdown>)}
         </Nav>
       </Navbar.Collapse>
     </Navbar>
