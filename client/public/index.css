@@ -1031,6 +1031,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   overflow-x: hidden;
 }
 
+span.poi-text {
+  display: inline-block;
+  max-width: 60vw;
+  vertical-align: bottom;
+}
+
 .poi-name {
   max-width: 240px;
 }
