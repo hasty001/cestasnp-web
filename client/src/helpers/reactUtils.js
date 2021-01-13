@@ -52,9 +52,9 @@ const useTraceUpdate = (props) => {
  * Get and set prop state from local storage.
  */
 const useStateWithLocalStorage = (localStorageKey, defValue = null) => {
-  const [value, setValue] = useState(
-    JSON.parse(localStorage.getItem(localStorageKey)) || defValue
-  );
+  const itemValue = localStorage.getItem(localStorageKey);
+  
+  const [value, setValue] = useState(itemValue == null ? defValue : JSON.parse(itemValue));
  
   useEffect(() => {
     localStorage.setItem(localStorageKey, JSON.stringify(value));

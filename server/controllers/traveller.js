@@ -6,7 +6,7 @@ const moment = require('moment');
 
 const request = require('request');
 const DB = require('../db/db');
-const checkToken = require('../util/checkToken');
+const { checkToken } = require('../util/checkUtils');
 
 const db = new DB();
 const router = express.Router();

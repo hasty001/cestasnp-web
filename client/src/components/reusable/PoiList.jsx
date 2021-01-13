@@ -1,4 +1,3 @@
-import { isMonday } from 'date-fns';
 import React, { useState } from 'react';
 import PoiItem from './PoiItem';
 

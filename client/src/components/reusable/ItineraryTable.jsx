@@ -2,8 +2,7 @@ import React, { Fragment } from 'react';
 import { useStateProp } from '../../helpers/reactUtils';
 import PoiIcon from './PoiIcon';
 import { A } from './Navigate';
-import { escapeHtml } from '../../helpers/helpers';
-import DOMPurify from 'dompurify';
+import { escapeHtml, htmlSanitize } from '../../helpers/helpers';
 
 const ItineraryTable = (props) => {
 
@@ -36,7 +35,7 @@ const ItineraryTable = (props) => {
           .replaceAll("[vľavo]", reverse ? "vpravo" : "vľavo")
           .replaceAll("[vpravo]", reverse ? "vľavo" : "vpravo")) 
           .replaceAll(/\[(.+?)\|(.+?)\]/gms, reverse ? "$2" : "$1"))
-        : [escapeHtml(poi.name), DOMPurify.sanitize(poi.text)].filter(s => s && s.trim().length > 0).join(" - ");
+        : [escapeHtml(poi.name), htmlSanitize(poi.text)].filter(s => s && s.trim().length > 0).join(" - ");
 
       return (
         <div key={index}>

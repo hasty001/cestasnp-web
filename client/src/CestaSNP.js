@@ -27,6 +27,8 @@ import * as Constants from './components/Constants';
 import SiteFooter from './components/SiteFooter';
 import ActivePhotos from './components/ActivePhotos';
 import { LocalSettingsProvider } from './components/LocalSettingsContext';
+import ArticleHistory from './components/ArticleHistory';
+import EditArticle from './components/Account/EditArticle';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -100,6 +102,14 @@ class CestaSNP extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route
+                path="/pred/articles/article/:articleId/historia"
+                component={ArticleHistory}
+              />
+              <Route
+                path="/pred/articles/article/:articleId/upravit"
+                component={EditArticle}
+              />
+              <Route
                 path="/pred/articles/article/:articleId"
                 component={Article}
               />
@@ -121,7 +131,9 @@ class CestaSNP extends Component {
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" render={(props) => (<Account {...props} />)}/>
               <Route exact path="/ucet/pridatpoi" render={(props) => (<Account {...props} addPoi />)} />
+              <Route exact path="/ucet/pridatclanok" render={(props) => (<Account {...props} addArticle />)} />
               <Route exact path="/ucet/pois" render={(props) => (<Account {...props} pois />)} />
+              <Route exact path="/ucet/zmeny" render={(props) => (<Account {...props} changes />)} />
               <Route path="*" component={NotFound} />
             </Switch>
             {!this.state.fillContent && <SiteFooter/>}

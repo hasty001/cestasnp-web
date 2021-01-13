@@ -6,55 +6,10 @@ import ArticleFilter from './ArticleFilter';
 import { A, navigate } from './reusable/Navigate';
 import DocumentTitle from 'react-document-title';
 import * as Constants from './Constants';
+import ButtonReadMore from './reusable/ButtonReadMore';
+import { htmlClean } from '../helpers/helpers';
 
-const articleCategories = [
-  { tag: 'vsetky', text: 'Všetky' },
-  // { tag: 'faqs', text: 'FAQs' },
-  // { tag: 'novinky', text: 'Novinky' },
-  { tag: 'ostatne', text: 'Ostatné' },
-  { tag: 'vybavenie', text: 'Vybavenie' },
-  { tag: 'odkazy', text: 'Odkazy' },
-  { tag: 'mapy', text: 'Mapy' },
-  { tag: 'dolezite_miesta', text: 'Dôležité miesta' },
-  { tag: 'stravovanie', text: 'Stravovanie' },
-  { tag: 'cestopisy', text: 'Cestopisy' },
-  // { tag: 'spravy_z_terenu', text: 'Správy z terénu' },
-  { tag: 'zaujimavosti', text: 'Zaujímavosti' },
-  // { tag: 'akcie', text: 'Akcie' },
-  { tag: 'obmedzenia', text: 'Obmedzenia' },
-  // { tag: 'oznamy', text: 'Oznamy' },
-  { tag: 'cesta-hrdinov-snp', text: 'Cesta hrdinov SNP' },
-  { tag: 'akcie-snp', text: 'Akcie Cesta hrdinov SNP' },
-  // { tag: 'akcie-ostatne', text: 'Ostatné akcie' },
-  { tag: 'oblecenie', text: 'Oblečenie' },
-  { tag: 'obuv', text: 'Obuv' },
-  { tag: 'o-cestesnpsk', text: 'O CesteSNP.sk' },
-  { tag: 'cela-trasa', text: 'Celá trasa' },
-  { tag: 'vku', text: 'VKU' },
-  { tag: 'shocart', text: 'Shocart' },
-  { tag: 'gps', text: 'GPS' },
-  { tag: 'batoh', text: 'Batoh' },
-  {
-    tag: 'dukla-cergov-sarisska-vrchovina',
-    text: 'Dukla, Čergov, Šarišská vrchovina'
-  },
-  { tag: 'cierna-hora-volovske-vrchy', text: 'Čierna hora, Volovské vrchy' },
-  { tag: 'nizke-tatry', text: 'Nízke Tatry' },
-  { tag: 'velka-fatra-kremnicke-vrchy', text: 'Veľká Fatra, Kremnické vrchy' },
-  {
-    tag: 'strazovske-vrchy-biele-karpaty',
-    text: 'Strážovske vrchy, Biele Karpatu'
-  },
-  { tag: 'male-karpaty', text: 'Malé Karpaty' },
-  { tag: 'recepty', text: 'Recepty' },
-  { tag: 'o-strave', text: 'O strave' },
-  // { tag: 'nezaradene', text: 'Nezaradené' },
-  // { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
-  { tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' },
-  { tag: 'rozhovory', text: 'Rozhovory' }
-];
-
-const categoryTags = articleCategories.map(category => {
+const categoryTags = Constants.ArticleCategories.map(category => {
   return category.tag;
 });
 
@@ -70,7 +25,7 @@ class Articles extends Component {
       filters: this.props.match.params.category
         ? this.props.match.params.category.split('+')
         : [],
-      categories: articleCategories.map(category => {
+      categories: Constants.ArticleCategories.map(category => {
         return category;
       })
     };
@@ -93,7 +48,7 @@ class Articles extends Component {
     if (this.state.activePage != newActivePage
       || this.state.filters.join("+") != newFilter.join("+") ) {
       this.setState({ activePage: newActivePage, filters: newFilter,
-        categories: articleCategories.map(category => {
+        categories: Constants.ArticleCategories.map(category => {
           return category;
         }), articles: [], loading: true
         }, this.fetchData);
@@ -204,6 +159,11 @@ class Articles extends Component {
   }
 
   render() {
+    const getArticleImage = (intro) => {
+      const res = intro && intro.match(/["'](https:\/\/res.cloudinary.com\/.*?)["']/);
+      return res && res.length > 1 ? res[1] : null;
+    };
+
     return (
       <div id="Articles">
         <DocumentTitle title={`Články${Constants.WebTitleSuffix}`} />
@@ -215,7 +175,7 @@ class Articles extends Component {
           <div style={{ display: 'inline-block' }}>
             {this.state.filters.map((filter, i) => {
               const filterIndex = categoryTags.indexOf(filter);
-              const filterText = articleCategories[filterIndex].text;
+              const filterText = Constants.ArticleCategories[filterIndex].text;
               return (
                 <Button
                   key={i}
@@ -227,37 +187,37 @@ class Articles extends Component {
                 </Button>
               );
             })}
-          </div>
-          {window.innerWidth > 768 && (
-            <div style={{ width: '100%', minHeight: '34px' }}>
-              <PaginationAdvanced
-                totalArticles={this.state.totalArticles}
-                activePage={this.state.activePage}
-                handlePageSelect={this.handlePageSelect}
-              />
-            </div>
-          )}
+          </div>          
+          <PaginationAdvanced className="top"
+            totalArticles={this.state.totalArticles}
+            activePage={this.state.activePage}
+            handlePageSelect={this.handlePageSelect}
+          />
           {/* loading articles */}
           {this.state.loading && <Loader />}
           {/* in case we have articles */}
           {!this.state.loading &&
             this.state.articles.length > 0 &&
             this.state.articles.map((article, i) => {
-              const introtext = () => {
-                return { __html: article.introtext };
-              };
+              const imgUrl = getArticleImage(article.introtext);
+
               return (
                 <div key={i} className="article-div">
+                  {!!imgUrl && <div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
+                      
                   <A
                     className="no-decoration"
                     href={`/pred/articles/article/${article.sql_article_id}`}
                   >
                     <h2 className="no-decoration">{article.title}</h2>
                   </A>
-                  <div dangerouslySetInnerHTML={introtext()} />
-                  <A href={`/pred/articles/article/${article.sql_article_id}`} >
-                    Čítaj viac...
-                  </A>
+                  
+                  {!!imgUrl && <div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
+                  
+                  <div className="article-text-col">
+                    <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>
+                    <ButtonReadMore href={`/pred/articles/article/${article.sql_article_id}`} />
+                  </div>
                 </div>
               );
             })}
@@ -268,13 +228,11 @@ class Articles extends Component {
             </div>
           )}
         </div>
-        <div style={{ width: '100%', minHeight: '34px' }}>
-          <PaginationAdvanced
-            totalArticles={this.state.totalArticles}
-            activePage={this.state.activePage}
-            handlePageSelect={this.handlePageSelect}
-          />
-        </div>
+        <PaginationAdvanced
+          totalArticles={this.state.totalArticles}
+          activePage={this.state.activePage}
+          handlePageSelect={this.handlePageSelect}
+        />
       </div>
     );
   }

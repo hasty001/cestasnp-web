@@ -3,6 +3,7 @@ import { Pagination } from 'react-bootstrap';
 
 const PaginationAdvanced = props => (
   <Pagination
+    className={props.className}
     prev
     next
     first

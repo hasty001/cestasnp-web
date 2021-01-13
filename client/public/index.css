@@ -108,6 +108,18 @@ a.white-button:active {
   border-color: red;
 }
 
+.pagination {
+  width: 100%;
+  min-height: 34px;
+  margin: 15px 0;
+}
+
+@media (max-width: 700px) {
+  .pagination.top {
+    display: none;
+  }
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
@@ -132,8 +144,18 @@ html, body, #root {
   border-bottom: 1px solid red;
 }
 
+.article-preview-box, .article-diff-box  {
+  width: 100%;
+}
+
+.article-diff-box pre {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+
 .modal {
-  margin-top: 80px;
+  margin: 80px auto 10px;
 } @media (max-width: 1000px) {
   .app-header {
     max-height: 70px;
@@ -143,10 +165,6 @@ html, body, #root {
   }
 } @media print {
   .app-header { 
-    display: none;
-  }
-} @media print {
-  .app-header {
     display: none;
   }
 }
@@ -491,7 +509,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /***     HOME       ***/
 
-#Home {
+#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -561,16 +579,19 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.home-articles-and-box {
+.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
   overflow: hidden;
+}
+
+.home-articles-and-box {
   min-height: 800px;
 }
 
 @media (min-width: 1600px) {
-  .home-articles-and-box {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -770,7 +791,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media(max-width: 670px) {
-  .home-articles-and-box {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -793,14 +814,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 0;
 }
 
-#Home .article-div {
+#Home .article-div, #Articles .article-div {
   margin-top: 50px;
   margin-bottom: 50px;
   min-height: 20px;
   overflow: hidden;
 }
 
-#Home .article-div h2 {
+#Home .article-div h2, #Articles h2, #Article h2, #Changes h2 {
   margin-top: 0px;
   margin-bottom: 30px;
   font-size: 25px;
@@ -808,7 +829,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
 }
 
-#Home .article-image {
+#Home .article-image, #Articles .article-image {
   float: left;
   min-width: 240px;
   max-width: 240px;
@@ -821,15 +842,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin-right: 30px;
 }
 
-#Home .article-image.before {
+#Home .article-image.before, #Articles .article-image.before {
   display: none;
 }
 
-#Home .article-text-col {
-  display: table-cell;
-}
-
-#Home .article-text {
+#Home .article-text, #Articles .article-text {
   display: -webkit-box;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;  
@@ -837,7 +854,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   max-height: 132px;
 }
 
-#Home .article-text img {
+#Home .article-text img, #Articles .article-text img {
   display: none;
 }
 
@@ -846,11 +863,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     margin-top: 30px;
   }
 
-  #Home .article-image {
+  #Home .article-image, #Articles .article-image {
     display: none;
   }
 
-  #Home .article-image.before {
+  #Home .article-image.before, #Articles .article-image.before {
     float: none;
     display: block;
     min-width: 240px;
@@ -864,7 +881,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     display: none;
   }
 
-  #Home .article-text-col {
+  #Home .article-text-col, #Articles .article-text-col {
     display: block;
     width: 100%;
     margin: 30px 0 0 0;
@@ -1017,25 +1034,17 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 /***     HOME       ***/
 /**********************/
-/***    KONTAKT     ***/
+/**KONTAKT + Cookies **/
 
-#Kontakt {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-} @media (max-width: 767px) {
-  #Kontakt {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
+#Kontakt, #Cookies, #Articles, #Changes {
+  margin-top: 40px;
 }
 
-#Kontakt p {
+#Kontakt p, #Cookies p {
   margin: 0;
 }
 
-/***    KONTAKT     ***/
+/**KONTAKT + Cookies **/
 /**********************/
 /***     POIS       ***/
 
@@ -1174,19 +1183,20 @@ span.poi-text {
   }
 }
 
-.poi-actions {
+.poi-actions, .article-actions {
   font-size: 16px;
 }
 
-.poi-icon {
+.poi-icon, .article-icon {
   margin: 0 2px;
 }
 
-.poi-history-link {
+.action, .poi-history-link, .article-history-link, .article-diff-link, .article-edit-link {
   float: right;
+  padding-left: 8px;
 }
 
-#poi-map {
+#map, #poi-map {
   width: 100%;
   height: 30vh;
   margin-bottom: 10px;
@@ -1204,10 +1214,6 @@ span.poi-text {
     margin-bottom: 10px;
     width: 100%;
   }
-}
-
-.poi-item {
-  margin: 5px 0;
 }
 
 /***      POI       ***/
@@ -1231,14 +1237,16 @@ span.poi-text {
   }
 }
 
-.itinerary-table, .pois-table {
+.itinerary-table, .pois-table, .changes-table {
   width: 100%;
 }
 
 .itinerary-table td, 
 .itinerary-table th,
 .pois-table td,
-.pois-table th {
+.pois-table th,
+.changes-table td,
+.changes-table th {
   vertical-align: baseline;
   padding: 2px 4px;
 }
@@ -1261,21 +1269,6 @@ span.poi-text {
 /**********************/
 /***    ARTICLES    ***/
 
-#Articles,
-#Article {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-  min-height: 400px;
-} @media (max-width: 767px) {
-  #Articles, 
-  #Article {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
 .article-div {
   display: block;
   min-height: 250px;
@@ -1284,6 +1277,66 @@ span.poi-text {
 .no-article-div {
   display: block;
   margin-top: 15px;
+}
+
+#Article {
+  margin-top: 10px;
+}
+
+#Article h2 {
+  margin-top: 30px;
+}
+
+#Article img.left {
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  max-width: 27vw !important;
+  border-radius: 8px;
+}
+
+#Article img.right {
+  float: right;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  max-width: 27vw !important;
+  border-radius: 8px;
+}
+
+#Article img.center {
+  display: block;
+  margin: 10px auto;
+  max-width: 85wv !important;
+  border-radius: 8px;
+}
+
+@media (max-width: 750px) {
+  #Article img.right,
+  #Article img.left {
+    float: none;
+    display: block;
+    margin: 10px auto;
+    max-width: 240px !important;
+  }
+}
+
+.article-img-item,
+.article-link-item {
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.image-list {
+  overflow: hidden;
+}
+
+.article-img-item img,
+.image-list img {
+  float: left;
+  max-width: 80px !important;
+  max-height: 80px !important;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 /***    ARTICLES    ***/
@@ -1503,8 +1556,17 @@ span.poi-text {
 
 .traveller-message-actions,
 .traveller-comment-actions,
-.poi-actions {
+.poi-actions,
+.article-actions {
   float: right;
+}
+
+.poi-item,
+.poi-history-item,
+.article-item,
+.article-history-item {
+  overflow: hidden;
+  margin-bottom: 8px;
 }
 
 .traveller-message-link, 
@@ -1513,7 +1575,11 @@ span.poi-text {
 .traveller-comment-delete,
 .poi-edit,
 .poi-delete,
-.poi-my {
+.poi-my,
+.article-edit,
+.article-history,
+.article-my,
+.article-state-icon {
   color: black;
   font-size: 16px;
   margin: 0 4px;
@@ -1660,6 +1726,14 @@ span.poi-text {
 
 /***   COMMENTBOX   ***/
 /**********************/
+/***    CHANGES     ***/
+
+#Changes label>input,
+#Changes label>select {
+  margin: 0 5px;
+}
+/***    CHANGE S    ***/
+/**********************/
 /***    ARCHIVE     ***/
 
 #NaCesteArchive {
@@ -1766,26 +1840,6 @@ span.poi-text {
 
 /***    FOOTER      ***/
 /**********************/
-/***    COOKIES     ***/
-
-#Cookies {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-} @media (max-width: 767px) {
-  #Cookies {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
-#Cookies p {
-  margin: 0;
-}
-
-/***    COOKIES     ***/
-/**********************/
 /***    ACCOUNT     ***/
 
 .resetPasswordModal {
@@ -1811,13 +1865,13 @@ span.poi-text {
   background: transparent;
 }
 
-.accountWrap, .fanAccountWrap, #AddPoi {
+.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle {
   width: 80%;
   margin: 20px auto;
   font-size: 16px;
 }
 
-.accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, 
+.accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
 .edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label {
   display: block;
   width: 100%;
@@ -1860,11 +1914,11 @@ span.poi-text {
   margin-left: 200px;
 }
 
-.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2 {
+.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2 {
   text-align: center;
 }
 
-.fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form {
+.fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form, #AddArticle p.form {
   text-align: justify;
   font-weight: 800;
 }
@@ -1874,9 +1928,25 @@ span.poi-text {
   margin-left: 200px;
 }
 
-.fanAccountWrap button, #AddPoi button, .edit-poi-box button {
+.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button {
   display: block;
   margin: 15px auto;
+}
+
+#AddArticle button.multiselect-option {
+  display: inline-block;
+  margin: 5px;
+  background: white;
+  border-radius: 8px;
+  max-width: 38vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#AddArticle button.multiselect-option.checked {
+  background: red;
+  color: white;
 }
 
 .accountWrap input {
@@ -1886,7 +1956,7 @@ span.poi-text {
   padding-left: 10px;
 }
 
-.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form {
+.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form, #AddArticle input.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1897,7 +1967,7 @@ span.poi-text {
 }
 
 .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form,
-.itinerary-dialog select.form {
+.itinerary-dialog select.form, #AddArticle select.form {
   height: 36px;
   border: solid 1px lightgray;
   width: 20%;
@@ -1905,7 +1975,7 @@ span.poi-text {
   margin: 5px 0;
 }
 
-.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form {
+.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1980,16 +2050,16 @@ span.poi-text {
     font-size: 18px;
   }
 
-  .fanAccountWrap, #AddPoi {
+  .fanAccountWrap, #AddPoi, #AddArticle {
     width: 95%;
   }
 
-  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form {
+  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form, #AddArticle select.form {
     display: block;
     min-width: 200px;
   }
 
-  .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2 {
+  .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2 {
     text-align: left;
   }
 

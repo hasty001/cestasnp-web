@@ -1,6 +1,6 @@
 const express = require('express');
 const DB = require('../db/db');
-const checkToken = require('../util/checkToken');
+const { checkToken } = require('../util/checkUtils');
 const sanitize = require('mongo-sanitize');
 const { findNearPois, findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
 const { ObjectId } = require('mongodb');
@@ -18,6 +18,20 @@ router.get('/', (req, res) => {
       console.error(error);
       res.status(500).json({ error: error.toString() });
     });
+});
+
+router.post('/my', (req, res) => {
+  const {
+    uid,
+  } = req.body;
+
+  checkToken(req, res, uid, () => 
+    db.getPoisMy(req.app.locals.db, uid).then(results => 
+      res.json(results)
+    ).catch(error => {
+      console.error(error);
+      res.status(500).json({ error: error.toString() });
+    }));
 });
 
 router.get('/:poiId', (req, res) => {

@@ -20,7 +20,7 @@ const AddPoi = (props) => {
     setLoading(true);
     setError('');
 
-    fetchJson('/api/pois')
+    fetchPostJsonWithToken(authData.user, '/api/pois/my', { uid: authData.userDetails.uid })
       .then(pois => {
 
         const maxDate = poi => {
@@ -41,7 +41,7 @@ const AddPoi = (props) => {
         setLoading(false);
         setError(Texts.GenericError);
 
-        console.error("Pois loading error: " + e);
+        console.error("Pois loading error: ", e);
       });
   };
 

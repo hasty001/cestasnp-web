@@ -1,9 +1,8 @@
 import React, { Component, Fragment, useContext } from 'react';
-import { dateTimeToStr } from '../../helpers/helpers';
+import { dateTimeToStr, htmlSanitize } from '../../helpers/helpers';
 import { AuthContext } from '../AuthContext';
 import ConfirmBox from '../reusable/ConfirmBox';
 import { A } from '../reusable/Navigate';
-import DOMPurify from 'dompurify';
 
 const SentMessages = (props) => {
   const authData = useContext(AuthContext);
@@ -143,7 +142,7 @@ class SentMessagesWithAuth extends Component {
                 // }}
               />
             )}      
-            <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }} />
+            <p dangerouslySetInnerHTML={{ __html: htmlSanitize(message.text) }} />
           </div>);}
         )}
 

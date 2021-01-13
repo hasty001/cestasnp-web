@@ -1,6 +1,19 @@
 const {admin} = require('./firebase');
 const auth = admin.auth();
 
+/**
+ * Checks if param is set, otherwise returns false and sets res to error
+ */
+const checkNotEmpty = (value, res) => {
+  if (!value) {
+    res.status(500).json({ error: 'Data is not valid.' });
+
+    return false;
+  }
+
+  return true;
+}
+
 const checkToken = (req, res, uid, callback) => {
   const token = req.header("X-Auth-Token");
 
@@ -17,4 +30,4 @@ const checkToken = (req, res, uid, callback) => {
   }
 }
 
-module.exports = checkToken;
+module.exports = { checkToken, checkNotEmpty };

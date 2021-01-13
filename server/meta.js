@@ -1,6 +1,6 @@
 const DB = require('./db/db');
 const sanitize = require('mongo-sanitize');
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const { escape, escapeImg, escapeDate } = require('./util/escapeUtils');
 
 const db = new DB();
@@ -73,11 +73,11 @@ const getArticleMeta = (dbRef, articleId) =>
               <meta property="og:type" content="article" />
               <meta property="og:description" content="${desc}"/>
               <meta property="og:image" content="${escapeImg(results[0].ogimg || imgRegEx())}" />
-              <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up)}" />
+              <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up || (result[0].state > 0 ? results[0].created : null))}" />
               <meta property="og:article:modified_time" content="${escapeDate(results[0].modified)}" />
-              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down)}" />
-              <meta property="place:location:latitude" content="${escape(lat())}">
-              <meta property="place:location:longitude" content="${escape(lon())}">`;
+              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down || (result[0].state <= 0 ? results[0].modified : null))}" />
+              <meta property="place:location:latitude" content="${escape(results[0].lat || lat())}">
+              <meta property="place:location:longitude" content="${escape(results[0].lon || lon())}">`;
 
             if (results[0].metakey)
               meta += results[0].metakey.split(",").reduce((res, tag) => res + `
@@ -118,7 +118,7 @@ const getArticleMeta = (dbRef, articleId) =>
 
 const getPoiMeta = (dbRef, poiId) => 
   db
-    .findByWithDB(dbRef, 'pois', { _id: new ObjectID(poiId) })
+    .findByWithDB(dbRef, 'pois', { _id: new ObjectId(poiId) })
     .then(results => {
       if (results && results.length > 0) {
         return db

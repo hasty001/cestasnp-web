@@ -3,12 +3,11 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
-import { dateTimeToStr, escapeHtml } from '../helpers/helpers';
+import { dateTimeToStr, escapeHtml, htmlSanitize } from '../helpers/helpers';
 import { findPoiCategory, PoiCategories } from './PoiCategories';
 import { useStateProp, useStateWithLocalStorage } from '../helpers/reactUtils';
 import * as Constants from './Constants';
 import { generateAnchor } from './reusable/Navigate';
-import DOMPurify from 'dompurify';
 
 const config = {
   params: {
@@ -266,7 +265,7 @@ const Map = (props) => {
             popupContent: `<h4>${generateAnchor(`/pred/pois/${p._id}`, '',
               `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
             <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
-            <p>${DOMPurify.sanitize(p.text)}</p>`
+            <p>${htmlSanitize(p.text)}</p>`
           }).addTo(markerLayers[category.value]);
 
           newMarkers.push(marker);
@@ -286,7 +285,7 @@ const Map = (props) => {
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
             popupContent: `<p>${dateTimeToStr(stop.date)}</p>
-          <p>${DOMPurify.sanitize(stop.text)}</p>` }).addTo(markerLayer);
+          <p>${htmlSanitize(stop.text)}</p>` }).addTo(markerLayer);
           newMarkers.push(marker);
           marker.bindPopup("");
         }
@@ -310,7 +309,7 @@ const Map = (props) => {
               icon,
               popupContent: `<p><b>${generateAnchor(`/na/${trvlr.userId}`, 'style="{text-decoration: none;}"', escapeHtml(trvlr.meno))}</b></p>
           <p>${dateTimeToStr(trvlr.lastMessage.pub_date)}</p>
-          <p>${DOMPurify.sanitize(trvlr.lastMessage.text)}</p>`
+          <p>${htmlSanitize(trvlr.lastMessage.text)}</p>`
             }
           ).addTo(markerLayer);
           newMarkers.push(marker);

@@ -1,13 +1,14 @@
 const express = require('express');
 const DB = require('../db/db');
 const { escape, escapeImg, escapeDate } = require('../util/escapeUtils');
+const _const = require('../../const');
 
 const db = new DB();
 
 const router = express.Router();
 
 const getJourneys = () =>
-  db.findBy('traveler_details')
+  db.findBy('traveler_details', {}, { start_date: -1 })
     .then(travellers => {
       var travellersIds = travellers.map(({user_id}) => user_id);
 
@@ -35,9 +36,9 @@ const getJourneys = () =>
     });
 
 router.get('*', (req, res) => {
-  Promise.all([db.findBy('pois', { deleted: null }), db.findBy('articles'), getJourneys()])
+  Promise.all([db.findBy('pois', { deleted: null }, { created: -1 }), 
+    db.findBy('articles', _const.ArticlesFilterBy, { created: -1 }), getJourneys()])
   .then(([pois, articles, journeys]) => {
-
       const urls = 
         [pois.map(p => {
         const image = escapeImg(p.img_url);

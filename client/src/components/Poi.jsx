@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';
-import { dateTimeToStr } from '../helpers/helpers';
+import { dateTimeToStr, htmlSanitize } from '../helpers/helpers';
 import { AuthContext } from './AuthContext';
 import Map from './Map';
 import { findPoiCategory } from './PoiCategories';
@@ -15,7 +15,6 @@ import * as Constants from './Constants';
 import ItineraryTable from './reusable/ItineraryTable';
 import { A } from './reusable/Navigate';
 import DocumentTitle from 'react-document-title';
-import DOMPurify from 'dompurify';
 
 const Poi = (props) => {
   const [loading, setLoading] = useState(false);
@@ -39,10 +38,10 @@ const Poi = (props) => {
     if (poi) {
       const newPoi = Object.assign({}, poi);
 
-      delete poi.successMsg;
-      delete poi.errorMsg;
+      delete newPoi.successMsg;
+      delete newPoi.errorMsg;
 
-      setPoi(poi);
+      setPoi(newPoi);
     }
   };
 
@@ -60,7 +59,7 @@ const Poi = (props) => {
         setLoading(false);
         setError(Texts.GenericError);
 
-        console.error("Poi loading error: " + e);
+        console.error("Poi loading error: ", e);
       });
   };
 
@@ -125,7 +124,7 @@ const Poi = (props) => {
           <Image value={(historyPoi || poi).img_url} alt={`${caption} - fotka miesta`} itemClassName="poi-image" large />
 
           <p><span data-nosnippet>GPS: {(historyPoi || poi).coordinates[1]}, {(historyPoi || poi).coordinates[0]}</span></p>
-          <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize((historyPoi || poi).text) }}></p>
+          <p dangerouslySetInnerHTML={{ __html: htmlSanitize((historyPoi || poi).text) }}></p>
 
           {!!(historyPoi || poi).guideposts && !!(historyPoi || poi).itinerary && !!((historyPoi || poi).itinerary.near || (historyPoi || poi).itinerary.after) 
             && <ItineraryTable noTotals noDetails fullKm itinerary={(historyPoi || poi).guideposts} insert={historyPoi || poi}
@@ -143,21 +142,21 @@ const Poi = (props) => {
               <h4>História</h4>
 
               {!!poi.deleted &&
-                <p>{dateTimeToStr(poi.deleted)} zmazal <UserLabel uid={poi.deleted_by} name={poi.deleted_by_name}/>{' Poznámka: '}{poi.deleted_note}
-                  {historyPoi && <a className="poi-history-link" href="#">pozrieť akutálnu verziu</a>}</p>}
+                <div className="poi-history-item">{dateTimeToStr(poi.deleted)} zmazal <UserLabel uid={poi.deleted_by} name={poi.deleted_by_name}/>{' Poznámka: '}{poi.deleted_note}
+                  {historyPoi && <a className="poi-history-link" href="#">pozrieť akutálnu verziu</a>}</div>}
               {!!poi.modified &&
-                <p>{dateTimeToStr(poi.modified)} upravil <UserLabel uid={poi.modified_by} name={poi.modified_by_name}/>{' Poznámka: '}{poi.modified_note}
-                  {historyPoi && <a className="poi-history-link" href="#">pozrieť akutálnu verziu</a>}</p>}
+                <div className="poi-history-item">{dateTimeToStr(poi.modified)} upravil <UserLabel uid={poi.modified_by} name={poi.modified_by_name}/>{' Poznámka: '}{poi.modified_note}
+                  {historyPoi && <a className="poi-history-link" href="#">pozrieť akutálnu verziu</a>}</div>}
       
               {(!!poi.history) && poi.history.filter(h => h.modified).map(h => 
-                <p key={h._id}>{dateTimeToStr(h.modified)} upravil <UserLabel uid={h.modified_by} name={h.modified_by_name}/>{' Poznámka: '}{h.modified_note} 
-                  {(!historyPoi || h._id != historyPoi._id) && <a className="poi-history-link" href={`#${h._id}`}>pozrieť</a>}</p>)}
+                <div key={h._id} className="poi-history-item">{dateTimeToStr(h.modified)} upravil <UserLabel uid={h.modified_by} name={h.modified_by_name}/>{' Poznámka: '}{h.modified_note} 
+                  {(!historyPoi || h._id != historyPoi._id) && <a className="poi-history-link" href={`#${h._id}`}>pozrieť</a>}</div>)}
               {(!!poi.history) && poi.history.filter(h => !h.modified).map(h => 
-                <p key={h._id}>{dateTimeToStr(h.created)} pridal <UserLabel uid={h.user_id} name={h.created_by_name}/> 
-                  {(!historyPoi || h._id != historyPoi._id) && <a className="poi-history-link" href={`#${h._id}`}>pozrieť</a>}</p>)}
+                <div key={h._id} className="poi-history-item">{dateTimeToStr(h.created)} pridal <UserLabel uid={h.user_id} name={h.created_by_name}/> 
+                  {(!historyPoi || h._id != historyPoi._id) && <a className="poi-history-link" href={`#${h._id}`}>pozrieť</a>}</div>)}
 
-              {(!poi.history || poi.history.length == 0) && <p>{dateTimeToStr(poi.created)} pridal <UserLabel uid={poi.user_id} name={poi.created_by_name}/>
-                {historyPoi && <a className="poi-history-link" href="#">pozrieť akutálnu verziu</a>}</p>}
+              {(!poi.history || poi.history.length == 0) && <div className="poi-history-item">{dateTimeToStr(poi.created)} pridal <UserLabel uid={poi.user_id} name={poi.created_by_name}/>
+                {historyPoi && <a className="poi-history-link" href="#">pozrieť akutálnu verziu</a>}</div>}
             </>
           )}
         </>)}

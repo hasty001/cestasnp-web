@@ -80,6 +80,8 @@ app.use('/api/traveller', require('./server/controllers/traveller'));
 
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
 
+app.use('/api/changes', require('./server/controllers/changes'));
+
 app.use('/sitemap.xml', require('./server/controllers/sitemap'));
 
 app.get('/*', (req, res) => {
