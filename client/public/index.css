@@ -577,10 +577,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .home-intro {
-  max-width: 800px;
+  max-width: 860px;
   min-height: 270px;
   max-height: 270px;
-  background-image: url("/img/cesta-snp-hory.jpg");
+  background-image: url("/img/cestasnp_desktop.jpg");
   background-repeat: no-repeat;
   background-position: bottom;
   border-radius: 8px;
@@ -595,26 +595,52 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   transform: translateX(-50%);
 }
 
-.home-intro-text {
-  color: #FFFFFF;
-  text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+.home-intro h1 {
+  color: #58595B;
   position: absolute;
-  bottom: 90px;
+  top: 40px;
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  line-height: 34px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.home-intro-text {
+  color: #58595B;
+  text-shadow: 0px 0px 10px #FFFFFF;
+  position: absolute;
+  top: 104px;
   width: 100%;
   text-align: center;
   font-weight: 500;
 }
 
-@media (max-width: 659px) {
+@media (max-width: 670px) {
   .home-intro {
-    min-width: 85vw;
-    max-width: 85vw;
-    background-image: url("/img/cesta-snp-hory-small.jpg");
+    background-image: url("/img/cestasnp_desktop.jpg");
+    background-position-x: 27%;
   }
 
+  .home-intro h1,
   .home-intro-text,
   .home-intro .read-more {
     display: none;
+  }
+}
+
+@media (max-width: 395px) {
+  .home-intro {
+    background-position-x: 20%;
+  }
+
+  .home-intro {
+    min-width: 85vw;
+    max-width: 85vw;
+    min-height: 85vw;
+    max-height: 85vw;
   }
 }
 
@@ -729,7 +755,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   display: none;
 }
 
-@media(max-width: 659px) {
+@media(max-width: 670px) {
   .home-articles-and-box {
     min-width: 85vw;
     max-width: 85vw;
@@ -801,7 +827,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   display: none;
 }
 
-@media(max-width: 659px) {
+@media(max-width: 670px) {
   #Home #home1 .article-div {
     margin-top: 30px;
   }

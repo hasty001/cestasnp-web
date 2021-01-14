@@ -49,7 +49,9 @@ const Home = (props) => {
 
         <DivWithLoader className="home-articles" loading={loading}>
           <div className="home-intro">
-            <div className="home-intro-text">najdlhšia pešia trasa na Slovensku je zážitok na celý život</div>
+            <h1>Cesta hrdinov SNP</h1>
+            <div className="home-intro-text">Najdlhšia pešia trasa na Slovensku je zážitok na celý život.
+               <br/>Celková dĺžka je cca 770 km a v priemere sa  zvláda za 25 - 28 dní.</div>
             <ButtonReadMore white href="/pred/articles/article/60"/>
           </div>
         
