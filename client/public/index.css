@@ -285,6 +285,12 @@ body {
   transition: 0.4s, margin 0s, padding 0s;
 }
 
+.navbar-nav>li.account-name>a,
+.navbar-nav .open .dropdown-menu>li.account-name>a {
+  pointer-events: none;
+  text-transform: none;
+}
+
 .navbar-nav>li>a {
   padding-bottom: 28px;
   border-bottom: 2px solid transparent;

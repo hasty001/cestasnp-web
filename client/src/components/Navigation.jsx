@@ -67,13 +67,21 @@ const Navigation = () => {
           {!!authData.isAuth && (
           <>
             <NavRouterItem
+              href="#"
+              eventKey={0.0}
+              className="mobile account-name"
+            >
+              {authData.userDetails.email}
+            </NavRouterItem>
+
+            <NavRouterItem
               href={ROUTES.mojaCesta}
               eventKey={0.1}
               title="Moja cesta"
               className="mobile"
             >
               Poslať správu
-            </NavRouterItem>          
+            </NavRouterItem> 
 
             <NavRouterItem
               href={ROUTES.pridatPOI}
@@ -137,6 +145,14 @@ const Navigation = () => {
 
           {!!authData.isAuth && (
           <NavDropdown eventKey={7} title="Môj účet" id="basic-nav-dropdown" className="desktop">
+            <NavRouterItem
+              href="#"
+              eventKey={7.0}
+              className="desktop account-name"
+            >
+              {authData.userDetails.email}
+            </NavRouterItem>
+
             <NavRouterItem
               href={ROUTES.mojaCesta}
               eventKey={7.1}
