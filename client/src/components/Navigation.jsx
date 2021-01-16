@@ -55,7 +55,7 @@ const Navigation = () => {
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav pullRight className={!authData.isAuth ? "not-auth" : "auth"}>
-        {!authData.isAuth && (
+          {!authData.isAuth && (
           <NavRouterItem
             href={ROUTES.ucetPois}
             eventKey={0}
@@ -65,54 +65,55 @@ const Navigation = () => {
           </NavRouterItem>)}
 
           {!!authData.isAuth && (
-          <>
             <NavRouterItem
               href="#"
-              eventKey={0.0}
               className="mobile account-name"
             >
               {authData.userDetails.email}
-            </NavRouterItem>
+            </NavRouterItem>)}
 
+          {!!authData.isAuth && (
             <NavRouterItem
               href={ROUTES.mojaCesta}
-              eventKey={0.1}
+              eventKey={1}
               title="Moja cesta"
               className="mobile"
             >
               Poslať správu
-            </NavRouterItem> 
+            </NavRouterItem>)}
 
+          {!!authData.isAuth && (
             <NavRouterItem
               href={ROUTES.pridatPOI}
-              eventKey={0.2}
+              eventKey={2}
               title="Pridať dôležité miesto"
               className="mobile"
             >
               Pridať dôležité miesto             
-            </NavRouterItem>
+            </NavRouterItem>)}
 
+          {!!authData.isAuth && (
             <NavRouterItem
               href="#"
-              eventKey={0.3}
+              eventKey={3}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="mobile"
             >
               Odhlásiť             
-            </NavRouterItem>
-          </>)}
+            </NavRouterItem>)}
 
           <NavRouterItem
             href={ROUTES.clanky}
-            eventKey={1}
+            eventKey={11}
             title="Články"
           >
             Pred cestou
           </NavRouterItem>
+
           <NavRouterItem
             href={ROUTES.pois}
-            eventKey={2}
+            eventKey={12}
             title="Dôležité miesta"
           >
             Mapa
@@ -120,7 +121,7 @@ const Navigation = () => {
 
           <NavRouterItem
             href={settingsData.activeLink.href}
-            eventKey={3}
+            eventKey={13}
             title="LIVE sledovanie"
           >
             LIVE sledovanie
@@ -128,7 +129,7 @@ const Navigation = () => {
 
           <NavRouterItem
             href={ROUTES.archiv}
-            eventKey={5}
+            eventKey={15}
             title="Archív"
           >
             Archív
@@ -137,17 +138,16 @@ const Navigation = () => {
           {!authData.isAuth && (
           <NavRouterItem
             href={ROUTES.ucetPois}
-            eventKey={6}
+            eventKey={16}
             className="red-button desktop"
           >
             Prihlásiť sa             
           </NavRouterItem>)}
 
           {!!authData.isAuth && (
-          <NavDropdown eventKey={7} title="Môj účet" id="basic-nav-dropdown" className="desktop">
+          <NavDropdown eventKey={17} title="Môj účet" id="basic-nav-dropdown" className="desktop">
             <NavRouterItem
               href="#"
-              eventKey={7.0}
               className="desktop account-name"
             >
               {authData.userDetails.email}
@@ -155,7 +155,7 @@ const Navigation = () => {
 
             <NavRouterItem
               href={ROUTES.mojaCesta}
-              eventKey={7.1}
+              eventKey={21}
               title="Moja cesta"
               className="desktop"
             >
@@ -164,7 +164,7 @@ const Navigation = () => {
 
             <NavRouterItem
               href={ROUTES.pridatPOI}
-              eventKey={7.2}
+              eventKey={22}
               title="Pridať dôležité miesto"
               className="desktop"
             >
@@ -173,7 +173,7 @@ const Navigation = () => {
 
             <NavRouterItem
               href="#"
-              eventKey={7.3}
+              eventKey={23}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="desktop"
