@@ -5,12 +5,17 @@ const fs = require('fs').promises;
 const { getMeta } = require('./server/meta');
 const { MongoClient } = require('mongodb');
 const compression = require('compression');
+const replaceAll = require('string.prototype.replaceall');
 
 const app = express();
 const http = require('http').Server(app);
 
 const promiseFinally = require('promise.prototype.finally');
 promiseFinally.shim();
+
+if (!String.replaceAll) {
+  replaceAll.shim();
+}
 
 const moment = require('moment-timezone');
 moment.tz.setDefault('Europe/Vienna');

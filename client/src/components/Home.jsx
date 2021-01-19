@@ -72,7 +72,7 @@ const Home = (props) => {
 
                       {!!imgUrl && <div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
                       <div className="article-text-col">
-                        <div className="article-text">{article.introtext.replaceAll(/<[^>]+>/g, '')}</div>
+                        <div className="article-text">{(article.introtext || '').replaceAll('<p>', "\n").replaceAll(/<[^>]+>/g, '')}</div>
                         <ButtonReadMore href={`/pred/articles/article/${article.sql_article_id}`} />
                       </div>
                     </div>
