@@ -31,11 +31,6 @@ a {
   }
 }
 
-li {
-  list-style: none !important;
-  display: inline-block;
-}
-
 [data-tooltip]:before {            
   position : absolute;
   content : attr(data-tooltip);
