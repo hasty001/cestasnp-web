@@ -32,7 +32,12 @@ const getArticleMeta = (dbRef, articleId) =>
     .findByWithDB(dbRef, 'articles', { sql_article_id: articleId })
     .then(results => {
       if (results && results.length > 0) {
-        const desc = escape(results[0].ogdesc || results[0].metadesc || 'Toto je starší článok z portálu CestaSNP.sk');
+        const getDesc = () => {
+          const t = (results[0].introtext || '').replaceAll('<p>', "\n").replaceAll(/<[^>]+>/g, '').replaceAll('  ', ' ').trim();
+          const i = t.indexOf(".", 55);
+          return i > 0 ? t.slice(0, i + 1) : t;
+        };
+        const desc = escape(results[0].ogdesc || results[0].metadesc || getDesc());
         
         return db
           .findByWithDB(dbRef, 'users', { sql_user_id: results[0].created_by_user_sql_id })
@@ -267,7 +272,7 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
     }
   }
 
-  if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') || path.startsWith('/na/archive'))) {
+  if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
     var userId = url.substr(4);
 
     if (userId && userId.length <= 3) {

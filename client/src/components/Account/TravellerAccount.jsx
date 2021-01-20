@@ -7,6 +7,7 @@ import AuthContext from '../AuthContext';
 import { dateToStr } from '../../helpers/helpers';
 import DocumentTitle from 'react-document-title';
 import * as Constants from '../Constants';
+import DOMPurify from 'dompurify';
 
 class TravellerAccount extends React.Component {
   constructor(props) {
@@ -264,7 +265,7 @@ class TravellerAccount extends React.Component {
               onChange={this.handleChange}
             />
           ) : (
-            <p className="travellerP">{this.state.popis}</p>
+            <p className="travellerP" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.state.popis) }}></p>
           )}
         </label>
         <label htmlFor="zaciatok">

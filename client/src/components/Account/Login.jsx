@@ -55,13 +55,13 @@ class Login extends React.Component {
     return (
       <>
         <div className="accountWrap">
-          <p>
-            Ak sa chceš zúčastniť LIVE Sledovania, vytvor si prosím účet a
+        <p>
+            Ak sa chceš zúčastniť LIVE Sledovania alebo prispievať k obsahu webu, vytvor si prosím účet a
             prihlás sa na tejto stránke.
           </p>
           <p>
-            Tento účet slúži <b>len pre zasielanie správ</b>. Ak neplánuješ
-            vyraziť na Cestu hrdinov SNP v najbližších dňoch, účet nepotrebuješ.
+            Tento účet slúži <b>najmä pre zasielanie správ</b> do LIVE Sledovanie, ale aj pre možnosť pridať dôležité miesta a
+            komentovať LIVE Sledovanie bez ďalšieho overenia.
           </p>
         </div>
         <form

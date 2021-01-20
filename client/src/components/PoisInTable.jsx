@@ -9,6 +9,7 @@ import { Modal } from 'react-bootstrap';
 import FormCheckBox from './reusable/FormCheckBox';
 import { useStateWithLocalStorage } from '../helpers/reactUtils';
 import { PoiCategories } from './PoiCategories';
+import { navigate } from './reusable/Navigate';
 
 const PoisInTable = (props) => {
 
@@ -44,6 +45,9 @@ const PoisInTable = (props) => {
         case "text":
         case "created_by_name":
           return strCompare(f, a[sort.by], b[sort.by]);
+        case "img":
+          return f * (((a.img_url && a.img_url != "None") ? 1 : 0) - 
+            ((b.img_url && b.img_url != "None") ? 1 : 0));     
         case "itinerary":
           return f * ((a.itinerary ? (a.itinerary.near || a.itinerary.after ? 1 : 0) : 0) - 
             (b.itinerary ? (b.itinerary.near || b.itinerary.after ? 1 : 0) : 0));
@@ -111,6 +115,7 @@ const PoisInTable = (props) => {
   return (
     <PageWithLoader pageId="PoisInTable" loading={loading} error={error} pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`} >
       <>
+        <button className="snpBtn pois-map-itinerary-link no-print" title="V itineráry" onClick={() => navigate('/pred/itinerar')}><i className="fas fa-table"></i></button>
         <button className="snpBtn no-print" onClick={e => { e.preventDefault(); setShowSettings(true); }}>Nastavenie</button>
 
         <Modal dialogClassName="pois-table-dalog" show={showSettings} onHide={() => setShowSettings(false)}>
@@ -135,6 +140,7 @@ const PoisInTable = (props) => {
               <th><Sort col="name">Názov</Sort></th>
               <th><Sort col="text">Popis</Sort></th>
               {!!showDetails && <th><Sort col="itinerary">V itinerári</Sort></th>}
+              {!!showDetails && <th><Sort col="img">Fotka</Sort></th>}
             </tr>
             <tr>
               {!!showDetails && <><th><Sort col="created">Čas</Sort></th><th><Sort col="created_by_name">Užívateľ</Sort></th></>}
@@ -143,12 +149,13 @@ const PoisInTable = (props) => {
               <th></th>
               <th></th>
               {!!showDetails && <th></th>}
+              {!!showDetails && <th></th>}
             </tr>
           </thead>
           <tbody>
             {!!poisSorted && poisSorted.filter(poi => poi._id && (!poi.deleted || showDeleted) 
               && (isEmpty(filter) || !filter[poi.category] || (poi.food && !filter[Constants.PoiCategoryFood]) || poi.water && !filter[Constants.PoiCategoryWater])).map(poi => 
-              <PoiItem key={poi._id} value={poi} tableRow showLastChange={showDetails} showCreated={showDetails} showItinerary={showDetails} />)}
+              <PoiItem key={poi._id} value={poi} tableRow showLastChange={showDetails} showCreated={showDetails} showItinerary={showDetails} showImage={showDetails} />)}
           </tbody>
         </table>
       </>

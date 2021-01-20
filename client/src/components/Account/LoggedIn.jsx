@@ -25,17 +25,6 @@ const LoggedIn = (props) => {
             <TravellerAccount traveller={props.userData} />
           ) : (props.pois ? <></> : <FanAccount fan={props.userData} />
       ))}
-      <button
-        className="snpBtn"
-        style={{
-          display: 'block',
-          margin: '15px auto'
-        }}
-        onClick={() => auth.signOut()}
-        type="submit"
-      >
-        Odhlásiť
-      </button>
     </>
   );
 }

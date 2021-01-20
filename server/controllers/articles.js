@@ -101,7 +101,7 @@ router.put('/increase_article_count', (req, res) => {
   });
 });
 
-// returns 3 newest articles for homepage
+// returns 2 newest articles for homepage
 router.get('/for/home', (req, res) => {
   query.newestSorted(
     'articles',

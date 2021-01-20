@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const GenericError = "Ups, niekde sa stala chyba. Skús neskôr prosím.";
+export const NoTravellersError = "Momentálne nie je nikto na ceste.";
 export const GpsLowAccuracyError = (lat, lon) => 
   <span>
     Tvoja poloha sa nám zdá byť nepresná.

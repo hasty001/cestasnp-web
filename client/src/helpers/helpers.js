@@ -34,4 +34,16 @@ const dateToStrFormat = (date, strFormat, def = "") =>
 const dateTimeToStr = (date, def = "") => dateToStrFormat(date, Constants.DateTimeViewFormat, def);
 const dateToStr = (date, def = "") => dateToStrFormat(date, Constants.DateViewFormat, def);
 
-export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr };
+/**
+ * Escape html special characters.
+ */
+const escapeHtml = (html) => {
+  return !html ? '' : String(html)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr, escapeHtml };

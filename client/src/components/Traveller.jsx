@@ -11,8 +11,8 @@ import { AuthContext } from './AuthContext';
 import ConfirmBox from './reusable/ConfirmBox';
 import UserLabel from './reusable/UserLabel';
 import DocumentTitle from 'react-document-title';
-import { A } from './reusable/Navigate';
 import history from '../helpers/history';
+import DOMPurify from 'dompurify';
 
 const Traveller = (props) => {
   const authData = useContext(AuthContext);
@@ -414,14 +414,14 @@ class TravellerWithAuth extends Component {
 
             <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
               <p>{this.state.travellerData.meno}</p>
-              <p>{this.state.travellerData.text}</p>
+              <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.state.travellerData.text) }}></p>
               <p>
                 Začiatok: {this.state.travellerData.start_miesto}{' '}
                 {dateToStr(this.state.travellerData.start_date)}
               </p>              
             </div>
 
-            <div className="na-ceste-traveller-sort" >
+            <div className="na-ceste-traveller-sort" data-nosnippet >
               Zoradiť: <a href="#" onClick={this.handleOrderClick}>{this.state.orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
             </div>
 
@@ -474,7 +474,7 @@ class TravellerWithAuth extends Component {
                             maxWidth: '100%',
                             maxHeight: '80vh'
                           }}
-                          alt="fotka z putovania"
+                          alt={`${this.state.travellerData.meno} - fotka z putovania`}
                           onClick={() => {
                             this.handleImageBox(
                               true,
@@ -485,7 +485,7 @@ class TravellerWithAuth extends Component {
                           }}
                         />
                         )}                 
-                      <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }} />
                     </div>
                   );
                 }
@@ -523,7 +523,7 @@ class TravellerWithAuth extends Component {
                         <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár"><i className="fas fa-link"/></a>
                       </span>
                     </p>
-                    <p dangerouslySetInnerHTML={{ __html: message.text }} />
+                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }} />
                   </div>
                 );
               })}

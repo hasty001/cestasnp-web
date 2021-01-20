@@ -1,31 +1,29 @@
-import React, { Component, Fragment } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import format from 'date-fns/format';
-import { dateToStr, dateTimeToStr } from '../helpers/helpers';
-import { A } from './reusable/Navigate'
-
-import Loader from './reusable/Loader';
-import DocumentTitle from 'react-document-title';
+import { dateToStr, dateTimeToStr, escapeHtml } from '../helpers/helpers';
+import { fetchJson } from '../helpers/fetchUtils';
+import { A, navigate } from './reusable/Navigate'
+import SimpleMasonry from './reusable/SimpleMasonry';
 import * as Constants from './Constants';
+import * as Texts from './Texts';
+import PageWithLoader from './reusable/PageWithLoader';
+import { LocalSettingsContext } from './LocalSettingsContext';
+import DOMPurify from 'dompurify';
+import ButtonReadMore from './reusable/ButtonReadMore';
 
-class ActiveLight extends Component {
-  constructor(props) {
-    super(props);
+const ActiveLight = (props) => {
+  const now = format(new Date(), 'YYYY-MM-DD');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
+  const [travellers, setTravellers] = useState([]);
 
-    this.state = {
-      now: null,
-      loading: true,
-      error: false,
-      travellers: []
-    };
-  }
+  const fetchData = () => {
+    setLoading(true);
+    setError('');
 
-  componentDidMount() {
-    const now = format(new Date(), 'YYYY-MM-DD');
-        
-    fetch('/api/traveller/activeTravellersWithLastMessage')
-      .then(resp => resp.json())
+    fetchJson('/api/traveller/activeTravellersWithLastMessage' + window.location.search)
       .then(data => {
-        const travellers = [];
+        const activeTravellers = [];
         const travellerIds = [];
         data.forEach(traveller => {
           const travellerData = {};
@@ -36,89 +34,124 @@ class ActiveLight extends Component {
           travellerData.startDate = format(traveller.start_date, 'YYYY-MM-DD');
           travellerData.endDate = traveller.end_date;
           travellerData.lastMessage = traveller.lastMessage;
+          travellerData.finishedTracking = traveller.finishedTracking;
+          travellerData.lastImg = traveller.lastImg;
+          travellerData.lastImgMsgId = traveller.lastImgMsgId;
 
-          travellers.push(travellerData);
+          activeTravellers.push(travellerData);
           travellerIds.push(traveller.user_id);
         });
 
-        travellers.sort((a, b) => 
-            ((b.startDate <= now && a.startDate <= now) 
-              && ((b.lastMessage && a.lastMessage && b.lastMessage.pub_date > a.lastMessage.pub_date) || (b.lastMessage && !a.lastMessage))) 
-              ? 1 : ((b.startDate <= now && a.startDate <= now) && ((b.lastMessage && a.lastMessage && b.lastMessage.pub_date < a.lastMessage.pub_date) || (!b.lastMessage && a.lastMessage))) 
-              ? -1 : (a.startDate > b.startDate) ? 1: (a.startDate < b.startDate) ? -1 : 0);
+        const getSortValue = t => (t.finishedTracking ? "11_" + t.startDate : ("0"
+         + (t.startDate <= now && t.lastMessage ? ("0_" + t.lastMessage.pub_date) : ("1_" + t.startDate))));
+
+         activeTravellers.sort((a, b) => getSortValue(a) > getSortValue(b));
         
-        if (travellers.length === 0) {
-          this.setState({
-            travellers,
-            error: true
-          });
-        } else {          
-          this.setState({
-            now,
-            travellers,
-            loading: false
-          });
+        if (activeTravellers.length === 0) {
+          setTravellers([]);
+          setError(Texts.NoTravellersError);
+          setLoading(false);
+        } else {            
+          setTravellers(activeTravellers);  
+          setLoading(false);      
         }
       })
       .catch(e => {
-        this.setState({
-          error: true
-        });
-        throw e;
+        console.error(e);
+
+        setError(Texts.GenericError);
+        setLoading(false);
       });
   }
 
-  render() {
-    return (
-      <div id="NaCesteActiveLight">
-        {!this.props.box && <DocumentTitle title={`LIVE sledovanie${Constants.WebTitleSuffix}`} />}
-        {this.state.loading && !this.state.error && <Loader />}
+  useEffect(() => { fetchData(); }, []);
 
-        {!this.state.loading && !this.state.error && this.state.travellers && (
-            <div className="active-travellers-list">
-              {this.state.travellers.map((traveller, i) => {
-                return (    
-                      <div key={i}
-                        className="active-traveller-item"
-                      >
-                        <strong>
-                          {(!!traveller.lastMessage && (traveller.startDate <= this.state.now)) &&  (
+  const images = travellers ? 
+    travellers.filter(t => t.lastImg).map(t => {
+      const url = `/na/${t.userId}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
+      const title = t.meno;
+
+      if (t.lastImg.eager && t.lastImg.eager.length > 0) {
+        return { url: url, title: title, src: t.lastImg.secure_url, eager: t.lastImg.eager, aspect: t.lastImg.height / t.lastImg.width };
+      } else {
+        return { url: url, title: title, src: t.lastImg.indexOf('res.cloudinary.com') === -1
+            ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${t.lastImg}`
+            : t.lastImg, aspect: 1}
+      }
+    }) : [];
+
+  const hasActive = travellers ? 
+    travellers.reduce((r, t) => r || !t.finishedTracking && t.startDate <= now, false) : false;
+
+  const hasPlanning =  travellers ? 
+    travellers.reduce((r, t) => r || !t.finishedTracking && t.startDate > now, false) : false;
+
+  const settingsData = useContext(LocalSettingsContext);
+
+  return (
+    <PageWithLoader pageId="NaCesteActiveLight" 
+      pageTitle={props.box ? null : `LIVE sledovanie${Constants.WebTitleSuffix}`}
+      loading={loading} error={error}>
+
+      {!props.box && <button className="snpBtn active-kind-link no-print" title="Fotky"
+        onClick={() => { settingsData.setActiveLink("fotky"); navigate('/na/ceste/fotky'); }}><i className="far fa-images"></i></button>}
+          
+      {!!travellers && travellers.length > 0 && (
+          <div className="active-travellers-list">
+            {!hasActive && (
+              <div className="active-travellers-info">
+                {hasPlanning ?
+                  "Momentálne nie je nikto na ceste, ale môžeš si pozrieť, kto cestu plánuje, alebo nedávna zaujímavá putovanie:"
+                  : "Momentálne nie je nikto na ceste ani cestu neplánuje, ale môžeš si pozrieť nedávna zaujímavá putovanie:"}
+              </div>
+            )}
+
+            <div className="active-travellers-items">
+            {travellers.map((traveller, i) => {
+              return (    
+                    <div className="active-traveller-item" key={i} >
+                      <div className="traveller-item-header"> 
+                        <A className="traveller-name" href={`/na/${traveller.userId}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
+                          {traveller.meno}                          
+                        </A>
+
+                        <span className="traveller-date">              
+                          {(!traveller.finishedTracking && !!traveller.lastMessage && (traveller.startDate <= now)) &&  (
                           <span>
-                            {dateTimeToStr(traveller.lastMessage.pub_date)}{' '}
+                            {dateTimeToStr(traveller.lastMessage.pub_date)}
                           </span>)} 
 
-                          {((traveller.startDate > this.state.now) || !traveller.lastMessage) && (
+                          {((traveller.startDate > now) || !traveller.lastMessage) && (
                           <span>
                             {dateToStr(traveller.startDate)}                           
-                            {' '}{traveller.startMiesto}{' '}
+                            {' '}{traveller.startMiesto}
                           </span>)}  
 
-                          <A href={`/na/${traveller.userId}`}>
-                            {traveller.meno}                          
-                          </A>
-                        </strong>
+                          {traveller.finishedTracking && (
+                          <span>
+                            {' - '}{dateToStr(traveller.endDate)}
+                          </span>)} 
+                        </span>
+                      </div>
 
-                        {!!traveller.lastMessage && (
-                        <span>
-                          <br/>
-                          <span dangerouslySetInnerHTML={{ __html: traveller.lastMessage.text }} />
-                        </span>)}                         
-                      </div>                          
-                );
-              })}
+                      <div className="traveller-text"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(
+                            traveller.finishedTracking || !traveller.lastMessage ? 
+                              traveller.text : traveller.lastMessage.text) }} />
+                    </div>                          
+              );
+            })}
+              <div className="active-travellers-items-more">
+                <ButtonReadMore href="/na/ceste/light"/>
+              </div>
             </div>
-        )}
 
-        {this.state.error && (
-          <div>            
-            <p style={{ marginTop: '10px' }}>
-              Momentálne nie je nikto na ceste.
-            </p>
+            {!!props.box && images && images.length > 0 && 
+              (<SimpleMasonry images={images} targetHeight={560} />)}
           </div>
-        )}
-      </div>
-    );
-  }
+      )}
+    </PageWithLoader>
+  );
 }
 
 export default ActiveLight;
