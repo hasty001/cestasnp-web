@@ -1,4 +1,4 @@
-const InterestingShowCount = 7;
+const InterestingShowCount = 8;
 const InterestingPrevMonths = 7;
 const MinRating = 20;
 const CommentRating = 1;
