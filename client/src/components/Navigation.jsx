@@ -103,6 +103,14 @@ const Navigation = () => {
               Odhlásiť             
             </NavRouterItem>)}
 
+          {!!authData.isAuth && (
+            <NavRouterItem
+              href="#"
+              className="line-divider mobile"
+            >           
+              <hr/>
+            </NavRouterItem>)}
+
           <NavRouterItem
             href={ROUTES.clanky}
             eventKey={11}

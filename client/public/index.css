@@ -286,6 +286,17 @@ body {
   text-transform: none;
 }
 
+.navbar-nav>li.line-divider>a,
+.navbar-nav .open .dropdown-menu>li.line-divider>a {
+  pointer-events: none;
+}
+
+.line-divider hr {
+  max-width: 160px;
+  margin: 0 auto;
+  border-color: black;
+}
+
 .navbar-nav>li>a {
   padding-bottom: 28px;
   border-bottom: 2px solid transparent;
@@ -511,6 +522,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25);
   transition: 0.4s;
   padding: 0 20px;
+  line-height: normal;
 }
 
 .banner>a:hover,

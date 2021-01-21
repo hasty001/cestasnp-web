@@ -84,7 +84,7 @@ const Home = (props) => {
       <div className="home banner">
         { (month >= 5 && mont <= 10)
           ? <A href={settingsData.activeLink.href}>LIVE sledovanie</A>
-          : <A href="/pred/pois">Dôležité miesta</A>}
+          : <A href="/pred/pois">Mapa</A>}
       </div>
     </div>
   );
