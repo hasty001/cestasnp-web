@@ -11,9 +11,9 @@ const FormImage = (props) => {
     <>
       <Image value={value} alt={props.imageAlt} itemClassName={props.itemClassName}>
       <CloudinaryWidget
-        uid={props.userId}
+        uid={props.uid} type={props.type} imageId={props.imageId}
         updateImageDetails={setValue}
-        btnTxt={value && value != 'None' ? "Nahraj inú fotku" : "Nahraj fotku"}
+        btnTxt={(value && value != 'None') ? "Nahraj inú fotku" : "Nahraj fotku"}
         />
       </Image>
     </>

@@ -19,3 +19,9 @@ export const PoiMarkerIconProps = {
 };
 export const WebTitle = "CestaSNP";
 export const WebTitleSuffix = " - CestaSNP";
+
+export const ImageType = {
+  LiveSledovanie: 0,
+  DolezitaMiesta: 1,
+  Clanky: 2
+}

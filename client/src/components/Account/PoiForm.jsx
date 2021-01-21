@@ -15,6 +15,7 @@ import PoiList from '../reusable/PoiList';
 import ItineraryTable from '../reusable/ItineraryTable';
 import { useStateEx } from '../../helpers/reactUtils';
 import FormCheckBox from '../reusable/FormCheckBox';
+import { ImageType } from '../reusable/CloudinaryWidget';
 
 const PoiForm = (props) => {
 
@@ -40,6 +41,7 @@ const PoiForm = (props) => {
   const [name, setName] = useStateEx('', clearMsg);
   const [text, setText] = useStateEx('', clearMsg);
   const [image, setImage] = useStateEx('', clearMsg);
+  const [imageId, setImageId] = useState(Date.now());
   const [water, setWater] = useStateEx('', clearMsg);
   const [food, setFood] = useStateEx('', clearMsg);
 
@@ -78,6 +80,7 @@ const PoiForm = (props) => {
       setName(p.name);
       setText(p.text);
       setImage(p.img_url);
+      setImageId(Date.now());
       setWater(p.water);
       setFood(p.food);
       setItineraryNear(p.itinerary ? p.itinerary.near : null);
@@ -175,6 +178,7 @@ const PoiForm = (props) => {
         setName('');
         setText('');
         setImage(''); 
+        setImageId(Date.now());
         setFood(''); 
         setWater(''); 
         setItineraryNear(null);
@@ -248,7 +252,8 @@ const PoiForm = (props) => {
       <FormText value={[name, setName]} valueName="name" valueLabel="Meno" itemClassName="form"/>
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>
 
-      <FormImage value={[image, setImage]} imageAlt="nahrana fotka miesta" />
+      <FormImage value={[image, setImage]} imageAlt="nahrana fotka miesta" uid={props.uid} 
+        imageId={imageId} type={Constants.ImageType.DolezitaMiesta}/>
 
       {!!props.edit && newPoi && addItineraryItems(newPoi, newPoi.guideposts)}
       {!!props.edit && <FormText value={[note, setNote]} valueName="note" valueLabel="Poznámka" itemClassName="form"/>}

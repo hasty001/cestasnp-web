@@ -7,6 +7,7 @@ import FormLatLon from '../reusable/FormLatLon';
 import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
 import { useStateEx } from '../../helpers/reactUtils';
+import * as Constants from '../Constants';
 
 const Message = (props) => {
 
@@ -25,6 +26,7 @@ const Message = (props) => {
   const [gpsEdit, setGpsEdit] = useStateEx(false, clearMsg);
   const [message, setMessage] = useStateEx('', clearMsg);
   const [image, setImage] = useStateEx('', clearMsg);
+  const [imageId, setImageId] = useState(Date.now());
 
   const sendMessage = () => {
     if (!message || message.trim().length === 0) {
@@ -62,7 +64,8 @@ const Message = (props) => {
         setGpsEdit(false);
         setGps({ latlon: '', accuracy: 0 });
         setMessage('');
-        setImage(''); 
+        setImage('');
+        setImageId(Date.now());
 
         setSuccessMsg('Správa úspešne poslaná!');
 
@@ -84,7 +87,8 @@ const Message = (props) => {
 
       <FormTextArea value={[message, setMessage]} valueName="message" valueLabel="Text" />
       
-      <FormImage value={[image, setImage]} imageAlt="nahrana fotka z cesty" />
+      <FormImage value={[image, setImage]} imageAlt="nahrana fotka z cesty" uid={props.userId} 
+        type={Constants.ImageType.LiveSledovanie} imageId={imageId} />
     </FormWithLoader>
   );
 }
