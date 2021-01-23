@@ -8,6 +8,7 @@ import { AuthContext } from './AuthContext';
 import { useStateWithLocalStorage } from '../helpers/reactUtils';
 import * as Constants from './Constants';
 import { navigate } from './reusable/Navigate';
+import Loader from './reusable/Loader';
 
 const Pois = (props) => {
 
@@ -116,11 +117,14 @@ const Pois = (props) => {
   };
 
   return (
-    <PageWithLoader pageId="Pois" loading={loading} error={error} pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`}>
+    <PageWithLoader pageId="Pois" pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`}>
       <>
-        {!!pois && (
-          <Map pois={pois} use="pois-map" 
-            view={[view, setView]} setView={null} marker={gpsMarker} showLayers />)}
+        <Map pois={pois || []} use="pois-map" 
+          view={[view, setView]} setView={null} marker={gpsMarker} showLayers />
+        {!!loading && !error && <Loader />}
+        {!!error && <div className="errorMsg">
+            {error}
+          </div>}
         {!!gpsError && <div className="errorMsg">
             <Close onClose={() => setGpsError('')}/>
             {gpsError}

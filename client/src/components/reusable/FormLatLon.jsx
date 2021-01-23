@@ -99,7 +99,7 @@ const FormLatLon = (props) => {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Map use="select-pos-map" view={[mapCenter, setMapCenter]} tilesNew>
+            <Map use="select-pos-map" view={[mapCenter, setMapCenter]} tiles="new">
               <i className="fas fa-map-marker-alt map-pos"/>
             </Map>
           </Modal.Body>

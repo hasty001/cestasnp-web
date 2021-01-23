@@ -5,13 +5,11 @@ import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
 import { dateTimeToStr, escapeHtml } from '../helpers/helpers';
 import { findPoiCategory, PoiCategories } from './PoiCategories';
-import { useStateProp } from '../helpers/reactUtils';
+import { useStateProp, useStateWithLocalStorage } from '../helpers/reactUtils';
 import * as Constants from './Constants';
 import { generateAnchor } from './reusable/Navigate';
 import DOMPurify from 'dompurify';
 
-// store the map configuration properties in an object,
-// we could also move this to a separate file & import it if desired.
 const config = {
   params: {
     center: [48.73, 19.46],
@@ -52,6 +50,8 @@ const Map = (props) => {
   const [markers, setMarkers] = useState([]);
   const [moving, setMoving] = useState();
   const [zooming, setZooming] = useState();
+
+  const [mapTilesLayer, setMapTilesLayer] = useStateWithLocalStorage("MapTilesLayer", props.tiles);
 
   const parse = (value, def) => {
     try {
@@ -96,10 +96,16 @@ const Map = (props) => {
       }
     }).addTo(map);
 
-    const mapTiles = L.tileLayer(config.tileLayer.uri, config.tileLayer.params).addTo(map);
+    const mapTiles = L.tileLayer(config.tileLayer.uri, config.tileLayer.params);
     const mapTilesNew = L.tileLayer(config.tileLayerNew.uri, config.tileLayerNew.params);
 
-    map.addLayer(props.tilesNew ? mapTilesNew : mapTiles);
+    if (mapTilesLayer == "new") {
+      mapTilesNew.addTo(map);
+    } else {
+      mapTiles.addTo(map);
+    }
+
+    map.on('baselayerchange', e => setMapTilesLayer(e.name == "turistika + cyklo + běžky" ? "new" : null));
 
     const posChanged = () => { 
       const c = map.getCenter(); 
