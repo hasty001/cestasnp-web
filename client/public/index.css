@@ -131,13 +131,14 @@ html, body, #root {
   top: 0;
   border-bottom: 1px solid red;
 }
-#CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog, .map-dialog {
+
+.modal {
   margin-top: 80px;
 } @media (max-width: 1000px) {
   .app-header {
     max-height: 70px;
   }
-  #CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog, .map-dialog {
+  .modal {
     margin-top: 70px;
   }
 } @media print {
@@ -1544,7 +1545,6 @@ span.poi-text {
 }
 
 .travellerPhotoModal {
-  margin-top: 120px;
   width: 900px;
   max-width: 90%;
 }
@@ -1789,7 +1789,6 @@ span.poi-text {
 /***    ACCOUNT     ***/
 
 .resetPasswordModal {
-  margin-top: 120px;
   width: 900px;
   max-width: 90%;
 }
