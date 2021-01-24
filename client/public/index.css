@@ -155,8 +155,15 @@ html, body, #root {
 }
 
 .modal {
-  margin: 80px auto 10px;
-} @media (max-width: 1000px) {
+  margin: 80px 0 0;
+  padding: 0 !important;
+} 
+
+.modal-dialog {
+  margin: 0 auto;
+}
+
+@media (max-width: 1000px) {
   .app-header {
     max-height: 70px;
   }
