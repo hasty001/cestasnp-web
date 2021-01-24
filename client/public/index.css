@@ -131,13 +131,14 @@ html, body, #root {
   top: 0;
   border-bottom: 1px solid red;
 }
-#CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog {
+
+.modal {
   margin-top: 80px;
 } @media (max-width: 1000px) {
   .app-header {
     max-height: 70px;
   }
-  #CommentBox, #ConfirmBox, #EditPoiBox, .itinerary-dialog, .pois-table-dalog {
+  .modal {
     margin-top: 70px;
   }
 } @media print {
@@ -284,6 +285,17 @@ body {
 .navbar-nav .open .dropdown-menu>li.account-name>a {
   pointer-events: none;
   text-transform: none;
+}
+
+.navbar-nav>li.line-divider>a,
+.navbar-nav .open .dropdown-menu>li.line-divider>a {
+  pointer-events: none;
+}
+
+.line-divider hr {
+  max-width: 160px;
+  margin: 0 auto;
+  border-color: black;
 }
 
 .navbar-nav>li>a {
@@ -511,6 +523,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25);
   transition: 0.4s;
   padding: 0 20px;
+  line-height: normal;
 }
 
 .banner>a:hover,
@@ -838,12 +851,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 
   #Home .article-image.before {
+    float: none;
     display: block;
-    min-width: 85vw;
-    min-height: 85vw;
-    margin: 0 0 30px 0;
-    max-width: unset;
-    max-height: unset;
+    min-width: 240px;
+    min-height: 240px;
+    margin: 0 auto 30px auto;
+    max-width: 240px;
+    max-height: 240px;
   }
 
   #Home #home1 .article-image.before {
@@ -854,6 +868,15 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     display: block;
     width: 100%;
     margin: 30px 0 0 0;
+  }
+}
+
+@media(max-width: 280px) {
+  #Home .article-image.before {
+    min-width: 85vw;
+    min-height: 85vw;
+    max-width: 85vw;
+    max-height: 85vw;
   }
 }
 
@@ -1109,6 +1132,20 @@ span.poi-text {
 /***     POIS       ***/
 /**********************/
 /***    ADD POIS    ***/
+
+#select-pos-map {
+  min-height: 60vh;
+}
+
+.map-pos {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -32px);
+  pointer-events: none;
+  z-index: 9998;
+  font-size: 32px;
+}
 
 #add-poi-map {
   width: 100%;
@@ -1508,7 +1545,6 @@ span.poi-text {
 }
 
 .travellerPhotoModal {
-  margin-top: 120px;
   width: 900px;
   max-width: 90%;
 }
@@ -1753,7 +1789,6 @@ span.poi-text {
 /***    ACCOUNT     ***/
 
 .resetPasswordModal {
-  margin-top: 120px;
   width: 900px;
   max-width: 90%;
 }

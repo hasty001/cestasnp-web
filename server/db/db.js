@@ -576,10 +576,10 @@ DB.prototype = {
                   }
                     
                   const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
-                  if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < maxCount || _const.InterestingShowCoun) {
+                  if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < maxCount || _const.InterestingShowCount) {
                     // no active only few planning, add some interesting
 
-                    return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCoun) - activeTravellers.length)
+                    return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length)
                       .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
                   }
 

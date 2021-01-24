@@ -1,57 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchPostJson } from '../../helpers/fetchUtils';
+import * as Constants from '../Constants';
 
-class CloudinaryWidget extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      myWidget: ''
-    };
+const getPreset = (type) => {
+  switch (type) {
+    case Constants.ImageType.LiveSledovanie:
+      return 'eo9nitmv';
+    case Constants.ImageType.DolezitaMiesta:
+      return 'dgdqau2u';
+    case Constants.ImageType.Clanky:
+      return 'khokhgj9';
   }
 
-  componentDidMount() {
-    const myWidget = cloudinary.createUploadWidget(
-      {
+  return 'eo9nitmv';
+}
+
+const getTags = (type) => {
+  switch (type) {
+    case Constants.ImageType.LiveSledovanie:
+      return ['live_sledovanie'];
+    case Constants.ImageType.DolezitaMiesta:
+      return ['dolezita_miesta'];
+    case Constants.ImageType.Clanky:
+      return ['clanky'];
+  }
+  return [];
+}
+
+const CloudinaryWidget = ({ uid, imageId, updateImageDetails, btnTxt, type }) => {
+  const [widget, setWidget] = useState();
+
+  useEffect(() => {
+    const myWidget = cloudinary.createUploadWidget({
         cloudName: 'cestasnp-sk',
         apiKey: '186532245374812',
-        uploadSignature: this.generateSignature,
-        uploadPreset: 'eo9nitmv',
+        uploadSignature: generateSignature,
+        uploadPreset: getPreset(type),
         sources: ['local', 'camera'],
         multiple: false,
         maxImageWidth: 1600,
+        maxImageHeight: 1600,
         resourceType: 'image',
         cropping: false,
-        tags: ['live_sledovanie'],
-        public_id: `${this.props.uid}_${Date.now()}`,
-        clientAllowedFormats: ['png', 'jpg', 'jpeg'],
-        thumbnailTransformation: [
-          { width: 248, height: 140, crop: 'fill' },
-          { width: 800, height: 400, crop: 'fill' }
-        ]
+        tags: getTags(type),
+        public_id: `${uid}_${imageId || Date.now()}`,
+        clientAllowedFormats: ['png', 'jpg', 'jpeg']
       },
       (error, result) => {
         if (!error && result && result.event === 'success') {
-          this.props.updateImageDetails(result.info);
+          updateImageDetails(result.info);
         } else if (error) {
-          this.props.updateImageDetails('');
+          updateImageDetails('');
         }
       }
     );
 
-    this.setState({
-      myWidget
-    });
-  }
+    setWidget(myWidget);
+  }, [imageId]);
 
-  generateSignature = (callback, params_to_sign) => {
-    fetch('/api/cloudinary/generateSignature', {
-      method: 'POST',
-      body: JSON.stringify(params_to_sign),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    })
-      .then(res => res.json())
+  const generateSignature = (callback, params_to_sign) => {
+    fetchPostJson('/api/cloudinary/generateSignature', params_to_sign)
       .then(signature => {
         callback(signature);
       })
@@ -60,23 +68,21 @@ class CloudinaryWidget extends React.Component {
       });
   };
 
-  openWidget = () => {
-    this.state.myWidget.open();
+  const openWidget = () => {
+   widget.open();
   };
 
-  render() {
-    return (
-      <button
-        type="button"
-        id="upload_widget"
-        className="snpBtnWhite"
-        onClick={this.openWidget}
-      >
-        {' '}
-        {this.props.btnTxt}
-      </button>
-    );
-  }
+  return (
+    <button
+      type="button"
+      id="upload_widget"
+      className="snpBtnWhite"
+      onClick={openWidget}
+    >
+      {' '}
+      {btnTxt}
+    </button>
+  );
 }
 
 export default CloudinaryWidget;
