@@ -1313,7 +1313,8 @@ span.poi-text {
 #Article img.center {
   display: block;
   margin: 10px auto;
-  max-width: 85wv !important;
+  max-width: 85vw !important;
+  max-height: 85vw !important;
   border-radius: 8px;
 }
 
@@ -1335,6 +1336,16 @@ span.poi-text {
 
 .image-list {
   overflow: hidden;
+}
+
+.article-img-item .buttons {
+  float: left;
+  padding-right: 5px;
+}
+
+.article-img-item button {
+  display: inline-block !important;
+  margin: 0 !important;
 }
 
 .article-img-item img,

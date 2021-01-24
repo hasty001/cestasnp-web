@@ -16,6 +16,8 @@ import ArticlePreviewBox from '../reusable/ArticlePreviewBox';
 import { A } from '../reusable/Navigate';
 import ArticleDiffBox from '../reusable/ArticleDiffBox';
 import FormItem from '../reusable/FormItem';
+import CloudinaryWidget from '../reusable/CloudinaryWidget';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const ArticleForm = (props) => {
 
@@ -28,6 +30,7 @@ const ArticleForm = (props) => {
 
   const [preview, setPreview] = useState(false);
   const [diff, setDiff] = useState(null);
+  const [imageId, setImageId] = useState(Date.now());
 
   const clearMsg = () => {
     setErrorMsg('');
@@ -47,6 +50,7 @@ const ArticleForm = (props) => {
   const [text, setText] = useStateEx('', clearMsg);
 
   const [images, setImages] = useStateEx([], clearMsg);
+  const [imagesAdded, setImagesAdded] = useStateEx([], clearMsg);
   const [links, setLinks] = useStateEx([], clearMsg);
 
   const [note, setNote] = useStateEx('', clearMsg);
@@ -77,6 +81,8 @@ const ArticleForm = (props) => {
   }, [intro, text])
 
   useEffect(() => {
+    setImageId(Date.now());
+
     if (!props.edit) {
       setLoading(true);
 
@@ -281,6 +287,34 @@ const ArticleForm = (props) => {
     return result;
   };
 
+  const addImage = (image) => {
+    const newImages = imagesAdded.map(i => i);
+    newImages.push({ 
+      html: `<img class="left" src="${image.secure_url}" />`, src: image.secure_url, added: true });
+
+    setImagesAdded(newImages);
+    setImageId(Date.now());
+  }
+
+  const imageAlign = (image, align) => {
+    var newHtml = image.html.replace(/class="[^"]*"/, `class="${align}"`)
+      .replaceAll(/(width|height|style)="[^"]*"/g, '');
+    if (newHtml.indexOf(" class=") < 0) {
+      newHtml = newHtml.replace("<img", `<img class="${align}"`);
+    }
+
+    if (image.added) {
+      image.html = newHtml;
+
+      setImagesAdded(imagesAdded.map(i => i));
+    } else {
+      setText((text || '').replace(image.html, newHtml));
+      setIntro((intro || '').replace(image.html, newHtml));
+    }
+  }
+
+  const allImages = images.concat(imagesAdded.filter(t => images.findIndex(i => i.src == t.src) < 0));
+  
   return (
     <FormWithLoader formId="add-article" 
       title={props.edit ? (<>Upraviť článok - <A href={`/pred/articles/article/${props.article ? props.article.sql_article_id : ''}`}>{props.article ? props.article.title : ""}</A></>) 
@@ -313,8 +347,27 @@ const ArticleForm = (props) => {
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form"/>
       
       <FormItem valueName="images" valueLabel="Obrázky" useEdit 
-        valueClass="image-list" value={images.map((image, i) => <img key={i} src={image.src}/>)}>
-        {!!images && images.map((image, i) => <div key={i} className="article-img-item"><img src={image.src}/>{image.html.replace('https://res.cloudinary.com/cestasnp-sk/image/upload', '...')}</div>)}
+        valueClass="image-list" value={allImages.map((image, i) => <img key={i} src={image.src}/>)}>
+        <>
+          {allImages.map((image, i) => (
+            <div key={i} className="article-img-item">
+              <CopyToClipboard text={image.html}>
+                <button className="action" title="Kopírovať"><i className="far fa-copy" /></button>
+              </CopyToClipboard>
+              <img src={image.src}/>
+
+              <span className="buttons">
+                <button className="" title="Vľavo" onClick={() => imageAlign(image, 'left')}><i className="fas fa-align-left" /></button>
+                <button className="" title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
+                <button className="" title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
+              </span>
+
+              {image.html.replace('https://res.cloudinary.com/cestasnp-sk/image/upload', '...')}
+            </div>))}
+          <CloudinaryWidget uid={props.uid} imageId={imageId} 
+            updateImageDetails={i => addImage(i)} 
+            btnTxt="Pridať" type={Constants.ImageType.Clanky} />
+        </>
       </FormItem>
 
       <FormItem valueName="links" valueLabel="Odkazy" useEdit 
