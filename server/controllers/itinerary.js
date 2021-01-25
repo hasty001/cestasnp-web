@@ -4,13 +4,14 @@ const WGS84Util = require('wgs84-util');
 const DB = require('../db/db');
 const { findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
 const promiseAsJson = require('../util/promiseUtils');
+const _const = require('../../const');
 
 const db = new DB();
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  promiseAsJson(() => db.all(req.app.locals.db, 'pois').then(results => {
+  promiseAsJson(() => db.all(req.app.locals.db, _const.PoisTable).then(results => {
     const resultItinerary = itinerary.map(item => Object.assign({}, item));
 
     results.filter(poi => !poi.deleted && poi.itinerary).forEach(poi => {
@@ -36,7 +37,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/matchPois', (req, res) => {
-  promiseAsJson(() => db.all(req.app.locals.db, 'pois').then(results => {
+  promiseAsJson(() => db.all(req.app.locals.db, _const.PoisTable).then(results => {
     const warning = [];
     const info = [];
 
@@ -80,7 +81,7 @@ router.get('/matchPois', (req, res) => {
     });
 
     if (req.query.apply) {
-      return db.setPoisItinerary(info).then(r =>Promise.resolve({ apply: r, warning, info }));
+      return db.setPoisItinerary(info).then(r => Promise.resolve({ apply: r, warning, info }));
     } else {    
       return Promise.resolve({ warning, info });
     }

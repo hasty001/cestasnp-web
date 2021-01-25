@@ -196,7 +196,7 @@ const ArticleForm = (props) => {
           setTitle('');
           setIntro('');
           setText('');
-          setImages('');
+          setImages([]);
           setArticleId((msgRes.sql_article_id + 1).toString());
         }
         setNote('');

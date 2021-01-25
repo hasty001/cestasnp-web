@@ -7,6 +7,7 @@ const Validation = require('./validation');
 const { getNearGuideposts, findNearestGuideposts, findNearestPoint } = require('../util/gpsUtils');
 const { format } = require('date-fns');
 const _const = require('../../const');
+const { sanitizeUserId } = require('../util/checkUtils');
 
 const securityCheck = new Validation();
 
@@ -15,198 +16,79 @@ const DB = function() {
   this.url = process.env.MONGODB_ATLAS_URI;
 };
 
+const dbCollection = (db, collection) => db.db('cestasnp').collection(collection);
+
+const dbConnect = (promise) => MongoClient.connect(
+  process.env.MONGODB_ATLAS_URI,
+  { useNewUrlParser: true }).then(db => promise(db).finally(() => db.close()));
+
 DB.prototype = {
   all(db, collection) {
-    return db.db('cestasnp')
-      .collection(collection)
+    return dbCollection(db, collection)
       .find()
       .toArray();
   },
 
-  newestSorted(db, collection, sortBy = {}, filterBy = {}, limit = 2) {
-    return db.db('cestasnp')
-      .collection(collection)
+  newestSorted(db, collection, sortBy = {}, filterBy = {}, limit = 1) {
+    return dbCollection(db, collection)
       .find(filterBy)
       .sort(sortBy)
       .limit(limit)
       .toArray();
   },
 
-  nextSorted(db, collection, sortBy = {}, next = 0, filterBy = {}, pageSize = 8) {
+  nextSorted(db, collection, sortBy = {}, next = 0, filterBy = {}, pageSize = _const.PageSize) {
     let page = next - 1;
     page = page < 0 ? 0 : page;
 
-    return db.db('cestasnp')
-        .collection(collection)
-        .find(filterBy)
-        .sort(sortBy)
-        .limit(pageSize)
-        .skip(pageSize * page)
-        .toArray();
-  },
-
-  findBy(collection, findBy = {}, sortBy = {}) {
-    return new Promise((resolve, reject) => {
-      MongoClient.connect(
-        process.env.MONGODB_ATLAS_URI,
-        { useNewUrlParser: true },
-        (err, db) => {
-          if (db) {
-            db.db('cestasnp')
-              .collection(collection)
-              .find(findBy)
-              .sort(sortBy)
-              .toArray((toArrayError, docs) => {
-                if (docs) {
-                  db.close();
-                  resolve(docs);
-                } else {
-                  db.close();
-                  reject(toArrayError);
-                }
-              });
-          } else {
-            reject(err);
-          }
-        }
-      );
-    });
-  },
-
-  findByWithDB(db, collection, findBy = {}) {
-    return db.db('cestasnp')
-        .collection(collection)
-        .find(findBy)
-        .toArray();
-  },
-
-  latestWithDB(db, collection, findBy = {}, sortBy = {}) {
-    return db.db('cestasnp')
-        .collection(collection)
-        .find(findBy)
-        .sort(sortBy)
-        .limit(1)
-        .toArray();
-  },
-  
-  findByWithDB(db, collection, findBy = {}, options = {}, sortBy = {}) {
-    return db.db('cestasnp')
-              .collection(collection)
-              .find(findBy, options)
-              .sort(sortBy)
-              .toArray();
-  },
-
-  countCollection(db, collection, findBy = {}) {
-    return db.db('cestasnp')
-            .collection(collection)
-            .countDocuments(findBy);
-  },
-
-  addArticle(article, collection) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          db.db('cestasnp')
-            .collection(collection)
-            .insertOne(article)
-            .then(() => {
-              db.close();
-            })
-            .catch(dbError => {
-              db.close();
-              throw dbError;
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
-  },
-
-  increaseArticleCount(articleId, callback) {
-    const sArticleId = sanitize(articleId);
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          const oid = new ObjectId(sArticleId);
-          db.db('cestasnp')
-            .collection('articles')
-            .findOneAndUpdate({ _id: oid }, { $inc: { article_views: 1 } })
-            .then(res => {
-              db.close();
-              callback(res);
-            })
-            .catch(dbError => {
-              db.close();
-              throw dbError;
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
-  },
-
-  // traveller related
-
-  getTravellerDetails(db, travellerId) {
-    return new Promise((resolve, reject) => {
-      let sTravellerId = sanitize(travellerId);
-      // for before FIREBASE users
-      if (sTravellerId.length <= 3) {
-        sTravellerId = parseInt(sTravellerId, 10);
-      }
-
-      return db.db('cestasnp')
-        .collection('traveler_details')
-        .find({ user_id: sTravellerId })
-        .toArray((toArrayError, docs) => {
-          if (docs) {
-            resolve(docs);
-          } else {
-            reject(toArrayError);
-          }
-        });
-    });
-  },
-
-  getTravellerArticle(db, travellerId) {
-    let sTravellerId = sanitize(travellerId);
-    // for before FIREBASE users
-    if (sTravellerId.length <= 3) {
-      sTravellerId = parseInt(sTravellerId, 10);
-    }
-    
-    return db.db('cestasnp')
-      .collection('articles')
-      .find({ created_by_user_sql_id: sTravellerId })
+    return dbCollection(db, collection)
+      .find(filterBy)
+      .sort(sortBy)
+      .limit(pageSize)
+      .skip(pageSize * page)
       .toArray();
   },
 
-  getTravellerMessages(db, userId) {
-    return new Promise((resolve, reject) => {
-      let sUserId = sanitize(userId);
-      // for before FIREBASE users
-      if (sUserId.length <= 3) {
-        sUserId = parseInt(sUserId, 10);
-      }
+  findBy(db, collection, findBy = {}) {
+    return dbCollection(db, collection)
+      .find(findBy)
+      .toArray();
+  },
+  
+  findBy(db, collection, findBy = {}, options = {}, sortBy = {}) {
+    return dbCollection(db, collection)
+      .find(findBy, options)
+      .sort(sortBy)
+      .toArray();
+  },
 
-      return db.db('cestasnp')
-        .collection('traveler_messages')
-        .find({ $and: [ { user_id: sUserId }, { deleted: {$ne: true} } ] })
-        .toArray((toArrayErr, docs) => {
-          if (docs) {
-            resolve(docs);
-          } else {
-            reject(toArrayErr);
-          }
-        })
-    });
+  countCollection(db, collection, findBy = {}) {
+    return dbCollection(db, collection)
+      .countDocuments(findBy);
+  },
+
+  addArticle(article, collection) {
+    return dbConnect(db => dbCollection(db, collection).insertOne(article));
+  },
+
+  increaseArticleCount(articleId) {
+    return dbConnect(db => dbCollection(db, _const.ArticlesTable)
+      .findOneAndUpdate({ _id: new ObjectId(sanitize(articleId)) }, { $inc: { article_views: 1 } }, { returnOriginal: false })
+      .then(res => res && res.value ? res.value.article_views : 0));
+  },
+
+  // traveller related
+  getTravellerDetails(db, travellerId) {
+    return this.findBy(db, _const.DetailsTable, { user_id: sanitizeUserId(travellerId) });
+  },
+
+  getTravellerArticle(db, travellerId) {
+    return this.findBy(db, _const.ArticlesTable, { created_by_user_sql_id: sanitizeUserId(travellerId) });
+  },
+
+  getTravellerMessages(db, travellerId) {
+    return this.findBy(db, _const.MessagesTable,
+      { $and: [ { user_id: sanitizeUserId(travellerId) }, { deleted: {$ne: true} } ] });
   },
 
   findUserName(uid, users) {
@@ -222,15 +104,11 @@ DB.prototype = {
    * Returns list of users with name or journey name for specified uids.
    */
   getUserNames(db, uids) {
-    const getUsers = db.db('cestasnp')
-      .collection('users')
-      .find(uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { uid: 1, sql_user_id: 1, name: 1 })
-      .toArray();
+    const getUsers = this.findBy(db, _const.UsersTable, 
+      uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { uid: 1, sql_user_id: 1, name: 1 });
 
-    const getDetails = db.db('cestasnp')
-      .collection('traveler_details')
-      .find(uids ? { user_id : { $in: uids } } : {}, { user_id: 1, meno: 1 })
-      .toArray();
+    const getDetails = this.findBy(db, _const.DetailsTable,
+      uids ? { user_id : { $in: uids } } : {}, { user_id: 1, meno: 1 });
 
     return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
       users.forEach(u => {
@@ -248,19 +126,15 @@ DB.prototype = {
     });
   },
 
-  getTravellerComments(db, articleId, travellerId, callback) {
+  getTravellerComments(db, articleId, travellerId) {
     const sArticleId = sanitize(articleId);
     const sTravellerId = sanitize(travellerId);
    
     const getDocs = (sArticleId === 0 || sArticleId === '') ?
-      db.db('cestasnp')
-        .collection('traveler_comments')
-        .find({ $and: [ { 'travellerDetails.id': sTravellerId }, { deleted: {$ne: true} } ] })
-        .toArray()
-      : db.db('cestasnp')
-        .collection('article_comments')
-        .find({ $and: [ { article_sql_id: sArticleId }, { deleted: {$ne: true} } ] })
-        .toArray();
+      this.findBy(db, _const.CommentsTable,
+        { $and: [ { 'travellerDetails.id': sTravellerId }, { deleted: {$ne: true} } ] })
+      : this.findBy(db, _const.ArticleCommentsTable,
+        { $and: [ { article_sql_id: sArticleId }, { deleted: {$ne: true} } ] });
 
     return getDocs.then((docs) => {
       const uids = this.getUids(docs, [d => d.uid]);
@@ -270,13 +144,13 @@ DB.prototype = {
           docs.forEach(d => {
             if (d.uid) {
               const user = users.find(u => u.uid === d.uid);
+              
               if (user) {
                 if (d.username)
                   d.username = user.name;
                 d.name = user.name;
               }
             }
-
           });
           
           return Promise.resolve(docs);
@@ -299,40 +173,39 @@ DB.prototype = {
       return Promise.reject('Traveller IDs not numbers');
     }
 
-    return db.db('cestasnp')
-      .collection('traveler_messages')
-      .find({ $and: [ { user_id: { $in: sTravellerIds } }, { deleted: {$ne: true} } ] })
-      .toArray().then(docs => {
-          docs.sort((a, b) => {
-            return new Date(b.pub_date) - new Date(a.pub_date);
-          });
+    return this.findBy(db, _const.MessagesTable,
+      { $and: [ { user_id: { $in: sTravellerIds } }, { deleted: {$ne: true} } ] })
+      .then(docs => {
+        docs.sort((a, b) => {
+          return new Date(b.pub_date) - new Date(a.pub_date);
+        });
 
-          return Promise.resolve(docs);
+        return Promise.resolve(docs);
       });
   },
 
   getTravellerLastMessage(db, travellerId) {
-    return db.db('cestasnp')
-      .collection('traveler_messages')
-      .find({ $and: [ { user_id: travellerId }, { deleted: {$ne: true} } ] })
-      .sort({ pub_date: -1 })
-      .toArray().then(docs => {
-          if (docs && docs.length > 0) {
-            return Promise.resolve(docs[0]);
-          } else if (docs && docs.length === 0) {
-            return Promise.resolve({
-              message: `No messages found for ${travellerId}`,
-              pub_date: 0,
-              user_id: travellerId
-            });
-          }});
+    const sTravellerId = sanitize(travellerId);
+
+    return this.newestSorted(db, _const.MessagesTable, { pub_date: -1 }, 
+      { $and: [ { user_id: sTravellerId }, { deleted: {$ne: true} } ] })
+      .then(docs => {
+        if (docs && docs.length > 0) {
+          return Promise.resolve(docs[0]);
+        } else if (docs && docs.length === 0) {
+          return Promise.resolve({
+            message: `No messages found for ${sTravellerId}`,
+            pub_date: 0,
+            user_id: sTravellerId
+          });
+        }});
   },
 
   getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount) {
     const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
     const start = format(new Date(date || new Date()) - _const.InterestingPrevMonths * 31 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD');
               
-    return this.findByWithDB(db, 'traveler_details', { 
+    return this.findBy(db, _const.DetailsTable, { 
       $and: [{ finishedTracking: true}, 
         { $or: [{start_date: { $lte: now }}, {end_date: { $lte: now }}]},
         { $or: [{start_date: { $gte: start }}, {end_date: { $gte: start }}]}] })
@@ -341,11 +214,11 @@ DB.prototype = {
         const finishedIds = finished.map(t => t.articleID ? t.articleID : t._id.toString() );
         const finishedUserIds = finished.map(t => t.user_id );
 
-        const listCommentsOld = this.findByWithDB(db, 'article_comments', 
+        const listCommentsOld = this.findBy(db, _const.ArticleCommentsTable, 
           { $and: [{ article_sql_id: { $in: finishedIds } }, { deleted: { $ne: true }}] });
-        const listCommentsNew = this.findByWithDB(db, 'traveler_comments', 
+        const listCommentsNew = this.findBy(db, _const.CommentsTable, 
           { $and: [{ 'travellerDetails.id': { $in: finishedIds } }, { deleted: { $ne: true }}] });
-        const listMessages = this.findByWithDB(db, 'traveler_messages', 
+        const listMessages = this.findBy(db, _const.MessagesTable, 
           { $and: [{ user_id: { $in: finishedUserIds } }, { deleted: { $ne: true }}] }, {}, { pub_date: 1 });
 
         return Promise.all([listCommentsOld, listCommentsNew, listMessages])
@@ -397,14 +270,14 @@ DB.prototype = {
   },
 
   getActiveTravellersWithLastMessage(db, date, maxCount) {
-    return this.findByWithDB(db, 'traveler_details', { finishedTracking: false })
+    return this.findBy(db, _const.DetailsTable, { finishedTracking: false })
       .then(activeTravellers => {
         var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
           
         if (activeTravellersIds.length === 0) {
           return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
         } else {
-          return this.findByWithDB(db, 'traveler_messages', { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
+          return this.findBy(db, _const.MessagesTable, { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
             {}, { pub_date: -1 })
             .then(lastMessages => {
               if (lastMessages) { 
@@ -435,260 +308,152 @@ DB.prototype = {
   })},
 
 
-  addCommentOldTraveller(comment, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          db.db('cestasnp')
-            .collection('article_comments')
-            .find()
-            .sort({ sql_comment_id: -1 })
-            .limit(1)
-            .toArray()
-            .then(array => {
-              // TODO - spread and add key
-              // eslint-disable-next-line no-param-reassign
-              comment.sql_comment_id = array[0].sql_comment_id + 1;
-            })
-            .then(() => {
-              if (securityCheck.checkCommentOldTraveller(comment)) {
-                // save comment with new comment id
-                db.db('cestasnp')
-                  .collection('article_comments')
-                  .insertOne(comment)
-                  .then((commentRes) => {
-                    comment._id = commentRes.insertedId;
-                    
-                    db.close();
-                    callback(comment);
-                  })
-                  .catch(insertOne => {
-                    db.close();
-                    throw insertOne;
-                  });
-              } else {
-                callback({ error: 'Malicious comment' });
-              }
-            })
-            .catch(dbError => {
-              throw dbError;
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
-  },
-
-  addCommentNewTraveller(comment, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          const resCollection = db
-            .db('cestasnp')
-            .collection('traveler_comments');
-          // / see highest comment number
-          if (securityCheck.checkCommentNewTraveller(comment)) {
+  addCommentOldTraveller(comment) {
+    return dbConnect(db =>
+      this.newestSorted(db, _const.ArticleCommentsTable, { sql_comment_id: -1 })
+        .then(array => {
+          // TODO - spread and add key
+          // eslint-disable-next-line no-param-reassign
+          comment.sql_comment_id = array[0].sql_comment_id + 1;
+        })
+        .then(() => {
+          if (securityCheck.checkCommentOldTraveller(comment)) {
             // save comment with new comment id
-            resCollection
+            return dbCollection(db, _const.ArticleCommentsTable)
               .insertOne(comment)
-              .then((commentRes) => {
+              .then(commentRes => {
                 comment._id = commentRes.insertedId;
-
-                db.close();
-                callback(comment);
-              })
-              .catch(inserErr => {
-                db.close();
-                throw inserErr;
+                
+                return Promsie.resolve(comment);
               });
           } else {
-            callback({ error: 'Malicious comment' });
+            return Promise.reject('Malicious comment');
           }
-        } else {
-          throw err;
-        }
-      }
-    );
+        }));          
   },
 
-  deleteComment(id, uid, articleId, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true }).then((db) => {
-          return db.db('cestasnp')
-          .collection('traveler_details')
-          .findOne({ user_id : uid })
-          .then((details) =>
-          {          
-            const sDetails = { _id: (details && details._id && details._id.toString()) ? details._id.toString() : "-1", 
-              articleID: (details && details.articleID) ? details.articleID : -1 };
+  addCommentNewTraveller(comment) {
+    return dbConnect(db => {
+      if (securityCheck.checkCommentNewTraveller(comment)) {
+        // save comment with new comment id
+        return dbCollection(db, _const.CommentsTable)
+          .insertOne(comment)
+          .then(commentRes => {
+            comment._id = commentRes.insertedId;
 
-            const update = {
-              $set: {
-                deleted: true,
-                del_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                del_by: uid,
-              }
-            };
-            const options = { returnOriginal: false };
-            const deleteComment = (articleId === 0 || articleId === '') ?
-              db.db('cestasnp')
-                .collection('traveler_comments')
-                .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { 'travellerDetails.id': sDetails._id }, { uid: uid } ] } ] },
-                  update, options)
-              : db.db('cestasnp')
-                .collection('article_comments')
-                .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { article_sql_id: sDetails.articleID }, { uid: uid } ] } ] },
-                  update, options);
-
-            return deleteComment.then((res) => {
-              db.close();
-
-              if (res.value) {
-                callback(res.value);
-              } else {
-                callback({ error: 'Komentár nebol nájdený.' });
-              }
-            });
-          })
-          .catch(error => {
-            db.close();
-            callback({ error });
+            return Promise.resolve(comment);
           });
-      }).catch(error => callback({ error }));
-  },
-
-  finishTracking(userId, completed, endDate) {
-    return new Promise((resolve, reject) => {
-      MongoClient.connect(
-        process.env.MONGODB_ATLAS_URI,
-        { useNewUrlParser: true },
-        (err, db) => {
-          if (db) {
-            db.db('cestasnp')
-              .collection('traveler_details')
-              .findOneAndUpdate(
-                {
-                  user_id: userId
-                },
-                {
-                  $set: {
-                    finishedTracking: true,
-                    end_date: endDate,
-                    completed
-                  }
-                }
-              )
-              .then(res => {
-                db.close();
-                resolve(res);
-              })
-              .catch(error => {
-                db.close();
-                reject(error);
-              });
-          } else {
-            reject(err);
-          }
-        }
-      );
+      } else {
+        return Promise.reject('Malicious comment');
+      }
     });
   },
 
-  createUser({ email, name, uid }, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          const userRecord = {
-            uid,
-            sql_user_id: '',
-            name,
-            email,
-            usertype: 'Fan',
-            registerDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-            lastvisitDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-            sendEmail: 'NOT IN USE',
-            gid: 'NOT IN USE',
-            block: 'NOT IN USE',
-            password: 'NOT IN USE',
-            username: 'NOT IN USE',
-            activation: 'NOT IN USE',
-            params: 'NOT IN USE'
+  deleteComment(id, uid, articleId) {
+    return dbConnect(db =>
+      dbCollection(db, _const.DetailsTable)
+        .findOne({ user_id : uid })
+        .then((details) =>
+        {          
+          const sDetails = { _id: (details && details._id && details._id.toString()) ? details._id.toString() : "-1", 
+            articleID: (details && details.articleID) ? details.articleID : -1 };
+
+          const update = {
+            $set: {
+              deleted: true,
+              del_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+              del_by: uid,
+            }
           };
-          db.db('cestasnp')
-            .collection('users')
-            .insertOne(userRecord)
-            .then(() => {
-              db.close();
-              callback({
-                userDetails: userRecord,
-                travellerDetails: {},
-                travellerMessages: []
-              });
-            })
-            .catch(dbError => {
-              db.close();
-              throw dbError;
-            });
-        } else {
-          throw err;
-        }
+
+          const options = { returnOriginal: false };
+          const deleteComment = (articleId === 0 || articleId === '') ?
+            dbCollection(db, _const.CommentsTable)
+              .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { 'travellerDetails.id': sDetails._id }, { uid: uid } ] } ] },
+                update, options)
+            : dbCollection(db, _const.ArticleCommentsTable)
+              .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { article_sql_id: sDetails.articleID }, { uid: uid } ] } ] },
+                update, options);
+
+          return deleteComment.then(res => {
+            if (res.value) {
+              return Promise.resolve(res.value);
+            } else {
+              return Promise.reject('Komentár nebol nájdený.');
+            }
+          });
+        }));
+  },
+
+  finishTracking(userId, completed, endDate) {
+    return dbConnect(db =>
+      dbCollection(db, _const.DetailsTable)
+        .findOneAndUpdate(
+          { user_id: userId }, {
+            $set: {
+              finishedTracking: true,
+              end_date: endDate,
+              completed
+            }
+          }));
+  },
+
+  createUser({ email, name, uid }) {
+    return dbConnect(db => {
+      const userRecord = {
+        uid: sanitize(uid),
+        sql_user_id: '',
+        name: sanitize(name),
+        email: sanitize(email),
+        usertype: 'Fan',
+        registerDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        lastvisitDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        sendEmail: 'NOT IN USE',
+        gid: 'NOT IN USE',
+        block: 'NOT IN USE',
+        password: 'NOT IN USE',
+        username: 'NOT IN USE',
+        activation: 'NOT IN USE',
+        params: 'NOT IN USE'
+      };
+
+      return dbCollection(db, _const.UsersTable)
+        .insertOne(userRecord)
+        .then(() => Promise.resolve({
+            userDetails: userRecord,
+            travellerDetails: {},
+            travellerMessages: []
+          }));      
+      });
+  },
+
+  createTraveller({ meno, text, start_date, uid, start_miesto, number, email }) {
+    return dbConnect(db => {
+      const travellerRecord = {
+        sql_id: '',
+        meno: sanitize(meno), // nazov skupiny
+        text: sanitize(text), // popis skupiny
+        start_date: sanitize(start_date),
+        end_date: '',
+        completed: '',
+        user_id: sanitize(uid),
+        start_miesto: sanitize(start_miesto),
+        number: sanitize(number), // pocet ucastnikov
+        email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
+        articleID: 0,
+        finishedTracking: false,
+        created: moment().format('YYYY-MM-DD HH:mm:ss'),
+        lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss')
+      };
+
+      return dbCollection(db, _const.DetailsTable)
+        .insertOne(travellerRecord)
+        .then(() => Promise.resolve(travellerRecord));
       }
     );
   },
 
-  createTraveller(
-    { meno, text, start_date, uid, start_miesto, number, email },
-    callback
-  ) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          const travellerRecord = {
-            sql_id: '',
-            meno, // nazov skupiny
-            text, // popis skupiny
-            start_date,
-            end_date: '',
-            completed: '',
-            user_id: uid,
-            start_miesto,
-            number, // pocet ucastnikov
-            email, // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
-            articleID: 0,
-            finishedTracking: false,
-            created: moment().format('YYYY-MM-DD HH:mm:ss'),
-            lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss')
-          };
-          db.db('cestasnp')
-            .collection('traveler_details')
-            .insertOne(travellerRecord)
-            .then(() => {
-              db.close();
-              callback(travellerRecord);
-            })
-            .catch(insertError => {
-              db.close();
-              throw insertError;
-            });
-        } else {
-          throw err;
-        }
-      }
-    );
-  },
-
-  updateTraveller(
-    {
+  updateTraveller({
       meno,
       text,
       start_date,
@@ -699,218 +464,137 @@ DB.prototype = {
       completed,
       email,
       finishedTracking
-    },
-    callback
-  ) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (err, db) => {
-        if (db) {
-          db.db('cestasnp')
-            .collection('traveler_details')
-            .findOneAndUpdate(
-              { user_id: uid },
-              {
+    }) {
+    return dbConnect(db =>
+      dbCollection(db, _const.DetailsTable)
+        .findOneAndUpdate({ user_id: uid }, {
+            $set: {
+              meno: sanitize(meno), // nazov skupiny
+              text: sanitize(text), // popis skupiny
+              start_date: sanitize(start_date),
+              end_date: sanitize(end_date),
+              completed: sanitize(completed),
+              user_id: sanitize(uid),
+              start_miesto: sanitize(start_miesto),
+              number: sanitize(number), // pocet ucastnikov
+              email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
+              finishedTracking: sanitize(finishedTracking),
+              lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss')
+            }
+          }
+        ));
+  },
+
+  sendMessage(message) {
+    return dbConnect(db => {
+      message.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
+      message.pub_date_milseconds = moment().valueOf();
+
+      return dbCollection(db, _const.MessagesTable)
+        .insertOne(securityCheck.sanitizeTravellerMessage(message))
+        .then(msgRes => {
+          message._id = msgRes.insertedId;
+
+          return dbCollection(db, _const.DetailsTable)
+            .findOneAndUpdate({ user_id: message.user_id }, {
                 $set: {
-                  meno: sanitize(meno), // nazov skupiny
-                  text: sanitize(text), // popis skupiny
-                  start_date: sanitize(start_date),
-                  end_date: sanitize(end_date),
-                  completed: sanitize(completed),
-                  user_id: sanitize(uid),
-                  start_miesto: sanitize(start_miesto),
-                  number: sanitize(number), // pocet ucastnikov
-                  email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
-                  finishedTracking: sanitize(finishedTracking),
-                  lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss')
+                  finishedTracking: false,
+                  end_date: ''
                 }
-              }
-            )
+              })
             .then(() => {
-              db.close();
-              callback({ response: `${uid} successfully updated` });
-            })
-            .catch(dbError => {
-              db.close();
-              throw dbError;
+              console.log(`${message.user_id} reactivated`);
+              return Promise.resolve(message);
             });
-        } else {
-          throw err;
-        }
-      }
-    );
+        });
+    });
   },
 
-  sendMessage(message, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (error, db) => {
-        if (db) {
-          message.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
-          message.pub_date_milseconds = moment().valueOf();
-
-          db.db('cestasnp')
-            .collection('traveler_messages')
-            .insertOne(securityCheck.sanitizeTravellerMessage(message))
-            .then((msgRes) => {
-              message._id = msgRes.insertedId;
-
-              db.db('cestasnp')
-                .collection('traveler_details')
-                .findOneAndUpdate(
-                  { user_id: message.user_id },
-                  {
-                    $set: {
-                      finishedTracking: false,
-                      end_date: ''
-                    }
-                  }
-                )
-                .then(() => {
-                  db.close();
-                  console.log(`${message.user_id} reactivated`);
-                  callback(message);
-                })
-                .catch(err => {
-                  db.close();
-                  throw err;
-                });
-            })
-            .catch(err => {
-              db.close();
-              callback({ error: err });
-            });
-        } else {
-          callback({ error });
-        }
-      }
-    );
-  },
-
-  deleteMessage(id, uid, callback) {
-    MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true },
-      (error, db) => {
-        if (db) {
-          db.db('cestasnp')
-            .collection('traveler_messages')
-            .findOneAndUpdate({ $and: [{_id: new ObjectId(id) }, { user_id: uid }] }, { $set: {
-              deleted: true,
-              del_date: moment().format('YYYY-MM-DD HH:mm:ss')
-            }}, 
-            { returnOriginal: false })
-            .then((res) => {
-              db.close();
-
-              if (res.value) {
-                callback(res.value);
-              } else {
-                callback({ error: 'Správa nebola nájdená.' });
-              };
-            })
-            .catch(err => {
-              db.close();
-              callback({ error: err });
-            });
-        } else {
-          callback({ error });
-        }
-      }
-    );
+  deleteMessage(id, uid) {
+    return dbConnect(db =>
+      dbCollection(db, _const.MessagesTable)
+        .findOneAndUpdate({ $and: [{_id: new ObjectId(id) }, { user_id: uid }] }, { $set: {
+          deleted: true,
+          del_date: moment().format('YYYY-MM-DD HH:mm:ss')
+        }}, { returnOriginal: false })
+        .then(res => {
+          if (res.value) {
+            return Promise.resolve(res.value);
+          } else {
+            return Promise.reject('Správa nebola nájdená.');
+          }
+        }));
   },
   
   setPoisItinerary(pois) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then(db => {
-          return Promise.all(pois.map(item => 
-            db.db('cestasnp')
-              .collection('pois')
-              .findOneAndUpdate({ _id: new ObjectId(item.poi._id) }, 
-                { $set: { 'itinerary.near': item.near ? item.near.id : null,
-                'itinerary.after': item.after ? item.after.id : null } },
-                { returnOriginal: false })
-          )).then(r => {
-            db.close();
-            return Promise.resolve(r.map(i => i.value));
-          })
-          .catch(dbError => {
-            db.close();
-            return Promise.reject(dbError);
-          });
-        });
+    return dbConnect(db => 
+      Promise.all(pois.map(item => 
+        dbCollection(db, _const.PoisTable)
+          .findOneAndUpdate({ _id: new ObjectId(item.poi._id) }, 
+            { $set: { 
+              'itinerary.near': item.near ? item.near.id : null,
+              'itinerary.after': item.after ? item.after.id : null } },
+            { returnOriginal: false })
+      )).then(r => Promise.resolve(r.map(i => i.value)))
+    );
   },
 
   addPoi(poi) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then( db  => {
-          poi.created = moment().format('YYYY-MM-DD HH:mm:ss');
+    return dbConnect(db => {
+      poi.created = moment().format('YYYY-MM-DD HH:mm:ss');
 
-          return db.db('cestasnp')
-            .collection('pois')
-            .insertOne(securityCheck.sanitizePoi(poi))
-            .then((poiRes) => {
-              poi._id = poiRes.insertedId;
+      return dbCollection(db, _const.PoisTable)
+        .insertOne(securityCheck.sanitizePoi(poi))
+        .then(poiRes => {
+          poi._id = poiRes.insertedId;
 
-              return this.fillPoiInfo(db, poi._id, poi).then(poi => {
-                return Promise.resolve(poi);
-              });
-            }).finally(() => db.close());
+          return this.fillPoiInfo(db, poi._id, poi).then(poi => {
+            return Promise.resolve(poi);
+          });
+        });
       }
     )
   },
 
   updatePoi({uid, id, note, ...poi}) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then( db  => {
-          poi.modified_by = uid;
-          poi.modified = moment().format('YYYY-MM-DD HH:mm:ss');
-          poi.modified_note = note;
+    return dbConnect(db => {
+      poi.modified_by = uid;
+      poi.modified = moment().format('YYYY-MM-DD HH:mm:ss');
+      poi.modified_note = note;
 
-          return db.db('cestasnp')
-            .collection('pois')
-            .findOne({ _id: new ObjectId(id) }).then(current => {
-              if (!current) {
-                return Promise.reject('Dôležité miesto nebolo nájdené.');
-              }
-              delete current._id;
-              current.poiId = id;
+      return dbCollection(db, _const.PoisTable)
+        .findOne({ _id: new ObjectId(id) })
+        .then(current => {
+          if (!current) {
+            return Promise.reject('Dôležité miesto nebolo nájdené.');
+          }
+          delete current._id;
+          current.poiId = id;
 
-              poi.user_id = current.user_id;
-              poi.created = current.created;
+          poi.user_id = current.user_id;
+          poi.created = current.created;
 
-              return db.db('cestasnp')
-                .collection('pois_history').insertOne(current).then(resInsert => {
-                  poi.historyId = resInsert.insertedId.toString();
+          return dbCollection(db, _const.PoisHistoryTable)
+            .insertOne(current).then(resInsert => {
+              poi.historyId = resInsert.insertedId.toString();
 
-                  return db.db('cestasnp')
-                    .collection('pois')
-                    .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: securityCheck.sanitizePoi(poi) },
-                      { returnOriginal: false })
-                    .then(res => {
-                      if (res.value) {
-                        return this.fillPoiInfo(db, res.value._id, res.value);
-                      } else {
-                        return Promise.reject('Dôležité miesto nebolo nájdené.');
-                      }
-                    });
-                }                  
-                );
-            }).finally(() => db.close());
-      }
-    )
+              return dbCollection(db, _const.PoisTable)
+                .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: securityCheck.sanitizePoi(poi) },
+                  { returnOriginal: false })
+                .then(res => {
+                  if (res.value) {
+                    return this.fillPoiInfo(db, res.value._id, res.value);
+                  } else {
+                    return Promise.reject('Dôležité miesto nebolo nájdené.');
+                  }
+                });
+            });
+        });
+      });
   },
 
   getPois(db) {
-    return db.db('cestasnp').collection('pois').find().toArray()
+    return this.findBy(db, _const.PoisTable)
       .then(pois => {
         const uids = this.getUids(pois, [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
 
@@ -929,16 +613,16 @@ DB.prototype = {
   getPoisMy(db, uid) {
     const s_uid = sanitize(uid);
 
-    return this.findByWithDB(db, 'users', { uid: s_uid })
+    return this.findBy(db, _const.UsersTable, { uid: s_uid })
     .then(user => { 
       const poisNotMy = (user[0].poisNotMy || []).map(v => new ObjectId(v));
       const poisMy = (user[0].poisMy || []).map(v => new ObjectId(v));
 
-      return db.db('cestasnp').collection('pois').find(
+      return this.findBy(db, _const.PoisTable,
         { $and: [ 
           { _id: { $nin: poisNotMy} },
           { $or: [{ _id: { $in: poisMy } }, { user_id: s_uid }] }
-        ] }).toArray()
+        ] })
         .then(pois => {
           const uids = this.getUids(pois, [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
 
@@ -956,11 +640,9 @@ DB.prototype = {
   },
 
   deletePoi(uid, id, note) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then(db => {
-        return db.db('cestasnp').collection('pois').findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }, { user_id: uid }] },
+    return dbConnect(db => 
+      dbCollection(db, _const.PoisTable)
+        .findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }, { user_id: uid }] },
           { $set: { deleted: moment().format('YYYY-MM-DD HH:mm:ss'), deleted_by: uid, deleted_note: note } }, 
           { returnOriginal: false })
         .then(res => {
@@ -969,67 +651,64 @@ DB.prototype = {
           } else {
             return Promise.reject('Dôležité miesto nebolo nájdené.');
           }
-        })
-        .finally(() => db.close());
-      });
+      }));
   },
 
   togglePoiMy(uid, id) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then(db => {
-        return db.db('cestasnp').collection('pois').findOne({ _id: new ObjectId(id) }).then(poi => {
-          if (!poi) {
-            return Promise.reject('Dôležité miesto nebolo nájdené.');            
+    return dbConnect(db => 
+      dbCollection(db, _const.PoisTable)
+      .findOne({ _id: new ObjectId(id) }).then(poi => {
+        if (!poi) {
+          return Promise.reject('Dôležité miesto nebolo nájdené.');            
+        }
+
+        return dbCollection(db, _const.UsersTable)
+        .findOne({ uid }).then(userDetails => {
+          if (!userDetails) {
+            return Promise.reject('Neexistujúci užívateľ.');
           }
 
-          return db.db('cestasnp').collection('users').findOne({ uid }).then(userDetails => {
-            if (!userDetails) {
+          const isMy = 
+            (userDetails.poisMy && userDetails.poisMy.indexOf(id) >= 0)
+            || (poi.user_id == userDetails.uid && !(userDetails.poisNotMy && userDetails.poisNotMy.indexOf(id) >= 0));
+
+          if (isMy) {
+            userDetails.poisMy = (userDetails.poisMy || []).filter(t => t != id);
+            userDetails.poisNotMy = userDetails.poisNotMy || [];
+
+            if (poi.user_id == userDetails.uid && userDetails.poisNotMy.indexOf(id) < 0) {
+              userDetails.poisNotMy.push(id);
+            }
+          } else {
+            userDetails.poisNotMy = (userDetails.poisNotMy || []).filter(t => t != id);
+            userDetails.poisMy = userDetails.poisMy || [];
+
+            if (poi.user_id != userDetails.uid && userDetails.poisMy.indexOf(id) < 0) {
+              userDetails.poisMy.push(id);
+            }
+          }
+
+          return dbCollection(db, _const.UsersTable)
+            .findOneAndUpdate({ uid },
+            { $set: { 
+              poisMy: userDetails.poisMy, 
+              poisNotMy: userDetails.poisNotMy } }, 
+            { returnOriginal: false })
+          .then(res => {
+            if (res.value) {
+              return Promise.resolve(res.value);
+            } else {
               return Promise.reject('Neexistujúci užívateľ.');
             }
-
-            const isMy = 
-              (userDetails.poisMy && userDetails.poisMy.indexOf(id) >= 0)
-              || (poi.user_id == userDetails.uid && !(userDetails.poisNotMy && userDetails.poisNotMy.indexOf(id) >= 0));
-
-            if (isMy) {
-              userDetails.poisMy = (userDetails.poisMy || []).filter(t => t != id);
-              userDetails.poisNotMy = userDetails.poisNotMy || [];
-
-              if (poi.user_id == userDetails.uid && userDetails.poisNotMy.indexOf(id) < 0) {
-                userDetails.poisNotMy.push(id);
-              }
-            } else {
-              userDetails.poisNotMy = (userDetails.poisNotMy || []).filter(t => t != id);
-              userDetails.poisMy = userDetails.poisMy || [];
-
-              if (poi.user_id != userDetails.uid && userDetails.poisMy.indexOf(id) < 0) {
-                userDetails.poisMy.push(id);
-              }
-            }
-
-            return db.db('cestasnp').collection('users').findOneAndUpdate({ uid },
-              { $set: { 
-                poisMy: userDetails.poisMy, 
-                poisNotMy: userDetails.poisNotMy } }, 
-              { returnOriginal: false })
-            .then(res => {
-              if (res.value) {
-                return res.value;
-              } else {
-                return Promise.reject('Neexistujúci užívateľ.');
-              }
-            });
           });
-        }).finally(() => db.close());
-      });
+        });
+     }));
   },
 
   fillPoiInfo(db, poiId, poiValue) {
     return Promise.all([
       poiValue,
-      db.db('cestasnp').collection('pois_history').find({ poiId: poiId.toString() }).sort({ modified: -1 }).toArray(),
+      this.findBy(db, _const.PoisHistoryTable, { poiId: poiId.toString() } ,[], { modified: -1 }),
     ]).then(([poi, history]) => {
       if (!poi) {
         return Promise.reject('Dôležité miesto nebolo nájdené.');
@@ -1067,65 +746,63 @@ DB.prototype = {
     const sPoiId = sanitize(poiId);
 
     return this.fillPoiInfo(db, sPoiId, 
-      db.db('cestasnp').collection('pois').findOne({ _id: new ObjectID(sPoiId) }));
+      dbCollection(db, _const.PoisTable).findOne({ _id: new ObjectId(sPoiId) }));
   },
 
   toggleArticleMy(uid, id) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then(db => {
-        return db.db('cestasnp').collection('articles').findOne({ sql_article_id: id }).then(article => {
-          if (!article) {
-            return Promise.reject('Článok nebol nájdený.');            
+    return dbConnect(db => 
+      db.db('cestasnp').collection(_const.ArticlesTable).findOne({ sql_article_id: id })
+      .then(article => {
+        if (!article) {
+          return Promise.reject('Článok nebol nájdený.');            
+        }
+
+        return dbCollection(db, _const.UsersTable).findOne({ uid })
+        .then(userDetails => {
+          if (!userDetails) {
+            return Promise.reject('Neexistujúci užívateľ.');
           }
 
-          return db.db('cestasnp').collection('users').findOne({ uid }).then(userDetails => {
-            if (!userDetails) {
+          const isMy = 
+            (userDetails.articlesMy && userDetails.articlesMy.indexOf(id) >= 0)
+            || (article.created_by == userDetails.uid && !(userDetails.articlesNotMy && userDetails.articlesNotMy.indexOf(id) >= 0));
+
+          if (isMy) {
+            userDetails.articlesMy = (userDetails.articlesMy || []).filter(t => t != id);
+            userDetails.articlesNotMy = userDetails.articlesNotMy || [];
+
+            if (article.created_by == userDetails.uid && userDetails.articlesNotMy.indexOf(id) < 0) {
+              userDetails.articlesNotMy.push(id);
+            }
+          } else {
+            userDetails.articlesNotMy = (userDetails.articlesNotMy || []).filter(t => t != id);
+            userDetails.articlesMy = userDetails.articlesMy || [];
+
+            if (article.created_by != userDetails.uid && userDetails.articlesMy.indexOf(id) < 0) {
+              userDetails.articlesMy.push(id);
+            }
+          }
+
+          return db.db('cestasnp').collection('users').findOneAndUpdate({ uid },
+            { $set: { 
+              articlesMy: userDetails.articlesMy, 
+              articlesNotMy: userDetails.articlesNotMy } }, 
+            { returnOriginal: false })
+          .then(res => {
+            if (res.value) {
+              return Promise.resolve(res.value);
+            } else {
               return Promise.reject('Neexistujúci užívateľ.');
             }
-
-            const isMy = 
-              (userDetails.articlesMy && userDetails.articlesMy.indexOf(id) >= 0)
-              || (article.created_by == userDetails.uid && !(userDetails.articlesNotMy && userDetails.articlesNotMy.indexOf(id) >= 0));
-
-            if (isMy) {
-              userDetails.articlesMy = (userDetails.articlesMy || []).filter(t => t != id);
-              userDetails.articlesNotMy = userDetails.articlesNotMy || [];
-
-              if (article.created_by == userDetails.uid && userDetails.articlesNotMy.indexOf(id) < 0) {
-                userDetails.articlesNotMy.push(id);
-              }
-            } else {
-              userDetails.articlesNotMy = (userDetails.articlesNotMy || []).filter(t => t != id);
-              userDetails.articlesMy = userDetails.articlesMy || [];
-
-              if (article.created_by != userDetails.uid && userDetails.articlesMy.indexOf(id) < 0) {
-                userDetails.articlesMy.push(id);
-              }
-            }
-
-            return db.db('cestasnp').collection('users').findOneAndUpdate({ uid },
-              { $set: { 
-                articlesMy: userDetails.articlesMy, 
-                articlesNotMy: userDetails.articlesNotMy } }, 
-              { returnOriginal: false })
-            .then(res => {
-              if (res.value) {
-                return res.value;
-              } else {
-                return Promise.reject('Neexistujúci užívateľ.');
-              }
-            });
           });
-        }).finally(() => db.close());
-      });
+        });
+      }));
   },
 
   fillArticleInfo(db, sql_article_id, articleValue) {
     return Promise.all([
       articleValue,
-      db.db('cestasnp').collection('articles_history').find({ sql_article_id: sql_article_id }).sort({ modified: -1 }).toArray(),
+      this.findBy(db, _const.ArticlesHistoryTable, { sql_article_id: sql_article_id }, {}, { modified: -1 }),
     ]).then(([article, history]) => {
       if (!article) {
         return Promise.reject('Článok nebol nájdený.');
@@ -1158,12 +835,12 @@ DB.prototype = {
   getArticlesMy(db, uid) {
     const s_uid = sanitize(uid);
 
-    return this.findByWithDB(db, 'users', { uid: s_uid })
-    .then(user => db.db('cestasnp').collection('articles').find(
+    return this.findBy(db, _const.UsersTable, { uid: s_uid })
+    .then(user => this.findBy(db, _const.ArticlesTable,
         { $and: [ 
           { sql_article_id: { $nin: (user[0].articlesNotMy || []) } },
           { $or: [{ sql_article_id: { $in: (user[0].articlesMy || []) } }, { created_by: s_uid }] },
-        ]}).toArray()
+        ]})
       .then(articles => {
         const uids = this.getUids(articles, [p => p.created_by, 
           p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id]);
@@ -1188,102 +865,90 @@ DB.prototype = {
   },
 
   addArticle(article) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then( db  => {
-        article.created = moment().format('YYYY-MM-DD HH:mm:ss'); 
-        article.sql_article_id = sanitize(parseInt(article.sql_article_id));
+    return dbConnect(db => {
+      article.created = moment().format('YYYY-MM-DD HH:mm:ss'); 
+      article.sql_article_id = sanitize(parseInt(article.sql_article_id));
 
-        return db.db('cestasnp').collection("users")
-          .findOne({ uid: article.created_by }).then(user => {
+      return dbCollection(db, _const.UsersTable)
+        .findOne({ uid: article.created_by }).then(user => {
 
-            if (user.articlesRole != "admin") {
-              article.state = -1;
+          if (user.articlesRole != "admin") {
+            article.state = -1;
+          }
+
+          return this.findBy(db, _const.ArticlesTable, { sql_article_id: article.sql_article_id }).then( duplicate => {
+
+            if (duplicate && duplicate.length > 0) {
+              return Promise.reject(`Článok s ID ${article.sql_article_id} už existuje.`);
             }
 
-            return this.latestWithDB(db, 'articles', { sql_article_id: article.sql_article_id }).then( duplicate => {
+            return dbCollection(db, _const.ArticlesTable)
+              .insertOne(securityCheck.sanitizeArticle(article))
+              .then((articleRes) => {
+                article._id = articleRes.insertedId;
 
-              if (duplicate && duplicate.length > 0) {
-                return Promise.reject(`Článok s ID ${article.sql_article_id} už existuje.`);
-              }
-
-              return db.db('cestasnp')
-                .collection('articles')
-                .insertOne(securityCheck.sanitizeArticle(article))
-                .then((articleRes) => {
-                  article._id = articleRes.insertedId;
-
-                  return this.fillArticleInfo(db, article.sql_article_id, article).then(article => {
-                    return Promise.resolve(article);
-                  });
+                return this.fillArticleInfo(db, article.sql_article_id, article).then(article => {
+                  return Promise.resolve(article);
                 });
-          });
-        }).finally(() => db.close());
-      }
-    )
+              });
+        });
+      });
+    });
   },
 
   updateArticle({uid, sql_article_id, note, ...article}) {
-    return MongoClient.connect(
-      process.env.MONGODB_ATLAS_URI,
-      { useNewUrlParser: true })
-      .then( db  => {
-          const s_id = sanitize(parseInt(sql_article_id));
-          const s_uid = sanitize(uid);
-          article.modified_by = s_uid;
-          article.modified = moment().format('YYYY-MM-DD HH:mm:ss');
-          article.note = sanitize(note);
-          article.sql_article_id = s_id;
+    return dbConnect(db => {
+      const s_id = sanitize(parseInt(sql_article_id));
+      const s_uid = sanitize(uid);
+      article.modified_by = s_uid;
+      article.modified = moment().format('YYYY-MM-DD HH:mm:ss');
+      article.note = sanitize(note);
+      article.sql_article_id = s_id;
 
-          return db.db('cestasnp').collection("users")
-            .findOne({ uid: s_uid }).then(user => {
+      return dbCollection(db, _const.UsersTable)
+        .findOne({ uid: s_uid }).then(user => {
 
-            if (user.articlesRole != "admin") {
-              article.state = -1;
+        if (user.articlesRole != "admin") {
+          article.state = -1;
+        }
+
+        const forReview = (article.state == -1);
+
+        return dbCollection(db,_const.ArticlesTable)
+          .findOne({ sql_article_id: s_id }).then(current => {
+            if (!current) {
+              return Promise.reject('Článok nebol nájdený.');
+            }
+            
+            if (!forReview) {
+              delete current._id;
             }
 
-            const forReview = (article.state == -1);
+            article.created_by = current.created_by || current.created_by_user_sql_id;
+            article.created = current.created;
 
-            return db.db('cestasnp')
-              .collection('articles')
-              .findOne({ sql_article_id: s_id }).then(current => {
-                if (!current) {
-                  return Promise.reject('Článok nebol nájdený.');
-                }
+            return dbCollection(db, _const.ArticlesHistoryTable)
+              .insertOne(forReview ? securityCheck.sanitizeArticle(article) : current).then(resInsert => {
+                if (forReview) {
+                  return this.fillArticleInfo(db, s_id, current);
+                } 
                 
-                if (!forReview) {
-                  delete current._id;
-                }
+                article.historyId = resInsert.insertedId.toString();
 
-                article.created_by = current.created_by || current.created_by_user_sql_id;
-                article.created = current.created;
-
-                return db.db('cestasnp')
-                  .collection('articles_history').insertOne(forReview ? securityCheck.sanitizeArticle(article) : current).then(resInsert => {
-                    if (forReview) {
-                      return this.fillArticleInfo(db, s_id, current);
-                    } 
-                    
-                    article.historyId = resInsert.insertedId.toString();
-
-                    return db.db('cestasnp')
-                      .collection('articles')
-                      .findOneAndUpdate({ sql_article_id: s_id }, { $set: securityCheck.sanitizeArticle(article) },
-                        { returnOriginal: false })
-                      .then(res => {
-                        if (res.value) {
-                          return this.fillArticleInfo(db, res.value.sql_article_id, res.value);
-                        } else {
-                          return Promise.reject('Článok nebol nájdený.');
-                        }
-                      });
-                  }                  
-                );
+                return dbCollection(db, _const.ArticlesTable)
+                  .findOneAndUpdate({ sql_article_id: s_id }, { $set: securityCheck.sanitizeArticle(article) },
+                    { returnOriginal: false })
+                  .then(res => {
+                    if (res.value) {
+                      return this.fillArticleInfo(db, res.value.sql_article_id, res.value);
+                    } else {
+                      return Promise.reject('Článok nebol nájdený.');
+                    }
+                  });
               });
-            }).finally(() => db.close());
-      }
-    )
+          });
+        });
+    });
   },
 };
 

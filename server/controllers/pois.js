@@ -1,11 +1,10 @@
 const express = require('express');
 const DB = require('../db/db');
 const { checkToken } = require('../util/checkUtils');
-const sanitize = require('mongo-sanitize');
 const { findNearPois, findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
-const { ObjectId } = require('mongodb');
 const itinerary = require('../data/guideposts.json');
 const promiseAsJson = require('../util/promiseUtils');
+const _const = require('../../const');
 
 const db = new DB();
 
@@ -19,17 +18,9 @@ router.get('/', (req, res) => {
 });
 
 router.post('/my', (req, res) => {
-  const {
-    uid,
-  } = req.body;
+  const { uid } = req.body;
 
-  checkToken(req, res, uid, () => 
-    db.getPoisMy(req.app.locals.db, uid).then(results => 
-      res.json(results)
-    ).catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    }));
+  checkToken(req, res, uid, () => db.getPoisMy(req.app.locals.db, uid));
 });
 
 router.get('/:poiId', (req, res) => {
@@ -37,40 +28,15 @@ router.get('/:poiId', (req, res) => {
 });
 
 router.post('/delete', (req, res) => {
-  const {
-    uid,
-    id,
-    note
-  } = req.body;
+  const { uid, id, note } = req.body;
 
-  checkToken(req, res, uid, () => {
-    db.deletePoi(uid, id, note)
-    .then(poi => {
-      res.json(poi);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    });
-  });
+  checkToken(req, res, uid, () => db.deletePoi(uid, id, note), () => note);
 });
 
 router.post('/toggleMy', (req, res) => {
-  const {
-    uid,
-    id
-  } = req.body;
+  const { uid, id } = req.body;
 
-  checkToken(req, res, uid, () => {
-    db.togglePoiMy(uid, id)
-    .then(poi => {
-      res.json(poi);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    });
-  });
+  checkToken(req, res, uid, () => db.togglePoiMy(uid, id));
 });
 
 router.post('/update', (req, res) => {
@@ -107,14 +73,7 @@ router.post('/update', (req, res) => {
       itineraryAfter,
       itineraryInfo,
       note
-    }).then(poi => {
-      res.json(poi);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    })
-    );
+    }), () => coordinates && coordinates.length >= 2 && category && (name || text) && note);
 });
 
 router.post('/add', (req, res) => {
@@ -148,19 +107,14 @@ router.post('/add', (req, res) => {
       itineraryNear,
       itineraryAfter,
       itineraryInfo
-    }).then(poi => {
-      res.json(poi);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    }));
+    }), () => coordinates && coordinates.length >= 2 && category && (name || text)
+      && (accuracy || img_url));
 
   if (confirmed) {
     addPoi();
   } else {
-    db.all(req.app.locals.db, 'pois').then(pois => {
-      const nearPois = findNearPois(coordinates, pois, 500);
+    db.all(req.app.locals.db, _const.PoisTable).then(pois => {
+      const nearPois = findNearPois(coordinates, pois, _const.NearPoisWarningDistance);
       const nearest = findNearestPoint(coordinates);
       const itinerary = nearest.coordinates ? findNearestGuideposts(nearest.coordinates) : null;
 

@@ -5,6 +5,7 @@ const sanitize = require('mongo-sanitize');
 const { addDays, format, startOfToday } = require('date-fns');
 const { escape, escapeImg, escapeDate } = require('../util/escapeUtils');
 const { ObjectId } = require('mongodb');
+const _const = require('../../const');
 
 const db = new DB();
 
@@ -14,8 +15,8 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
   const s_uid = sanitize(uid);
 
   return Promise.all([db.getUserNames(dbRef, null), 
-    s_uid ? db.findByWithDB(dbRef, 'users', { uid: s_uid }).then(u => u && u.length > 0 ? u[0] : null) : Promise.resolve(null),
-    db.findByWithDB(dbRef, 'traveler_details', {}, { project: { 'user_id': 1, 'articleID': 1, 'sql_id': 1 }})])
+    s_uid ? db.findBy(dbRef, _const.UsersTable, { uid: s_uid }).then(u => u && u.length > 0 ? u[0] : null) : Promise.resolve(null),
+    db.findBy(dbRef, _const.DetailsTable, {}, { project: { 'user_id': 1, 'articleID': 1, 'sql_id': 1 }})])
   .then(([users, user, details]) => {
     const s_from = format(from || new Date(0), 'YYYY-MM-DD');
     const s_to = format(addDays(to || startOfToday(), 1), 'YYYY-MM-DD');
@@ -69,7 +70,8 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       'introtext': 0, 'fulltext': 0, 'attribs': 0, 'metakey': 0, 'metadesc': 0,
       'comment': 0, 'img': 0};
 
-    const dbPromise = (table, myItems, authorProp, change, changedProp, userProp, getName = () => {}, noteProp = '', getUrl = () => {}) => db.findByWithDB(dbRef, table, 
+    const dbPromise = (table, myItems, authorProp, change, changedProp, userProp, 
+        getName = () => {}, noteProp = '', getUrl = () => {}) => db.findBy(dbRef, table, 
       { $or: [ check(changedProp, myItems, authorProp, userProp) ] }, { projection: ignoreProps }).then(data => data.map(item => {
         return { table, change, date: item[changedProp], user: item[userProp] || item[userProp + "_user_sql_id"], userName: getUserName(item[userProp] || item[userProp + "_user_sql_id"]), 
           note: noteProp ? item[noteProp] : null, name: getName(item), url: getUrl(item), item };
@@ -80,38 +82,38 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
     const myPois = user ? user.poisMy.map(p => new ObjectId(p)) : null;
     const getPoiUrl = (item) => `/pred/pois/${item.poiId || item._id}`;
     const promisePois = (!s_items || s_items.indexOf('pois') >= 0) ? Promise.all([
-      dbPromise('pois', myPois, 'user_id', 'created', 'created', 'user_id', item => item['name'], '', getPoiUrl),
-      dbPromise('pois', myPois, 'user_id', 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
-      dbPromise('pois', myPois, 'user_id', 'deleted', 'deleted', 'deleted_by', item => item['name'], 'deleted_note', getPoiUrl),
-      dbPromise('pois_history', myPois, 'user_id', 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
+      dbPromise(_const.PoisTable, myPois, 'user_id', 'created', 'created', 'user_id', item => item['name'], '', getPoiUrl),
+      dbPromise(_const.PoisTable, myPois, 'user_id', 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
+      dbPromise(_const.PoisTable, myPois, 'user_id', 'deleted', 'deleted', 'deleted_by', item => item['name'], 'deleted_note', getPoiUrl),
+      dbPromise(_const.PoisHistoryTable, myPois, 'user_id', 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const myArticles = user ? user.articlesMy : null;
     const getArticleUrl = (item) => `/pred/articles/article/${item.sql_article_id}`;
     const promiseArtcles = (!s_items || s_items.indexOf('articles') >= 0) ? Promise.all([
-      dbPromise('articles', myArticles, 'created_by', 'created', 'created', 'created_by', item => item['title'], '', getArticleUrl),
-      dbPromise('articles', myArticles, 'created_by', 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
-      dbPromise('articles_history', myArticles, 'created_by', 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
+      dbPromise(_const.ArticlesTable, myArticles, 'created_by', 'created', 'created', 'created_by', item => item['title'], '', getArticleUrl),
+      dbPromise(_const.ArticlesTable, myArticles, 'created_by', 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
+      dbPromise(_const.ArticlesHistoryTable, myArticles, 'created_by', 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getDetailUrl = (item) => `/na/${item.user_id}`;
     const promiseDetails = (!s_items || s_items.indexOf('details') >= 0) ? Promise.all([
-      dbPromise('traveler_details', null, 'user_id', 'created', 'created', 'user_id', item => item['meno'], '', getDetailUrl),
-      dbPromise('traveler_details', null, 'user_id', 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
+      dbPromise(_const.DetailsTable, null, 'user_id', 'created', 'created', 'user_id', item => item['meno'], '', getDetailUrl),
+      dbPromise(_const.DetailsTable, null, 'user_id', 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getMessageUrl = (item) => `/na/${getDetailUserId(item)}#${item._id}`;
     const promiseMessages = (!s_items || s_items.indexOf('messages') >= 0) ? Promise.all([
-      dbPromise('traveler_messages', null, 'user_id', 'created', 'pub_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
-      dbPromise('traveler_messages', null, 'user_id', 'deleted', 'del_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
+      dbPromise(_const.MessagesTable, null, 'user_id', 'created', 'pub_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
+      dbPromise(_const.MessagesTable, null, 'user_id', 'deleted', 'del_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getCommentUrl = (item) => `/na/${getDetailUserId(item)}#${item._id}`;
     const promiseComments = (!s_items || s_items.indexOf('comments') >= 0) ? Promise.all([
-      dbPromise('traveler_comments', null, 'uid', 'created', 'date', 'uid', item => item.travellerDetails.name, '', getCommentUrl),
-      dbPromise('traveler_comments', null, 'uid', 'deleted', 'del_date', 'del_by', item => item.travellerDetails.name, '', getCommentUrl),
-      dbPromise('article_comments', null, 'uid', 'created', 'date', 'uid', item => getDetailName(item), '', getCommentUrl),
-      dbPromise('article_comments', null, 'uid', 'deleted', 'del_date', 'del_by', item => getDetailName(item), '', getCommentUrl),
+      dbPromise(_const.CommentsTable, null, 'uid', 'created', 'date', 'uid', item => item.travellerDetails.name, '', getCommentUrl),
+      dbPromise(_const.CommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => item.travellerDetails.name, '', getCommentUrl),
+      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'created', 'date', 'uid', item => getDetailName(item), '', getCommentUrl),
+      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => getDetailName(item), '', getCommentUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getDate = (date) => {
@@ -138,18 +140,18 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
 const getTableAsText = (table) => {
   switch (table) {
-    case "pois":
-    case "pois_history":
+    case _const.PoisTable:
+    case _const.PoisHistoryTable:
       return "Dôležité miesto";
-    case "articles":
-    case "articles_history":
+    case _const.ArticlesTable:
+    case _const.ArticlesHistoryTable:
       return "Článok";
-    case "traveler_details":
+    case _const.DetailsTable:
       return "Cesta";
-    case "traveler_messages":
+    case _const.MessagesTable:
       return "Zpráva";
-    case "traveler_comments":
-    case "article_comments":
+    case _const.CommentsTable:
+    case _const.ArticleCommentsTable:
       return "Komentár";
     default:
       return table;
@@ -194,7 +196,7 @@ router.get('/feed', (req, res) => {
   })
   .catch(error => {
     console.error(error);
-    res.status(500).json({ error: error.toString() });
+    res.status(500).send(error.toString());
   });
 });
 
@@ -210,12 +212,7 @@ router.post('/', (req, res) => {
     count
   } = req.body;
 
-  checkToken(req, res, uid, () => {
-    getChanges(req.app.locals.db, uid, from, to, my, items, sort, page, count).then(data => res.json(data))
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    })});
+  checkToken(req, res, uid, () => getChanges(req.app.locals.db, uid, from, to, my, items, sort, page, count));
 });
 
 module.exports = router;

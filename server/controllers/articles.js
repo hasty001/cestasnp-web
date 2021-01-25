@@ -2,10 +2,10 @@ const express = require('express');
 const sanitize = require('mongo-sanitize');
 const DB = require('../db/db');
 const _const = require('../../const');
-const { checkToken, checkNotEmpty } = require('../util/checkUtils');
+const { checkToken } = require('../util/checkUtils');
 const promiseAsJson = require('../util/promiseUtils');
 
-const query = new DB();
+const db = new DB();
 const router = express.Router();
 
 const ORDER = {
@@ -23,43 +23,27 @@ const filtersSplit = category => {
 
 // count the entire article collection
 router.get('/', (req, res) => {
-  promiseAsJson(() => query.countCollection(req.app.locals.db, 'articles', _const.ArticlesFilterBy), res);
+  promiseAsJson(() => db.countCollection(req.app.locals.db, _const.ArticlesTable, _const.ArticlesFilterBy), res);
 });
 
 router.post('/my', (req, res) => {
-  const {
-    uid,
-  } = req.body;
+  const { uid } = req.body;
 
   checkToken(req, res, uid, () => 
-    query.getArticlesMy(req.app.locals.db, uid).then(results => {
+    db.getArticlesMy(req.app.locals.db, uid).then(results => {
       results.forEach(a => {
         a.introtext = '';
         a.fulltext = '';
       });
-      res.json(results);
-    }).catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
+      
+      return results;
     }));
 });
 
 router.post('/toggleMy', (req, res) => {
-  const {
-    uid,
-    id
-  } = req.body;
+  const { uid, id } = req.body;
 
-  checkToken(req, res, uid, () => {
-    query.toggleArticleMy(uid, id)
-    .then(article => {
-      res.json(article);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    });
-  });
+  checkToken(req, res, uid, () => db.toggleArticleMy(uid, id));
 });
 
 router.post('/add', (req, res) => {
@@ -75,11 +59,9 @@ router.post('/add', (req, res) => {
     sql_article_id,
     created_by
   } = req.body;
-  if (!checkNotEmpty(tags && tags.length && title && introtext && sql_article_id, res))
-    return;
 
   checkToken(req, res, created_by, () =>
-    query.addArticle({
+    db.addArticle({
       lat,
       lon,
       accuracy,
@@ -90,13 +72,7 @@ router.post('/add', (req, res) => {
       fulltext,
       sql_article_id,
       created_by
-    }).then(article => {
-      res.json(article);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    }));
+    }), () => tags && tags.length && title && introtext && sql_article_id);
 });
 
 router.post('/update', (req, res) => {
@@ -113,11 +89,9 @@ router.post('/update', (req, res) => {
     note,
     uid
   } = req.body;
-  if (!checkNotEmpty(tags && tags.length && title && introtext && sql_article_id && note, res))
-    return;
 
   checkToken(req, res, uid, () =>
-    query.updateArticle({
+    db.updateArticle({
       lat,
       lon,
       accuracy,
@@ -129,30 +103,19 @@ router.post('/update', (req, res) => {
       sql_article_id,
       note,
       uid
-    }).then(article => {
-      res.json(article);
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: error.toString() });
-    }));
+    }), () => tags && tags.length && title && introtext && sql_article_id && note);
 });
 
 router.get('/lastId', (req, res) => {
-  query.latestWithDB(req.app.locals.db, 'articles', {}, { sql_article_id: -1 }).then(article => {
-    res.json(article[0].sql_article_id);
-  })
-  .catch(error => {
-    console.error(error);
-    res.status(500).json({ error: error.toString() });
-  });
+  promiseAsJson(() => db.newestSorted(req.app.locals.db, _const.ArticlesTable, { sql_article_id: -1 }, {})
+    .then(article => article[0].sql_article_id), res);
 });
 
 // operates pagination for all articles
 router.get('/:page', (req, res) => {
-  promiseAsJson(() => query.nextSorted(
+  promiseAsJson(() => db.nextSorted(
     req.app.locals.db, 
-    'articles',
+    _const.ArticlesTable,
     ORDER.newestFirst,
     sanitize(req.params.page),
     _const.ArticlesFilterBy
@@ -163,31 +126,31 @@ router.get('/:page', (req, res) => {
 router.get('/article/:articleId', (req, res) => {
   const articleId = sanitize(parseInt(req.params.articleId, 10));
 
-  promiseAsJson(() => query
-    .findByWithDB(req.app.locals.db, 'articles', { sql_article_id: articleId })
-    .then(results => query.fillArticleInfo(req.app.locals.db, articleId, results[0]))
-    .then(article => res.json([article])), res);
+  promiseAsJson(() => db
+    .findBy(req.app.locals.db, _const.ArticlesTable, { sql_article_id: articleId })
+    .then(results => db.fillArticleInfo(req.app.locals.db, articleId, results[0]))
+    .then(article => [article]), res);
 });
 
 // returns all articles matching category
 router.get('/category/:category', (req, res) => {
-  const filters = filtersSplit(sanitize(req.params.category));
+  const filters = filtersSplit(sanitize(req.params.category || ''));
   filters.push(_const.ArticlesFilterBy);
   const finalFilter = {};
   finalFilter.$and = filters;
 
-  promiseAsJson(() => query.countCollection(req.app.locals.db, 'articles', finalFilter), res);
+  promiseAsJson(() => db.countCollection(req.app.locals.db, _const.ArticlesTable, finalFilter), res);
 });
 
 // returns articles matching category on certain page
 router.get('/category/:category/:page', (req, res) => {
-  const filters = filtersSplit(sanitize(req.params.category));
+  const filters = filtersSplit(sanitize(req.params.category || ''));
   filters.push(_const.ArticlesFilterBy);
   const finalFilter = {};
   finalFilter.$and = filters;
 
-  promiseAsJson(() => query.nextSorted(
-    req.app.locals.db, 'articles',
+  promiseAsJson(() => db.nextSorted(
+    req.app.locals.db, _const.ArticlesTable,
     ORDER.newestFirst,
     sanitize(req.params.page),
     finalFilter
@@ -196,15 +159,13 @@ router.get('/category/:category/:page', (req, res) => {
 
 // increases article count
 router.put('/increase_article_count', (req, res) => {
-  query.increaseArticleCount(req.body.id, results => {
-    res.json(results);
-  });
+  promiseAsJson(() => db.increaseArticleCount(req.body.id), res);
 });
 
 // returns 2 newest articles for homepage
 router.get('/for/home', (req, res) => {
-  promiseAsJson(() => query.newestSorted(req.app.locals.db,
-    'articles', ORDER.newestFirst, _const.ArticlesFilterBy, 2), res);
+  promiseAsJson(() => db.newestSorted(req.app.locals.db,
+    _const.ArticlesTable, ORDER.newestFirst, _const.ArticlesFilterBy, _const.HomeArticlesCount), res);
 });
 
 module.exports = router;
