@@ -9,6 +9,7 @@ import * as Texts from './Texts';
 import PageWithLoader from './reusable/PageWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
 import ButtonReadMore from './reusable/ButtonReadMore';
+import { addDays } from 'date-fns';
 
 const ActiveLight = (props) => {
   const now = format(new Date(), 'YYYY-MM-DD');
@@ -41,10 +42,12 @@ const ActiveLight = (props) => {
           travellerIds.push(traveller.user_id);
         });
 
-        const getSortValue = t => (t.finishedTracking ? "11_" + t.startDate : ("0"
-         + (t.startDate <= now && t.lastMessage ? ("0_" + t.lastMessage.pub_date) : ("1_" + t.startDate))));
+        const getSortValue = t => (t.finishedTracking ? "11_" + new Date(t.startDate).valueOf() 
+          : ("0" + (t.startDate <= now && t.lastMessage ? 
+            ("0_" + (addDays(new Date(now), 1) - new Date(t.lastMessage.pub_date))) 
+            : ("1_" + new Date(t.startDate).valueOf()))));
 
-         activeTravellers.sort((a, b) => getSortValue(a) > getSortValue(b));
+        activeTravellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
         
         if (activeTravellers.length === 0) {
           setTravellers([]);

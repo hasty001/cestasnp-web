@@ -120,6 +120,12 @@ a.white-button:active {
   }
 }
 
+textarea.html {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: normal;
+  font-size: 13px;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/

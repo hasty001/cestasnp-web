@@ -342,9 +342,9 @@ const ArticleForm = (props) => {
       </FormMultiSelect>
 
       {!!props.edit && <a className="action" href="#" onClick={() => setIntro(fixArticle(intro))}>vyčistiť</a>}
-      <FormTextArea value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form"/>
+      <FormTextArea value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html"/>
       {!!props.edit && <a className="action" href="#" onClick={() => setText(fixArticle(text))}>vyčistiť</a>}
-      <FormTextArea value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form"/>
+      <FormTextArea value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html"/>
       
       <FormItem valueName="images" valueLabel="Obrázky" useEdit 
         valueClass="image-list" value={allImages.map((image, i) => <img key={i} src={image.src}/>)}>
