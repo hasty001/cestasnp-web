@@ -5,7 +5,7 @@ import DivWithLoader from './reusable/DivWithLoader';
 import { A } from './reusable/Navigate';
 import ButtonReadMore from './reusable/ButtonReadMore';
 import { LocalSettingsContext } from './LocalSettingsContext';
-import { htmlClean } from '../helpers/helpers';
+import { htmlClean, getArticleImage } from '../helpers/helpers';
 
 const Home = (props) => {
   const [articles, setArticles] = useState([]);
@@ -28,11 +28,6 @@ const Home = (props) => {
   const settingsData = useContext(LocalSettingsContext);
 
   const month = (new Date()).getMonth + 1;
-
-  const getArticleImage = (intro) => {
-      const res = intro && intro.match(/["'](https:\/\/res.cloudinary.com\/.*?)["']/);
-      return res && res.length > 1 ? res[1] : null;
-    };
 
   return (
     <div id="Home">

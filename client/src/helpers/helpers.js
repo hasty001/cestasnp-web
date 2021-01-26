@@ -137,5 +137,20 @@ const getArticleStateIcon = (state) => {
   }
 }
 
+const getArticleImage = (intro) => {
+  const res = intro && intro.match(/["'](https:\/\/res\.cloudinary\.com\/.*?)["']/);
+  const url = res && res.length > 1 ? res[1] : '';
+
+  const match = url.match(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/);
+  return match ? 
+    url.replace(match[0], 'https://res.cloudinary.com/cestasnp-sk/image/upload/c_fill,w_240,h_240/v') : url;
+}
+
+const getArticleCategoryText = (tag) => {
+  const index = Constants.ArticleCategories.findIndex(c => c.tag == tag);
+
+  return index >= 0 ? Constants.ArticleCategories[index].text : "";
+}
+
 export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr, escapeHtml, htmlSanitize, htmlClean,
-  getArticleState, getArticleStateIcon };
+  getArticleState, getArticleStateIcon, getArticleImage, getArticleCategoryText };

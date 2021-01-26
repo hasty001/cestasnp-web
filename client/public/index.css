@@ -1302,6 +1302,7 @@ span.poi-text {
 
 #Article img.left {
   float: left;
+  margin-top: 5px;
   margin-right: 10px;
   margin-bottom: 10px;
   max-width: 27vw !important;
@@ -1310,6 +1311,7 @@ span.poi-text {
 
 #Article img.right {
   float: right;
+  margin-top: 5px;
   margin-left: 10px;
   margin-bottom: 10px;
   max-width: 27vw !important;
