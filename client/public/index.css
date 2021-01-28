@@ -1318,6 +1318,10 @@ span.poi-text {
   margin-top: 30px;
 }
 
+img.preview {
+  cursor: pointer;
+}
+
 #Article img.left {
   float: left;
   margin-top: 5px;

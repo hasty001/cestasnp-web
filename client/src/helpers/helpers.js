@@ -70,6 +70,19 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
       }
     }
   }
+
+  // set image preview
+  if (node.tagName === "IMG" && node.hasAttribute('class') && node.hasAttribute('src')) {
+    const cl = (node.getAttribute('class') || '').trim().split(' ');
+
+    if (cl.indexOf('preview') >= 0) {
+      const src = (node.getAttribute('src') || '').trim();
+
+      if (src) {
+        node.setAttribute('onclick', `__setPreview("${src}")`);
+      }
+    }
+  }
 });
 
 const LinkRegEx = /(http[s]?:\/\/[^\s]+)/g;

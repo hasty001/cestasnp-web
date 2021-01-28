@@ -32,6 +32,8 @@ const ArticleForm = (props) => {
   const [diff, setDiff] = useState(null);
   const [imageId, setImageId] = useState(Date.now());
 
+  const [article, setArticle] = useState(props.article);
+
   const clearMsg = () => {
     setErrorMsg('');
     setErrorMsgFirst('');
@@ -100,12 +102,14 @@ const ArticleForm = (props) => {
     }
   }, []);
 
+  useEffect(() => { setArticle(props.article); }, [props.article]);
+
   useEffect(() => {
-    if (props.article && props.edit) {
+    if (article && props.edit) {
       const hashId = (window.location.hash || "").replace("#", "");
-      const index = hashId && props.article && props.article.history ? 
-        props.article.history.findIndex(a => a._id == hashId) : -1;
-      const p = index >= 0 ? props.article.history[index] : props.article;
+      const index = hashId && article && article.history ? 
+        article.history.findIndex(a => a._id == hashId) : -1;
+      const p = index >= 0 ? article.history[index] : article;
 
       setGps({ latlon: p.lat && p.lon ? `${p.lat}, ${p.lon}` : '', accuracy: p.accuracy });
       setState(props.role != "admin" ? -1 : p.state);
@@ -114,13 +118,13 @@ const ArticleForm = (props) => {
       setIntro(p.introtext);
       setText(p.fulltext);
 
-      const latest = props.article.history && props.article.history.length > 0 ? 
-        props.article.history[0] : props.article;
+      const latest = article.history && article.history.length > 0 ? 
+        article.history[0] : article;
       if (p.modified < latest.modified) {
         setWarningMsgFirst((<>Existuje novšia verzia článku - <a href={`#${latest._id}`}>použiť pre úpravy</a>.</>));
       }
     }
-  }, [props.role, props.article, props.edit, window.location.hash]);
+  }, [props.role, article, props.edit, window.location.hash]);
 
   const addArticle = () => {
     if (!props.edit && (!articleId || articleId.trim().length === 0)) {
@@ -169,7 +173,7 @@ const ArticleForm = (props) => {
     data.introtext = intro;
     data.fulltext = text;
     if (props.edit) {
-      data.sql_article_id = props.article.sql_article_id;
+      data.sql_article_id = article.sql_article_id;
       data.uid = props.uid;
       data.note = note;
     } else {
@@ -200,6 +204,10 @@ const ArticleForm = (props) => {
           setArticleId((msgRes.sql_article_id + 1).toString());
         }
         setNote('');
+
+        if (props.edit) {
+          setArticle(msgRes);
+        }
 
         msgRes.successMsg = props.edit ? 'Článok úspešne upravený!': 
           'Článok úspešne pridaný!';
@@ -299,10 +307,49 @@ const ArticleForm = (props) => {
   }
 
   const imageAlign = (image, align) => {
-    var newHtml = image.html.replace(/class="[^"]*"/, `class="${align}"`)
-      .replaceAll(/(width|height|style)="[^"]*"/g, '');
+    var newHtml = image.html.replaceAll(/(width|height|style)="[^"]*"/g, '');
+    const match = newHtml.match(/class="([^"]*)"/)
+    
+    if (match && match.length > 1) {
+      const list = match[1].split(" ");
+      const index = Math.max(list.indexOf('left'), list.indexOf('right'), list.indexOf('center'));
+      if (index >= 0) {
+        list[index] = align;
+      } else {
+        list.push(align);
+      }
+
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+    }
+
+    if (image.added) {
+      image.html = newHtml;
+
+      setImagesAdded(imagesAdded.map(i => i));
+    } else {
+      setText((text || '').replace(image.html, newHtml));
+      setIntro((intro || '').replace(image.html, newHtml));
+    }
+  }
+
+  const imageToggleClass = (image, value) => {
+    var newHtml = image.html;
+    const match = newHtml.match(/class="([^"]*)"/)
+    
+    if (match && match.length > 1) {
+      const list = match[1].split(" ");
+      const index = list.indexOf(value);
+      if (index >= 0) {
+        list.splice(index, 1);
+      } else {
+        list.push(value);
+      }
+
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+    }
+
     if (newHtml.indexOf(" class=") < 0) {
-      newHtml = newHtml.replace("<img", `<img class="${align}"`);
+      newHtml = newHtml.replace("<img", `<img class="${value}"`);
     }
 
     if (image.added) {
@@ -319,7 +366,7 @@ const ArticleForm = (props) => {
   
   return (
     <FormWithLoader formId="add-article" 
-      title={props.edit ? (<>Upraviť článok - <A href={`/pred/articles/article/${props.article ? props.article.sql_article_id : ''}`}>{props.article ? props.article.title : ""}</A></>) 
+      title={props.edit ? (<>Upraviť článok - <A href={`/pred/articles/article/${article ? article.sql_article_id : ''}`}>{article ? article.title : ""}</A></>) 
         : "Pridať článok" }
       submitText={props.edit ? "Upraviť" : (warningMsg ? "Naozaj pridať" : "Pridať")}
       onSubmit={addArticle} loading={loading} errorMsg={errorMsg} errorMsgFirst={errorMsgFirst} successMsg={successMsg}>
@@ -362,6 +409,7 @@ const ArticleForm = (props) => {
                 <button className="" title="Vľavo" onClick={() => imageAlign(image, 'left')}><i className="fas fa-align-left" /></button>
                 <button className="" title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
                 <button className="" title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
+                <button className="" title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
               </span>
 
               {image.html.replace('https://res.cloudinary.com/cestasnp-sk/image/upload', '...')}
@@ -397,7 +445,7 @@ const ArticleForm = (props) => {
 
       <ArticlePreviewBox show={preview} title={title} intro={intro} text={text} onHide={() => setPreview(false)}/>
       <ArticleDiffBox show={diff != null} 
-        oldArticle={props.article}
+        oldArticle={article}
         newArticle={diff}
         onHide={() => setDiff(null)}/>
     </FormWithLoader>

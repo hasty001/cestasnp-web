@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { getArticleState, htmlSanitize } from '../../helpers/helpers';
 import * as Constants from '../Constants';
+import ImageBox from './ImageBox';
 
 const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, tags, gps }) => {
   
+  const [preview, setPreview] = useState(null);
+
+  window.__setPreview = setPreview;
+
   const getOptionLabel = (v) => {
     const index = Constants.ArticleCategories.findIndex(o => o.tag == v);
 
@@ -17,6 +22,7 @@ const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, 
     show={show}
     onHide={onHide}
     dialogClassName="article-preview-box"
+
   >
     <Modal.Header closeButton>
       <Modal.Title>Náhled článku</Modal.Title>
@@ -32,6 +38,7 @@ const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, 
         <div dangerouslySetInnerHTML={{ __html: htmlSanitize(intro) }} />
         <div dangerouslySetInnerHTML={{ __html: htmlSanitize(text) }} />
         {children}
+        <ImageBox show={!!preview} url={fixImageUrl(preview)} onHide={() => setPreview(null)} />
       </div>
     </Modal.Body>
     <Modal.Footer>{` `}</Modal.Footer>

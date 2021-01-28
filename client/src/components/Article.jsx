@@ -7,11 +7,15 @@ import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';
 import PageWithLoader from './reusable/PageWithLoader';
 import { A } from './reusable/Navigate';
 import Map from './Map';
+import ImageBox from './reusable/ImageBox';
 
 const Article = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [article, setArticle] = useState(null);
+  const [preview, setPreview] = useState(null);
+
+  window.__setPreview = setPreview;
 
   const authData = useContext(AuthContext);
 
@@ -88,6 +92,10 @@ const Article = (props) => {
       });
   };
 
+  const fixImageUrl = (url) => {
+    return (url || '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 'https://res.cloudinary.com/cestasnp-sk/image/upload/v');
+  };
+
   return (
     <PageWithLoader pageId="Article" loading={loading} error={error}>
       {!!article && (
@@ -125,6 +133,8 @@ const Article = (props) => {
                 url: `/pred/articles/article/${article.sql_article_id}` }]} view={{ lat: article.lat, lon: article.lon, zoom: 13 }}/>
               <A href={`/pred/pois#poi=clanok${article.sql_article_id}&lat=${article.lat}&lon=${article.lon}`}><span data-nosnippet>na celej mape</span></A>
             </>)}
+
+            <ImageBox show={!!preview} url={fixImageUrl(preview)} onHide={() => setPreview(null)} />
         </>
       )}
     </PageWithLoader>
