@@ -312,7 +312,7 @@ const ArticleForm = (props) => {
     
     if (match && match.length > 1) {
       const list = match[1].split(" ");
-      const index = Math.max(list.indexOf('left'), list.indexOf('right'), list.indexOf('center'));
+      const index = Math.max(list.indexOf('left'), list.indexOf('right'), list.indexOf('center'), list.indexOf('row'));
       if (index >= 0) {
         list[index] = align;
       } else {
@@ -320,6 +320,10 @@ const ArticleForm = (props) => {
       }
 
       newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+    }
+
+    if (newHtml.indexOf(" class=") < 0) {
+      newHtml = newHtml.replace("<img", `<img class="${align}"`);
     }
 
     if (image.added) {
@@ -408,6 +412,7 @@ const ArticleForm = (props) => {
               <span className="buttons">
                 <button className="" title="Vľavo" onClick={() => imageAlign(image, 'left')}><i className="fas fa-align-left" /></button>
                 <button className="" title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
+                <button className="" title="V rade" onClick={() => imageAlign(image, 'row')}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
                 <button className="" title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
                 <button className="" title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
               </span>
