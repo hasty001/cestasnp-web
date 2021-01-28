@@ -38,7 +38,7 @@ const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, 
         <div dangerouslySetInnerHTML={{ __html: htmlSanitize(intro) }} />
         <div dangerouslySetInnerHTML={{ __html: htmlSanitize(text) }} />
         {children}
-        <ImageBox show={!!preview} url={fixImageUrl(preview)} onHide={() => setPreview(null)} />
+        <ImageBox show={!!preview} url={preview} onHide={() => setPreview(null)} />
       </div>
     </Modal.Body>
     <Modal.Footer>{` `}</Modal.Footer>

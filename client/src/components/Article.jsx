@@ -92,10 +92,6 @@ const Article = (props) => {
       });
   };
 
-  const fixImageUrl = (url) => {
-    return (url || '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 'https://res.cloudinary.com/cestasnp-sk/image/upload/v');
-  };
-
   return (
     <PageWithLoader pageId="Article" loading={loading} error={error}>
       {!!article && (
@@ -134,7 +130,7 @@ const Article = (props) => {
               <A href={`/pred/pois#poi=clanok${article.sql_article_id}&lat=${article.lat}&lon=${article.lon}`}><span data-nosnippet>na celej mape</span></A>
             </>)}
 
-            <ImageBox show={!!preview} url={fixImageUrl(preview)} onHide={() => setPreview(null)} />
+            <ImageBox show={!!preview} url={preview} onHide={() => setPreview(null)} />
         </>
       )}
     </PageWithLoader>

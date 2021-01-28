@@ -169,10 +169,13 @@ const getArticleImage = (intro) => {
   const res = intro && intro.match(/["'](https:\/\/res\.cloudinary\.com\/.*?)["']/);
   const url = res && res.length > 1 ? res[1] : '';
 
-  const match = url.match(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/);
-  return match ? 
-    url.replace(match[0], 'https://res.cloudinary.com/cestasnp-sk/image/upload/c_fill,w_240,h_240/v') : url;
+  return fixImageUrl(url, 'c_fill,w_240,h_240');
 }
+
+const fixImageUrl = (url, code) => {
+  return (url || '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
+    `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`);
+};
 
 const getArticleCategoryText = (tag) => {
   const index = Constants.ArticleCategories.findIndex(c => c.tag == tag);
@@ -182,4 +185,4 @@ const getArticleCategoryText = (tag) => {
 
 export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr, 
   escapeHtml, htmlSanitize, htmlSimpleSanitize, htmlClean, htmlLineClean,
-  getArticleState, getArticleStateIcon, getArticleImage, getArticleCategoryText };
+  getArticleState, getArticleStateIcon, getArticleImage, fixImageUrl, getArticleCategoryText };
