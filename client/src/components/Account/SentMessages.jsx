@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useContext } from 'react';
-import { dateTimeToStr, htmlSanitize } from '../../helpers/helpers';
+import { dateTimeToStr, htmlSimpleSanitize } from '../../helpers/helpers';
 import { AuthContext } from '../AuthContext';
 import ConfirmBox from '../reusable/ConfirmBox';
 import { A } from '../reusable/Navigate';
@@ -142,7 +142,7 @@ class SentMessagesWithAuth extends Component {
                 // }}
               />
             )}      
-            <p dangerouslySetInnerHTML={{ __html: htmlSanitize(message.text) }} />
+            <p dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(message.text) }} />
           </div>);}
         )}
 

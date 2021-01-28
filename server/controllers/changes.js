@@ -71,9 +71,10 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       'comment': 0, 'img': 0};
 
     const dbPromise = (table, myItems, authorProp, change, changedProp, userProp, 
-        getName = () => {}, noteProp = '', getUrl = () => {}) => db.findBy(dbRef, table, 
+        getName = () => {}, noteProp = '', getUrl = () => {}, getItemUserName = () => {}) => db.findBy(dbRef, table, 
       { $or: [ check(changedProp, myItems, authorProp, userProp) ] }, { projection: ignoreProps }).then(data => data.map(item => {
-        return { table, change, date: item[changedProp], user: item[userProp] || item[userProp + "_user_sql_id"], userName: getUserName(item[userProp] || item[userProp + "_user_sql_id"]), 
+        return { table, change, date: item[changedProp], user: item[userProp] || item[userProp + "_user_sql_id"], 
+          userName: getUserName(item[userProp] || item[userProp + "_user_sql_id"]) || getItemUserName(item), 
           note: noteProp ? item[noteProp] : null, name: getName(item), url: getUrl(item), item };
       }));
 
@@ -110,10 +111,10 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
     const getCommentUrl = (item) => `/na/${getDetailUserId(item)}#${item._id}`;
     const promiseComments = (!s_items || s_items.indexOf('comments') >= 0) ? Promise.all([
-      dbPromise(_const.CommentsTable, null, 'uid', 'created', 'date', 'uid', item => item.travellerDetails.name, '', getCommentUrl),
-      dbPromise(_const.CommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => item.travellerDetails.name, '', getCommentUrl),
-      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'created', 'date', 'uid', item => getDetailName(item), '', getCommentUrl),
-      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => getDetailName(item), '', getCommentUrl),
+      dbPromise(_const.CommentsTable, null, 'uid', 'created', 'date', 'uid', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),
+      dbPromise(_const.CommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),
+      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'created', 'date', 'uid', item => getDetailName(item), '', getCommentUrl, item => item.name),
+      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => getDetailName(item), '', getCommentUrl, item => item.name),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getDate = (date) => {

@@ -4,7 +4,7 @@ import Loader from '../reusable/Loader';
 import Message from './Message';
 import SentMessages from './SentMessages';
 import AuthContext from '../AuthContext';
-import { dateToStr, htmlSanitize } from '../../helpers/helpers';
+import { dateToStr, htmlSimpleSanitize } from '../../helpers/helpers';
 import DocumentTitle from 'react-document-title';
 import * as Constants from '../Constants';
 
@@ -264,7 +264,7 @@ class TravellerAccount extends React.Component {
               onChange={this.handleChange}
             />
           ) : (
-            <p className="travellerP" dangerouslySetInnerHTML={{ __html: htmlSanitize(this.state.popis) }}></p>
+            <p className="travellerP" dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(this.state.popis) }}></p>
           )}
         </label>
         <label htmlFor="zaciatok">

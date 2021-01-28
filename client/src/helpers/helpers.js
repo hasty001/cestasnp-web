@@ -84,21 +84,22 @@ const styleLinks = (html) => {
   }
 
   if (html.indexOf("http://") < 0 && html.indexOf("https://") < 0) {
-    return html;
+    return html.replaceAll("\n", "<br/>");
   }
   
   const matches = [...html.matchAll(LinkRegEx)];
   if (matches) {
     var shift = 0;
     matches.forEach(m => {
-      const href = m[1].replace(/[;,\.\]\)}]$/g, '');;
+      const href = m[1].replace(/[;,\.\]\)}'"`]$/g, '');;
       const link = `<a href="${href}">${href}</a>${m[1].slice(href.length)}`;
       html = html.slice(0, m.index + shift) + link + html.slice(m.index + m[0].length + shift);
 
       shift += link.length - m[0].length;
     });
   }
-  return html;
+  
+  return html.replaceAll("\n", "<br/>");
 }
 
 /**
@@ -108,11 +109,25 @@ const htmlSanitize = (html) => {
   return DOMPurify.sanitize(styleLinks(html), { USE_PROFILES: { html: true } } );
 }
 
+/*
+* Sanitize html code allowing <br/> and <a href>.
+*/
+const htmlSimpleSanitize = (html) => {
+  return DOMPurify.sanitize(styleLinks(html), { ALLOWED_TAGS: ['#text', 'br', 'a'], ALLOWED_ATTR: ['href'] } );
+}
+
 /**
  * Clean html tags.
  */
 const htmlClean = (html) => {
   return DOMPurify.sanitize((html || '').replaceAll("<p>", "\n<p>"), { ALLOWED_TAGS: ['#text'] } );
+}
+
+/**
+ * Clean html tags, remove new lines.
+ */
+const htmlLineClean = (html) => {
+  return DOMPurify.sanitize(html || '', { ALLOWED_TAGS: ['#text'] } ).replaceAll('\r', ' ').replaceAll('\n', ' ');
 }
 
 const getArticleState = (state) => {
@@ -152,5 +167,6 @@ const getArticleCategoryText = (tag) => {
   return index >= 0 ? Constants.ArticleCategories[index].text : "";
 }
 
-export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr, escapeHtml, htmlSanitize, htmlClean,
+export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr, 
+  escapeHtml, htmlSanitize, htmlSimpleSanitize, htmlClean, htmlLineClean,
   getArticleState, getArticleStateIcon, getArticleImage, getArticleCategoryText };

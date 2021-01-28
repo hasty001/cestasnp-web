@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { getArticleState, htmlSanitize } from '../../helpers/helpers';
+import { getArticleState } from '../../helpers/helpers';
 import * as Constants from '../Constants';
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 

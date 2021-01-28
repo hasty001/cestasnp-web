@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';
-import { dateTimeToStr, htmlSanitize } from '../helpers/helpers';
+import { dateTimeToStr, htmlSimpleSanitize } from '../helpers/helpers';
 import { AuthContext } from './AuthContext';
 import Map from './Map';
 import { findPoiCategory } from './PoiCategories';
@@ -124,7 +124,7 @@ const Poi = (props) => {
           <Image value={(historyPoi || poi).img_url} alt={`${caption} - fotka miesta`} itemClassName="poi-image" large />
 
           <p><span data-nosnippet>GPS: {(historyPoi || poi).coordinates[1]}, {(historyPoi || poi).coordinates[0]}</span></p>
-          <p dangerouslySetInnerHTML={{ __html: htmlSanitize((historyPoi || poi).text) }}></p>
+          <p dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize((historyPoi || poi).text) }}></p>
 
           {!!(historyPoi || poi).guideposts && !!(historyPoi || poi).itinerary && !!((historyPoi || poi).itinerary.near || (historyPoi || poi).itinerary.after) 
             && <ItineraryTable noTotals noDetails fullKm itinerary={(historyPoi || poi).guideposts} insert={historyPoi || poi}

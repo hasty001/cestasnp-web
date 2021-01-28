@@ -267,7 +267,6 @@ const ArticleForm = (props) => {
     result = result.replaceAll('id="introtext_img"', '');
     result = result.replaceAll('id="article_img"', '');
     result = result.replaceAll(' border="0" alt=', ' alt=');
-    result = result.replaceAll('align="justify"', '');
     result = result.replaceAll('text-align: justify;', '');
     result = result.replaceAll('text-align: justify', '');
     result = result.replaceAll('font-size: 14px;', '');
@@ -277,11 +276,14 @@ const ArticleForm = (props) => {
     result = result.replaceAll('color: #800000', 'font-weight: 700');
     result = result.replaceAll('color: #993300', 'font-weight: 700');
     result = result.replaceAll('font-weight: 400;', '');
+    result = result.replaceAll(' align="justify"', '');
     result = result.replaceAll(' style=""', '');
     result = result.replaceAll(' alt=""', '');
     result = result.replaceAll(' title=""', '');
+    result = result.replaceAll('<p >', '<p>');
     result = result.replaceAll(/<span style="font-weight: 700;"><strong>(.*?)<\/strong><\/span>/g, '<strong>$1</strong>');
     result = result.replaceAll(/<strong><span style="font-weight: 700;">(.*?)<\/span><\/strong>/g, '<strong>$1</strong>');
+    result = result.replaceAll(/<span style="font-weight: 700;"><span style="font-weight: 700;">(.*?)<\/span><\/span>/g, '<strong>$1</strong>');
     
 
     return result;
@@ -375,6 +377,14 @@ const ArticleForm = (props) => {
         {!!links && links.map((link, i) => <div key={i} className="article-link-item"><a href={link.href}>{link.href}</a></div>)}
       </FormItem>
 
+      <button className="snpBtnWhite" onClick={() => setPreview(true)}>
+        Náhled článku
+      </button>
+      {!!props.edit && (<button className="snpBtnWhite" onClick={() => setDiff({ state: parseInt(state), tags, 
+          gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text })}>
+          Rozdiel
+        </button>)}
+
       <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsg} itemClassName="form"/>
 
       {!!props.edit && <FormText value={[note, setNote]} valueName="note" valueLabel="Poznámka" itemClassName="form"/>}
@@ -390,14 +400,6 @@ const ArticleForm = (props) => {
         oldArticle={props.article}
         newArticle={diff}
         onHide={() => setDiff(null)}/>
-
-      <button className="snpBtnWhite" onClick={() => setPreview(true)}>
-        Náhled článku
-      </button>
-      {!!props.edit && (<button className="snpBtnWhite" onClick={() => setDiff({ state: parseInt(state), tags, 
-          gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text })}>
-          Rozdiel
-        </button>)}
     </FormWithLoader>
   )
 }

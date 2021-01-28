@@ -7,6 +7,7 @@ export const FromOldQuery = "?from-old";
 
 export const PoiCategoryOther = "ostatne";
 export const PoiCategoryGuidepost = "razcestnik";
+export const PoiCategoryArticle = "clanok";
 export const PoiCategoryWater = "pramen";
 export const PoiCategoryFood = "krcma_jedlo";
 export const NearByMarkersDistance = 10; // in map pixels

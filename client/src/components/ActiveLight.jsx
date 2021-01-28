@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import format from 'date-fns/format';
-import { dateToStr, dateTimeToStr, escapeHtml, htmlSanitize } from '../helpers/helpers';
+import { dateToStr, dateTimeToStr, htmlSimpleSanitize } from '../helpers/helpers';
 import { fetchJson } from '../helpers/fetchUtils';
 import { A, navigate } from './reusable/Navigate'
 import SimpleMasonry from './reusable/SimpleMasonry';
@@ -137,7 +137,7 @@ const ActiveLight = (props) => {
                       </div>
 
                       <div className="traveller-text"
-                        dangerouslySetInnerHTML={{ __html: htmlSanitize(
+                        dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(
                             traveller.finishedTracking || !traveller.lastMessage ? 
                               traveller.text : traveller.lastMessage.text) }} />
                     </div>                          

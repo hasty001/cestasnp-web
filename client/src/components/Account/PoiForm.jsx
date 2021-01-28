@@ -264,7 +264,7 @@ const PoiForm = (props) => {
           {!!warningMsg.pois && <h4>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h4>  }
           
           <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
-            marker={{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto", accuracy: warningMsg.poi.accuracy }} 
+            markers={[{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto", accuracy: warningMsg.poi.accuracy }]} 
             pois={warningMsg.pois} guideposts={guideposts} showDeleted />
 
           {!!warningMsg.pois && <PoiList pois={warningMsg.pois} showDeleted />}

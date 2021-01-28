@@ -3,7 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
-import { dateTimeToStr, escapeHtml, htmlSanitize } from '../helpers/helpers';
+import { dateTimeToStr, escapeHtml, htmlSimpleSanitize } from '../helpers/helpers';
 import { findPoiCategory, PoiCategories } from './PoiCategories';
 import { useStateProp, useStateWithLocalStorage } from '../helpers/reactUtils';
 import * as Constants from './Constants';
@@ -68,7 +68,7 @@ const Map = (props) => {
     if (view && view.lat && view.lat) { params.center = [parse(view.lat, params.center[0]), parse(view.lon, params.center[1])] }
     if (view && view.zoom) { 
       params.zoom = parse(view.zoom, params.zoom); 
-    } else if (props.marker || (view && view.poi)) {
+    } else if ((props.markers && props.markers.filter(m => m).length > 0) || (view && view.poi)) {
       params.zoom = 13;
     }
 
@@ -219,7 +219,7 @@ const Map = (props) => {
         
         const marker = new MapMarker([g.lat, g.lon], {
           icon, poi: g.id, zIndexOffset: -4000,
-          popupContent: `<h4>${generateAnchor(`/pred/itinerar#g${g.id}`, '', `<i class="${guidepostIcon}"></i> ${escapeHtml(g.name)} ${g.ele ? ` ${g.ele}\u00A0m`: ""}`)}</h4>`
+          popupContent: `<h4>${generateAnchor(`/pred/itinerar#${g.id}`, '', `<i class="${guidepostIcon}"></i> ${escapeHtml(g.name)} ${g.ele ? ` ${g.ele}\u00A0m`: ""}`)}</h4>`
         }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
         newMarkers.push(marker);
   
@@ -261,11 +261,11 @@ const Map = (props) => {
           });
 
           const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
-            icon, poi: p._id, zIndexOffset: -i,
-            popupContent: `<h4>${generateAnchor(`/pred/pois/${p._id}`, '',
+            icon, poi: p._id || p.id, zIndexOffset: -i,
+            popupContent: `<h4>${generateAnchor(p.url || `/pred/pois/${p._id}`, '',
               `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
             <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
-            <p>${htmlSanitize(p.text)}</p>`
+            <p>${htmlSimpleSanitize(p.text)}</p>`
           }).addTo(markerLayers[category.value]);
 
           newMarkers.push(marker);
@@ -285,7 +285,7 @@ const Map = (props) => {
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
             popupContent: `<p>${dateTimeToStr(stop.date)}</p>
-          <p>${htmlSanitize(stop.text)}</p>` }).addTo(markerLayer);
+          <p>${htmlSimpleSanitize(stop.text)}</p>` }).addTo(markerLayer);
           newMarkers.push(marker);
           marker.bindPopup("");
         }
@@ -309,7 +309,7 @@ const Map = (props) => {
               icon,
               popupContent: `<p><b>${generateAnchor(`/na/${trvlr.userId}`, 'style="{text-decoration: none;}"', escapeHtml(trvlr.meno))}</b></p>
           <p>${dateTimeToStr(trvlr.lastMessage.pub_date)}</p>
-          <p>${htmlSanitize(trvlr.lastMessage.text)}</p>`
+          <p>${htmlSimpleSanitize(trvlr.lastMessage.text)}</p>`
             }
           ).addTo(markerLayer);
           newMarkers.push(marker);
@@ -384,29 +384,32 @@ const Map = (props) => {
     layer.clearLayers();
 
     // MARKER 
-    if (props.marker ) {
-      const icon = L.divIcon({
-        html: `<i class="fas fa-map-marker-alt" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px; color: ${props.marker.color || "blue"}" ></i>`,
-        ...Constants.PoiMarkerIconProps,
-      });
-      const marker = L.marker([props.marker.lat, props.marker.lon], {
-        icon, zIndexOffset: 2
-      }).addTo(layer);
-      if (props.marker.name) { 
-        marker.bindPopup(props.marker.name);
-      }
+    if (props.markers) {
+      props.markers.filter(m => m).forEach(m => {
+        const icon = L.divIcon({
+          html: `<i class="fas fa-map-marker-alt" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px; color: ${m.color || "blue"}" ></i>`,
+          ...Constants.PoiMarkerIconProps,
+        });
+        const marker = L.marker([m.lat, m.lon], {
+          icon, zIndexOffset: 2
+        }).addTo(layer);
 
-      if (props.marker.accuracy) {
-        const circle = L.circle([props.marker.lat, props.marker.lon], { 
-          zIndexOffset: -3999,
-          color: props.marker.color || "blue",
-          opacity: 0.5,
-          fillColor: props.marker.color || "blue",
-          fillOpacity: 0.2,
-          radius: props.marker.accuracy }).addTo(layer);
-      }
+        if (m.name) { 
+          marker.bindPopup(m.name);
+        }
+
+        if (m.accuracy) {
+          const circle = L.circle([m.lat, m.lon], { 
+            zIndexOffset: -3999,
+            color: m.color || "blue",
+            opacity: 0.5,
+            fillColor: m.color || "blue",
+            fillOpacity: 0.2,
+            radius: m.accuracy }).addTo(layer);
+        }
+      });
     }
-  }, [mapObj, props.marker]);
+  }, [mapObj, props.markers]);
 
   return <div id={props.use} data-nosnippet>{props.children}</div>;
 }

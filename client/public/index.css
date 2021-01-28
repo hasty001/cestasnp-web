@@ -842,6 +842,24 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
 }
 
+#Article h3, #Changes h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #58595B;
+  clear: both;
+}
+
+#Article h4, #Changes h4 {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #58595B;
+  clear: both;
+}
+
 #Home .article-image, #Articles .article-image {
   float: left;
   min-width: 240px;
@@ -1322,8 +1340,8 @@ span.poi-text {
   display: block;
   margin: 10px auto;
   max-width: 85vw !important;
-  max-height: 85vw !important;
   border-radius: 8px;
+  clear: both;
 }
 
 @media (max-width: 750px) {

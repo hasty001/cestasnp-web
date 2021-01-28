@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
-import { sortByDateDesc, dateToStr, htmlSanitize } from '../helpers/helpers';
+import { sortByDateDesc, dateToStr, htmlSimpleSanitize } from '../helpers/helpers';
 import { A } from './reusable/Navigate';
 import * as Constants from './Constants';
 import DocumentTitle from 'react-document-title';
@@ -68,7 +68,7 @@ class Archive extends Component {
         <p className="archived-traveller-field">Začiatok: {traveller.startMiesto + " "} {dateToStr(traveller.startDate)}</p>
         <p className="archived-traveller-field">Koniec: {dateToStr(traveller.endDate)}</p>
         <div className="archived-traveller-text">
-          <p dangerouslySetInnerHTML={{ __html: htmlSanitize(traveller.text) }} />
+          <p dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(traveller.text) }} />
         </div>
         <A href={`/na/${traveller.userId}${Constants.FromOldQuery}`} >
           Sleduj celé putovanie...

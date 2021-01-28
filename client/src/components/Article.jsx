@@ -117,7 +117,14 @@ const Article = (props) => {
           <div dangerouslySetInnerHTML={{ __html: htmlSanitize(article.introtext) }} />
           <div dangerouslySetInnerHTML={{ __html: htmlSanitize(article.fulltext) }} />
           
-          {!!article.lat && !!article.lon && <Map use="map" marker={{ lat: article.lat, lon: article.lon }} view={{ lat: article.lat, lon: article.lon, zoom: 13 }}/>}
+          {!!article.lat && !!article.lon && (
+            <>
+              <h3>Poloha na mape:</h3>
+              <Map use="map" pois={[{ category: "clanok", id: `clanok${article.sql_article_id}`, 
+                name: article.title, text: "Článok", coordinates: [article.lon, article.lat], 
+                url: `/pred/articles/article/${article.sql_article_id}` }]} view={{ lat: article.lat, lon: article.lon, zoom: 13 }}/>
+              <A href={`/pred/pois#poi=clanok${article.sql_article_id}&lat=${article.lat}&lon=${article.lon}`}><span data-nosnippet>na celej mape</span></A>
+            </>)}
         </>
       )}
     </PageWithLoader>
