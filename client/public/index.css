@@ -842,7 +842,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
 }
 
-#Article h3, #Changes h3 {
+#Article h3 {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 20px;
@@ -851,7 +851,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   clear: both;
 }
 
-#Article h4, #Changes h4 {
+#Article h4 {
   margin-top: 15px;
   margin-bottom: 10px;
   font-size: 18px;
@@ -1322,6 +1322,14 @@ img.preview {
   cursor: pointer;
 }
 
+#Article img.row {
+  float: left;
+  margin: 10px;
+  max-width: 85vw !important;
+  max-height: 27vw !important;
+  border-radius: 8px;
+}
+
 #Article img.left {
   float: left;
   margin-top: 5px;
@@ -1349,6 +1357,7 @@ img.preview {
 }
 
 @media (max-width: 750px) {
+  #Article img.row,
   #Article img.right,
   #Article img.left {
     float: none;
