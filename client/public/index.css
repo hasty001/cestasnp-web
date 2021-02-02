@@ -238,6 +238,7 @@ body {
   padding: 0;
   font-family: 'Ubuntu', sans-serif;
   box-sizing: border-box; 
+  color: black;
 }
 
 .app-body {
@@ -834,7 +835,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   overflow: hidden;
 }
 
-#Home .article-div h2, #Articles h2, #Article h2, #Changes h2 {
+#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2 {
   margin-top: 0px;
   margin-bottom: 30px;
   font-size: 25px;
@@ -842,7 +843,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
 }
 
-#Article h3 {
+.public-DraftEditor-content h2 {
+  margin-top: 30px;
+}
+
+#Article h3, .public-DraftEditor-content h3 {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 20px;
@@ -851,7 +856,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   clear: both;
 }
 
-#Article h4 {
+#Article h4, .public-DraftEditor-content h4 {
   margin-top: 15px;
   margin-bottom: 10px;
   font-size: 18px;
@@ -1322,33 +1327,78 @@ img.preview {
   cursor: pointer;
 }
 
-#Article img.row {
-  float: left;
-  margin: 10px;
-  max-width: 85vw !important;
-  max-height: 27vw !important;
+#AddArticle .DraftEditor-root {
+  display: block;
+  width: 100%;
+  border: 1px solid lightgray;
+  margin: 5px 0;
+  padding: 5px;
+  min-height: 100px;
+  height: 200px;
+  overflow: auto;
+  font-size: 15px;
+  font-weight: normal;
+  font-family: 'Ubuntu', sans-serif;
+  cursor: text;
+  resize: vertical;
+}
+
+.DraftEditor-editorContainer {
+  border: none !important;
+}
+
+.editor-image {
+  position: relative;
+}
+
+.editor-image-buttons {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 120px;
+}
+
+.editor-image-buttons button {
+  display: inline-block!important;
+  margin: 0!important;
+}
+
+#Article img.row, .public-DraftEditor-content img.row,
+#Article img.left, .public-DraftEditor-content img.left,
+#Article img.right, .public-DraftEditor-content img.right,
+#Article img.center, .public-DraftEditor-content img.center {
   border-radius: 8px;
 }
 
-#Article img.left {
+#Article img.row, .public-DraftEditor-content img.row {
+  float: left;
+  margin: 10px;
+  max-width: 85vw !important;
+  max-height: 27vw !important; 
+}
+
+#Article img.left, .public-DraftEditor-content img.left {
   float: left;
   margin-top: 5px;
   margin-right: 10px;
   margin-bottom: 10px;
   max-width: 27vw !important;
-  border-radius: 8px;
 }
 
-#Article img.right {
+#Article img.right, .public-DraftEditor-content img.right {
   float: right;
   margin-top: 5px;
   margin-left: 10px;
   margin-bottom: 10px;
   max-width: 27vw !important;
-  border-radius: 8px;
 }
 
-#Article img.center {
+.public-DraftEditor-content img.left,
+.public-DraftEditor-content img.right {
+  max-width: 27% !important;
+}
+
+#Article img.center, .public-DraftEditor-content img.center {
   display: block;
   margin: 10px auto;
   max-width: 85vw !important;
@@ -1356,10 +1406,18 @@ img.preview {
   clear: both;
 }
 
+.public-DraftEditor-content img.row,
+.public-DraftEditor-content img.center {
+  max-width: 100% !important;
+}
+
 @media (max-width: 750px) {
   #Article img.row,
   #Article img.right,
-  #Article img.left {
+  #Article img.left, 
+  .public-DraftEditor-content img.row,
+  .public-DraftEditor-content img.right,
+  .public-DraftEditor-content img.left {
     float: none;
     display: block;
     margin: 10px auto;

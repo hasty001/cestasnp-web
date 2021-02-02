@@ -25,7 +25,7 @@ const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, 
 
   >
     <Modal.Header closeButton>
-      <Modal.Title>Náhled článku</Modal.Title>
+      <Modal.Title>Náhľad článku</Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <div id="Article">
