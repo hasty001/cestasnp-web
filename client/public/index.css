@@ -1349,80 +1349,101 @@ img.preview {
 
 .editor-image {
   position: relative;
+  z-index: 10;
 }
 
 .editor-image-buttons {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 120px;
+  left: 10px;
+  top: 10px;
 }
 
-.editor-image-buttons button {
+.editor-image-buttons button, .editor-toolbar button {
   display: inline-block!important;
   margin: 0!important;
+  min-width: 26px;
 }
 
-#Article img.row, .public-DraftEditor-content img.row,
-#Article img.left, .public-DraftEditor-content img.left,
-#Article img.right, .public-DraftEditor-content img.right,
-#Article img.center, .public-DraftEditor-content img.center {
+.editor-image-buttons {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.editor-toolbar {
+  padding: 5px;
+}
+
+#Article img.row, .public-DraftEditor-content .editor-image.row>img,
+#Article img.left, .public-DraftEditor-content .editor-image.left>img,
+#Article img.right, .public-DraftEditor-content .editor-image.right>img,
+#Article img.center, .public-DraftEditor-content .editor-image.center>img {
   border-radius: 8px;
 }
 
-#Article img.row, .public-DraftEditor-content img.row {
+#Article img.row, .public-DraftEditor-content .editor-image.row {
   float: left;
   margin: 10px;
   max-width: 85vw !important;
   max-height: 27vw !important; 
 }
 
-#Article img.left, .public-DraftEditor-content img.left {
+.public-DraftEditor-content .editor-image.row>img {
+  max-width: 85vw !important;
+  max-height: 27vw !important; 
+}
+
+#Article img.left, .public-DraftEditor-content .editor-image.left {
   float: left;
   margin-top: 5px;
   margin-right: 10px;
   margin-bottom: 10px;
   max-width: 27vw !important;
+  clear: left;
 }
 
-#Article img.right, .public-DraftEditor-content img.right {
+#Article img.right, .public-DraftEditor-content .editor-image.right {
   float: right;
   margin-top: 5px;
   margin-left: 10px;
   margin-bottom: 10px;
   max-width: 27vw !important;
+  clear: right;
 }
 
-.public-DraftEditor-content img.left,
-.public-DraftEditor-content img.right {
-  max-width: 27% !important;
-}
-
-#Article img.center, .public-DraftEditor-content img.center {
+#Article img.center, .public-DraftEditor-content .editor-image.center {
   display: block;
   margin: 10px auto;
   max-width: 85vw !important;
-  border-radius: 8px;
   clear: both;
 }
 
-.public-DraftEditor-content img.row,
-.public-DraftEditor-content img.center {
-  max-width: 100% !important;
+.public-DraftEditor-content .editor-image.center {
+  width: fit-content;
+}
+
+img.row::before, .editor-image.row::before {
+  content: none;
 }
 
 @media (max-width: 750px) {
   #Article img.row,
   #Article img.right,
   #Article img.left, 
-  .public-DraftEditor-content img.row,
-  .public-DraftEditor-content img.right,
-  .public-DraftEditor-content img.left {
+  .public-DraftEditor-content .editor-image.row,
+  .public-DraftEditor-content .editor-image.right,
+  .public-DraftEditor-content .editor-image.left {
     float: none;
     display: block;
     margin: 10px auto;
     max-width: 240px !important;
+    max-height: none !important;
   }
+
+  .public-DraftEditor-content .editor-image.row>img {
+    max-width: 240px !important;
+    max-height: none !important;
+  }  
 }
 
 .article-img-item,
@@ -1987,7 +2008,7 @@ img.preview {
 }
 
 .accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
-.edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label {
+.edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label, .link-box label {
   display: block;
   width: 100%;
 }
@@ -2071,7 +2092,7 @@ img.preview {
   padding-left: 10px;
 }
 
-.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form, #AddArticle input.form {
+.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form, #AddArticle input.form, .link-box input {
   display: block;
   width: 100%;
   border: 1px solid lightgray;

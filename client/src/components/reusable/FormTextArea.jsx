@@ -1,60 +1,159 @@
-import React, { useEffect, useState } from 'react';
-import { useStateProp } from '../../helpers/reactUtils';
+import React, { useEffect, useState, useRef } from 'react';
+import { useStateEx, useStateProp } from '../../helpers/reactUtils';
 import FormItem from './FormItem';
-import { CompositeDecorator, Editor, EditorState, Modifier } from "draft-js";
+import { CompositeDecorator, Editor, EditorState, Modifier, RichUtils, SelectionState } from "draft-js";
 import "draft-js/dist/Draft.css";
 import { stateFromHTML } from 'draft-js-import-html';
 import { stateToHTML } from 'draft-js-export-html';
 import { findImageEntities, findLinkEntities, Image, Link, optionsFromHTML, optionsToHTML } from './Decorators';
+import LinkBox from './LinkBox';
+import CloudinaryWidget from './CloudinaryWidget';
+import * as Constants from '../Constants';
 
 const FormTextArea = (props) => {
+
+  const [value, setValue] = useStateProp(props.value);
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorator));
+  const [savedSelection, setSavedSelection] = useState();
+  const [savedScrollTop, setSavedScrollTop] = useState();
+  const [linkUrl, setLinkUrl] = useState(null);
+  const [linkSelection, setLinkSelection] = useState();
+  const [imageId, setImageId] = useState(null);
+
+  const editor = useRef(null);
+
+  const focus = (selection, scrollTop) => {
+    setTimeout(() => {
+      editor.current.focus();
+
+      if (selection) {
+        setTimeout(() => {        
+          setEditorState(editorState => EditorState.forceSelection(editorState, selection));
+
+          if (scrollTop) {
+            setTimeout(() => {
+              editor.current.editor.parentElement.parentElement.scrollTop = scrollTop;
+            }, 100);    
+          }
+        }, 200);
+      }
+    }, 50);
+  };
+
+  const mergeEntityData = (blockKey, start, end, entityKey, value) => {
+    setEditorState(editorState => {   
+      const selection = SelectionState.createEmpty(blockKey).set('anchorOffset', start).set('focusOffset', start);
+
+      return EditorState.forceSelection(
+        EditorState.push(editorState, editorState.getCurrentContent().mergeEntityData(entityKey, value),
+        'apply-entity'), selection);
+    });
+
+    focus();
+  }
+
+  const removeEntity = (blockKey, start, end) => {
+    setEditorState(editorState => {
+      const contentState = editorState.getCurrentContent();
+      const selection = SelectionState.createEmpty(blockKey).merge(
+        { anchorKey: blockKey, anchorOffset: start, focusKey: blockKey, focusOffset: end });
+      const newContent = Modifier.removeRange(contentState, selection, 'forward');
+
+      return EditorState.push(editorState, newContent, 'remove-range');
+    });
+    focus();
+  }
+
+  const toggleInline = (style) => {
+    setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+    focus();
+  }
+
+  const toggleBlock = (style) => {
+    setEditorState(RichUtils.toggleBlockType(editorState, style));
+    focus();
+  }
+
+  const showImage = () => {
+    setSavedSelection(selection => editorState.getSelection() || selection)      
+    setSavedScrollTop(editor.current.editor.parentElement.parentElement.scrollTop);
+
+    setImageId(Date.now());
+  }
+
+  const insertImage = (img) => {
+    setImageId(null);
+      
+    const pastedBlock = stateFromHTML(`<img class="left" src="${img.secure_url}" />`, optionsFromHTML).getBlockMap();
+
+    const start = savedSelection.getStartOffset();
+    const newContent = Modifier.replaceWithFragment(editorState.getCurrentContent(), 
+      savedSelection.set('anchorOffset', start).set('focusOffset', start), pastedBlock);
+    setEditorState(EditorState.push(editorState, newContent, 'insert-fragment'));
+
+    focus(savedSelection, savedScrollTop);
+  }
+
+  const showLink = () => {
+    setSavedSelection(selection => editorState.getSelection() || selection);              
+    setSavedScrollTop(editor.current.editor.parentElement.parentElement.scrollTop);
+
+    const selection = editorState.getSelection();
+
+    if (selection.getStartKey() == selection.getEndKey()) {
+      const content = editorState.getCurrentContent();
+      const block = content.getBlockForKey(selection.getStartKey());
+
+      const entityKey = block.getEntityAt(selection.getStartOffset());
+      const entity = entityKey ? content.getEntity(entityKey) : null;
+
+      if (entity && entity.getType() == "LINK") {
+        var start = selection.getStartOffset();
+        while (start > 0 && block.getEntityAt(start) == entityKey) start--;
+        var end = selection.getStartOffset();
+        while (end < block.getLength() - 1 && block.getEntityAt(end) == entityKey) end++;
+
+        setLinkSelection(SelectionState.createEmpty(selection.getStartKey()).set('anchorOffset', start).set('focusOffset', end));
+        setLinkUrl(entity.getData()['url'] || "");
+      } else if (selection.getStartOffset() != selection.getEndOffset()) {
+        setLinkSelection(selection); 
+        setLinkUrl("");
+      }
+    }
+  }
+
+  const setLink = (url, hide) => {
+    setLinkUrl(null);
+
+    if (!hide) {
+      const newContentState = url ? editorState.getCurrentContent().createEntity('LINK', 'MUTABLE', { url }) 
+      : editorState.getCurrentContent();
+      const entityKey = url ? newContentState.getLastCreatedEntityKey() : null;
+
+      setEditorState(RichUtils.toggleLink(EditorState.push(editorState, newContentState), linkSelection, entityKey));
+    }
+
+    focus(savedSelection, savedScrollTop);
+  }
 
   const decorator = new CompositeDecorator([
     {
       strategy: findLinkEntities,
-      component: Link
+      component: Link,
+      props: { mergeEntityData, removeEntity }
     },
     {
       strategy: findImageEntities,
-      component: Image
+      component: Image,
+      props: { mergeEntityData, removeEntity }
     },
   ]);
-
-  const [value, setValue] = useStateProp(props.value);
-  const [editorState, setEditorState] = useState(EditorState.createEmpty(decorator));
 
   useEffect(() => {
     if (props.html) {
       setEditorState(EditorState.createWithContent(stateFromHTML(value, optionsFromHTML), decorator));
     }
   }, [value, props.html]);
-
-  /*
-  const toolbarConfig = {
-    display: ['INLINE_STYLE_BUTTONS', 'BLOCK_ALIGNMENT_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'IMAGE_BUTTON', 'BLOCK_TYPE_DROPDOWN', 'HISTORY_BUTTONS'],
-    INLINE_STYLE_BUTTONS: [
-      {label: 'Tučne', style: 'BOLD'},
-      {label: 'Kurzíva', style: 'ITALIC'},
-    ],
-    BLOCK_TYPE_DROPDOWN: [
-      {label: 'Normálny', style: 'unstyled'},
-      {label: 'Veľký nadpis', style: 'header-two'},
-      {label: 'Nadpis', style: 'header-three'},
-      {label: 'Malý nadpis', style: 'header-four'},
-      {label: 'Citace', style: 'blockquote'},
-      {label: 'Kód', style: 'code-block'}
-    ],
-    BLOCK_ALIGNMENT_BUTTONS: [
-      {label: 'Vľevo', style: 'ALIGN_LEFT'},
-      {label: 'Na stred', style: 'ALIGN_CENTER'},
-      {label: 'Vpravo', style: 'ALIGN_RIGHT'}
-    ],
-    LINK_BUTTONS: { link: { label: 'Odkaz' }, removeLink: { label: 'Odstaniť odkaz' } },
-    BLOCK_TYPE_BUTTONS: [
-      {label: 'Odrážky', style: 'unordered-list-item'},
-      {label: 'Číslovaný zoznam', style: 'ordered-list-item'}
-    ]
-  };*/
 
   const paste = (text, html, editorState) => {
     if (html) {
@@ -70,8 +169,32 @@ const FormTextArea = (props) => {
   return (
     <FormItem {...props} value={value}>
       {!!props.html ? 
-      <Editor editorState={editorState} onChange={s => setEditorState(s)} handlePastedText={paste}
-        onBlur = {() => setValue(stateToHTML(editorState.getCurrentContent(), optionsToHTML).replaceAll('>&nbsp;</img>', '/>'))}/>
+      (<div>
+         <LinkBox show={linkUrl != null} 
+           url={linkUrl}
+           onConfirm={url => setLink(url)}
+           onDelete={() => setLink(null)}
+           onHide={() => setLink(null, true)}
+           />
+        <CloudinaryWidget show={!!imageId} uid={props.uid} imageId={imageId} 
+            updateImageDetails={i => insertImage(i)} type={Constants.ImageType.Clanky} />
+         <div className="editor-toolbar">
+           <button title="Tučne" onMouseDown={e => { e.preventDefault(); toggleInline("BOLD"); }}><strong>B</strong></button>
+           <button title="Kurzíva" onMouseDown={e => { e.preventDefault(); toggleInline("ITALIC"); }}><em>I</em></button>
+           <button title="Normálny" onMouseDown={e => { e.preventDefault(); toggleBlock("unstyled"); }}>t</button>
+           <button title="Veľký nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-two"); }}>H2</button>
+           <button title="Nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-three"); }}>H3</button>
+           <button title="Malý nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-four"); }}>H4</button>
+           <button title="Citace" onMouseDown={e => { e.preventDefault(); toggleBlock("blockquote"); }}>""</button>
+           <button title="Odrážky" onMouseDown={e => { e.preventDefault(); toggleBlock("unordered-list-item"); }}>🞄t</button>
+           <button title="Číslovaný zoznam" onMouseDown={e => { e.preventDefault(); toggleBlock("ordered-list-item"); }}>1.</button>
+           <button title="Odkaz" onMouseDown={e => { e.preventDefault(); showLink(); }}><i className="fas fa-link"></i></button>
+           <button title="Obrázok" onMouseDown={e => { e.preventDefault(); showImage(); }}><i className="far fa-images"></i></button>
+         </div>
+         
+         <Editor ref={editor} editorState={editorState} onChange={s => setEditorState(s)} handlePastedText={paste}
+           onBlur={() => { setValue(stateToHTML(editorState.getCurrentContent(), optionsToHTML).replaceAll('>&nbsp;</img>', '/>')); }}/>
+       </div>)
       :
       (<textarea
         className={props.itemClassName}

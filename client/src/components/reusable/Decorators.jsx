@@ -1,3 +1,4 @@
+import { EditorState } from 'draft-js';
 import React from 'react';
 
 function findLinkEntities(contentBlock, callback, contentState) {
@@ -40,8 +41,46 @@ const Image = (props) => {
     className, src, alt, title
   } = props.contentState.getEntity(props.entityKey).getData();
 
+  const imageAlign = (align) => {
+    const { className } = props.contentState.getEntity(props.entityKey).getData();
+
+    const list = (className || '').split(' ');
+    const index = Math.max(list.indexOf('left'), list.indexOf('center'), list.indexOf('right'), list.indexOf('row'));
+    if (index >= 0) {
+      list[index] = align;
+    } else {
+      list.push(align);
+    }
+
+    props.mergeEntityData(props.blockKey, props.start, props.end, props.entityKey, { className: list.join(' ') });
+  }
+
+  const imageToggleClass = (value) => {
+    const { className } = props.contentState.getEntity(props.entityKey).getData();
+
+    const list = (className || '').split(' ');
+    const index = list.indexOf(value);
+    if (index >= 0) {
+      list.splice(index, 1);
+    } else {
+      list.push(value);
+    }
+
+    props.mergeEntityData(props.blockKey, props.start, props.end, props.entityKey, { className: list.join(' ') });
+  } 
+
   return (
-    <img className={className} src={src} alt={alt} title={title}/>
+    <span className={`editor-image ${className}`}>
+      <img src={src} alt={alt} title={title}/>
+      <span className="editor-image-buttons">
+        <button title="Vľavo" onMouseDown={e => { e.preventDefault(); imageAlign('left'); }}><i className="fas fa-align-left" /></button>
+        <button title="Na stred" onMouseDown={e => { e.preventDefault(); imageAlign('center'); }}><i className="fas fa-align-center" /></button>
+        <button title="V rade" onMouseDown={e => { e.preventDefault(); imageAlign('row'); }}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
+        <button title="Vpravo" onMouseDown={e => { e.preventDefault(); imageAlign('right'); }}><i className="fas fa-align-right" /></button>
+        <button title="S náhľadom" onMouseDown={e => { e.preventDefault(); imageToggleClass('preview'); }}><i className="fas fa-external-link-alt" /></button>
+        <button title="Zmazať" onMouseDown={e => { e.preventDefault(); props.removeEntity(props.blockKey, props.start, props.end); }}><i className="fas fa-trash-alt" /></button>
+      </span>
+    </span>
   );
 };
 

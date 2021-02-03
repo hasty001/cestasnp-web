@@ -406,11 +406,11 @@ const ArticleForm = (props) => {
 
       <a className="action" href="#" onClick={() => setIntroHtml(v => !v)}>{introHtml ? "editovať kód" : "editovať náhľad" }</a>
       {!!props.edit && !introHtml && <a className="action" href="#" onClick={() => setIntro(fixArticle(intro))}>vyčistiť</a>}
-      <FormTextArea value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html" html={introHtml}/>
+      <FormTextArea uid={props.uid} value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html" html={introHtml}/>
       
       <a className="action" href="#" onClick={() => setTextHtml(v => !v)}>{textHtml ? "editovať kód" : "editovať náhľad" }</a>
       {!!props.edit && !textHtml && <a className="action" href="#" onClick={() => setText(fixArticle(text))}>vyčistiť</a>}
-      <FormTextArea value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html" html={textHtml}/>
+      <FormTextArea uid={props.uid} value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html" html={textHtml}/>
       
       <FormItem valueName="images" valueLabel="Obrázky" useEdit 
         valueClass="image-list" value={allImages.map((image, i) => <img key={i} src={image.src}/>)}>
