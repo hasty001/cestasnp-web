@@ -35,7 +35,7 @@ const SiteFooter = (props) => {
         </div>
         <div className="col2">
           <A href="/"><img src={logoFooter} className="logo-footer"/></A>
-          <A className="footer-link" href="/kontakt">O nás</A>
+          <A className="footer-link" href="/pred/articles/article/55">O nás</A>
           <A className="footer-link" href="/pred/articles/1">Články</A>
           <A className="footer-link" href="/pred/pois">Dôležité miesta</A>
           <A className="footer-link" href="/pred/itinerar">Itinerár</A>
@@ -49,7 +49,7 @@ const SiteFooter = (props) => {
           </h3>
         </div>
         <div className="col3">
-          <h2>Kontakt</h2>
+          <A className="no-decoration" href="/kontakt"><h2>Kontakt</h2></A>
           <p>
             Občianske združenie<br/>
             CestaSNP.sk<br/>
