@@ -57,6 +57,7 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
     if (href && !href.startsWith("#")) {
       if ((href.indexOf(":") > 0 || !href.startsWith("/") || href.startsWith("//")) && !href.startsWith("https://cestasnp.sk")) {
         node.setAttribute('target', '_blank');
+        node.setAttribute('rel', 'noopener');
       } else {
         if (!window.__navigate) {
           window.__navigate = navigate;

@@ -50,6 +50,8 @@ const ArticleForm = (props) => {
   const [title, setTitle] = useStateEx('', clearMsg);
   const [intro, setIntro] = useStateEx('', clearMsg);
   const [text, setText] = useStateEx('', clearMsg);
+  const [introHtml, setIntroHtml] = useState(true);
+  const [textHtml, setTextHtml] = useState(true);
 
   const [images, setImages] = useStateEx([], clearMsg);
   const [imagesAdded, setImagesAdded] = useStateEx([], clearMsg);
@@ -61,7 +63,7 @@ const ArticleForm = (props) => {
     const list = [];
     const linksList = [];
 
-    const imgTagRegEx = /<img.*?src="([^"].*?)"[^>]*?\/>/g;
+    const imgTagRegEx = /<img.*?src="([^"].*?)"[^>]*?\/?>(<\/img>)?/g;
     const linkRegEx = /href="([^"].*?)"/g;
 
     const imgTags = [...(intro + text).matchAll(imgTagRegEx)];
@@ -104,6 +106,10 @@ const ArticleForm = (props) => {
 
   useEffect(() => { setArticle(props.article); }, [props.article]);
 
+  const supported = (code) => {
+    return code.indexOf('<div') < 0 && code.indexOf('style=') < 0 && code.indexOf('<table') < 0;
+  }
+
   useEffect(() => {
     if (article && props.edit) {
       const hashId = (window.location.hash || "").replace("#", "");
@@ -115,6 +121,8 @@ const ArticleForm = (props) => {
       setState(props.role != "admin" ? -1 : p.state);
       setTags(p.tags);
       setTitle(p.title);
+      setIntroHtml(supported(p.introtext));
+      setTextHtml(supported(p.fulltext));
       setIntro(p.introtext);
       setText(p.fulltext);
 
@@ -288,6 +296,8 @@ const ArticleForm = (props) => {
     result = result.replaceAll(' style=""', '');
     result = result.replaceAll(' alt=""', '');
     result = result.replaceAll(' title=""', '');
+    result = result.replaceAll('<b>', '<strong>');
+    result = result.replaceAll('</b>', '</strong>');
     result = result.replaceAll('<p >', '<p>');
     result = result.replaceAll(/<span style="font-weight: 700;"><strong>(.*?)<\/strong><\/span>/g, '<strong>$1</strong>');
     result = result.replaceAll(/<strong><span style="font-weight: 700;">(.*?)<\/span><\/strong>/g, '<strong>$1</strong>');
@@ -394,10 +404,13 @@ const ArticleForm = (props) => {
         options={ Constants.ArticleCategories.slice(1).map(cat => { return { value: cat.tag, label: cat.text }; }) } itemClassName="form">
       </FormMultiSelect>
 
-      {!!props.edit && <a className="action" href="#" onClick={() => setIntro(fixArticle(intro))}>vyčistiť</a>}
-      <FormTextArea value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html"/>
-      {!!props.edit && <a className="action" href="#" onClick={() => setText(fixArticle(text))}>vyčistiť</a>}
-      <FormTextArea value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html"/>
+      <a className="action" href="#" onClick={() => setIntroHtml(v => !v)}>{introHtml ? "editovať kód" : "editovať náhľad" }</a>
+      {!!props.edit && !introHtml && <a className="action" href="#" onClick={() => setIntro(fixArticle(intro))}>vyčistiť</a>}
+      <FormTextArea uid={props.uid} value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html" html={introHtml}/>
+      
+      <a className="action" href="#" onClick={() => setTextHtml(v => !v)}>{textHtml ? "editovať kód" : "editovať náhľad" }</a>
+      {!!props.edit && !textHtml && <a className="action" href="#" onClick={() => setText(fixArticle(text))}>vyčistiť</a>}
+      <FormTextArea uid={props.uid} value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html" html={textHtml}/>
       
       <FormItem valueName="images" valueLabel="Obrázky" useEdit 
         valueClass="image-list" value={allImages.map((image, i) => <img key={i} src={image.src}/>)}>
@@ -431,7 +444,7 @@ const ArticleForm = (props) => {
       </FormItem>
 
       <button className="snpBtnWhite" onClick={() => setPreview(true)}>
-        Náhled článku
+        Náhľad článku
       </button>
       {!!props.edit && (<button className="snpBtnWhite" onClick={() => setDiff({ state: parseInt(state), tags, 
           gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text })}>
