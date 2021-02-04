@@ -18,6 +18,7 @@ import ArticleDiffBox from '../reusable/ArticleDiffBox';
 import FormItem from '../reusable/FormItem';
 import CloudinaryWidget from '../reusable/CloudinaryWidget';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import CanMaximize from '../reusable/CanMaximize';
 
 const ArticleForm = (props) => {
 
@@ -404,14 +405,18 @@ const ArticleForm = (props) => {
         options={ Constants.ArticleCategories.slice(1).map(cat => { return { value: cat.tag, label: cat.text }; }) } itemClassName="form">
       </FormMultiSelect>
 
-      <a className="action" href="#" onClick={() => setIntroHtml(v => !v)}>{introHtml ? "editovať kód" : "editovať náhľad" }</a>
-      {!!props.edit && !introHtml && <a className="action" href="#" onClick={() => setIntro(fixArticle(intro))}>vyčistiť</a>}
-      <FormTextArea uid={props.uid} value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html" html={introHtml}/>
-      
-      <a className="action" href="#" onClick={() => setTextHtml(v => !v)}>{textHtml ? "editovať kód" : "editovať náhľad" }</a>
-      {!!props.edit && !textHtml && <a className="action" href="#" onClick={() => setText(fixArticle(text))}>vyčistiť</a>}
-      <FormTextArea uid={props.uid} value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html" html={textHtml}/>
-      
+      <CanMaximize>
+        <a className="action" href="#" onClick={() => setIntroHtml(v => !v)}>{introHtml ? "editovať kód" : "editovať náhľad" }</a>
+        {!!props.edit && !introHtml && <a className="action" href="#" onClick={() => setIntro(fixArticle(intro))}>vyčistiť</a>}
+        <FormTextArea uid={props.uid} value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html" html={introHtml}/>
+      </CanMaximize>
+
+      <CanMaximize>
+        <a className="action" href="#" onClick={() => setTextHtml(v => !v)}>{textHtml ? "editovať kód" : "editovať náhľad" }</a>
+        {!!props.edit && !textHtml && <a className="action" href="#" onClick={() => setText(fixArticle(text))}>vyčistiť</a>}
+        <FormTextArea uid={props.uid} value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html" html={textHtml}/>
+      </CanMaximize>
+
       <FormItem valueName="images" valueLabel="Obrázky" useEdit 
         valueClass="image-list" value={allImages.map((image, i) => <img key={i} src={image.src}/>)}>
         <>
@@ -443,10 +448,10 @@ const ArticleForm = (props) => {
         {!!links && links.map((link, i) => <div key={i} className="article-link-item"><a href={link.href}>{link.href}</a></div>)}
       </FormItem>
 
-      <button className="snpBtnWhite" onClick={() => setPreview(true)}>
+      <button className="snpBtnWhite" accessKey="N" onClick={() => setPreview(true)}>
         Náhľad článku
       </button>
-      {!!props.edit && (<button className="snpBtnWhite" onClick={() => setDiff({ state: parseInt(state), tags, 
+      {!!props.edit && (<button className="snpBtnWhite" accessKey="R" onClick={() => setDiff({ state: parseInt(state), tags, 
           gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text })}>
           Rozdiel
         </button>)}

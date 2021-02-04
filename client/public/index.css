@@ -52,6 +52,12 @@ a {
   opacity : 1;
 }
 
+br.clear-both {
+  clear: both;
+  max-height: 0;
+  margin: 0;
+}
+
 a.red-button {
   display: block;
   width: 120px; /*for IE*/
@@ -126,6 +132,44 @@ textarea.html {
   font-size: 13px;
 }
 
+.can-maximize:not(.maximized) .maximized {
+  display: none;
+}
+
+.can-maximize.maximized .not-maximized {
+  display: none;
+}
+
+.can-maximize.maximized {
+  margin-top: 80px;
+  width: 100%;
+  height: calc(100vh - 80px);
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 100;
+  background-color: white;
+  padding-top: 5px;
+}
+
+.can-maximize.maximized .action:first-of-type {
+  margin-right: 5px;
+}
+
+.can-maximize.maximized label>span {
+  margin-left: 5px;
+}
+
+.can-maximize.maximized .DraftEditor-root {
+  resize: none !important;
+  height: calc(100vh - 151px) !important;
+}
+
+.can-maximize.maximized textarea.html {
+  resize: none !important;
+  height: calc(100vh - 113px) !important;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
@@ -175,6 +219,16 @@ html, body, #root {
   }
   .modal {
     margin-top: 70px;
+  }
+  .can-maximize.maximized {
+    margin-top: 70px;
+    height: calc(100vh - 70px);
+  }
+  .can-maximize.maximized .DraftEditor-root {
+    height: calc(100vh - 141px) !important;
+  }
+  .can-maximize.maximized textarea.html {
+    height: calc(100vh - 103px) !important;
   }
 } @media print {
   .app-header { 
@@ -1420,6 +1474,10 @@ img.preview {
 
 .public-DraftEditor-content .editor-image.center {
   width: fit-content;
+}
+
+img.row::after, .editor-image.row::after {
+  content: none;
 }
 
 img.row::before, .editor-image.row::before {

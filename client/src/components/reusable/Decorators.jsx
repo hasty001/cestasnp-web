@@ -69,18 +69,33 @@ const Image = (props) => {
     props.mergeEntityData(props.blockKey, props.start, props.end, props.entityKey, { className: list.join(' ') });
   } 
 
+  const block = props.contentState.getBlockForKey(props.blockKey);
+
+  const beforeKey = props.start > 0 ? block.getEntityAt(props.start - 1) : null;
+  const before = (beforeKey && beforeKey != props.entityKey) ? props.contentState.getEntity(beforeKey) : null;
+
+  const afterKey = block.getEntityAt(props.end);
+  const after = (afterKey && afterKey != props.entityKey) ? props.contentState.getEntity(afterKey) : null;
+
+  const noRow = (e) => (className || '').split(' ').indexOf('row') >= 0 
+    && (!e || e.getType() != "IMAGE" || (e.getData()['className'] || '').split(' ').indexOf('row') < 0);
+
   return (
-    <span className={`editor-image ${className}`}>
-      <img src={src} alt={alt} title={title}/>
-      <span className="editor-image-buttons">
-        <button title="Vľavo" onMouseDown={e => { e.preventDefault(); imageAlign('left'); }}><i className="fas fa-align-left" /></button>
-        <button title="Na stred" onMouseDown={e => { e.preventDefault(); imageAlign('center'); }}><i className="fas fa-align-center" /></button>
-        <button title="V rade" onMouseDown={e => { e.preventDefault(); imageAlign('row'); }}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
-        <button title="Vpravo" onMouseDown={e => { e.preventDefault(); imageAlign('right'); }}><i className="fas fa-align-right" /></button>
-        <button title="S náhľadom" onMouseDown={e => { e.preventDefault(); imageToggleClass('preview'); }}><i className="fas fa-external-link-alt" /></button>
-        <button title="Zmazať" onMouseDown={e => { e.preventDefault(); props.removeEntity(props.blockKey, props.start, props.end); }}><i className="fas fa-trash-alt" /></button>
+    <>
+      {noRow(before) && <br className="clear-both"/>}
+      <span className={`editor-image ${className}`}>
+        <img src={src} alt={alt} title={title}/>
+        <span className="editor-image-buttons">
+          <button title="Vľavo" onMouseDown={e => { e.preventDefault(); imageAlign('left'); }}><i className="fas fa-align-left" /></button>
+          <button title="Na stred" onMouseDown={e => { e.preventDefault(); imageAlign('center'); }}><i className="fas fa-align-center" /></button>
+          <button title="V rade" onMouseDown={e => { e.preventDefault(); imageAlign('row'); }}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
+          <button title="Vpravo" onMouseDown={e => { e.preventDefault(); imageAlign('right'); }}><i className="fas fa-align-right" /></button>
+          <button title="S náhľadom" onMouseDown={e => { e.preventDefault(); imageToggleClass('preview'); }}><i className="fas fa-external-link-alt" /></button>
+          <button title="Zmazať" onMouseDown={e => { e.preventDefault(); props.removeEntity(props.blockKey, props.start, props.end); }}><i className="fas fa-trash-alt" /></button>
+        </span>
       </span>
-    </span>
+      {noRow(after) && <br className="clear-both"/>}
+    </>
   );
 };
 
