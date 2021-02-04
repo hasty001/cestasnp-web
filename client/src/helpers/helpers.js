@@ -72,7 +72,7 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
     }
   }
 
-  // set image preview
+  // set image preview and divide image in row from other content
   if (node.tagName === "IMG" && node.hasAttribute('class') && node.hasAttribute('src')) {
     const cl = (node.getAttribute('class') || '').trim().split(' ');
 
@@ -81,6 +81,22 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
 
       if (src) {
         node.setAttribute('onclick', `__setPreview("${src}")`);
+      }
+    }
+
+    if (cl.indexOf('row') >= 0) {
+      const br = () => {
+        const e = document.createElement("br");
+        e.setAttribute("class", "clear-both");
+        return e;
+      }
+      const noRow = (e) => !e || e.tagName != "IMG" || (e.getAttribute('class') || '').split(' ').indexOf('row') < 0;
+
+      if (noRow(node.previousElementSibling)) {
+        node.parentElement.insertBefore(br(), node);
+      }
+      if (noRow(node.nextElementSibling)) {
+        node.parentElement.insertBefore(br(), node.nextElementSibling);
       }
     }
   }

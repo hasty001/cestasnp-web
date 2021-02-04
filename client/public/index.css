@@ -52,6 +52,12 @@ a {
   opacity : 1;
 }
 
+br.clear-both {
+  clear: both;
+  max-height: 0;
+  margin: 0;
+}
+
 a.red-button {
   display: block;
   width: 120px; /*for IE*/
@@ -1420,6 +1426,10 @@ img.preview {
 
 .public-DraftEditor-content .editor-image.center {
   width: fit-content;
+}
+
+img.row::after, .editor-image.row::after {
+  content: none;
 }
 
 img.row::before, .editor-image.row::before {
