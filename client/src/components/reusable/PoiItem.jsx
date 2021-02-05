@@ -26,7 +26,7 @@ const PoiItem = (props) => {
   };
 
   return (
-    <ItemElement key={props.value._id} className="poi-item">
+    <ItemElement key={props.value._id || props.value.id} className="poi-item">
       {!!props.value.errorMsg && <div className="errorMsg">{props.value.errorMsg}</div>}
       {!!props.value.successMsg && <div className="successMsg">{props.value.successMsg}</div>}
 

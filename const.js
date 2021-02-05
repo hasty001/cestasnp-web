@@ -14,6 +14,7 @@ const NearMaxLonDistance = 1/16; // in °
 
 const NearMaxDistance = 5000; // in m
 
+const ArticlesRelatedByTagsCount = 5;
 const ArticlesFilterBy = { $and: [{ state: { $gt: 0 } }, {
   $or: [
   { tags: {$in: ['rozhovory']}},
@@ -45,7 +46,8 @@ const ArticleCommentsTable = "article_comments";
 
 module.exports = {
   InterestingShowCount, InterestingPrevMonths, MinRating, CommentRating, ImageRating, TextRatingPerChar, 
-  ArticlesFilterBy, FilterNoResult, FilterPoiNotDeleted, FilterNotDeleted, HomeArticlesCount, PageSize, NearPoisWarningDistance,
+  ArticlesRelatedByTagsCount, ArticlesFilterBy, FilterNoResult, FilterPoiNotDeleted, FilterNotDeleted, 
+  HomeArticlesCount, PageSize, NearPoisWarningDistance,
   NearMaxLatDistance, NearMaxLonDistance, NearMaxDistance,
   UsersTable, DetailsTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,
   MessagesTable, CommentsTable, ArticleCommentsTable

@@ -753,6 +753,13 @@ DB.prototype = {
     ] };
   },
 
+  articleToPoi(a) {
+    return { category: "clanok", id: `clanok${a.sql_article_id}`, 
+      name: a.title, text: "Článok", 
+      coordinates: (a.lat && a.lon) ? [a.lon, a.lat] : null, 
+      url: `/pred/articles/article/${a.sql_article_id}` };
+  },
+
   fillPoiInfo(db, poiId, poiValue) {
     return Promise.all([
       poiValue,
@@ -766,7 +773,7 @@ DB.prototype = {
 
       return Promise.all([
         this.findBy(db, _const.PoisTable, this.getNearPoisCoordsFilter(poi.coordinates)), 
-        this.findBy(db, _const.ArticlesTable, this.getNearArticlesCoordsFilter(poi.coordinates)), 
+        this.findBy(db, _const.ArticlesTable, this.getNearArticlesCoordsFilter(poi.coordinates), { projection: { fultext: 0 } }), 
         this.getUserNames(db, uids)]).then(([nearPois, nearArticles, users]) => {
         [poi].concat(history || []).forEach(poi => {
           poi.created_by_name = this.findUserName(poi.user_id, users);
@@ -774,10 +781,7 @@ DB.prototype = {
           poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
         });
 
-        poi.near = (nearPois || []).concat((nearArticles || []).map(a => 
-          Object.assign({ category: "clanok", id: `clanok${a.sql_article_id}`, 
-          name: a.title, text: "Článok", 
-          coordinates: [a.lon, a.lat], url: `/pred/articles/article/${a.sql_article_id}` })));
+        poi.near = (nearPois || []).concat((nearArticles || []).map(a => this.ArticleToPoi(a)));
         sortNear(poi, poi.near, _const.NearMaxDistance);
 
         poi.history = history || [];
@@ -855,6 +859,20 @@ DB.prototype = {
         });
       }));
   },
+  
+  filterSimilarTags(article, similar, limit) {
+    const result = similar.filter(a => article.sql_article_id != a.sql_article_id);
+
+    const tags = article.tags;
+    result.sort((a, b) => {
+      const as = a.tags.reduce((s, c) => s + (tags.indexOf(c) >= 0 ? 1 : 0), 0);
+      const bs = b.tags.reduce((s, c) => s + (tags.indexOf(c) >= 0 ? 1 : 0), 0);
+
+      return (as == bs) ? (b.article_views - a.article_views) : (bs - as);
+    });
+
+    return result.slice(0, limit);
+  },
 
   fillArticleInfo(db, sql_article_id, articleValue) {
     return Promise.all([
@@ -868,7 +886,13 @@ DB.prototype = {
       const uids = this.getUids([article].concat(history || []), [p => p.created_by, 
         p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id]);
 
-      return this.getUserNames(db, uids).then(users => {
+      return Promise.all([
+        this.findBy(db, _const.PoisTable, this.getNearPoisFilter(article.lat, article.lon)), 
+        this.findBy(db, _const.ArticlesTable, this.getNearArticlesFilter(article.lat, article.lon), { projection: { fultext: 0 } }), 
+        this.findBy(db, _const.ArticlesTable, { $and: [_const.ArticlesFilterBy, { tags: { $in: article.tags } }] },
+          { projection: { fultext: 0 } }), 
+        this.getUserNames(db, uids)
+      ]).then(([nearPois, nearArticles, similarArticles, users]) => {
         [article].concat(history || []).forEach(a => {
           if (!a.created_by) {
              a.created_by = a.created_by_user_sql_id; 
@@ -881,6 +905,10 @@ DB.prototype = {
           a.created_by_name = this.findUserName(a.created_by || a.created_by_user_sql_id, users); 
           a.modified_by_name = this.findUserName(a.modified_by || a.modified_by_user_sql_id, users);
         });
+
+        article.related = (nearPois || []).concat(((nearArticles || [])
+          .concat(this.filterSimilarTags(article, similarArticles || [], _const.ArticlesRelatedByTagsCount))).map(a => this.articleToPoi(a)));  
+        sortNear(this.articleToPoi(article), article.related, _const.NearMaxDistance);
 
         article.history = history || [];
 

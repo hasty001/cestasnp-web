@@ -8,6 +8,7 @@ import PageWithLoader from './reusable/PageWithLoader';
 import { A } from './reusable/Navigate';
 import Map from './Map';
 import ImageBox from './reusable/ImageBox';
+import PoiList from './reusable/PoiList';
 
 const Article = (props) => {
   const [loading, setLoading] = useState(false);
@@ -130,7 +131,13 @@ const Article = (props) => {
               <A href={`/pred/pois#poi=clanok${article.sql_article_id}&lat=${article.lat}&lon=${article.lon}`}><span data-nosnippet>na celej mape</span></A>
             </>)}
 
-            <ImageBox show={!!preview} url={preview} onHide={() => setPreview(null)} />
+          {!!article.related && article.related.length > 0 && (
+          <div data-nosnippet>
+            <h3>Súvisiace</h3>
+            <PoiList pois={article.related}/>
+          </div>)}
+
+          <ImageBox show={!!preview} url={preview} onHide={() => setPreview(null)} />
         </>
       )}
     </PageWithLoader>

@@ -19,9 +19,7 @@ router.get('/', (req, res) => {
     .then(([results, articles]) => {
       // add guideposts
       return Promise.resolve(results.concat(
-        articles.map(a => Object.assign({ category: "clanok", id: `clanok${a.sql_article_id}`, 
-          name: a.title, text: "Článok", 
-          coordinates: [a.lon, a.lat], url: `/pred/articles/article/${a.sql_article_id}` })), 
+        articles.map(a => db.articleToPoi(a)), 
         itinerary.map(g => Object.assign(Object.assign({ category: "razcestnik" }, g), { id: `razcestnik${g.id}` }))));
     }), res);
 });

@@ -154,14 +154,15 @@ const findNearestGuideposts = (coordinates) => {
 }
 
 const sortNear = (obj, list, maxDistance) => {
-  const objIndex = list.findIndex(o => o._id.toString() == obj._id.toString());
+  const objIndex = list.findIndex(o => (o._id || o.id).toString() == (obj._id || obj.id).toString());
   if (objIndex >= 0) {
     list.splice(objIndex, 1);
   }
 
   list.forEach(o => {
-    o.distance = WGS84Util.distanceBetween({ coordinates: obj.coordinates ? obj.coordinates : [obj.lon, obj.lat] },
-      { coordinates: o.coordinates ? o.coordinates : [o.lon, o.lat] });
+    o.distance = (obj.coordinates || (obj.lat && obj.lon)) && (o.coordinates || (o.lat && o.lon)) ?
+      WGS84Util.distanceBetween({ coordinates: obj.coordinates ? obj.coordinates : [obj.lon, obj.lat] },
+      { coordinates: o.coordinates ? o.coordinates : [o.lon, o.lat] }) : maxDistance;
   });
 
   list.splice(0, list.length, ...list.filter(o => o.distance <= maxDistance));
