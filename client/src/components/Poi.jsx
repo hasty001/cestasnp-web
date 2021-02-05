@@ -9,6 +9,7 @@ import EditPoiBox from './reusable/EditPoiBox';
 import Image from './reusable/Image';
 import PageWithLoader from './reusable/PageWithLoader';
 import PoiIcon from './reusable/PoiIcon';
+import PoiList from './reusable/PoiList';
 import UserLabel from './reusable/UserLabel';
 import * as Texts from './Texts';
 import * as Constants from './Constants';
@@ -134,6 +135,12 @@ const Poi = (props) => {
           
           {!historyPoi && !poi.deleted && !!poi.itinerary && (poi.itinerary.near || poi.itinerary.after) && (
             <span data-nosnippet> | <A href={`/pred/itinerar#p${poi._id}`}>v itinerári</A></span>)}
+
+          {!historyPoi && !poi.deleted && poi.near && poi.near.length > 0 && (
+            <div data-nosnippet>
+              <h3>V okolí</h3>
+              <PoiList pois={poi.near}/>
+            </div>)}
 
           {!!authData.isAuth && (
             <>

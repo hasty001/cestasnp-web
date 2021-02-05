@@ -118,7 +118,8 @@ router.get('/:page', (req, res) => {
     _const.ArticlesTable,
     ORDER.newestFirst,
     sanitize(req.params.page),
-    _const.ArticlesFilterBy
+    _const.ArticlesFilterBy,
+    { projection: { fulltext: 0 } }
   ), res);
 });
 
@@ -126,9 +127,8 @@ router.get('/:page', (req, res) => {
 router.get('/article/:articleId', (req, res) => {
   const articleId = sanitize(parseInt(req.params.articleId, 10));
 
-  promiseAsJson(() => db
-    .findBy(req.app.locals.db, _const.ArticlesTable, { sql_article_id: articleId })
-    .then(results => db.fillArticleInfo(req.app.locals.db, articleId, results[0]))
+  promiseAsJson(() => db.fillArticleInfo(req.app.locals.db, articleId, 
+      db.findBy(req.app.locals.db, _const.ArticlesTable, { sql_article_id: articleId }).then(result => result[0]))
     .then(article => [article]), res);
 });
 
@@ -153,7 +153,8 @@ router.get('/category/:category/:page', (req, res) => {
     req.app.locals.db, _const.ArticlesTable,
     ORDER.newestFirst,
     sanitize(req.params.page),
-    finalFilter
+    finalFilter,
+    { projection: { fulltext: 0 } }
   ), res);
 });
 
@@ -165,7 +166,7 @@ router.put('/increase_article_count', (req, res) => {
 // returns 2 newest articles for homepage
 router.get('/for/home', (req, res) => {
   promiseAsJson(() => db.newestSorted(req.app.locals.db,
-    _const.ArticlesTable, ORDER.newestFirst, _const.ArticlesFilterBy, _const.HomeArticlesCount), res);
+    _const.ArticlesTable, ORDER.newestFirst, _const.ArticlesFilterBy, _const.HomeArticlesCount, { projection: { fulltext: 0 }}), res);
 });
 
 module.exports = router;

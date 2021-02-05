@@ -4,7 +4,7 @@ const sanitize = require('mongo-sanitize');
 const moment = require('moment-timezone');
 const { ObjectId } = require('mongodb');
 const Validation = require('./validation');
-const { getNearGuideposts, findNearestGuideposts, findNearestPoint } = require('../util/gpsUtils');
+const { getNearGuideposts, findNearestGuideposts, findNearestPoint, sortNear } = require('../util/gpsUtils');
 const { format } = require('date-fns');
 const _const = require('../../const');
 const { sanitizeUserId } = require('../util/checkUtils');
@@ -29,20 +29,20 @@ DB.prototype = {
       .toArray();
   },
 
-  newestSorted(db, collection, sortBy = {}, filterBy = {}, limit = 1) {
+  newestSorted(db, collection, sortBy = {}, filterBy = {}, limit = 1, options = {}) {
     return dbCollection(db, collection)
-      .find(filterBy)
+      .find(filterBy, options)
       .sort(sortBy)
       .limit(limit)
       .toArray();
   },
 
-  nextSorted(db, collection, sortBy = {}, next = 0, filterBy = {}, pageSize = _const.PageSize) {
+  nextSorted(db, collection, sortBy = {}, next = 0, filterBy = {}, options = {}, pageSize = _const.PageSize) {
     let page = next - 1;
     page = page < 0 ? 0 : page;
 
     return dbCollection(db, collection)
-      .find(filterBy)
+      .find(filterBy, options)
       .sort(sortBy)
       .limit(pageSize)
       .skip(pageSize * page)
@@ -88,7 +88,7 @@ DB.prototype = {
 
   getTravellerMessages(db, travellerId) {
     return this.findBy(db, _const.MessagesTable,
-      { $and: [ { user_id: sanitizeUserId(travellerId) }, { deleted: {$ne: true} } ] });
+      { $and: [ { user_id: sanitizeUserId(travellerId) }, _const.FilterNotDeleted] });
   },
 
   findUserName(uid, users) {
@@ -105,10 +105,10 @@ DB.prototype = {
    */
   getUserNames(db, uids) {
     const getUsers = this.findBy(db, _const.UsersTable, 
-      uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { uid: 1, sql_user_id: 1, name: 1 });
+      uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
 
     const getDetails = this.findBy(db, _const.DetailsTable,
-      uids ? { user_id : { $in: uids } } : {}, { user_id: 1, meno: 1 });
+      uids ? { user_id : { $in: uids } } : {}, { projection: { user_id: 1, meno: 1 } });
 
     return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
       users.forEach(u => {
@@ -132,9 +132,9 @@ DB.prototype = {
    
     const getDocs = (sArticleId === 0 || sArticleId === '') ?
       this.findBy(db, _const.CommentsTable,
-        { $and: [ { 'travellerDetails.id': sTravellerId }, { deleted: {$ne: true} } ] })
+        { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted] })
       : this.findBy(db, _const.ArticleCommentsTable,
-        { $and: [ { article_sql_id: sArticleId }, { deleted: {$ne: true} } ] });
+        { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted] });
 
     return getDocs.then((docs) => {
       const uids = this.getUids(docs, [d => d.uid]);
@@ -174,7 +174,7 @@ DB.prototype = {
     }
 
     return this.findBy(db, _const.MessagesTable,
-      { $and: [ { user_id: { $in: sTravellerIds } }, { deleted: {$ne: true} } ] })
+      { $and: [ { user_id: { $in: sTravellerIds } }, _const.FilterNotDeleted] })
       .then(docs => {
         docs.sort((a, b) => {
           return new Date(b.pub_date) - new Date(a.pub_date);
@@ -188,7 +188,7 @@ DB.prototype = {
     const sTravellerId = sanitize(travellerId);
 
     return this.newestSorted(db, _const.MessagesTable, { pub_date: -1 }, 
-      { $and: [ { user_id: sTravellerId }, { deleted: {$ne: true} } ] })
+      { $and: [ { user_id: sTravellerId }, _const.FilterNotDeleted] })
       .then(docs => {
         if (docs && docs.length > 0) {
           return Promise.resolve(docs[0]);
@@ -215,11 +215,11 @@ DB.prototype = {
         const finishedUserIds = finished.map(t => t.user_id );
 
         const listCommentsOld = this.findBy(db, _const.ArticleCommentsTable, 
-          { $and: [{ article_sql_id: { $in: finishedIds } }, { deleted: { $ne: true }}] });
+          { $and: [{ article_sql_id: { $in: finishedIds } }, _const.FilterNotDeleted] }, { projection: { article_sql_id: 1 } });
         const listCommentsNew = this.findBy(db, _const.CommentsTable, 
-          { $and: [{ 'travellerDetails.id': { $in: finishedIds } }, { deleted: { $ne: true }}] });
+          { $and: [{ 'travellerDetails.id': { $in: finishedIds } }, _const.FilterNotDeleted] }, { projection: { travellerDetails: 1 } });
         const listMessages = this.findBy(db, _const.MessagesTable, 
-          { $and: [{ user_id: { $in: finishedUserIds } }, { deleted: { $ne: true }}] }, {}, { pub_date: 1 });
+          { $and: [{ user_id: { $in: finishedUserIds } }, _const.FilterNotDeleted] }, {}, { pub_date: 1 });
 
         return Promise.all([listCommentsOld, listCommentsNew, listMessages])
         .then(([oldComments, newComments, msgs]) => {
@@ -277,7 +277,7 @@ DB.prototype = {
         if (activeTravellersIds.length === 0) {
           return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
         } else {
-          return this.findBy(db, _const.MessagesTable, { $and: [{ user_id: { $in: activeTravellersIds } }, { deleted: { $ne: true }}] },
+          return this.findBy(db, _const.MessagesTable, { $and: [{ user_id: { $in: activeTravellersIds } }, _const.FilterNotDeleted] },
             {}, { pub_date: -1 })
             .then(lastMessages => {
               if (lastMessages) { 
@@ -705,6 +705,61 @@ DB.prototype = {
      }));
   },
 
+  getNearPoisCoordsFilter(coordinates) {
+    return (!coordinates || (coordinates.length < 2)) ? _const.FilterNoResult : this.getNearPoisFilter(coordinates[1], coordinates[0]);
+  },
+
+  getNearPoisFilter(lat, lon) {
+    if (!lat || !lon) {
+      return _const.FilterNoResult;
+    }
+
+    const flat = parseFloat(lat);
+    const flon = parseFloat(lon);
+
+    return { $and: [_const.FilterPoiNotDeleted, 
+      { $or: [{ 'coordinates.1': { $gt: flat - _const.NearMaxLatDistance } }, 
+        { 'coordinates.1': { $gt: (flat - _const.NearMaxLatDistance).toFixed(6) } }]},
+      { $or: [{ 'coordinates.1': { $lt: flat + _const.NearMaxLatDistance } }, 
+        { 'coordinates.1': { $lt: (flat + _const.NearMaxLatDistance).toFixed(6) } }]},
+      { $or: [{ 'coordinates.0': { $gt: flon - _const.NearMaxLonDistance } }, 
+        { 'coordinates.0': { $gt: (flon - _const.NearMaxLonDistance).toFixed(6) } }]},
+      { $or: [{ 'coordinates.0': { $lt: flon + _const.NearMaxLonDistance } }, 
+        { 'coordinates.0': { $lt: (flon + _const.NearMaxLonDistance).toFixed(6) } }]},
+    ] };
+  },
+
+  getNearArticlesCoordsFilter(coordinates) {
+    return (!coordinates || (coordinates.length < 2)) ? _const.FilterNoResult : this.getNearArticlesFilter(coordinates[1], coordinates[0]);
+  },
+
+  getNearArticlesFilter(lat, lon) {
+    if (!lat || !lon) {
+      return _const.FilterNoResult;
+    }
+
+    const flat = parseFloat(lat);
+    const flon = parseFloat(lon);
+
+    return { $and: [_const.ArticlesFilterBy, 
+      { $or: [{ lat: { $gt: flat - _const.NearMaxLatDistance } }, 
+        { lat: { $gt: (flat - _const.NearMaxLatDistance).toFixed(6) } }] },
+      { $or: [{ lat: { $lt: flat + _const.NearMaxLatDistance } }, 
+        { lat: { $lt: (flat + _const.NearMaxLatDistance).toFixed(6) } }] },
+      { $or: [{ lon: { $gt: flon - _const.NearMaxLonDistance } }, 
+        { lon: { $gt: (flon - _const.NearMaxLonDistance).toFixed(6) } }] },
+      { $or: [{ lon: { $lt: flon + _const.NearMaxLonDistance } }, 
+        { lon: { $lt: (flon + _const.NearMaxLonDistance).toFixed(6) } }] },
+    ] };
+  },
+
+  articleToPoi(a) {
+    return { category: "clanok", id: `clanok${a.sql_article_id}`, 
+      name: a.title, text: "Článok", 
+      coordinates: (a.lat && a.lon) ? [a.lon, a.lat] : null, 
+      url: `/pred/articles/article/${a.sql_article_id}` };
+  },
+
   fillPoiInfo(db, poiId, poiValue) {
     return Promise.all([
       poiValue,
@@ -716,12 +771,18 @@ DB.prototype = {
 
       const uids = this.getUids([poi].concat(history || []), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
 
-      return this.getUserNames(db, uids).then(users => {
+      return Promise.all([
+        this.findBy(db, _const.PoisTable, this.getNearPoisCoordsFilter(poi.coordinates)), 
+        this.findBy(db, _const.ArticlesTable, this.getNearArticlesCoordsFilter(poi.coordinates), { projection: { fultext: 0 } }), 
+        this.getUserNames(db, uids)]).then(([nearPois, nearArticles, users]) => {
         [poi].concat(history || []).forEach(poi => {
           poi.created_by_name = this.findUserName(poi.user_id, users);
           poi.modified_by_name = this.findUserName(poi.modified_by, users);
           poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
         });
+
+        poi.near = (nearPois || []).concat((nearArticles || []).map(a => this.ArticleToPoi(a)));
+        sortNear(poi, poi.near, _const.NearMaxDistance);
 
         poi.history = history || [];
 
@@ -798,6 +859,20 @@ DB.prototype = {
         });
       }));
   },
+  
+  filterSimilarTags(article, similar, limit) {
+    const result = similar.filter(a => article.sql_article_id != a.sql_article_id);
+
+    const tags = article.tags;
+    result.sort((a, b) => {
+      const as = a.tags.reduce((s, c) => s + (tags.indexOf(c) >= 0 ? 1 : 0), 0);
+      const bs = b.tags.reduce((s, c) => s + (tags.indexOf(c) >= 0 ? 1 : 0), 0);
+
+      return (as == bs) ? (b.article_views - a.article_views) : (bs - as);
+    });
+
+    return result.slice(0, limit);
+  },
 
   fillArticleInfo(db, sql_article_id, articleValue) {
     return Promise.all([
@@ -811,7 +886,13 @@ DB.prototype = {
       const uids = this.getUids([article].concat(history || []), [p => p.created_by, 
         p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id]);
 
-      return this.getUserNames(db, uids).then(users => {
+      return Promise.all([
+        this.findBy(db, _const.PoisTable, this.getNearPoisFilter(article.lat, article.lon)), 
+        this.findBy(db, _const.ArticlesTable, this.getNearArticlesFilter(article.lat, article.lon), { projection: { fultext: 0 } }), 
+        this.findBy(db, _const.ArticlesTable, { $and: [_const.ArticlesFilterBy, { tags: { $in: article.tags } }] },
+          { projection: { fultext: 0 } }), 
+        this.getUserNames(db, uids)
+      ]).then(([nearPois, nearArticles, similarArticles, users]) => {
         [article].concat(history || []).forEach(a => {
           if (!a.created_by) {
              a.created_by = a.created_by_user_sql_id; 
@@ -824,6 +905,10 @@ DB.prototype = {
           a.created_by_name = this.findUserName(a.created_by || a.created_by_user_sql_id, users); 
           a.modified_by_name = this.findUserName(a.modified_by || a.modified_by_user_sql_id, users);
         });
+
+        article.related = (nearPois || []).concat(((nearArticles || [])
+          .concat(this.filterSimilarTags(article, similarArticles || [], _const.ArticlesRelatedByTagsCount))).map(a => this.articleToPoi(a)));  
+        sortNear(this.articleToPoi(article), article.related, _const.NearMaxDistance);
 
         article.history = history || [];
 

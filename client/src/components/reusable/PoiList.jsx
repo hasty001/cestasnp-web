@@ -14,7 +14,8 @@ const PoiList = (props) => {
   return (
     <>
       {!!props.pois && props.pois.filter(poi => (!props.my || isMy(poi)) && (!poi.deleted || props.showDeleted))
-        .map(poi => <PoiItem key={poi._id} value={poi} showLastChange={props.showLastChange || false} my={props.my}
+        .map(poi => <PoiItem key={poi._id} value={poi} showLastChange={props.showLastChange || false} 
+          showDistance={props.showDistance || false} my={props.my}
           onMyRemove={props.onMyRemove} />)}   
     </>
   )

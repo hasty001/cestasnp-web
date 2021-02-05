@@ -9,6 +9,12 @@ const HomeArticlesCount = 2;
 const PageSize = 8;
 const NearPoisWarningDistance = 500; //m
 
+const NearMaxLatDistance = 1/20; // in °
+const NearMaxLonDistance = 1/16; // in °
+
+const NearMaxDistance = 5000; // in m
+
+const ArticlesRelatedByTagsCount = 5;
 const ArticlesFilterBy = { $and: [{ state: { $gt: 0 } }, {
   $or: [
   { tags: {$in: ['rozhovory']}},
@@ -24,6 +30,10 @@ const ArticlesFilterBy = { $and: [{ state: { $gt: 0 } }, {
   }
 }]}]};
 
+const FilterNoResult = { _id: null };
+const FilterPoiNotDeleted = { deleted: null };
+const FilterNotDeleted = { deleted: { $ne: true }};
+
 const UsersTable = "users";
 const DetailsTable = "traveler_details";
 const ArticlesTable = "articles";
@@ -36,7 +46,9 @@ const ArticleCommentsTable = "article_comments";
 
 module.exports = {
   InterestingShowCount, InterestingPrevMonths, MinRating, CommentRating, ImageRating, TextRatingPerChar, 
-  ArticlesFilterBy, HomeArticlesCount, PageSize, NearPoisWarningDistance, 
+  ArticlesRelatedByTagsCount, ArticlesFilterBy, FilterNoResult, FilterPoiNotDeleted, FilterNotDeleted, 
+  HomeArticlesCount, PageSize, NearPoisWarningDistance,
+  NearMaxLatDistance, NearMaxLonDistance, NearMaxDistance,
   UsersTable, DetailsTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,
   MessagesTable, CommentsTable, ArticleCommentsTable
 };

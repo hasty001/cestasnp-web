@@ -26,11 +26,11 @@ const PoiItem = (props) => {
   };
 
   return (
-    <ItemElement key={props.value._id} className="poi-item">
+    <ItemElement key={props.value._id || props.value.id} className="poi-item">
       {!!props.value.errorMsg && <div className="errorMsg">{props.value.errorMsg}</div>}
       {!!props.value.successMsg && <div className="successMsg">{props.value.successMsg}</div>}
 
-      {!!props.value.distance && `${props.value.distance.toFixed(0)} m `}
+      {!!props.showDistance && !!props.value.distance && `${props.value.distance.toFixed(0)} m `}
       {!!props.showCreated && <><ItemProp className="poi-created">{dateTimeToStr(props.value.created)}</ItemProp>{space}<ItemProp><UserLabel uid={props.value.user_id} name={props.value.created_by_name}/></ItemProp></>}
       {!!props.showLastChange && (props.value.deleted ? 
         <><ItemProp className="poi-deleted">{dateTimeToStr(props.value.deleted)}</ItemProp>{space}<ItemProp>zmazal</ItemProp>{space}<ItemProp><UserLabel uid={props.value.deleted_by} name={props.value.deleted_by_name}/>{space}</ItemProp></>
@@ -38,7 +38,7 @@ const PoiItem = (props) => {
           <><ItemProp className="poi-modified">{dateTimeToStr(props.value.modified)}</ItemProp>{space}<ItemProp>upravil</ItemProp>{space}<ItemProp><UserLabel uid={props.value.modified_by} name={props.value.modified_by_name}/>{space}</ItemProp></>
           : (props.showCreated ? <ItemProp colSpan={3}/> : <><ItemProp className="poi-created">{dateTimeToStr(props.value.created)}</ItemProp>{space}<ItemProp>pridal</ItemProp>{space}<ItemProp><UserLabel uid={props.value.user_id} name={props.value.created_by_name}/>{space}</ItemProp></>)))}
       <ItemProp className={"poi-name" + (props.value.deleted ? " deleted" : "")}>
-        <A href={`/pred/pois/${props.value._id}`}>
+        <A href={props.value.url || `/pred/pois/${props.value._id}`}>
           <PoiIcon value={props.value} />
           {' '}{props.value.name || findPoiCategory(props.value.category).label}
         </A>
