@@ -36,7 +36,7 @@ const getJourneys = (dbRef) =>
     });
 
 router.get('*', (req, res) => {
-  Promise.all([db.findBy(req.app.locals.db, _const.PoisTable, { deleted: null }, { created: -1 }), 
+  Promise.all([db.findBy(req.app.locals.db, _const.PoisTable, _const.FilterPoiNotDeleted, { created: -1 }), 
     db.findBy(req.app.locals.db, _const.ArticlesTable, _const.ArticlesFilterBy, { created: -1 }), getJourneys(req.app.locals.db)])
   .then(([pois, articles, journeys]) => {
       const urls = 

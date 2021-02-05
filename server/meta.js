@@ -196,7 +196,7 @@ const getTravelerMeta = (dbRef, userId) =>
           .findBy(dbRef, _const.UsersTable, { $or: [{ sql_user_id: userId }, { uid: userId }] })
           .then(user =>   
           db
-          .newestSorted(dbRef, _const.MessagesTable, { pub_date: -1 }, { $and: [{ user_id: userId }, { deleted: { $ne: true }}] })
+          .newestSorted(dbRef, _const.MessagesTable, { pub_date: -1 }, { $and: [{ user_id: userId }, _const.FilterNotDeleted] })
           .then(msg => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
             const title = escape(results[0].meno + WebSuffix);

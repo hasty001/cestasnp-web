@@ -16,7 +16,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
   return Promise.all([db.getUserNames(dbRef, null), 
     s_uid ? db.findBy(dbRef, _const.UsersTable, { uid: s_uid }).then(u => u && u.length > 0 ? u[0] : null) : Promise.resolve(null),
-    db.findBy(dbRef, _const.DetailsTable, {}, { project: { 'user_id': 1, 'articleID': 1, 'sql_id': 1 }})])
+    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { 'user_id': 1, 'articleID': 1, 'sql_id': 1 }})])
   .then(([users, user, details]) => {
     const s_from = format(from || new Date(0), 'YYYY-MM-DD');
     const s_to = format(addDays(to || startOfToday(), 1), 'YYYY-MM-DD');

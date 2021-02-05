@@ -267,7 +267,7 @@ const PoiForm = (props) => {
             markers={[{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto", accuracy: warningMsg.poi.accuracy }]} 
             pois={warningMsg.pois} guideposts={guideposts} showDeleted />
 
-          {!!warningMsg.pois && <PoiList pois={warningMsg.pois} showDeleted />}
+          {!!warningMsg.pois && <PoiList pois={warningMsg.pois} showDeleted showDistance />}
           
           {!!warningMsg.itinerary && (
             <>
