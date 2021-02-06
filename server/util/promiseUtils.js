@@ -14,4 +14,23 @@ const promiseAsJson = (promise, res) => {
   });
 }
 
-module.exports = promiseAsJson;
+/**
+ * Process promise and pass result in JSON format using cache.
+*/
+const promiseAsJsonCached = (req, key, time, promise, res) => {
+  return promiseAsJson(() => {
+      var result = req.app.locals.cache.get(key);
+      if (result != null) {
+        return Promise.resolve(result);
+      }
+
+      return promise().then(result => {
+        req.app.locals.cache.put(key, result, time);
+
+        return Promise.resolve(result);
+      });
+    }
+    , res); 
+}
+
+module.exports = { promiseAsJson, promiseAsJsonCached };

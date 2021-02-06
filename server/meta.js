@@ -75,9 +75,9 @@ const getArticleMeta = (dbRef, articleId) =>
               <meta property="og:type" content="article" />
               <meta property="og:description" content="${desc}"/>
               <meta property="og:image" content="${escapeImg(results[0].ogimg || imgRegEx())}" />
-              <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up || (result[0].state > 0 ? results[0].created : null))}" />
+              <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up || (results[0].state > 0 ? results[0].created : null))}" />
               <meta property="og:article:modified_time" content="${escapeDate(results[0].modified)}" />
-              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down || (result[0].state <= 0 ? results[0].modified : null))}" />
+              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down || (results[0].state <= 0 ? results[0].modified : null))}" />
               <meta property="place:location:latitude" content="${escape(results[0].lat || lat())}">
               <meta property="place:location:longitude" content="${escape(results[0].lon || lon())}">`;
 

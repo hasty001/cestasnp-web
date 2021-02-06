@@ -3,7 +3,7 @@ const DB = require('../db/db');
 const { checkToken } = require('../util/checkUtils');
 const { findNearPois, findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
 const itinerary = require('../data/guideposts.json');
-const promiseAsJson = require('../util/promiseUtils');
+const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
 
 const db = new DB();

@@ -1,6 +1,6 @@
 const sanitize = require('mongo-sanitize');
-const {admin} = require('./firebase');
-const promiseAsJson = require('./promiseUtils');
+const { admin } = require('./firebase');
+const { promiseAsJson } = require('./promiseUtils');
 const auth = admin.auth();
 
 /**

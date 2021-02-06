@@ -159,6 +159,9 @@ const sortNear = (obj, list, maxDistance) => {
     list.splice(objIndex, 1);
   }
 
+  // filter unique
+  list.splice(0, list.length, ...list.filter((o, i, a) => a.findIndex(l => (o._id || o.id).toString() == (l._id || l.id).toString()) == i));
+
   list.forEach(o => {
     o.distance = (obj.coordinates || (obj.lat && obj.lon)) && (o.coordinates || (o.lat && o.lon)) ?
       WGS84Util.distanceBetween({ coordinates: obj.coordinates ? obj.coordinates : [obj.lon, obj.lat] },

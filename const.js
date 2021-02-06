@@ -5,6 +5,10 @@ const CommentRating = 1;
 const ImageRating = 5;
 const TextRatingPerChar = 1/50;
 
+const Minute = 60 * 1000;
+const Hour = Minute * 60;
+const Day = Hour * 14;
+
 const HomeArticlesCount = 2;
 const PageSize = 8;
 const NearPoisWarningDistance = 500; //m
@@ -45,6 +49,7 @@ const CommentsTable = "traveler_comments";
 const ArticleCommentsTable = "article_comments";
 
 module.exports = {
+  Minute, Hour, Day,
   InterestingShowCount, InterestingPrevMonths, MinRating, CommentRating, ImageRating, TextRatingPerChar, 
   ArticlesRelatedByTagsCount, ArticlesFilterBy, FilterNoResult, FilterPoiNotDeleted, FilterNotDeleted, 
   HomeArticlesCount, PageSize, NearPoisWarningDistance,

@@ -3,7 +3,7 @@ const sanitize = require('mongo-sanitize');
 const DB = require('../db/db');
 const _const = require('../../const');
 const { checkToken } = require('../util/checkUtils');
-const promiseAsJson = require('../util/promiseUtils');
+const { promiseAsJson, promiseAsJsonCached } = require('../util/promiseUtils');
 
 const db = new DB();
 const router = express.Router();
@@ -163,10 +163,16 @@ router.put('/increase_article_count', (req, res) => {
   promiseAsJson(() => db.increaseArticleCount(req.body.id), res);
 });
 
-// returns 2 newest articles for homepage
+// returns 2 newest articles for homepage and one as first
 router.get('/for/home', (req, res) => {
-  promiseAsJson(() => db.newestSorted(req.app.locals.db,
-    _const.ArticlesTable, ORDER.newestFirst, _const.ArticlesFilterBy, _const.HomeArticlesCount, { projection: { fulltext: 0 }}), res);
+  const first = parseInt(sanitize(req.query.first || 0));
+
+  promiseAsJson(req, () => Promise.all([
+    db.findBy(req.app.locals.db, _const.ArticlesTable, { sql_article_id: first }, { projection: { fulltext: 0 }}),
+    db.newestSorted(req.app.locals.db,
+      _const.ArticlesTable, ORDER.newestFirst, { $and: [_const.ArticlesFilterBy, { sql_article_id: { $ne: first } }]},
+      _const.HomeArticlesCount + 1, { projection: { fulltext: 0 }})])
+    .then(([first, articles]) => first.concat(articles).slice(0, _const.HomeArticlesCount + 1)), res);
 });
 
 module.exports = router;

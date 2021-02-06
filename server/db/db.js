@@ -203,7 +203,7 @@ DB.prototype = {
 
   getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount) {
     const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
-    const start = format(new Date(date || new Date()) - _const.InterestingPrevMonths * 31 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD');
+    const start = format(new Date(date || new Date()) - _const.InterestingPrevMonths * 31 * _const.Day, 'YYYY-MM-DD');
               
     return this.findBy(db, _const.DetailsTable, { 
       $and: [{ finishedTracking: true}, 
@@ -890,7 +890,7 @@ DB.prototype = {
         this.findBy(db, _const.PoisTable, this.getNearPoisFilter(article.lat, article.lon)), 
         this.findBy(db, _const.ArticlesTable, this.getNearArticlesFilter(article.lat, article.lon), { projection: { fultext: 0 } }), 
         this.findBy(db, _const.ArticlesTable, { $and: [_const.ArticlesFilterBy, { tags: { $in: article.tags } }] },
-          { projection: { fultext: 0 } }), 
+          { projection: { fultext: 0 } }),
         this.getUserNames(db, uids)
       ]).then(([nearPois, nearArticles, similarArticles, users]) => {
         [article].concat(history || []).forEach(a => {
