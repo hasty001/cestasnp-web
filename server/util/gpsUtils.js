@@ -160,7 +160,7 @@ const sortNear = (obj, list, maxDistance) => {
   }
 
   // filter unique
-  list.splice(0, list.length, ...list.filter((o, i) => o.findIndex(a => (o._id || o.id).toString() == (a._id || a.id).toString()) == i));
+  list.splice(0, list.length, ...list.filter((o, i, a) => a.findIndex(l => (o._id || o.id).toString() == (l._id || l.id).toString()) == i));
 
   list.forEach(o => {
     o.distance = (obj.coordinates || (obj.lat && obj.lon)) && (o.coordinates || (o.lat && o.lon)) ?

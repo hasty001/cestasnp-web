@@ -890,7 +890,7 @@ DB.prototype = {
         this.findBy(db, _const.PoisTable, this.getNearPoisFilter(article.lat, article.lon)), 
         this.findBy(db, _const.ArticlesTable, this.getNearArticlesFilter(article.lat, article.lon), { projection: { fultext: 0 } }), 
         this.findBy(db, _const.ArticlesTable, { $and: [_const.ArticlesFilterBy, { tags: { $in: article.tags } }] },
-          { projection: { fultext: 0 } }), 
+          { projection: { fultext: 0 } }),
         this.getUserNames(db, uids)
       ]).then(([nearPois, nearArticles, similarArticles, users]) => {
         [article].concat(history || []).forEach(a => {
