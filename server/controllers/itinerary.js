@@ -3,7 +3,7 @@ const itinerary = require('../data/guideposts.json');
 const WGS84Util = require('wgs84-util');
 const DB = require('../db/db');
 const { findNearestPoint, findNearestGuideposts } = require('../util/gpsUtils');
-const promiseAsJson = require('../util/promiseUtils');
+const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
 
 const db = new DB();

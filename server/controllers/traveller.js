@@ -7,7 +7,7 @@ const moment = require('moment');
 const request = require('request');
 const DB = require('../db/db');
 const { checkToken, sanitizeUserId } = require('../util/checkUtils');
-const promiseAsJson = require('../util/promiseUtils');
+const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
 
 const db = new DB();
