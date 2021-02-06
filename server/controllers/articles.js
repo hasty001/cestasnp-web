@@ -167,7 +167,7 @@ router.put('/increase_article_count', (req, res) => {
 router.get('/for/home', (req, res) => {
   const first = parseInt(sanitize(req.query.first || 0));
 
-  promiseAsJson(req, () => Promise.all([
+  promiseAsJson(() => Promise.all([
     db.findBy(req.app.locals.db, _const.ArticlesTable, { sql_article_id: first }, { projection: { fulltext: 0 }}),
     db.newestSorted(req.app.locals.db,
       _const.ArticlesTable, ORDER.newestFirst, { $and: [_const.ArticlesFilterBy, { sql_article_id: { $ne: first } }]},
