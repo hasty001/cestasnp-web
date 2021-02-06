@@ -14,9 +14,9 @@ const Home = (props) => {
   useEffect(() => {
     setLoading(true);
     
-    Promise.all([fetchJson('/api/articles/for/home'), fetchJson('/api/articles/article/60')])
-      .then(([data, article]) => {
-        setArticles(article.concat(data));
+    fetchJson('/api/articles/for/home?first=60')
+      .then(data => {
+        setArticles(data);
         setLoading(false);
       })
       .catch(err => {
