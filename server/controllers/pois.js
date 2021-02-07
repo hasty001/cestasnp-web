@@ -13,11 +13,10 @@ const router = express.Router();
 router.get('/', (req, res) => {
   promiseAsJson(() => Promise.all([
     db.getPois(req.app.locals.db),
-    // add articles
     db.findBy(req.app.locals.db, _const.ArticlesTable, { $and: [_const.ArticlesFilterBy, { lat: { $ne: null } }, { lon: { $ne: null } }] },
-      { projection: { introtext: 0, fulltext: 0 } })])
+      { projection: { fulltext: 0 } })])
     .then(([results, articles]) => {
-      // add guideposts
+      // add guideposts and articles with gps
       return Promise.resolve(results.concat(
         articles.map(a => db.articleToPoi(a)), 
         itinerary.map(g => Object.assign(Object.assign({ category: "razcestnik" }, g), { id: `razcestnik${g.id}` }))));

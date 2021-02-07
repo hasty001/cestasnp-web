@@ -143,7 +143,16 @@ const htmlSanitize = (html) => {
 * Sanitize html code allowing <br/> and <a href>.
 */
 const htmlSimpleSanitize = (html) => {
-  return DOMPurify.sanitize(styleLinks(html), { ALLOWED_TAGS: ['#text', 'br', 'a'], ALLOWED_ATTR: ['href'] } );
+  return DOMPurify.sanitize(styleLinks(html || '').replaceAll("<p>", "<br/><p>"), 
+    { ALLOWED_TAGS: ['#text', 'br', 'a'], ALLOWED_ATTR: ['href'] } );
+}
+
+/*
+* Sanitize html code allowing <a href>.
+*/
+const htmlLineSimpleSanitize = (html) => {
+  return DOMPurify.sanitize(styleLinks(html || ''), 
+    { ALLOWED_TAGS: ['#text', 'a'], ALLOWED_ATTR: ['href'] } ).replaceAll('\r', ' ').replaceAll('\n', ' ');
 }
 
 /**
@@ -201,5 +210,5 @@ const getArticleCategoryText = (tag) => {
 }
 
 export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr, 
-  escapeHtml, htmlSanitize, htmlSimpleSanitize, htmlClean, htmlLineClean,
+  escapeHtml, htmlSanitize, htmlSimpleSanitize, htmlLineSimpleSanitize, htmlClean, htmlLineClean,
   getArticleState, getArticleStateIcon, getArticleImage, fixImageUrl, getArticleCategoryText };

@@ -5,7 +5,7 @@ const moment = require('moment-timezone');
 const { ObjectId } = require('mongodb');
 const Validation = require('./validation');
 const { getNearGuideposts, findNearestGuideposts, findNearestPoint, sortNear } = require('../util/gpsUtils');
-const { format } = require('date-fns');
+const { format, differenceInDays } = require('date-fns');
 const _const = require('../../const');
 const { sanitizeUserId } = require('../util/checkUtils');
 
@@ -755,7 +755,8 @@ DB.prototype = {
 
   articleToPoi(a) {
     return { category: "clanok", id: `clanok${a.sql_article_id}`, 
-      name: a.title, text: "Článok", 
+      name: a.title, 
+      text: a.introtext, 
       coordinates: (a.lat && a.lon) ? [a.lon, a.lat] : null, 
       url: `/pred/articles/article/${a.sql_article_id}` };
   },
@@ -781,7 +782,7 @@ DB.prototype = {
           poi.deleted_by_name = this.findUserName(poi.deleted_by, users);
         });
 
-        poi.near = (nearPois || []).concat((nearArticles || []).map(a => this.ArticleToPoi(a)));
+        poi.near = (nearPois || []).concat((nearArticles || []).map(a => this.articleToPoi(a)));
         sortNear(poi, poi.near, _const.NearMaxDistance);
 
         poi.history = history || [];
@@ -862,13 +863,17 @@ DB.prototype = {
   
   filterSimilarTags(article, similar, limit) {
     const result = similar.filter(a => article.sql_article_id != a.sql_article_id);
+    const now = new Date();
 
     const tags = article.tags;
     result.sort((a, b) => {
       const as = a.tags.reduce((s, c) => s + (tags.indexOf(c) >= 0 ? 1 : 0), 0);
       const bs = b.tags.reduce((s, c) => s + (tags.indexOf(c) >= 0 ? 1 : 0), 0);
 
-      return (as == bs) ? (b.article_views - a.article_views) : (bs - as);
+      return (as == bs) ? 
+        (b.article_views / Math.max(1, Math.abs(differenceInDays(b.created, now))) 
+          - a.article_views / Math.max(1, Math.abs(differenceInDays(b.created, now)))) 
+        : (bs - as);
     });
 
     return result.slice(0, limit);
