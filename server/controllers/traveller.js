@@ -2,13 +2,12 @@
 /* eslint-disable array-callback-return */
 const express = require('express');
 const sanitize = require('mongo-sanitize');
-const moment = require('moment');
-
 const request = require('request');
 const DB = require('../db/db');
 const { checkToken, sanitizeUserId } = require('../util/checkUtils');
 const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
+const { momentDate, momentDateTime } = require('../util/momentUtils');
 
 const db = new DB();
 const router = express.Router();
@@ -80,7 +79,7 @@ router.get('/activeTravellers', (req, res) => {
               // eslint-disable-next-line no-param-reassign
               msg.completed = 0;
               // eslint-disable-next-line no-param-reassign
-              msg.pub_date = moment(startDate).format('YYYY-MM-DD');
+              msg.pub_date = momentDate(startDate);
               return msg;
             }
             if (
@@ -93,12 +92,12 @@ router.get('/activeTravellers', (req, res) => {
                 // eslint-disable-next-line no-param-reassign
                 msg.completed = 1;
                 // eslint-disable-next-line no-param-reassign
-                msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD');
+                msg.pub_date = momentDate(msg.pub_date);
               } else {
                 // eslint-disable-next-line no-param-reassign
                 msg.completed = 0;
                 // eslint-disable-next-line no-param-reassign
-                msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD');
+                msg.pub_date = momentDate(msg.pub_date);
               }
               return msg;
             }
@@ -186,7 +185,7 @@ router.post('/addComment', (req, res) => {
         comment.ip = sVisitorIp;
         const sArticleId = sanitize(req.body.articleId);
         comment.article_sql_id = sArticleId;
-        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
+        const sDate = sanitize(momentDateTime());
         comment.date = sDate;
         const sUid = sanitizeUserId(req.body.uid);
         comment.uid = sUid;
@@ -206,7 +205,7 @@ router.post('/addComment', (req, res) => {
         comment.travellerDetails.id = sTravellerId;
         const sTravellerName = sanitize(req.body.travellerName);
         comment.travellerDetails.name = sTravellerName;
-        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
+        const sDate = sanitize(momentDateTime());
         comment.date = sDate;
         const sUid = sanitizeUserId(req.body.uid);
         comment.uid = sUid;

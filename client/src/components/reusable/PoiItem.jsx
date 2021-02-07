@@ -3,7 +3,7 @@ import { findPoiCategory } from '../PoiCategories';
 import * as Constants from '../Constants'; 
 import PoiIcon from './PoiIcon';
 import UserLabel from './UserLabel';
-import { dateTimeToStr, htmlSimpleSanitize } from '../../helpers/helpers';
+import { dateTimeToStr, htmlLineSimpleSanitize } from '../../helpers/helpers';
 import { AuthContext } from '../AuthContext';
 import { A } from './Navigate';
 
@@ -44,7 +44,7 @@ const PoiItem = (props) => {
         </A>
       </ItemProp>
       {space}
-      <ItemProp className="poi-text" dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(props.value.text) }}></ItemProp>
+      <ItemProp className="poi-text" dangerouslySetInnerHTML={{ __html: htmlLineSimpleSanitize(props.value.text) }}></ItemProp>
       {!!props.showItinerary && <ItemProp className="poi-itinerary">
         {!props.value.deleted && !!props.value.itinerary && (props.value.itinerary.near || props.value.itinerary.after) && (
               <A href={`/pred/itinerar#p${props.value._id}`}><i className="fas fa-external-link-alt"></i></A>)}
