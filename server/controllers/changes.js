@@ -6,6 +6,7 @@ const { addDays, format, startOfToday } = require('date-fns');
 const { escape, escapeImg, escapeDate } = require('../util/escapeUtils');
 const { ObjectId } = require('mongodb');
 const _const = require('../../const');
+const { formatAsDate } = require('../util/momentUtils');
 
 const db = new DB();
 
@@ -16,10 +17,10 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
   return Promise.all([db.getUserNames(dbRef, null), 
     s_uid ? db.findBy(dbRef, _const.UsersTable, { uid: s_uid }).then(u => u && u.length > 0 ? u[0] : null) : Promise.resolve(null),
-    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { 'user_id': 1, 'articleID': 1, 'sql_id': 1 }})])
+    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { user_id: 1, articleID: 1, sql_id: 1, meno: 1 }})])
   .then(([users, user, details]) => {
-    const s_from = format(from || new Date(0), 'YYYY-MM-DD');
-    const s_to = format(addDays(to || startOfToday(), 1), 'YYYY-MM-DD');
+    const s_from = formatAsDate(from || new Date(0));
+    const s_to = formatAsDate(addDays(to || startOfToday(), 1));
     const s_page = sanitize(page) || 0;
     const s_count = sanitize(count) || 20;
     const s_items = items ? items.split(',') : null;
@@ -54,15 +55,14 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
     }
 
     const getDetailUserId = (item) => {
-      const index = details.findIndex(u => (u.sql_id && u.sql_id == item.details_id) || 
-        u._id == item.details_id ||
-        (item.travellerDetails && u._id == item.travellerDetails.id) || (item.article_sql_id && u.articleID == item.article_sql_id));
+      const index = details.findIndex(u => 
+        (item.travellerDetails && u._id.toString() == item.travellerDetails.id) || (item.article_sql_id && u.articleID == item.article_sql_id));
       return index >= 0 ? details[index].user_id : "";
     }
 
     const getDetailName = (item) => {
-      const index = details.findIndex(u => u.sql_id == item.details_id || u._id == item.details_id ||
-        (item.travellerDetails && u._id == item.travellerDetails.id) || (item.article_sql_id && u.articleID == item.article_sql_id));
+      const index = details.findIndex(u => u.user_id == item.user_id ||
+        (item.travellerDetails && u._id.toString() == item.travellerDetails.id) || (item.article_sql_id && u.articleID == item.article_sql_id));
       return index >= 0 ? details[index].meno : "";
     }
 
@@ -103,7 +103,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       dbPromise(_const.DetailsTable, null, 'user_id', 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
-    const getMessageUrl = (item) => `/na/${getDetailUserId(item)}#${item._id}`;
+    const getMessageUrl = (item) => `/na/${item.user_id}#${item._id}`;
     const promiseMessages = (!s_items || s_items.indexOf('messages') >= 0) ? Promise.all([
       dbPromise(_const.MessagesTable, null, 'user_id', 'created', 'pub_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
       dbPromise(_const.MessagesTable, null, 'user_id', 'deleted', 'del_date', 'user_id', item => getDetailName(item), '', getMessageUrl),

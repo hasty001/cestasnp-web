@@ -8,6 +8,7 @@ const { getNearGuideposts, findNearestGuideposts, findNearestPoint, sortNear } =
 const { format, differenceInDays } = require('date-fns');
 const _const = require('../../const');
 const { sanitizeUserId } = require('../util/checkUtils');
+const { momentDateTime, formatAsDate } = require('../util/momentUtils');
 
 const securityCheck = new Validation();
 
@@ -202,8 +203,8 @@ DB.prototype = {
   },
 
   getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount) {
-    const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
-    const start = format(new Date(date || new Date()) - _const.InterestingPrevMonths * 31 * _const.Day, 'YYYY-MM-DD');
+    const now = formatAsDate(date || Date.now());
+    const start = formatAsDate(new Date(date || Date.now()) - _const.InterestingPrevMonths * 31 * _const.Day);
               
     return this.findBy(db, _const.DetailsTable, { 
       $and: [{ finishedTracking: true}, 
@@ -294,7 +295,7 @@ DB.prototype = {
                   });
               }
                 
-              const now = format(new Date(date || new Date()), 'YYYY-MM-DD');
+              const now = formatAsDate(date || Date.now());
               if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < maxCount || _const.InterestingShowCount) {
                 // no active only few planning, add some interesting
 
@@ -361,7 +362,7 @@ DB.prototype = {
           const update = {
             $set: {
               deleted: true,
-              del_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+              del_date: momentDateTime(),
               del_by: uid,
             }
           };
@@ -406,8 +407,8 @@ DB.prototype = {
         name: sanitize(name),
         email: sanitize(email),
         usertype: 'Fan',
-        registerDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-        lastvisitDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        registerDate: momentDateTime(),
+        lastvisitDate: momentDateTime(),
         sendEmail: 'NOT IN USE',
         gid: 'NOT IN USE',
         block: 'NOT IN USE',
@@ -442,8 +443,8 @@ DB.prototype = {
         email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
         articleID: 0,
         finishedTracking: false,
-        created: moment().format('YYYY-MM-DD HH:mm:ss'),
-        lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss')
+        created: momentDateTime(),
+        lastUpdated: momentDateTime()
       };
 
       return dbCollection(db, _const.DetailsTable)
@@ -479,7 +480,7 @@ DB.prototype = {
               number: sanitize(number), // pocet ucastnikov
               email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
               finishedTracking: sanitize(finishedTracking),
-              lastUpdated: moment().format('YYYY-MM-DD HH:mm:ss')
+              lastUpdated: momentDateTime()
             }
           }
         ));
@@ -487,7 +488,7 @@ DB.prototype = {
 
   sendMessage(message) {
     return dbConnect(db => {
-      message.pub_date = moment().format('YYYY-MM-DD HH:mm:ss');
+      message.pub_date = momentDateTime();
       message.pub_date_milseconds = moment().valueOf();
 
       return dbCollection(db, _const.MessagesTable)
@@ -515,7 +516,7 @@ DB.prototype = {
       dbCollection(db, _const.MessagesTable)
         .findOneAndUpdate({ $and: [{_id: new ObjectId(id) }, { user_id: uid }] }, { $set: {
           deleted: true,
-          del_date: moment().format('YYYY-MM-DD HH:mm:ss')
+          del_date: momentDateTime()
         }}, { returnOriginal: false })
         .then(res => {
           if (res.value) {
@@ -541,7 +542,7 @@ DB.prototype = {
 
   addPoi(poi) {
     return dbConnect(db => {
-      poi.created = moment().format('YYYY-MM-DD HH:mm:ss');
+      poi.created = momentDateTime();
 
       return dbCollection(db, _const.PoisTable)
         .insertOne(securityCheck.sanitizePoi(poi))
@@ -559,7 +560,7 @@ DB.prototype = {
   updatePoi({uid, id, note, ...poi}) {
     return dbConnect(db => {
       poi.modified_by = uid;
-      poi.modified = moment().format('YYYY-MM-DD HH:mm:ss');
+      poi.modified = momentDateTime();
       poi.modified_note = note;
 
       return dbCollection(db, _const.PoisTable)
@@ -643,7 +644,7 @@ DB.prototype = {
     return dbConnect(db => 
       dbCollection(db, _const.PoisTable)
         .findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }, { user_id: uid }] },
-          { $set: { deleted: moment().format('YYYY-MM-DD HH:mm:ss'), deleted_by: uid, deleted_note: note } }, 
+          { $set: { deleted: momentDateTime(), deleted_by: uid, deleted_note: note } }, 
           { returnOriginal: false })
         .then(res => {
           if (res.value) {
@@ -956,7 +957,7 @@ DB.prototype = {
 
   addArticle(article) {
     return dbConnect(db => {
-      article.created = moment().format('YYYY-MM-DD HH:mm:ss'); 
+      article.created = momentDateTime(); 
       article.sql_article_id = sanitize(parseInt(article.sql_article_id));
 
       return dbCollection(db, _const.UsersTable)
@@ -991,7 +992,7 @@ DB.prototype = {
       const s_id = sanitize(parseInt(sql_article_id));
       const s_uid = sanitize(uid);
       article.modified_by = s_uid;
-      article.modified = moment().format('YYYY-MM-DD HH:mm:ss');
+      article.modified = momentDateTime();
       article.note = sanitize(note);
       article.sql_article_id = s_id;
 
