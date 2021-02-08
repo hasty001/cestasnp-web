@@ -71,7 +71,7 @@ const CloudinaryWidget = ({ uid, imageId, updateImageDetails, btnTxt, type, show
         console.error(error);
 
         setError(<>Nepodarilo sa nahrať doplnok na nahrávanie fotiek - <a href="#" onClick={() => setError(null)}>skúsiť znova</a>.</>);
-      })
+      });
     }
   }, [uid, imageId, error]);
 
