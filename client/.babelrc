@@ -1,7 +1,13 @@
 {
   "presets": [
     "@babel/react",
-    "@babel/preset-env"
+    [
+      "@babel/preset-env",
+      {
+       "useBuiltIns": "entry",
+       "corejs": "3.5"
+      }
+     ]
   ],
   "plugins": [
     [
@@ -9,6 +15,7 @@
       {
         "loose": true
       }
-    ]
+    ],
+    ["@babel/plugin-transform-for-of"]
   ]
 }

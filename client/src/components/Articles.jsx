@@ -11,7 +11,7 @@ import { htmlClean, getArticleImage, getArticleCategoryText } from '../helpers/h
 import { fetchJson } from '../helpers/fetchUtils';
 
 const Articles = (props) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const [activePage, setActivePage] = useState(parseInt(props.match.params.page || 1));

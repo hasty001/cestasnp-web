@@ -6,7 +6,7 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   mode: 'development',
-  entry: ['whatwg-fetch', './src/index.js', "./public/index.css"],
+  entry: ['./src/index.js', "./public/index.css"],
   output: {
     path: path.resolve('./build'),
     filename: 'bundle.js'
