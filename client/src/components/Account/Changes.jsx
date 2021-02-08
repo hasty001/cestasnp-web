@@ -106,7 +106,7 @@ const Changes = (props) => {
           <FormCheckBox value={[my, setMy]} valueName="my" valueLabel="len moje" itemClassName="form" />
 
           <PaginationAdvanced className="top"
-            totalArticles={data ? Math.ceil(data.count / 20) : 0}
+            pages={data ? Math.ceil(data.count / 20) : 0}
             activePage={page + 1}
             handlePageSelect={p => setPage(p - 1)}
           />
@@ -136,7 +136,7 @@ const Changes = (props) => {
         </table>
 
         <PaginationAdvanced
-          totalArticles={data ? Math.ceil(data.count / 20) : 0}
+          pages={data ? Math.ceil(data.count / 20) : 0}
           activePage={page + 1}
           handlePageSelect={p => setPage(p - 1)}
         />
