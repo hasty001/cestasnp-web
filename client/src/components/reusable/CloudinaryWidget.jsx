@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPostJson } from '../../helpers/fetchUtils';
 import * as Constants from '../Constants';
+import loadScriptOnce from 'load-script-once';
+import Loader from './Loader';
 
 const getPreset = (type) => {
   switch (type) {
@@ -30,36 +32,48 @@ const getTags = (type) => {
 const CloudinaryWidget = ({ uid, imageId, updateImageDetails, btnTxt, type, show }) => {
   const [widget, setWidget] = useState();
   const [showing, setShowing] = useState();
+  const [loading, setLoading] = useState();
+  const [error, setError] = useState();
 
   useEffect(() => {
-    if (uid && imageId) {
-      const myWidget = cloudinary.createUploadWidget({
-          cloudName: 'cestasnp-sk',
-          apiKey: '186532245374812',
-          uploadSignature: generateSignature,
-          uploadPreset: getPreset(type),
-          sources: ['local', 'camera'],
-          multiple: false,
-          maxImageWidth: 1600,
-          maxImageHeight: 1600,
-          resourceType: 'image',
-          cropping: false,
-          tags: getTags(type),
-          public_id: `${uid}_${Date.now()}`,
-          clientAllowedFormats: ['png', 'jpg', 'jpeg']
-        },
-        (error, result) => {
-          if (!error && result && result.event === 'success') {
-            updateImageDetails(result.info);
-          } else if (error) {
-            updateImageDetails('');
+    if (uid && imageId && !error) {
+      setLoading(true);
+      loadScriptOnce('https://widget.cloudinary.com/v2.0/global/all.js').then(() => {
+        const myWidget = cloudinary.createUploadWidget({
+            cloudName: 'cestasnp-sk',
+            apiKey: '186532245374812',
+            uploadSignature: generateSignature,
+            uploadPreset: getPreset(type),
+            sources: ['local', 'camera'],
+            multiple: false,
+            maxImageWidth: 1600,
+            maxImageHeight: 1600,
+            resourceType: 'image',
+            cropping: false,
+            tags: getTags(type),
+            public_id: `${uid}_${Date.now()}`,
+            clientAllowedFormats: ['png', 'jpg', 'jpeg']
+          },
+          (e, result) => {
+            if (!e && result && result.event === 'success') {
+              updateImageDetails(result.info);
+            } else if (e) {
+              console.error(e);
+              updateImageDetails('');
+            }
           }
-        }
-      );
+        );
 
-      setWidget(myWidget);
+        setWidget(myWidget);
+        setLoading(false);
+      }).catch(error => {
+        setLoading(false);
+        console.error(error);
+
+        setError(<>Nepodarilo sa nahrať doplnok na nahrávanie fotiek - <a href="#" onClick={() => setError(null)}>skúsiť znova</a>.</>);
+      });
     }
-  }, [uid, imageId]);
+  }, [uid, imageId, error]);
 
   useEffect(() => {
     if (widget) {
@@ -90,15 +104,18 @@ const CloudinaryWidget = ({ uid, imageId, updateImageDetails, btnTxt, type, show
 
   return (
     <>
-      {btnTxt ? (<button
-        type="button"
-        id="upload_widget"
-        className="snpBtnWhite"
-        onClick={openWidget}
-      >
-        {' '}
-        {btnTxt}
-      </button>) : null}
+      {error ? <div className="errorMsg">{error}</div> 
+      : loading ? <Loader/>
+        : btnTxt ? (
+        <button
+          type="button"
+          id="upload_widget"
+          className="snpBtnWhite"
+          onClick={openWidget}
+        >
+          {' '}
+          {btnTxt}
+        </button>) : null}
     </>
   );
 }
