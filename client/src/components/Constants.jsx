@@ -4,6 +4,7 @@ export const DateTimeViewFormat = "D. M. YYYY H:mm";
 export const DateViewFormat = "D. M. YYYY";
 
 export const FromOldQuery = "?from-old";
+export const ArticlesPageSize = 8;
 
 export const PoiCategoryOther = "ostatne";
 export const PoiCategoryGuidepost = "razcestnik";
