@@ -63,6 +63,7 @@
     "react-recaptcha": "^2.3.7",
     "react-router": "^4.2.2",
     "request": "^2.88.2",
+    "string.prototype.matchall": "^4.0.3",
     "string.prototype.replaceall": "^1.0.3",
     "url-search-params-polyfill": "^8.1.0",
     "validator": "^13.0.0",

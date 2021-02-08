@@ -6,6 +6,7 @@ import findIndex from 'array.prototype.findindex';
 import assign from 'object.assign';
 import values from 'object.values'
 import replaceAll from 'string.prototype.replaceall';
+import matchAll from 'string.prototype.matchall';
 import CestaSNP from './CestaSNP';
 import '../public/index.css';
 import promiseFinally from 'promise.prototype.finally';
@@ -38,6 +39,8 @@ if (!Object.values) {
 if (!String.replaceAll) {
   replaceAll.shim();
 }
+
+matchAll.shim();
 
 faIconsRegister();
 
