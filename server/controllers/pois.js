@@ -11,15 +11,21 @@ const db = new DB();
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  promiseAsJson(() => db.getPois(req.app.locals.db), res);
+});
+
+
+router.get('/map', (req, res) => {
   promiseAsJson(() => Promise.all([
-    db.getPois(req.app.locals.db),
+    db.findBy(req.app.locals.db, _const.PoisTable, _const.FilterPoiNotDeleted, 
+      { projection: { category: 1, food: 1, water: 1, coordinates: 1, name: 1, text: 1 } }),
     db.findBy(req.app.locals.db, _const.ArticlesTable, { $and: [_const.ArticlesFilterBy, { lat: { $ne: null } }, { lon: { $ne: null } }] },
       { projection: { fulltext: 0 } })])
     .then(([results, articles]) => {
       // add guideposts and articles with gps
       return Promise.resolve(results.concat(
         articles.map(a => db.articleToPoi(a)), 
-        itinerary.map(g => Object.assign(Object.assign({ category: "razcestnik" }, g), { id: `razcestnik${g.id}` }))));
+        itinerary.map(g => db.guidepostToPoi(g))));
     }), res);
 });
 
@@ -147,6 +153,9 @@ router.post('/add', (req, res) => {
       }
 
       if (itinerary && itinerary.nearest) {
+        if (itinerary.guideposts) {
+          itinerary.guidepostsPois = itinerary.guideposts.map(g => db.guidepostToPoi(g));
+        }
         confirm.itinerary = itinerary;
       }
 

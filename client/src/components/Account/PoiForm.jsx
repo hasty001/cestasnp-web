@@ -206,6 +206,8 @@ const PoiForm = (props) => {
 
   const guideposts = warningMsg && warningMsg.itinerary ?
     warningMsg.itinerary.guideposts : [];
+  const guidepostsPois = warningMsg && warningMsg.itinerary ?
+    warningMsg.itinerary.guidepostsPois : [];
 
   const addItineraryItems = (insertPoi, itinerary) => (
     <>
@@ -265,7 +267,7 @@ const PoiForm = (props) => {
           
           <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
             markers={[{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto", accuracy: warningMsg.poi.accuracy }]} 
-            pois={warningMsg.pois} guideposts={guideposts} showDeleted />
+            pois={(warningMsg.pois || [].concat(guidepostsPois || []))}  showDeleted />
 
           {!!warningMsg.pois && <PoiList pois={warningMsg.pois} showDeleted showDistance />}
           
