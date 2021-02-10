@@ -80,7 +80,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
     const concat = (array) => array.reduce((a, v) => a.concat(v), []);
 
-    const myPois = user ? user.poisMy.map(p => new ObjectId(p)) : null;
+    const myPois = user ? (user.poisMy || []).map(p => new ObjectId(p)) : null;
     const getPoiUrl = (item) => `/pred/pois/${item.poiId || item._id}`;
     const promisePois = (!s_items || s_items.indexOf('pois') >= 0) ? Promise.all([
       dbPromise(_const.PoisTable, myPois, 'user_id', 'created', 'created', 'user_id', item => item['name'], '', getPoiUrl),
