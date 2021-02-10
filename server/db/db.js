@@ -762,6 +762,13 @@ DB.prototype = {
       url: `/pred/articles/article/${a.sql_article_id}` };
   },
 
+  guidepostToPoi(g) {
+    return { category: "razcestnik", id: `razcestnik${g.id}`, main: g.main, 
+      name: `${g.name} ${g.ele ? ` ${g.ele}\u00A0m` : ''}`.trim(),
+      coordinates: (g.lat && g.lon) ? [g.lon, g.lat] : null,
+      url: `/pred/itinerar#razcestnik${g.id}` } 
+  },
+
   fillPoiInfo(db, poiId, poiValue) {
     return Promise.all([
       poiValue,

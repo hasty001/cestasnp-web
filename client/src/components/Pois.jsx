@@ -93,7 +93,7 @@ const Pois = (props) => {
     setLoading(true);
     setError('');
 
-    fetchJson('/api/pois')
+    fetchJson('/api/pois/map')
       .then(value => {
         setPois(value);
         setLoading(false);
