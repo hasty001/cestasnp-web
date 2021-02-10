@@ -37,7 +37,7 @@ router.get('/finishedTravellers', (req, res) => {
   promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, {
     finishedTracking: true,
     end_date: { $ne: '' }
-  }), res);
+  }, {}, { end_date: -1 }), res);
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {

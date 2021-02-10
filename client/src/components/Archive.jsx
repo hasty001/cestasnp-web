@@ -1,120 +1,33 @@
-import React, { Component } from 'react';
-import Loader from './reusable/Loader';
-import NotFound from './reusable/NotFound';
-import { sortByDateDesc, dateToStr, htmlSimpleSanitize } from '../helpers/helpers';
-import { A } from './reusable/Navigate';
+import React, { useEffect, useState } from 'react';
 import * as Constants from './Constants';
-import DocumentTitle from 'react-document-title';
+import { fetchJson } from '../helpers/fetchUtils';
+import PageWithLoader from './reusable/PageWithLoader';
+import TravellerItem from './reusable/TravellerItem';
 
-class Archive extends Component {
-  constructor(props) {
-    super(props);
+const Archive = (props) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
+  const [travellers, setTravellers] = useState([]);
 
-    this.state = {
-      loading: true,
-      error: false,
-      fullyCompleted: [],
-      partiallyCompleted: []
-    };
-  }
-
-  componentDidMount() {
-    fetch('/api/traveller/finishedTravellers')
-      .then(resp => resp.json())
-      .then(data => {
-        const fully = [];
-        const partially = [];
-        data.forEach(traveller => {
-          // TODO - :)
-          if (traveller.end_date !== 'NULL') {
-            const travellerData = {};
-            travellerData.meno = traveller.meno;
-            travellerData.text = traveller.text;
-            travellerData.userId = traveller.user_id;
-            travellerData.startMiesto = traveller.start_miesto;
-            travellerData.startDate = traveller.start_date;
-            travellerData.endDate = traveller.end_date;
-            travellerData.completed = traveller.completed;
-            if (travellerData.completed) {
-              fully.push(travellerData);
-            } else {
-              partially.push(travellerData);
-            }
-          }
-        });
-
-        sortByDateDesc(fully, 'startDate');
-        sortByDateDesc(partially, 'startDate');
-
-        this.setState({
-          fullyCompleted: fully,
-          partiallyCompleted: partially,
-          loading: false
-        });
-      })
+  useEffect(() => {
+    fetchJson('/api/traveller/finishedTravellers')
+      .then(data => setTravellers(data))
       .catch(e => {
-        this.setState({
-          error: true
-        });
-        throw e;
-      });
-  }
+        console.error(e);
 
-  getArchiveCard(traveller, i)
-  {
-    return (
-      <div key={i} className="archived-traveller">
-        <p className="archived-traveller-field name">{traveller.meno}</p>
-        <p className="archived-traveller-field">Začiatok: {traveller.startMiesto + " "} {dateToStr(traveller.startDate)}</p>
-        <p className="archived-traveller-field">Koniec: {dateToStr(traveller.endDate)}</p>
-        <div className="archived-traveller-text">
-          <p dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(traveller.text) }} />
-        </div>
-        <A href={`/na/${traveller.userId}${Constants.FromOldQuery}`} >
-          Sleduj celé putovanie...
-        </A>
+        setError(Texts.GenericError);
+      }).finally(() => setLoading(false));
+    }, []);
+
+  const now = Date.now();
+  return (
+    <PageWithLoader pageId="NaCesteArchive" pageTitle={`Archív${Constants.WebTitleSuffix}`} 
+      loading={loading} error={error}>
+      <div className="travellers">
+        {travellers.map((traveller, i) => <TravellerItem traveller={traveller} key={i} now={now}/>)}
       </div>
-    );
-  }
-
-  render() {
-    return (
-      <div id="NaCesteArchive">
-        <DocumentTitle title={`Archív${Constants.WebTitleSuffix}`} />
-        {this.state.loading && !this.state.error && <Loader />}
-
-        {!this.state.loading && !this.state.error && this.state.fullyCompleted && (
-          <div>
-            <h2>Cestu prešli celú:</h2>
-            <div className="archived-travellers">
-              {
-                this.state.fullyCompleted.map((traveller, i) => {
-                  return this.getArchiveCard(traveller, i);
-                })
-              }
-            </div>
-          </div>
-        )}
-
-        {!this.state.loading &&
-          !this.state.error &&
-          this.state.partiallyCompleted && (
-            <div>
-              <h2>Cestu prešli čiastočne:</h2>
-              <div className="archived-travellers">
-                {
-                  this.state.partiallyCompleted.map((traveller, i) => {
-                    return this.getArchiveCard(traveller, i);
-                  })
-                }
-              </div>
-            </div>
-          )}
-
-        {this.state.error && <NotFound />}
-      </div>
-    );
-  }
+    </PageWithLoader>
+  );
 }
 
 export default Archive;

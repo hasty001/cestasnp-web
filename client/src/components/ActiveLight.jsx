@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import format from 'date-fns/format';
-import { dateToStr, dateTimeToStr, htmlSimpleSanitize } from '../helpers/helpers';
 import { fetchJson } from '../helpers/fetchUtils';
-import { A, navigate } from './reusable/Navigate'
+import { navigate } from './reusable/Navigate'
 import SimpleMasonry from './reusable/SimpleMasonry';
 import * as Constants from './Constants';
 import * as Texts from './Texts';
@@ -10,67 +8,48 @@ import PageWithLoader from './reusable/PageWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
 import ButtonReadMore from './reusable/ButtonReadMore';
 import { addDays } from 'date-fns';
+import TravellerItem from './reusable/TravellerItem';
 
 const ActiveLight = (props) => {
-  const now = format(new Date(), 'YYYY-MM-DD');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
   const [travellers, setTravellers] = useState([]);
+
+  const now = Date.now();
 
   const fetchData = () => {
     setLoading(true);
     setError('');
 
     fetchJson('/api/traveller/activeTravellersWithLastMessage' + window.location.search)
-      .then(data => {
-        const activeTravellers = [];
-        const travellerIds = [];
-        data.forEach(traveller => {
-          const travellerData = {};
-          travellerData.meno = traveller.meno;
-          travellerData.text = traveller.text;
-          travellerData.userId = traveller.user_id;
-          travellerData.startMiesto = traveller.start_miesto;
-          travellerData.startDate = format(traveller.start_date, 'YYYY-MM-DD');
-          travellerData.endDate = traveller.end_date;
-          travellerData.lastMessage = traveller.lastMessage;
-          travellerData.finishedTracking = traveller.finishedTracking;
-          travellerData.lastImg = traveller.lastImg;
-          travellerData.lastImgMsgId = traveller.lastImgMsgId;
+      .then(data => {     
+        const activeTravellers = data;
 
-          activeTravellers.push(travellerData);
-          travellerIds.push(traveller.user_id);
-        });
-
-        const getSortValue = t => (t.finishedTracking ? "11_" + new Date(t.startDate).valueOf() 
-          : ("0" + (t.startDate <= now && t.lastMessage ? 
-            ("0_" + (addDays(new Date(now), 1) - new Date(t.lastMessage.pub_date))) 
-            : ("1_" + new Date(t.startDate).valueOf()))));
+        const getSortValue = t => (t.finishedTracking ? "11_" + new Date(t.start_date).valueOf() 
+          : ("0" + (new Date(t.start_date) <= now && t.lastMessage ? 
+            ("0_" + (addDays(now, 1) - new Date(t.lastMessage.pub_date))) 
+            : ("1_" + new Date(t.start_date).valueOf()))));
 
         activeTravellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
         
         if (activeTravellers.length === 0) {
-          setTravellers([]);
           setError(Texts.NoTravellersError);
-          setLoading(false);
-        } else {            
-          setTravellers(activeTravellers);  
-          setLoading(false);      
         }
+        
+        setTravellers(activeTravellers);  
       })
       .catch(e => {
         console.error(e);
 
         setError(Texts.GenericError);
-        setLoading(false);
-      });
+      }).finally(() => setLoading(false));
   }
 
   useEffect(() => { fetchData(); }, []);
 
   const images = travellers ? 
     travellers.filter(t => t.lastImg).map(t => {
-      const url = `/na/${t.userId}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
+      const url = `/na/${t.user_id}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
       const title = t.meno;
 
       if (t.lastImg.eager && t.lastImg.eager.length > 0) {
@@ -83,10 +62,10 @@ const ActiveLight = (props) => {
     }) : [];
 
   const hasActive = travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && t.startDate <= now, false) : false;
+    travellers.reduce((r, t) => r || !t.finishedTracking && t.start_date <= now, false) : false;
 
   const hasPlanning =  travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && t.startDate > now, false) : false;
+    travellers.reduce((r, t) => r || !t.finishedTracking && t.start_date > now, false) : false;
 
   const settingsData = useContext(LocalSettingsContext);
 
@@ -109,40 +88,7 @@ const ActiveLight = (props) => {
             )}
 
             <div className="active-travellers-items">
-            {travellers.map((traveller, i) => {
-              return (    
-                    <div className="active-traveller-item" key={i} >
-                      <div className="traveller-item-header"> 
-                        <A className="traveller-name" href={`/na/${traveller.userId}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
-                          {traveller.meno}                          
-                        </A>
-
-                        <span className="traveller-date">              
-                          {(!traveller.finishedTracking && !!traveller.lastMessage && (traveller.startDate <= now)) &&  (
-                          <span>
-                            {dateTimeToStr(traveller.lastMessage.pub_date)}
-                          </span>)} 
-
-                          {((traveller.startDate > now) || !traveller.lastMessage) && (
-                          <span>
-                            {dateToStr(traveller.startDate)}                           
-                            {' '}{traveller.startMiesto}
-                          </span>)}  
-
-                          {traveller.finishedTracking && (
-                          <span>
-                            {' - '}{dateToStr(traveller.endDate)}
-                          </span>)} 
-                        </span>
-                      </div>
-
-                      <div className="traveller-text"
-                        dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(
-                            traveller.finishedTracking || !traveller.lastMessage ? 
-                              traveller.text : traveller.lastMessage.text) }} />
-                    </div>                          
-              );
-            })}
+            {travellers.map((traveller, i) => <TravellerItem key={i} traveller={traveller} now={now}/>)}
               <div className="active-travellers-items-more">
                 <ButtonReadMore href="/na/ceste/light"/>
               </div>
