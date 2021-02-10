@@ -577,7 +577,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /***     HOME       ***/
 
-#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes {
+#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -647,7 +647,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes {
+.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -659,7 +659,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media (min-width: 1600px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -770,7 +770,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 15px 0;
 }
 
-.active-traveller-item {
+.traveller-item {
   border-bottom: 1px solid red;
   margin: 15px 0 30px 0;
   padding-bottom: 15px;
@@ -859,7 +859,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media(max-width: 670px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -1126,7 +1126,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /**KONTAKT + Cookies **/
 
-#Kontakt, #Cookies, #Articles, #Changes {
+#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive {
   margin-top: 40px;
 }
 
@@ -1930,62 +1930,35 @@ img.row::before, .editor-image.row::before {
 /**********************/
 /***    ARCHIVE     ***/
 
-#NaCesteArchive {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-} @media (max-width: 767px) {
-  #NaCesteArchive {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
-#NaCesteArchive h2 {
-  margin-top: 0px;
-  text-align: left;
-}
-
-.archived-travellers {
+#NaCesteArchive .travellers {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.archived-traveller {
+#NaCesteArchive .traveller-item {
   display: flex;
   flex-flow: column;
   position: relative;
-  background-color: #ececec70;
-  width: 30%;
-  height: 360px;
-  padding: 10px;
-  margin: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-} @media (max-width: 767px) {
-  .archived-traveller {
-    width: 100%;
-    height: 260px;
+  min-width: calc(50% - 40px);
+  max-width: calc(50% - 40px);
+} @media (max-width: 670px) {
+  #NaCesteArchive .traveller-item {
+    min-width: 100%;
+    max-width: 100%;
   }
 }
 
-.archived-traveller-field {
-  flex: 0 1 auto
+#NaCesteArchive .traveller-item:nth-child(odd) {
+  margin-right: 80px;
 }
 
-.archived-traveller-field.name {
-  font-weight: 800
-}
-
-.archived-traveller-text {
-  overflow: auto;
-  flex: 1 1 auto;
-  margin: 10px 0px;
-}
-
-.archived-traveller-text p {
-  margin: 0px 5px 0px 0px;
+#NaCesteArchive .traveller-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  max-height: 88px;
 }
 
 /***    ARCHIVE     ***/
