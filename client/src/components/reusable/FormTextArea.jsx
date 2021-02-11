@@ -186,7 +186,7 @@ const FormTextArea = (props) => {
            <button title="Nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-three"); }}>H3</button>
            <button title="Malý nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-four"); }}>H4</button>
            <button title="Citácie" onMouseDown={e => { e.preventDefault(); toggleBlock("blockquote"); }}>""</button>
-           <button title="Odrážky" onMouseDown={e => { e.preventDefault(); toggleBlock("unordered-list-item"); }}>🞄t</button>
+           <button title="Odrážky" onMouseDown={e => { e.preventDefault(); toggleBlock("unordered-list-item"); }}>-t</button>
            <button title="Číslovaný zoznam" onMouseDown={e => { e.preventDefault(); toggleBlock("ordered-list-item"); }}>1.</button>
            <button title="Odkaz" onMouseDown={e => { e.preventDefault(); showLink(); }}><i className="fas fa-link"></i></button>
            <button title="Obrázok" onMouseDown={e => { e.preventDefault(); showImage(); }}><i className="far fa-images"></i></button>

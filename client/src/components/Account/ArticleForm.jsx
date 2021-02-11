@@ -9,7 +9,7 @@ import FormText from '../reusable/FormText';
 import FormSelect from '../reusable/FormSelect';
 import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
-import { useStateEx } from '../../helpers/reactUtils';
+import { useStateEx, useStateWithSessionStorage } from '../../helpers/reactUtils';
 import FormCheckBox from '../reusable/FormCheckBox';
 import FormMultiSelect from '../reusable/FormMultiSelect';
 import ArticlePreviewBox from '../reusable/ArticlePreviewBox';
@@ -19,6 +19,7 @@ import FormItem from '../reusable/FormItem';
 import CloudinaryWidget from '../reusable/CloudinaryWidget';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CanMaximize from '../reusable/CanMaximize';
+import { Prompt } from 'react-router';
 
 const ArticleForm = (props) => {
 
@@ -28,6 +29,7 @@ const ArticleForm = (props) => {
   const [warningMsg, setWarningMsg] = useState('');
   const [warningMsgFirst, setWarningMsgFirst] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [changed, setChanged] = useState(false);
 
   const [preview, setPreview] = useState(false);
   const [diff, setDiff] = useState(null);
@@ -41,24 +43,44 @@ const ArticleForm = (props) => {
     setWarningMsg('');
     setWarningMsgFirst('');
     setSuccessMsg('');
+    setChanged(true);
   }
-  
-  const [gps, setGps] = useStateEx({ latlon: '', accuracy: 0 }, clearMsg);
+
+  const getKey = (prop) => props.edit ? null : `article-draft.${prop}`;
+
+  const [gps, setGps] = useStateWithSessionStorage(getKey('gps'), { latlon: '', accuracy: 0 }, clearMsg);
   const [gpsEdit, setGpsEdit] = useStateEx(false, clearMsg);
-  const [state, setState] = useStateEx(props.role != "admin" ? -1 : 0, clearMsg);
+  const [state, setState] = useStateWithSessionStorage(getKey('state'), props.role != "admin" ? -1 : 0, clearMsg);
   const [articleId, setArticleId] = useStateEx('', clearMsg);
-  const [tags, setTags] = useStateEx([], clearMsg);
-  const [title, setTitle] = useStateEx('', clearMsg);
-  const [intro, setIntro] = useStateEx('', clearMsg);
-  const [text, setText] = useStateEx('', clearMsg);
-  const [introHtml, setIntroHtml] = useState(true);
-  const [textHtml, setTextHtml] = useState(true);
+  const [tags, setTags] = useStateWithSessionStorage(getKey('tags'), [], clearMsg);
+  const [title, setTitle] = useStateWithSessionStorage(getKey('title'), '', clearMsg);
+  const [intro, setIntro] = useStateWithSessionStorage(getKey('intro'), '', clearMsg);
+  const [text, setText] = useStateWithSessionStorage(getKey('text'), '', clearMsg);
+  const [introHtml, setIntroHtml] = useStateWithSessionStorage(getKey('introHtml'), true);
+  const [textHtml, setTextHtml] = useStateWithSessionStorage(getKey('textHtml'), true);
 
   const [images, setImages] = useStateEx([], clearMsg);
-  const [imagesAdded, setImagesAdded] = useStateEx([], clearMsg);
+  const [imagesAdded, setImagesAdded] = useStateWithSessionStorage(getKey('imagesAdded'), [], clearMsg);
   const [links, setLinks] = useStateEx([], clearMsg);
 
-  const [note, setNote] = useStateEx('', clearMsg);
+  const [note, setNote] = useStateWithSessionStorage(getKey('note'), clearMsg);
+
+  useEffect(() => {
+    const beforeunload = (e) => {
+      if (changed && props.edit) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', beforeunload);
+
+    if (props.onChanged) {
+      props.onChanged(changed && props.edit);
+    }
+
+    return () => window.removeEventListener('beforeunload', beforeunload);
+  }, [changed, props.edit]);
 
   useEffect(() => {
     const list = [];
@@ -67,14 +89,14 @@ const ArticleForm = (props) => {
     const imgTagRegEx = /<img.*?src="([^"].*?)"[^>]*?\/?>(<\/img>)?/g;
     const linkRegEx = /href="([^"].*?)"/g;
 
-    const imgTags = [...(intro + text).matchAll(imgTagRegEx)];
+    const imgTags = [...((intro + text) || '').matchAll(imgTagRegEx)];
     if (imgTags) {
       imgTags.forEach(imgTag => {
         list.push({ html: imgTag[0], src: imgTag.length > 1 ? imgTag[1] : null });
       });
     }
 
-    const linkTags = [...(intro + text).matchAll(linkRegEx)];
+    const linkTags = [...((intro + text) || '').matchAll(linkRegEx)];
     if (linkTags) {
       linkTags.forEach(linkTag => {
         linksList.push({ href: linkTag.length > 1 ? linkTag[1] : null });
@@ -95,6 +117,7 @@ const ArticleForm = (props) => {
       .then(id => {
         setArticleId((id + 1).toString());
         setLoading(false);
+        setChanged(false);
       })
       .catch(e => {
         console.error('Last Article Id error: ', e);
@@ -126,6 +149,7 @@ const ArticleForm = (props) => {
       setTextHtml(supported(p.fulltext));
       setIntro(p.introtext);
       setText(p.fulltext);
+      setChanged(false);
 
       const latest = article.history && article.history.length > 0 ? 
         article.history[0] : article;
@@ -213,6 +237,7 @@ const ArticleForm = (props) => {
           setArticleId((msgRes.sql_article_id + 1).toString());
         }
         setNote('');
+        setChanged(false);
 
         if (props.edit) {
           setArticle(msgRes);
@@ -406,14 +431,14 @@ const ArticleForm = (props) => {
       </FormMultiSelect>
 
       <CanMaximize>
-        <a className="action" href="#" onClick={() => setIntroHtml(v => !v)}>{introHtml ? "editovať kód" : "editovať náhľad" }</a>
-        {!!props.edit && !introHtml && <a className="action" href="#" onClick={() => setIntro(fixArticle(intro))}>vyčistiť</a>}
+        <a className="action" href="#" onClick={e => { e.preventDefault(); setIntroHtml(v => !v); }}>{introHtml ? "editovať kód" : "editovať náhľad" }</a>
+        {!!props.edit && !introHtml && <a className="action" href="#" onClick={e => { e.preventDefault(); setIntro(fixArticle(intro)); }}>vyčistiť</a>}
         <FormTextArea uid={props.uid} value={[intro, setIntro]} valueName="intro" valueLabel="Úvod" itemClassName="form html" html={introHtml}/>
       </CanMaximize>
 
       <CanMaximize>
-        <a className="action" href="#" onClick={() => setTextHtml(v => !v)}>{textHtml ? "editovať kód" : "editovať náhľad" }</a>
-        {!!props.edit && !textHtml && <a className="action" href="#" onClick={() => setText(fixArticle(text))}>vyčistiť</a>}
+        <a className="action" href="#" onClick={e => { e.preventDefault(); setTextHtml(v => !v); }}>{textHtml ? "editovať kód" : "editovať náhľad" }</a>
+        {!!props.edit && !textHtml && <a className="action" href="#" onClick={e => { e.preventDefault(); setText(fixArticle(text)); }}>vyčistiť</a>}
         <FormTextArea uid={props.uid} value={[text, setText]} valueName="text" valueLabel="Text" itemClassName="form html" html={textHtml}/>
       </CanMaximize>
 
@@ -471,6 +496,7 @@ const ArticleForm = (props) => {
         oldArticle={article}
         newArticle={diff}
         onHide={() => setDiff(null)}/>
+      {!!props.edit && <Prompt when={changed} message={() => Texts.LeaveNotSavedWarning} />}
     </FormWithLoader>
   )
 }

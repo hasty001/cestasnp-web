@@ -7,14 +7,15 @@ import UserLabel from './UserLabel';
 import { logDev } from '../../helpers/logDev';
 import loadScriptOnce from 'load-script-once';
 import * as Texts from '../Texts';
-import { useStateEx } from '../../helpers/reactUtils';
+import { useStateEx, useStateWithSessionStorage, useStateWithLocalStorage } from '../../helpers/reactUtils';
 import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 
 const CommentBox = (props) => {
   const authData = useContext(AuthContext);
 
-  const [comment, setComment] = useStateEx('', () => setCommentError(''));
-  const [name, setName] = useStateEx('', () => setNameError(''));
+  const [comment, setComment] = useStateWithSessionStorage(
+    `comment-draft_${props.travellerId}_${props.articleID}.comment`, '', () => setCommentError(''));
+  const [name, setName] = useStateWithLocalStorage('comment-draft.name', '', () => setNameError(''));
   const [captcha, setCaptcha] = useStateEx('', () => setCaptchaError(''));
   
   const [loading, setLoading] = useState(false);

@@ -1,5 +1,6 @@
 import React from 'react';
 
+export const LeaveNotSavedWarning = "Naozaj chceš odísť a prísť tak o neuložené zmeny?";
 export const GenericError = "Ups, niekde sa stala chyba. Skús neskôr prosím.";
 export const NoTravellersError = "Momentálne nie je nikto na ceste.";
 export const GpsLowAccuracyError = (lat, lon) => 
