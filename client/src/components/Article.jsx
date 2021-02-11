@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import * as Constants from './Constants';
+import * as Texts from './Texts';
 import { htmlSanitize } from '../helpers/helpers';
 import { AuthContext } from './AuthContext';
 import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';

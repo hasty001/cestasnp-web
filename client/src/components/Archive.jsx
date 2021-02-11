@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Constants from './Constants';
+import * as Texts from './Texts';
 import { fetchJson } from '../helpers/fetchUtils';
 import PageWithLoader from './reusable/PageWithLoader';
 import TravellerItem from './reusable/TravellerItem';

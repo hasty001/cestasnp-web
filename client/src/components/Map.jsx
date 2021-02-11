@@ -304,10 +304,15 @@ const Map = (props) => {
     map.on("popupopen", poiPopupOpen);
 
     setMarkers(newMarkers);
+
+    return () => {
+      map.off();
+      map.remove();
+    };
   }
 
   useEffect(() => {
-    init(props.use);
+    return init(props.use);
   }, []);
 
   useEffect(() => {   

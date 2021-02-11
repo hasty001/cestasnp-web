@@ -25,9 +25,15 @@ const CommentBox = (props) => {
   const [nameError, setNameError] = useState('');
 
   useEffect(() => {
+    var cancelled = false;
+
     if (!authData.isAuth && props.show) {
       loadScriptOnce('https://www.google.com/recaptcha/api.js')
-      .then(() => 
+      .then(() => {
+        if (cancelled) {
+          return;
+        }
+
         setRecaptchaWidget((
           <Recaptcha
             render="explicit"
@@ -36,13 +42,16 @@ const CommentBox = (props) => {
             expiredCallback={expiredCallback}
             sitekey="6LdmY1UUAAAAAOi_74AYzgrYCp-2fpusucy1lmrK"
             hl="sk"
-            size={window.innerWidth <= 390 ? 'compact' : 'normal'}/>)))
+            size={window.innerWidth <= 390 ? 'compact' : 'normal'}/>));
+      })
       .catch(error => {
         console.error(error);
 
         setRecaptchaWidget(<p className="commentError">{Texts.GenericError}</p>);
       });
     }
+
+    return () => cancelled = true;
   }, [props.show, authData.isAuth]);
 
   const onloadCallback = () => {
