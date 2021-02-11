@@ -2,7 +2,8 @@ import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import { faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExternalLinkAlt,
   faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
   faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap, 
-  faStar as fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight } from '@fortawesome/free-solid-svg-icons';
+  faStar as fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
+  faListOl } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faImages, faCopy } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
@@ -26,7 +27,8 @@ const faIconsRegister = () => {
   library.add(faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExternalLinkAlt,
     faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
     faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap,
-    fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight);
+    fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
+    faListOl);
 
   library.add(faStar, faImages, faCopy);
 
