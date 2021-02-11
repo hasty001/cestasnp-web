@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { logDev } from "./logDev";
-import throttle from 'lodash/throttle';
-import { json } from "body-parser";
+import throttle from 'lodash.throttle';
 
 /**
  * Uses prop state if it is in useState format [value, setValue], otherwise uses new local state with prop as initial value if set. 

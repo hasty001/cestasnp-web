@@ -43,7 +43,7 @@
     "history": "^4.10.1",
     "leaflet": "^1.6.0",
     "load-script-once": "^2.0.1",
-    "loadash": "^1.0.0",
+    "lodash.throttle": "^4.1.1",
     "logrocket": "^1.0.7",
     "memory-cache": "^0.2.0",
     "moment": "^2.24.0",
