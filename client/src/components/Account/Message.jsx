@@ -6,7 +6,7 @@ import FormWithLoader from '../reusable/FormWithLoader';
 import FormLatLon from '../reusable/FormLatLon';
 import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
-import { useStateEx } from '../../helpers/reactUtils';
+import { useStateEx, useStateWithSessionStorage } from '../../helpers/reactUtils';
 import * as Constants from '../Constants';
 
 const Message = (props) => {
@@ -22,10 +22,10 @@ const Message = (props) => {
     setSuccessMsg('');
   }
   
-  const [gps, setGps] = useStateEx({ latlon: '', accuracy: 0 }, clearMsg);
+  const [gps, setGps] = useStateWithSessionStorage('message-draft.gps', { latlon: '', accuracy: 0 }, clearMsg);
   const [gpsEdit, setGpsEdit] = useStateEx(false, clearMsg);
-  const [message, setMessage] = useStateEx('', clearMsg);
-  const [image, setImage] = useStateEx('', clearMsg);
+  const [message, setMessage] = useStateWithSessionStorage('message-draft.message', '', clearMsg);
+  const [image, setImage] = useStateWithSessionStorage('message-draft.image', '', clearMsg);
   const [imageId, setImageId] = useState(Date.now());
 
   const sendMessage = () => {

@@ -7,14 +7,15 @@ import UserLabel from './UserLabel';
 import { logDev } from '../../helpers/logDev';
 import loadScriptOnce from 'load-script-once';
 import * as Texts from '../Texts';
-import { useStateEx } from '../../helpers/reactUtils';
+import { useStateEx, useStateWithSessionStorage, useStateWithLocalStorage } from '../../helpers/reactUtils';
 import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
 
 const CommentBox = (props) => {
   const authData = useContext(AuthContext);
 
-  const [comment, setComment] = useStateEx('', () => setCommentError(''));
-  const [name, setName] = useStateEx('', () => setNameError(''));
+  const [comment, setComment] = useStateWithSessionStorage(
+    `comment-draft_${props.travellerId}_${props.articleID}.comment`, '', () => setCommentError(''));
+  const [name, setName] = useStateWithLocalStorage('comment-draft.name', '', () => setNameError(''));
   const [captcha, setCaptcha] = useStateEx('', () => setCaptchaError(''));
   
   const [loading, setLoading] = useState(false);
@@ -25,9 +26,15 @@ const CommentBox = (props) => {
   const [nameError, setNameError] = useState('');
 
   useEffect(() => {
+    var cancelled = false;
+
     if (!authData.isAuth && props.show) {
       loadScriptOnce('https://www.google.com/recaptcha/api.js')
-      .then(() => 
+      .then(() => {
+        if (cancelled) {
+          return;
+        }
+
         setRecaptchaWidget((
           <Recaptcha
             render="explicit"
@@ -36,13 +43,16 @@ const CommentBox = (props) => {
             expiredCallback={expiredCallback}
             sitekey="6LdmY1UUAAAAAOi_74AYzgrYCp-2fpusucy1lmrK"
             hl="sk"
-            size={window.innerWidth <= 390 ? 'compact' : 'normal'}/>)))
+            size={window.innerWidth <= 390 ? 'compact' : 'normal'}/>));
+      })
       .catch(error => {
         console.error(error);
 
         setRecaptchaWidget(<p className="commentError">{Texts.GenericError}</p>);
       });
     }
+
+    return () => cancelled = true;
   }, [props.show, authData.isAuth]);
 
   const onloadCallback = () => {

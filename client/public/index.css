@@ -1367,6 +1367,7 @@ span.poi-text {
 .no-article-div {
   display: block;
   margin-top: 15px;
+  min-height: 200px;
 }
 
 #Article {

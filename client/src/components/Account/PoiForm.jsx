@@ -13,9 +13,10 @@ import { findPoiCategory, PoiCategories } from '../PoiCategories';
 import Map from '../Map';
 import PoiList from '../reusable/PoiList';
 import ItineraryTable from '../reusable/ItineraryTable';
-import { useStateEx } from '../../helpers/reactUtils';
+import { useStateEx, useStateWithSessionStorage } from '../../helpers/reactUtils';
 import FormCheckBox from '../reusable/FormCheckBox';
 import { ImageType } from '../reusable/CloudinaryWidget';
+import { Prompt } from 'react-router';
 
 const PoiForm = (props) => {
 
@@ -25,6 +26,7 @@ const PoiForm = (props) => {
   const [warningMsg, setWarningMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [categoryDescription, setCategoryDescription] = useState('');
+  const [changed, setChanged] = useState(false);
 
   const [newPoi, setNewPoi] = useState();
 
@@ -33,23 +35,43 @@ const PoiForm = (props) => {
     setErrorMsgFirst('');
     setWarningMsg('');
     setSuccessMsg('');
+    setChanged(true);
   }
   
-  const [gps, setGps] = useStateEx({ latlon: '', accuracy: 0 }, clearMsg);
+  const getKey = (prop) => props.edit ? null : `poi-draft.${prop}`;
+
+  const [gps, setGps] = useStateWithSessionStorage(getKey('gps'), { latlon: '', accuracy: 0 }, clearMsg);
   const [gpsEdit, setGpsEdit] = useStateEx(false, clearMsg);
-  const [category, setCategory] = useStateEx('', clearMsg);
-  const [name, setName] = useStateEx('', clearMsg);
-  const [text, setText] = useStateEx('', clearMsg);
-  const [image, setImage] = useStateEx('', clearMsg);
+  const [category, setCategory] = useStateWithSessionStorage(getKey('category'), '', clearMsg);
+  const [name, setName] = useStateWithSessionStorage(getKey('name'), '', clearMsg);
+  const [text, setText] = useStateWithSessionStorage(getKey('text'), '', clearMsg);
+  const [image, setImage] = useStateWithSessionStorage(getKey('image'), '', clearMsg);
   const [imageId, setImageId] = useState(Date.now());
-  const [water, setWater] = useStateEx('', clearMsg);
-  const [food, setFood] = useStateEx('', clearMsg);
+  const [water, setWater] = useStateWithSessionStorage(getKey('water'), '', clearMsg);
+  const [food, setFood] = useStateWithSessionStorage(getKey('food'), '', clearMsg);
 
-  const [itineraryNear, setItineraryNear] = useState(null);
-  const [itineraryAfter, setItineraryAfter] = useState(null);
-  const [itineraryInfo, setItineraryInfo] = useState('');
+  const [itineraryNear, setItineraryNear] = useStateWithSessionStorage(getKey('near'), null);
+  const [itineraryAfter, setItineraryAfter] = useStateWithSessionStorage(getKey('after'), null);
+  const [itineraryInfo, setItineraryInfo] = useStateWithSessionStorage(getKey('info'), '');
 
-  const [note, setNote] = useStateEx('', clearMsg);
+  const [note, setNote] = useStateWithSessionStorage(getKey('note'), '', clearMsg);
+
+  useEffect(() => {
+    const beforeunload = (e) => {
+      if (changed && props.edit) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', beforeunload);
+
+    if (props.onChanged) {
+      props.onChanged(changed && props.edit);
+    }
+
+    return () => window.removeEventListener('beforeunload', beforeunload);
+  }, [changed, props.edit]);
 
   useEffect(() => {
     if (window.location.hash && window.location.hash.replace('#', '')) {
@@ -87,6 +109,8 @@ const PoiForm = (props) => {
       setItineraryAfter(p.itinerary ? p.itinerary.after : null);
       setItineraryInfo(p.itinerary ? p.itinerary.info : '');
     }
+
+    setChanged(false);
   }, [props.poi, props.edit]);
 
   useEffect(() => {
@@ -185,6 +209,7 @@ const PoiForm = (props) => {
         setItineraryAfter(null);
         setItineraryInfo('');
         setNote('');
+        setChanged(false);
 
         msgRes.successMsg = props.edit ? 'Dôležité miesto úspešne upravené!': 
           'Dôležité miesto úspešne pridané!';
@@ -280,6 +305,8 @@ const PoiForm = (props) => {
           )}
         </div>
       )}
+
+      {!!props.edit && <Prompt when={changed} message={() => Texts.LeaveNotSavedWarning} />}
     </FormWithLoader>
   )
 }

@@ -36,9 +36,15 @@ const CloudinaryWidget = ({ uid, imageId, updateImageDetails, btnTxt, type, show
   const [error, setError] = useState();
 
   useEffect(() => {
+    var cancelled = false;
+
     if (uid && imageId && !error) {
       setLoading(true);
       loadScriptOnce('https://widget.cloudinary.com/v2.0/global/all.js').then(() => {
+        if (cancelled) {
+          return;
+        }
+        
         const myWidget = cloudinary.createUploadWidget({
             cloudName: 'cestasnp-sk',
             apiKey: '186532245374812',
@@ -72,6 +78,8 @@ const CloudinaryWidget = ({ uid, imageId, updateImageDetails, btnTxt, type, show
 
         setError(<>Nepodarilo sa nahrať doplnok na nahrávanie fotiek - <a href="#" onClick={() => setError(null)}>skúsiť znova</a>.</>);
       });
+
+      return () => cancelled = true;
     }
   }, [uid, imageId, error]);
 
