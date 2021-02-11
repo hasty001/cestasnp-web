@@ -156,6 +156,8 @@ const ArticleForm = (props) => {
       if (p.modified < latest.modified) {
         setWarningMsgFirst((<>Existuje novšia verzia článku - <a href={`#${latest._id}`}>použiť pre úpravy</a>.</>));
       }
+
+      setTimeout(() => setChanged(false), 1000);
     }
   }, [props.role, article, props.edit, window.location.hash]);
 
