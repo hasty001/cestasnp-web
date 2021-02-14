@@ -821,7 +821,7 @@ DB.prototype = {
 
   toggleArticleMy(uid, id) {
     return dbConnect(db => 
-      db.db('cestasnp').collection(_const.ArticlesTable).findOne({ sql_article_id: id })
+      dbCollection(_const.ArticlesTable).findOne({ sql_article_id: id })
       .then(article => {
         if (!article) {
           return Promise.reject('Článok nebol nájdený.');            
@@ -853,7 +853,7 @@ DB.prototype = {
             }
           }
 
-          return db.db('cestasnp').collection('users').findOneAndUpdate({ uid },
+          return dbCollection(_const.UsersTable).findOneAndUpdate({ uid },
             { $set: { 
               articlesMy: userDetails.articlesMy, 
               articlesNotMy: userDetails.articlesNotMy } }, 
