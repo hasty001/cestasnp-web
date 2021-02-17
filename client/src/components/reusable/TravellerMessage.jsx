@@ -37,7 +37,7 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
 
         {message.isComment ?
           <span className="traveller-comment-actions">
-            {(userData.isAuth
+            {(!!userData.isAuth
               && (message.uid == userData.userDetails.uid 
                 || (message.travellerDetails && message.travellerDetails.id == userData.travellerDetails._id))) && 
               (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-comment-delete" title="zmazať komentár"><i className="fas fa-trash-alt"/></a>)}
@@ -45,7 +45,7 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
           </span>
           :
           <span className="traveller-message-actions">
-            {(userData.isAuth && userData.userDetails.uid == message.user_id) && 
+            {(!!userData.isAuth && userData.userDetails.uid == message.user_id) && 
               (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-message-delete" title="zmazať správu"><i className="fas fa-trash-alt"/></a>)}
             <Link href={inTraveller ? `#${message._id}` : `/na/${message.user_id}#${message._id}`} className="traveller-message-link" title="odkaz na správu"><i className="fas fa-link"/></Link>
           </span>}
