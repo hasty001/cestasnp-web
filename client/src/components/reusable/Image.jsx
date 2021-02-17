@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { fixImageUrl } from '../../helpers/helpers';
 import ImageBox from './ImageBox';
 import { A, isNormalClickEvent } from './Navigate';
 
@@ -16,23 +17,27 @@ const Image = (props) => {
         ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${props.value}`
         : props.value;
 
-      imagePreview = image;
+      imagePreview = props.small ? fixImageUrl(image, 'c_fill,w_240,h_240') : image;
 
     } else {
       image = props.value.secure_url;
       imagePreview = image;
 
-      if (props.large) {
-        if (props.value.eager) {
-          const i = props.value.eager.findIndex(e => e.width >= 800);
-          if ( i >= 0) {
-            imagePreview = props.value.eager[i].secure_url;
-          }
-        } 
+      if (props.small) {
+        imagePreview = fixImageUrl(image, 'c_fill,w_240,h_240');
       } else {
-        if (props.value.eager && props.value.eager.length > 0) {
-          imagePreview = props.value.eager[0].secure_url;
-        } 
+        if (props.large) {
+          if (props.value.eager) {
+            const i = props.value.eager.findIndex(e => e.width >= 800);
+            if ( i >= 0) {
+              imagePreview = props.value.eager[i].secure_url;
+            }
+          } 
+        } else {
+          if (props.value.eager && props.value.eager.length > 0) {
+            imagePreview = props.value.eager[0].secure_url;
+          } 
+        }
       }
     }
   }

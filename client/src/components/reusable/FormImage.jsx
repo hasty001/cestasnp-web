@@ -9,7 +9,7 @@ const FormImage = (props) => {
 
   return (
     <>
-      <Image value={value} alt={props.imageAlt} itemClassName={props.itemClassName}>
+      <Image value={value} alt={props.imageAlt} itemClassName={props.itemClassName} small>
       <CloudinaryWidget
         uid={props.uid} type={props.type} imageId={props.imageId}
         updateImageDetails={setValue}
