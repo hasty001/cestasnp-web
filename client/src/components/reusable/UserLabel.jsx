@@ -4,13 +4,13 @@ import { A } from './Navigate';
 /**
  * Label with user name and link to user journey, if uid is passed.
  */
-const UserLabel = ({ name, uid }) => {
+const UserLabel = ({ name, uid, className }) => {
   
   return (
     <>
       {uid ?
-       <A href={`/na/${uid}`}>{name}</A>
-       : <span>{name}</span>}
+       <A className={className} href={`/na/${uid}`}>{name}</A>
+       : <span className={className}>{name}</span>}
     </>
   )
 }

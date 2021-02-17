@@ -1,14 +1,13 @@
 import React from 'react';
 import DocumentTitle from 'react-document-title';
-import auth from '../../helpers/firebase';
 import history from '../../helpers/history';
-import AddPoi from './AddPoi';
-
-import FanAccount from './FanAccount';
-import TravellerAccount from './TravellerAccount';
 import * as Constants from '../Constants';
+
+import AddPoi from './AddPoi';
+import TravellerAccount from './TravellerAccount';
 import AddArticle from './AddArticle';
 import Changes from './Changes';
+import SendMessage from './SendMessage';
 
 const LoggedIn = (props) => {
 
@@ -26,8 +25,8 @@ const LoggedIn = (props) => {
         : (props.changes ? <Changes /> 
           : (props.userData.travellerDetails &&
             Object.keys(props.userData.travellerDetails).length > 0 ? (
-              <TravellerAccount traveller={props.userData} />
-            ) : (props.pois ? <></> : <FanAccount fan={props.userData} />
+              props.sendMessage ? <SendMessage userData={props.userData} /> : <TravellerAccount userData={props.userData} edit />
+            ) : (props.pois ? <></> : <TravellerAccount userData={props.userData} />
       ))))}
     </>
   );

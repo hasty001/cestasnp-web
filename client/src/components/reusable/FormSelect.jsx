@@ -18,6 +18,7 @@ const FormSelect = (props) => {
         {props.children}
         {!!props.options && props.options.map((option, i) => <option key={i} value={option.value} label={option.label}>{option.label}</option>)}
       </select>
+      {props.labelChildren}      
     </FormItem>
   )
 }

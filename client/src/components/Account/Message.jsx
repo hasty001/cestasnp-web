@@ -53,11 +53,11 @@ const Message = (props) => {
     data.lat = latlon[0].toFixed(6);
     data.accuracy = gps.accuracy;
     data.text = message;
-    data.user_id = props.userId;
+    data.user_id = props.userData.userDetails.uid;
     data.img = image;
-    data.details_id = props.travellerId;
+    data.details_id = props.userData.travellerDetails._id;
 
-    fetchPostJsonWithToken(props.traveller.user, '/api/traveller/sendMessage', data)
+    fetchPostJsonWithToken(props.userData.user, '/api/traveller/sendMessage', data)
       .then(msgRes => {
         setLoading(false);
 
@@ -69,7 +69,7 @@ const Message = (props) => {
 
         setSuccessMsg('Správa úspešne poslaná!');
 
-        props.updateTravellerMsgs(msgRes);
+        props.messageAdded(msgRes);
       })
       .catch(e => {
         console.error('Send message error: ', e);
@@ -81,14 +81,14 @@ const Message = (props) => {
 
   return (
     <FormWithLoader formId="MessageForm" title="Poslať správu" submitText="Poslať správu"
-      onSubmit={sendMessage} loading={loading} errorMsg={errorMsg} successMsg={successMsg} errorMsgFirst={errorMsgFirst}>
+      onSubmit={sendMessage} loading={loading} error={errorMsg} success={successMsg} errorFirst={errorMsgFirst}>
       
       <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsgFirst}/>
 
       <FormTextArea value={[message, setMessage]} valueName="message" valueLabel="Text" />
       
-      <FormImage value={[image, setImage]} imageAlt="nahrana fotka z cesty" uid={props.userId} 
-        type={Constants.ImageType.LiveSledovanie} imageId={imageId} />
+      <FormImage value={[image, setImage]} imageAlt="nahrana fotka z cesty" uid={props.userData.userDetails.uid} 
+        type={Constants.ImageType.LiveSledovanie} imageId={imageId}/>
     </FormWithLoader>
   );
 }

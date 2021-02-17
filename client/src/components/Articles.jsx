@@ -26,6 +26,7 @@ const Articles = (props) => {
 
   const fetchData = () => {
     setLoading(true);
+    setError('');
 
     fetchJson(filter ? `/api/articles/category/${filter}` : '/api/articles/')
     .then(count => {

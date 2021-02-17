@@ -60,6 +60,10 @@ const CommentBox = (props) => {
   };
 
   const addComment = () => {
+    setNameError('');
+    setCommentError('');
+    setCaptchaError('');
+    
     if (!authData.isAuth && !captcha) {
       setCaptchaError('Prosím potvrď, že nie si robot');
       return;
@@ -83,7 +87,6 @@ const CommentBox = (props) => {
       (authData.travellerDetails && authData.travellerDetails.meno) ?
       authData.travellerDetails.meno : authData.userDetails.name;
     data.articleId = props.articleID;
-    data.visitorIp = props.visitorIp;
     data.travellerName = props.travellerName;
     data.travellerId = props.travellerId;
     data['g-recaptcha-response'] = captcha;

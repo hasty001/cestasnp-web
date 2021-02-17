@@ -11,17 +11,17 @@ const FormWithLoader = (props) => {
       }
       {!!props.description && <div className="form-description">{props.description}</div>}
 
-      {!!props.errorMsgFirst && 
-        <p className="errorMsg">{props.errorMsgFirst}</p>
+      {!!props.errorFirst && 
+        <p className="errorMsg">{props.errorFirst}</p>
       }
       
       {props.children}
 
-      {!!props.errorMsg && 
-        <p className="errorMsg">{props.errorMsg}</p>
+      {!!props.error && 
+        <p className="errorMsg">{props.error}</p>
       }
-      {!!props.successMsg && 
-        <p className="successMsg">{props.successMsg}</p>
+      {!!props.success && 
+        <p className="successMsg">{props.success}</p>
       }
 
       {!!props.submitText && (

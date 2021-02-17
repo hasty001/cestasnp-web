@@ -132,6 +132,14 @@ router.post('/addComment', (req, res) => {
     return;
   }
 
+  var ipAddr = req.headers["x-forwarded-for"];
+  if (ipAddr){
+    var list = ipAddr.split(",");
+    ipAddr = list[list.length - 1];
+  } else {
+    ipAddr = req.connection.remoteAddress;
+  }
+
   const secretKey = process.env.RECAPTCHA;
   const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${req.body['g-recaptcha-response']}`;
   // + '&remoteip=' +
@@ -181,7 +189,7 @@ router.post('/addComment', (req, res) => {
         const sName = sanitize(req.body.name);
         comment.name = sName;
         comment.username = sName;
-        const sVisitorIp = sanitize(req.body.visitorIp);
+        const sVisitorIp = sanitize(ipAddr);
         comment.ip = sVisitorIp;
         const sArticleId = sanitize(req.body.articleId);
         comment.article_sql_id = sArticleId;
@@ -198,7 +206,7 @@ router.post('/addComment', (req, res) => {
         comment.comment = sComment;
         const sName = sanitize(req.body.name);
         comment.name = sName;
-        const sVisitorIp = sanitize(req.body.visitorIp);
+        const sVisitorIp = sanitize(ipAddr);
         comment.ip = sVisitorIp;
         comment.travellerDetails = {};
         const sTravellerId = sanitize(req.body.travellerId);
@@ -227,14 +235,12 @@ router.post('/userCheck', (req, res) => {
   checkToken(req, res, uid, () =>
     Promise.all([
       db.findBy(req.app.locals.db, _const.UsersTable, { uid }),
-      db.getTravellerDetails(req.app.locals.db, uid),
-      db.getTravellerMessages(req.app.locals.db, uid)
-    ]).then(([userDetails, travellerDetails, travellerMessages]) => {
+      db.getTravellerDetails(req.app.locals.db, uid)
+    ]).then(([userDetails, travellerDetails]) => {
       if (userDetails && userDetails.length > 0) {
         return {
           userDetails: userDetails[0],
-          travellerDetails: travellerDetails[0] || {},
-          travellerMessages: travellerMessages || []
+          travellerDetails: travellerDetails[0] || {}
         };
       }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { fetchPostJsonWithToken } from '../helpers/fetchUtils';
 import auth from '../helpers/firebase';
 
 export const AuthContext = React.createContext({
@@ -7,7 +7,6 @@ export const AuthContext = React.createContext({
   user: null,
   userDetails: {},
   travellerDetails: {},
-  travellerMessages: [],
   authProviderMounted: 0,
   updateTravellerDetails: () => {},
   updateUserDetails: () => {}
@@ -21,7 +20,6 @@ export class AuthProvider extends React.Component {
       user: null,
       userDetails: {},
       travellerDetails: {},
-      travellerMessages: [],
       authProviderMounted: 0,
       updateTravellerDetails: this.updateTravellerDetails.bind(this),
       updateUserDetails: this.updateUserDetails.bind(this)
@@ -32,76 +30,59 @@ export class AuthProvider extends React.Component {
     auth.onAuthStateChanged(user => {
       if (user && user.emailVerified) {
         this.userMongoCheck(user);
-      } else if (user) {
-        auth.signOut();
-        this.setState({
-          isAuth: 0,
-          user: null,
-          userDetails: {},
-          travellerDetails: {},
-          travellerMessages: [],
-          authProviderMounted: 1
-        });
       } else {
+        if (user) {
+          auth.signOut();
+        }
+
         this.setState({
           isAuth: 0,
           user: null,
           userDetails: {},
           travellerDetails: {},
-          travellerMessages: [],
           authProviderMounted: 1
         });
-      }
+      } 
     });
   }
 
   userMongoCheck(user) {
-    user.getIdToken()
-      .then(token => 
-        fetch('/api/traveller/userCheck', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: user.email,
-        name: user.displayName,
-        uid: user.uid
-      }),
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        'X-Auth-Token': token,
-      })
+    fetchPostJsonWithToken(user, '/api/traveller/userCheck', {
+      email: user.email,
+      name: user.displayName,
+      uid: user.uid
     })
-      .then(res => res.json())
-      .then(r => {
-        if (r.error) {
-          throw r.error; 
-        } else { 
-          return r; 
-        }})
-      .then(({ userDetails, travellerDetails, travellerMessages }) => {
-        this.setState({
-          isAuth: 1,
-          user,
-          userDetails,
-          travellerDetails,
-          travellerMessages,
-          authProviderMounted: 1
-        });
-      }))
-      .catch(e => {
-        console.error('userMongoCheck error ', e);
-        const loggedUser = auth.currentUser;
-        if (loggedUser) {
-          auth.signOut();
-        }
-        this.setState({
-          isAuth: 0,
-          user: null,
-          userDetails: {},
-          travellerDetails: {},
-          travellerMessages: [],
-          authProviderMounted: 1
-        });
+    .then(r => {
+      if (r.error) {
+        throw r.error; 
+      } else { 
+        return r; 
+      }})
+    .then(({ userDetails, travellerDetails }) => {
+      this.setState({
+        isAuth: 1,
+        user,
+        userDetails,
+        travellerDetails,
+        authProviderMounted: 1
       });
+    })
+    .catch(e => {
+      console.error('userMongoCheck error ', e);
+      
+      const loggedUser = auth.currentUser;
+      if (loggedUser) {
+        auth.signOut();
+      }
+
+      this.setState({
+        isAuth: 0,
+        user: null,
+        userDetails: {},
+        travellerDetails: {},
+        authProviderMounted: 1
+      });
+    });
   }
 
   updateTravellerDetails(details) {

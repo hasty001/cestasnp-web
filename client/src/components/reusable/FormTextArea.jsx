@@ -207,6 +207,7 @@ const FormTextArea = (props) => {
         }}
         onChange={e => setValue(e.target.value)}
         value={value}
+        {...props.inputAttrs}
         />)}
     </FormItem>
   )

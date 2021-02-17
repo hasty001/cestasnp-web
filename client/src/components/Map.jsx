@@ -258,13 +258,13 @@ const Map = (props) => {
     // TRAVELLER MSGs
     if (props.stops && props.stops.length > 0) {
       props.stops.forEach(stop => {
-        if (stop.type === 'message') {
+        if (!stop.isComment && stop.lat && stop.lon) {
           const icon = L.divIcon({
             html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px"></i>`,
             ...Constants.PoiMarkerIconProps,
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
-            popupContent: `<p>${dateTimeToStr(stop.date)}</p>
+            popupContent: `<p>${dateTimeToStr(stop.pub_date)}</p>
           <p>${htmlSimpleSanitize(stop.text)}</p>` }).addTo(markerLayer);
           newMarkers.push(marker);
           marker.bindPopup("");
@@ -358,7 +358,7 @@ const Map = (props) => {
     if (mapObj) {
       updateLayers(mapObj);
     }
-  }, [mapObj, props.pois, props.guideposts, props.stop, props.travellers]);
+  }, [mapObj, props.pois, props.guideposts, props.stops, props.travellers]);
 
   useEffect(() => {
     if (!mapObj || !mapObj.markerLayers || !mapObj.markerLayers["marker"]) {
