@@ -17,6 +17,7 @@ const ROUTES = {
   archiv: '/na/archive',
   kontakt: '/kontakt',
   mojaCesta: '/ucet',
+  poslatSpravu: '/ucet/poslatspravu',
   pridatPOI: '/ucet/pridatpoi',
   pridatClanok: '/ucet/pridatclanok',
   ucetPois: '/ucet/pois',
@@ -81,13 +82,23 @@ const Navigation = () => {
               title="Moja cesta"
               className="mobile"
             >
+              Moja cesta
+            </NavRouterItem>)}
+
+          {!!authData.isAuth && (
+            <NavRouterItem
+              href={ROUTES.poslatSpravu}
+              eventKey={2}
+              title="Poslať správu"
+              className="mobile"
+            >
               Poslať správu
             </NavRouterItem>)}
 
           {!!authData.isAuth && (
             <NavRouterItem
               href={ROUTES.pridatPOI}
-              eventKey={2}
+              eventKey={3}
               title="Pridať dôležité miesto"
               className="mobile"
             >
@@ -97,7 +108,7 @@ const Navigation = () => {
           {!!authData.isAuth && (
             <NavRouterItem
               href={ROUTES.pridatClanok}
-              eventKey={3}
+              eventKey={4}
               title="Pridať článok"
               className="mobile"
             >
@@ -107,7 +118,7 @@ const Navigation = () => {
           {!!authData.isAuth && !!authData.userDetails && authData.userDetails.articlesRole == 'admin' && (
             <NavRouterItem
               href={ROUTES.zmeny}
-              eventKey={4}
+              eventKey={5}
               title="Prehľad zmien"
               className="mobile"
             >
@@ -117,7 +128,7 @@ const Navigation = () => {
           {!!authData.isAuth && (
             <NavRouterItem
               href="#"
-              eventKey={5}
+              eventKey={6}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="mobile"
@@ -185,8 +196,17 @@ const Navigation = () => {
 
             <NavRouterItem
               href={ROUTES.mojaCesta}
-              eventKey={21}
+              eventKey={20}
               title="Moja cesta"
+              className="desktop"
+            >
+              Moja cesta
+            </NavRouterItem> 
+
+            <NavRouterItem
+              href={ROUTES.poslatSpravu}
+              eventKey={21}
+              title="Poslať správu"
               className="desktop"
             >
               Poslať správu

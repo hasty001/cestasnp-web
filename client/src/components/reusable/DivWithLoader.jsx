@@ -7,6 +7,7 @@ const DivWithLoader = (props) => {
     <div id={props.divId} className={`${props.className || ''} ${props.absolute ? "" : "for-floating-loader"}`.trim()}>    
       {!!props.loading && <FloatingLoader />}    
       <div className={props.loading ? "invisible" : null}>
+        {!!props.error && <div className="errorMsg">{props.error}</div>}
         {props.children}
       </div>
     </div>

@@ -334,7 +334,7 @@ DB.prototype = {
               .then(commentRes => {
                 comment._id = commentRes.insertedId;
                 
-                return Promsie.resolve(comment);
+                return Promise.resolve(comment);
               });
           } else {
             return Promise.reject('Malicious comment');
@@ -491,8 +491,8 @@ DB.prototype = {
               finishedTracking: sanitize(finishedTracking),
               lastUpdated: momentDateTime()
             }
-          }
-        ));
+          }, { returnOriginal: false }
+        )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
   },
 
   sendMessage(message) {

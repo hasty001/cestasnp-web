@@ -474,7 +474,7 @@ const ArticleForm = (props) => {
       title={props.edit ? (<>Upraviť článok - <A href={`/pred/articles/article/${article ? article.sql_article_id : ''}`}>{article ? article.title : ""}</A></>) 
         : "Pridať článok" }
       submitText={props.edit ? "Upraviť" : (warningMsg ? "Naozaj pridať" : "Pridať")}
-      onSubmit={addArticle} loading={loading} errorMsg={errorMsg} errorMsgFirst={errorMsgFirst} successMsg={successMsg}>
+      onSubmit={addArticle} loading={loading} error={errorMsg} errorFirst={errorMsgFirst} success={successMsg}>
 
       {!!warningMsgFirst && (
         <div className="warningMsg">

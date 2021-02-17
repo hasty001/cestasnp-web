@@ -35,6 +35,7 @@ const Active = (props) => {
 
   const fetchData = () => {
     setLoading(true);
+    setError('');
 
     fetchJson('/api/traveller/activeTravellers')
       .then(data => {
@@ -130,7 +131,6 @@ const Active = (props) => {
         onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/light'); }}><i className="fas fa-align-justify"></i></button>
       <DivWithLoader absolute className="active-travellers" 
         loading={loading} error={error} style={{ position: "absolute" }}>
-        {!!error && error}
         {!loading && !error && !!travellers && travellers.map((traveller, i) => {
           return (
             <A

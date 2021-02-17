@@ -595,7 +595,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /***     HOME       ***/
 
-#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -666,7 +666,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -678,7 +678,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media (min-width: 1600px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -773,13 +773,45 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 15px 0;
 }
 
-.traveller-item {
-  border-bottom: 1px solid red;
+.traveller-item, .traveller-message, .traveller-comment {
   margin: 15px 0 30px 0;
   padding-bottom: 15px;
+  overflow: auto;
+  border-bottom: 1px solid red;
 }
 
-.traveller-item-header {
+.traveller-comment {
+  margin-left: 30px;
+  border-color: #58595b;
+}
+
+#Traveller .traveller-item {
+  margin: 30px 0 15px 0;
+}
+
+.traveller-message.highlighted, .traveller-comment.highlighted {
+  padding-bottom: 14px;
+  border-bottom-width: 2px;
+}
+
+.traveller-message-image {
+  float: left;
+  max-width: 240px;
+  max-height: 240px;
+  border-radius: 8px;
+  margin-right: 30px;
+  margin-bottom: 10px;
+}
+
+@media(max-width: 670px) {
+  .traveller-message-image {
+    float: none;
+    display: block;
+    margin: 0px auto 15px;
+  }
+}
+
+.traveller-item-header, .traveller-message-header, .traveller-comment-header {
   overflow-y: hidden;
   margin-bottom: 15px;
 }
@@ -790,8 +822,21 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: red;
 }
 
-.traveller-name:hover {
+.traveller-message-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: red;
+}
+
+.traveller-name:hover,
+.traveller-message-name {
   text-decoration: underline !important;
+}
+
+.traveller-comment-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #58595b;
 }
 
 .traveller-date {
@@ -874,7 +919,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media(max-width: 670px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive,
+  .traveller {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -1296,10 +1342,6 @@ span.poi-text {
     margin: 0;
     padding: 15px;
   }
-}
-
-.poi-actions, .article-actions {
-  font-size: 16px;
 }
 
 .poi-icon, .article-icon {
@@ -1781,70 +1823,14 @@ img.row::before, .editor-image.row::before {
 
 #na-ceste-map-traveller {
   width: 100%;
-  height: 450px;
-}
-
-@media (max-width: 767px) and (max-height: 580px) {
-  #na-ceste-map-traveller {
-    height: 300px;
-  }
-}
-
-@media (max-width: 767px) and (min-height: 580px) {
-  #na-ceste-map-traveller {
-    height: 400px;
-  }
-}
-
-.na-ceste-traveller {
-  display: block;
-  width: 100%;
-  padding: 10px;
+  height: 40vw;
+  min-height: 240px;
+  max-height: 420px;
 }
 
 .na-ceste-traveller-sort {
   display: block;
   width: 100%;
-  padding: 0px 10px 5px 10px;
-}
-
-.na-ceste-traveller-msgs {
-  display: block;
-  padding: 0 10px;
-  overflow-y: hidden;
-}
-
-.traveller-message-deleted, 
-.traveller-comment-deleted {
-  display: block;
-  width: 90%;
-  padding: 15px;
-  margin: 4px 0;
-  float: left;
-  text-align: justify;
-}
-
-.traveller-comment-deleted {
-  float: right;
-}
-
-.traveller-message, 
-.traveller-comment {
-  display: block;
-  width: 90%;
-  padding: 15px;
-  margin: 4px 0;
-  float: left;
-  text-align: justify;
-  background-color: #ffdbdb;
-}
-
-.traveller-message.highlighted, 
-.traveller-comment.highlighted{
-  margin: 8px 4px;
-  -webkit-box-shadow: 0px 0px 50px 15px rgba(0,0,0,0.5);
-  -moz-box-shadow: 0px 0px 50px 15px rgba(0,0,0,0.5);
-  box-shadow: 0px 0px 50px 15px rgba(0,0,0,0.5);
 }
 
 .traveller-message-actions,
@@ -1852,6 +1838,9 @@ img.row::before, .editor-image.row::before {
 .poi-actions,
 .article-actions {
   float: right;
+  line-height: 25px;
+  margin-left: 5px;
+  font-size: 16px;
 }
 
 .poi-item,
@@ -1884,23 +1873,6 @@ img.row::before, .editor-image.row::before {
   position: relative;
   top: -120px;
   height: 0px;
-}
-
-.traveller-comment {
-  float: right;
-  text-align: justify;
-  background-color: white;
-  border: 1px solid #ccc2c2;
-}
-
-.red-stripe {
-  display: inline-block;
-  height: 12px;
-  background-color: red;
-  width: 14px;
-  border-bottom: solid 4px white;
-  border-top: solid 4px white;
-  margin-right: 5px;
 }
 
 .travellerPhotoModal {
@@ -2131,13 +2103,13 @@ img.row::before, .editor-image.row::before {
   background: transparent;
 }
 
-.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle {
+.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle, #SendMessage {
   width: 80%;
   margin: 20px auto;
   font-size: 16px;
 }
 
-.accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
+.accountWrap label, .fanAccountWrap label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
 .edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label, .link-box label {
   display: block;
   width: 100%;
@@ -2180,8 +2152,9 @@ img.row::before, .editor-image.row::before {
   margin-left: 200px;
 }
 
-.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2 {
+.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2, #SendMessage h2 {
   text-align: center;
+  padding-bottom: 15px;
 }
 
 .fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form, #AddArticle p.form {
@@ -2194,7 +2167,7 @@ img.row::before, .editor-image.row::before {
   margin-left: 200px;
 }
 
-.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button {
+.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button, #SendMessage button {
   display: block;
   margin: 15px auto;
 }
@@ -2241,7 +2214,8 @@ img.row::before, .editor-image.row::before {
   margin: 5px 0;
 }
 
-.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form {
+.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form,
+#MessageForm textarea {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -2266,7 +2240,9 @@ img.row::before, .editor-image.row::before {
   left: 50%;
   transform: translateX(-50%);
   margin: 10px 0;
-  max-height: 200px;
+  max-height: 240px;
+  max-width: 240px;
+  border-radius: 8px;
 }
 
 .errorMsg {
@@ -2405,7 +2381,7 @@ img.row::before, .editor-image.row::before {
   padding: 15px;
 }
 
-#SentMessages {
+#Messages {
   overflow: hidden;
   margin: 30px 0;
 }

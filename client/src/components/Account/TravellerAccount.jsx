@@ -1,352 +1,180 @@
-import React from 'react';
+import React, { useState } from 'react';
 import differenceInDays from 'date-fns/difference_in_days';
-import Loader from '../reusable/Loader';
-import Message from './Message';
-import SentMessages from './SentMessages';
-import AuthContext from '../AuthContext';
-import { dateToStr, htmlSimpleSanitize } from '../../helpers/helpers';
-import DocumentTitle from 'react-document-title';
+import { logDev } from '../../helpers/logDev';
+import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
+import * as Texts from '../Texts';
 import * as Constants from '../Constants';
+import FormWithLoader from '../reusable/FormWithLoader';
+import FormText from '../reusable/FormText';
+import FormTextArea from '../reusable/FormTextArea';
+import { useStateEx } from '../../helpers/reactUtils';
+import FormSelect from '../reusable/FormSelect';
+import PageWithLoader from '../reusable/PageWithLoader';
 
-class TravellerAccount extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meno: this.props.traveller.travellerDetails.meno,
-      popis: this.props.traveller.travellerDetails.text,
-      zaciatok: this.props.traveller.travellerDetails.start_miesto,
-      pocet: this.props.traveller.travellerDetails.number,
-      start_date: this.props.traveller.travellerDetails.start_date,
-      user_id: this.props.traveller.travellerDetails.user_id,
-      travellerId: this.props.traveller.travellerDetails._id,
-      travellerMsgs: this.props.traveller.travellerMessages || [],
-      loading: 0,
-      edit: {
-        meno: 0,
-        popis: 0,
-        zaciatok: 0,
-        pocet: 0,
-        start_date: 0
-      },
-      error: '',
-      successMsg: ''
+const TravellerAccount = (props) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const clearMsg = () => {
+    setError('');
+    setSuccess('');
+  }
+
+  const isDuklaDevin = props.userData.travellerDetails.start_miesto == 'Dukla' || 
+    props.userData.travellerDetails.start_miesto == 'Devín';
+
+  const [name, setName] = useStateEx(props.edit ? props.userData.travellerDetails.meno : '', clearMsg);
+  const [text, setText] = useStateEx(props.edit ? props.userData.travellerDetails.text : '', clearMsg);
+  const [start, setStart] = useStateEx(props.edit ?
+    (isDuklaDevin ? props.userData.travellerDetails.start_miesto : 'oth') : 'Dukla', clearMsg);
+  const [startOther, setStartOther] = useStateEx(props.edit && !isDuklaDevin ? props.userData.travellerDetails.start_miesto : '', clearMsg);
+  const [startDate, setStartDate] = useStateEx(props.edit ? props.userData.travellerDetails.start_date : '', clearMsg);
+  const [count, setCount] = useStateEx(props.edit ? props.userData.travellerDetails.number : '', clearMsg);
+
+  const createTraveller = () => {
+    if (props.edit) {
+      if (
+        name === props.userData.travellerDetails.meno &&
+        text === props.userData.travellerDetails.text &&
+        (start === props.userData.travellerDetails.start_miesto ||
+         startOther === props.userData.travellerDetails.start_miesto) &&
+        count == props.userData.travellerDetails.number &&
+        startDate === props.userData.travellerDetails.start_date
+      ) {
+        setError('Nič si nezmenil');
+        return;
+      }
+    }
+
+    if (!name || name.trim().length === 0) {
+      setError('Zabudol si na názov cesty!');
+      return;
+    }
+
+    if (!text || text.trim().length === 0) {
+      setError('Zabudol si na popis!');
+      return;
+    }
+
+    if (text.trim().length < 32) {
+      setError('Popis cesty je príliš krátky (min. 32 znakov)!');
+      return;
+    }
+
+    if (start === 'oth' &&
+      (!startOther || startOther.trim().length === 0)
+    ) {
+      setError('Zabudol si na alternatívny začiatok, kedže nevyrážaš ani z Dukly ani z Devína!');
+      return;
+    }
+
+    if (!startDate || startDate.trim().length === 0) {
+      setError('Zabudol si na dátum začiatku cesty!');
+      return;
+    }
+
+    if (count.trim().length === 0 || parseInt(count) < 0) {
+      setError('Počet účasníkov nesmie byť záporný!');
+      return;
+    }
+
+    if (differenceInDays(startDate, new Date()) < -5) {
+      logDev(differenceInDays(startDate, new Date()));
+      
+      setError('Začiatok cesty je viac než 5 dni v minulosti. Vyber iný dátum!');
+      return;
+    }
+
+    setLoading(true);
+    clearMsg();
+
+    const data = {
+      meno: name,
+      text: text,
+      start_date: startDate,
+      uid: props.userData.userDetails.uid,
+      start_miesto: start === 'oth' ? startOther : start,
+      number: parseInt(count),
+      end_date: '',
+      completed: '',
+      email: 0,
+      finishedTracking: false
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.updateTraveller = this.updateTraveller.bind(this);
-    this.updateTravellerMsgs = this.updateTravellerMsgs.bind(this);
-    this.triggerEdit = this.triggerEdit.bind(this);
+
+    fetchPostJsonWithToken(props.userData.user, 
+      props.edit ? '/api/traveller/updateTraveller' : '/api/traveller/setupTraveller', data)
+    .then(travellerDetails => {
+      if (travellerDetails.error) {
+        throw travellerDetails.error;
+      }
+      
+      props.userData.updateTravellerDetails(travellerDetails);
+      setSuccess('Detaily tvojej cesty sme úspešne zmenili');
+    })
+    .catch(e => {
+      console.error('TravellerAccount error', e);
+
+      setError(Texts.GenericError);
+    })
+    .finally(() => setLoading(false));
   }
 
-  handleChange(event) {
-    if (event.target.name === 'start_date') {
-      this.setState({
-        [event.target.name]: event.target.value.toString(),
-        error: '',
-        successMsg: ''
-      });
-    } else {
-      this.setState({
-        [event.target.name]: event.target.value,
-        error: '',
-        successMsg: ''
-      });
-    }
-  }
-
-  updateTravellerMsgs(msg) {
-    const updatedMsgs = this.state.travellerMsgs;
-    updatedMsgs.push(msg);
-    updatedMsgs.sort((a, b) => {
-      if (new Date(b.pub_date) < new Date(a.pub_date)) return -1;
-      if (new Date(b.pub_date) > new Date(a.pub_date)) return 1;
-
-      return 0;
-    });
-    this.setState({
-      // eslint-disable-next-line react/no-unused-state
-      travellerMessages: updatedMsgs
-    });
-  }
-
-  triggerEdit(target) {
-    const editUpdate = this.state.edit;
-    editUpdate[target] = this.state.edit[target] === 1 ? 0 : 1;
-    this.setState({
-      edit: editUpdate
-    });
-  }
-
-  updateTraveller() {
-    const { meno, popis, zaciatok, pocet, start_date, user_id } = this.state;
-
-    if (
-      meno === this.props.traveller.travellerDetails.meno &&
-      popis === this.props.traveller.travellerDetails.text &&
-      zaciatok === this.props.traveller.travellerDetails.start_miesto &&
-      pocet === this.props.traveller.travellerDetails.number &&
-      start_date === this.props.traveller.travellerDetails.start_date &&
-      user_id === this.props.traveller.travellerDetails.user_id
-    ) {
-      this.setState({
-        error: 'Nič si nezmenil'
-      });
-      return;
-    }
-
-    if (!meno || meno.trim().length === 0) {
-      this.setState({
-        error: 'Názov nesmie byť prázdny!'
-      });
-      return;
-    }
-
-    if (!popis || popis.trim().length === 0) {
-      this.setState({
-        error: 'Popis nesmie byť prázdny!'
-      });
-      return;
-    }
-
-    if (popis.trim().length < 32) {
-      this.setState({
-        error: 'Popis cesty je príliš krátky (min. 32 znakov)!'
-      });
-      return;
-    }
-
-    if (pocet.trim().length < 0 || pocet < 0) {
-      this.setState({
-        error: 'Počet účasníkov nesmie byť záporný!'
-      });
-      return;
-    }
-
-    if (
-      start_date !== this.props.traveller.travellerDetails.start_date &&
-      differenceInDays(start_date, new Date()) < 0
-    ) {
-      this.setState({
-        error: 'Začiatok cesty je v minulosti. Vyber iný dátum!'
-      });
-      return;
-    }
-
-    this.setState({
-      loading: 1
-    });
-
-    this.props.traveller.user.getIdToken()
-      .then(token => 
-        fetch('/api/traveller/updateTraveller', {
-          method: 'POST',
-          body: JSON.stringify({
-            meno,
-            text: popis,
-            start_date,
-            uid: user_id,
-            start_miesto: zaciatok,
-            number: pocet,
-            end_date: '',
-            completed: '',
-            email: 0,
-            finishedTracking: false
-          }),
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            'X-Auth-Token': token,
-          })
-        })
-          .then(resp => resp.json())
-          .then(msgRes => {
-            if (msgRes.error) {
-              console.error('send message err ', msgRes.error);
-
-              this.setState({
-                loading: 0,
-                error: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
-              });
-            } else {
-              this.setState({
-                loading: 0,
-                edit: {
-                  meno: 0,
-                  popis: 0,
-                  zaciatok: 0,
-                  pocet: 0,
-                  start_date: 0
-                },
-                successMsg: 'Detaily tvojej cesty sme úspešne zmenili',
-                error: ''
-              });
-
-              this.props.traveller.updateTravellerDetails({
-                meno,
-                text: popis,
-                start_date,
-                uid: user_id,
-                start_miesto: zaciatok,
-                number: pocet,
-                end_date: '',
-                completed: '',
-                email: 0,
-                finishedTracking: false
-              });
-            }
-          })
-        )
-      .catch(e => {
-        console.error('fanAccount err ', e);
-        this.setState({
-          loading: 0,
-          error: 'Ups, niekde sa stala chyba. Skús neskôr prosím'
-        });
-      });
-  }
-
-  render() {
-    return (
-      <form
+  return (
+    <PageWithLoader pageId="TravellerAccount" pageTitle={`Moja cesta${Constants.WebTitleSuffix}`}>
+      <FormWithLoader
         className="fanAccountWrap"
-        onSubmit={e => {
-          this.updateTraveller();
-          e.preventDefault();
-        }}
-      >
-        <DocumentTitle title={`Poslať správu${Constants.WebTitleSuffix}`} />
-        <Message
-          userId={this.state.user_id}
-          travellerId={this.state.travellerId}
-          traveller={this.props.traveller}
-          updateTravellerMsgs={this.updateTravellerMsgs}
-        />
-        {this.state.travellerMsgs.length > 0 && (
-          <SentMessages msgs={this.state.travellerMsgs} userId={this.state.user_id} />
-        )}
-        <div id="MyJourney">
-        <h2>Moja cesta</h2>
+        loading={loading} error={error} success={success}
+        submitText={props.edit ? "Uložiť zmeny" : "Vytvoriť cestu"} onSubmit={createTraveller}>
+
+        {props.edit ? (
+        <>
+          <h2>Moja cesta</h2>
+          <p>
+            Tu si môžeš upraviť detaily:
+          </p>
+        </>)
+        : (
+        <>
+          <h2>Chystáš sa na cestu?</h2>
+          <p>
+            Prečítaj si ako používať LIVE Sledovanie popísané v{' '}
+            <a href="/pred/articles/article/10004" target="_blank">
+              tomto návode
+            </a>{' '}
+            a vytvor si profil!{' '}
+          </p>
+          <p>Potom stačí už len vyraziť :).</p>
+        </>)}
+
+        <FormText valueName="name" valueLabel="Názov tvojej cesty" value={[name, setName]}
+          inputAttrs={{ maxLength: "30", placeholder: "(max. 30 znakov)" }} />
+
+        <FormTextArea valueName="text" valueLabel="O tvojej skupine alebo putovaní" value={[text, setText]}
+          inputAttrs={{ placeholder: "(min. 32 znakov)" }} />
+
+        <FormSelect valueName="start" valueLabel="Kde štartuješ/te?" value={[start, setStart]}
+          options={[{ value: "Dukla", label: "Dukla" }, { value: "Devín", label: "Devín" },
+            { value: "oth", label: "Inde" }]} 
+          labelChildren={start === 'oth' && <FormText valueName="startOther" valueLabel="" value={[startOther, setStartOther]} inputAttrs={{ placeholder: "Kde?" }} />}/>
+
+        <FormText valueName="count" valueLabel="Koľko vás ide? (0 ak nechceš uviesť)" value={[count, setCount]}
+          inputAttrs={{ type: "number" }} />
+
+        <FormText valueName="startDate" valueLabel="Kedy vyrážaš/te?" value={[startDate, setStartDate]}
+          inputAttrs={{ type: "date" }} />
+
+        {!props.edit && (
         <p>
-          Tu si môžeš upraviť detaily o svojej ceste a zároveň posielať správy.
-        </p>
-        <label htmlFor="meno">
-          <span onClick={() => this.triggerEdit('meno')}>
-            Moja cesta <i className="fas fa-edit" />
-          </span>
-          {this.state.edit.meno ? (
-            <input
-              id="meno"
-              name="meno"
-              value={this.state.meno}
-              type="text"
-              maxLength="30"
-              onBlur={e => {
-                this.handleChange(e);
-                e.preventDefault();
-              }}
-              onChange={this.handleChange}
-            />
-          ) : (
-            <p className="travellerP">{this.state.meno}</p>
-          )}
-        </label>
-        <label htmlFor="popis">
-          <span onClick={() => this.triggerEdit('popis')}>
-            Popis <i className="fas fa-edit" />
-          </span>
-          {this.state.edit.popis ? (
-            <textarea
-              id="popis"
-              name="popis"
-              value={this.state.popis}
-              onBlur={e => {
-                this.handleChange(e);
-                e.preventDefault();
-              }}
-              onChange={this.handleChange}
-            />
-          ) : (
-            <p className="travellerP" dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(this.state.popis) }}></p>
-          )}
-        </label>
-        <label htmlFor="zaciatok">
-          <span
-            onClick={() => {
-              this.triggerEdit('zaciatok');
-              this.triggerEdit('start_date');
-            }}
-          >
-            Začiatok <i className="fas fa-edit" />
-          </span>
-          {this.state.edit.zaciatok ? (
-            <input
-              id="zaciatok"
-              name="zaciatok"
-              value={this.state.zaciatok}
-              onBlur={e => {
-                this.handleChange(e);
-                e.preventDefault();
-              }}
-              onChange={this.handleChange}
-            />
-          ) : (
-            <p className="travellerP">{this.state.zaciatok}</p>
-          )}
-        </label>
-        <label htmlFor="start_date">
-          {this.state.edit.start_date ? (
-            <input
-              type="date"
-              id="start_date"
-              name="start_date"
-              value={this.state.start_date}
-              onBlur={e => {
-                this.handleChange(e);
-                e.preventDefault();
-              }}
-              onChange={this.handleChange}
-            />
-          ) : (
-            <p className="travellerP">{dateToStr(this.state.start_date)}</p>
-          )}
-        </label>
-        <label htmlFor="pocet">
-          <span onClick={() => this.triggerEdit('pocet')}>
-            Počet <i className="fas fa-edit" />
-          </span>
-          {this.state.edit.pocet ? (
-            <input
-              type="number"
-              id="pocet"
-              name="pocet"
-              value={this.state.pocet}
-              onBlur={e => {
-                this.handleChange(e);
-                e.preventDefault();
-              }}
-              onChange={this.handleChange}
-            />
-          ) : (
-            <p className="travellerP">{this.state.pocet}</p>
-          )}
-        </label>
-        {this.state.error && <p className="errorMsg">{this.state.error}</p>}
-        {this.state.successMsg && (
-          <p className="successMsg">{this.state.successMsg}</p>
-        )}
-        {this.state.loading ? (
-          <Loader />
-        ) : (
-          <button
-            className="snpBtn"
-            onClick={this.updateTraveller}
-            type="submit"
-          >
-            Uložiť zmeny
-          </button>
-        )}
-        </div>
-      </form>
-    );
-  }
+          Nezabudni si ale pozrieť{' '}
+          <a href="/pred/articles/article/10004" target="_blank">
+            návod
+          </a>
+          .
+        </p>)}
+      </FormWithLoader>
+    </PageWithLoader>
+  );
 }
 
 export default TravellerAccount;
