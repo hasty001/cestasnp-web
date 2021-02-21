@@ -1254,7 +1254,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   left: 50%;
   transform: translateX(-50%);
   bottom: 15px;
-  z-index: 9998;
+  z-index: 9997;
 }
 
 @media print {
@@ -1304,7 +1304,8 @@ span.poi-text {
   position: absolute;
   left: 10px;
   top: 10px;
-  z-index: 9998;
+  padding: 5px 15px !important;
+  z-index: 9997;
 }
 
 .pois-map-itinerary-link,
@@ -1316,7 +1317,8 @@ span.poi-text {
   position: absolute;
   left: 75px;
   top: 10px;
-  z-index: 9998;
+  padding: 5px 15px !important;
+  z-index: 9997;
 }
 
 #Pois .errorMsg {
@@ -1344,7 +1346,7 @@ span.poi-text {
   left: 50%;
   transform: translate(-50%, -32px);
   pointer-events: none;
-  z-index: 9998;
+  z-index: 9997;
   font-size: 32px;
 }
 
@@ -1799,7 +1801,7 @@ button#dropdown-basic-1 {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  z-index: 9998;
+  z-index: 9997;
   background: white;
   -ms-overflow-style: -ms-autohiding-scrollbar;
   text-align: center;
@@ -2590,3 +2592,17 @@ button#dropdown-basic-1 {
   visibility: visible;
 }
   
+.modal.map-popup-dialog {
+  z-index: 9998;
+}
+
+.map-popup-content {
+  overflow: auto;
+  max-height: calc(100vh - 144px);
+}
+
+@media (max-width: 600px) {
+  .leaflet-popup {
+    visibility: collapse;
+  }
+}
