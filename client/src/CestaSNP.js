@@ -59,7 +59,9 @@ class CestaSNP extends Component {
     }
     this.prevPath = path;
 
-    const newState = (path == "/na/ceste" || path == "/pred/pois" || path == "/na/ceste/fotky");
+    const newState = 
+      (path == "/na/ceste" || path == "/pred/pois" || path == "/na/ceste/fotky") ||
+      (path == "/na/ceste/" || path == "/pred/pois/" || path == "/na/ceste/fotky/");
       
     if (this.state.fillContent != newState)
       this.setState({

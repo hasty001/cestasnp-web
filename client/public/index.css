@@ -1678,10 +1678,42 @@ img.row::before, .editor-image.row::before {
   display: inline-block;
   vertical-align: middle;
   font-size: 16px;
-  min-width: 200px;
-  margin: 5px;
-  padding: 10px;
-  height: 80px;
+  font-weight: 500;
+  min-width: 120px;
+  margin: 8px;
+  padding: 5px 15px;
+  height: 70px;
+  color: white;
+  border-radius: 8px;
+}
+
+.active-traveller-name {
+  margin-top: 4px;
+}
+
+.active-traveller.started>.active-traveller-name {
+  margin-top: 8px;
+}
+
+.active-traveller-marker {
+  display: inline-block;
+  position: relative;
+  width: 38px;
+  height: 38px;
+  vertical-align: middle;
+  margin-bottom: 5px;
+}
+
+.active-traveller-marker .marker-border {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.active-traveller-marker .marker-image {
+  position: absolute;
+  left: 3px;
+  top: 3px;
 }
 
 #NaCesteActiveLight,
