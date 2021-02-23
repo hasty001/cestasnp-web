@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
 import Map from './Map';
 import CommentBox from './reusable/CommentBox';
 import * as Texts from './Texts';
@@ -204,12 +203,12 @@ const Traveller = (props) => {
               handleDeleteCommentClick : handleDeleteMessageClick}/>)}
 
           {props.scrollTop > Constants.ShowCommentBoxScrollOffset && (
-            <Button
-              className="comment-box-btn"
+            <button
+              className="comment-box-btn snpBtn"
               onClick={() => setShowCommentBox(true)}
             >
               Komentuj
-            </Button>
+            </button>
           )}
 
           <CommentBox

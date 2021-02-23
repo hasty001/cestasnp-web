@@ -1245,20 +1245,18 @@ span.poi-text {
   position: absolute;
   left: 10px;
   top: 10px;
-  padding: 5px 15px !important;
   z-index: 9998;
 }
 
 .pois-map-itinerary-link,
 .pois-map-link {
-  padding: 5px 15px !important;
+  margin: 5px 10px 5px 0 !important;
 }
 
 .pois-map-watch-gps {
   position: absolute;
-  left: 65px;
+  left: 75px;
   top: 10px;
-  padding: 5px 15px !important;
   z-index: 9998;
 }
 
@@ -1754,6 +1752,12 @@ img.row::before, .editor-image.row::before {
   min-height: 1200px;
 }
 
+#Traveller .traveller-item .traveller-name {
+  font-size: 25px;
+  font-weight: 500;
+  color: #58595b;
+}
+
 #na-ceste-map-traveller {
   width: 100%;
   height: 40vw;
@@ -1828,33 +1832,13 @@ img.row::before, .editor-image.row::before {
 /***   COMMENTBOX   ***/
 
 .comment-box-btn {
-  background: #f97474;
-  border: solid 0px;
-  border-radius: 20px;
-  bottom: 0px;
-  box-shadow: #867e7e 2px 2px 3px;
-  color: #f5f5f5;
-  font-size: 18px;
-  height: 40px;
-  margin: 5px;
-  min-width: 120px;
-  left: 45%;
   position: fixed;
-  text-align: center;
-  width: 10%;
+  bottom: 0;
   z-index: 999;
-  outline: none;
-} @media(max-width: 464px) {
-  .comment-box-btn {
-    left: 33%;
-    width: 33%;
-  }
-}
-
-.comment-box-btn:hover {
-    color: #f53838;
-    background-color: #fffdfd;
-    border-color: #fffefe;
+  display: block;
+  margin-bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .modal-content {
@@ -2279,30 +2263,38 @@ img.row::before, .editor-image.row::before {
 
 }
 
-.snpBtn {
-  background: #f97474;
-  border: solid 0px;
-  padding: 5px 30px;
-  font-size: 18px;
-  height: 40px;
+.snpBtn, .snpBtnWhite {
+  box-sizing: border-box;
+  border: 1px solid red;
   border-radius: 20px;
-  color: #f5f5f5;
-  box-shadow: #867e7e 2px 2px 3px;
-  margin: 10px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  transition: background-color 0.4s, color 0.4s;
+  font-size: 15px;
+  font-weight: 400;
   outline: none;
 }
 
+.snpBtn {
+  background-color: red;
+  color: white;
+}
+
+.snpBtn:hover,
+.snpBtn:focus,
+.snpBtn:active {
+  background-color: #E00000;
+}
+
 .snpBtnWhite {
-  background: white;
-  border: 1px solid #f97474;
-  color: #333333;
-  padding: 5px 30px;
-  font-size: 18px;
-  height: 40px;
-  border-radius: 20px;
-  box-shadow: #867e7e 2px 2px 3px;
-  margin: 10px;
-  outline: none;
+  background-color: white;
+  color: red;
+}
+
+.snpBtnWhite:hover,
+.snpBtnWhite:focus,
+.snpBtnWhite:active {
+  background-color: #FFE0E0;
 }
 
 .snpBtn.down {
@@ -2310,7 +2302,7 @@ img.row::before, .editor-image.row::before {
 }
 
 .thinRedWrap {
-  border: solid 1px #f97474;
+  border: solid 1px red;
   padding: 15px;
 }
 
