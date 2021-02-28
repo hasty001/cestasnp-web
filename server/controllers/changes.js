@@ -40,8 +40,8 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
         const userFilter = {};
         userFilter[userProp] = s_uid;
 
-        const inMyItems = myItems ? { _id: { $in: myItems } } : {};
-        const inMyItemsOld = myItems ? { sql_article_id: { $in: myItems } } : {};
+        const inMyItems = myItems ? { _id: { $in: myItems } } : { _id: null };
+        const inMyItemsOld = myItems ? { sql_article_id: { $in: myItems } } : { _id: null };
 
         myFilter["$or"] = [authorFilter, userFilter, inMyItems, inMyItemsOld];
       }
