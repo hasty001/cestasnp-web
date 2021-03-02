@@ -1,7 +1,9 @@
 const DB = require('./db/db');
 const sanitize = require('mongo-sanitize');
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const { escape, escapeImg, escapeDate } = require('./util/escapeUtils');
+const _const = require('../const');
+const { sanitizeUserId } = require('./util/checkUtils');
 
 const db = new DB();
 
@@ -29,7 +31,7 @@ const getPublisher = () =>
 
 const getArticleMeta = (dbRef, articleId) => 
   db
-    .findByWithDB(dbRef, 'articles', { sql_article_id: articleId })
+    .findBy(dbRef, _const.ArticlesTable, { sql_article_id: articleId })
     .then(results => {
       if (results && results.length > 0) {
         const getDesc = () => {
@@ -40,7 +42,7 @@ const getArticleMeta = (dbRef, articleId) =>
         const desc = escape(results[0].ogdesc || results[0].metadesc || getDesc());
         
         return db
-          .findByWithDB(dbRef, 'users', { sql_user_id: results[0].created_by_user_sql_id })
+          .findBy(dbRef, _const.UsersTable, { sql_user_id: results[0].created_by_user_sql_id })
           .then(user => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
             const title = escape((results[0].title || 'Článok') + WebSuffix);
@@ -73,11 +75,11 @@ const getArticleMeta = (dbRef, articleId) =>
               <meta property="og:type" content="article" />
               <meta property="og:description" content="${desc}"/>
               <meta property="og:image" content="${escapeImg(results[0].ogimg || imgRegEx())}" />
-              <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up)}" />
+              <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up || (results[0].state > 0 ? results[0].created : null))}" />
               <meta property="og:article:modified_time" content="${escapeDate(results[0].modified)}" />
-              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down)}" />
-              <meta property="place:location:latitude" content="${escape(lat())}">
-              <meta property="place:location:longitude" content="${escape(lon())}">`;
+              <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down || (results[0].state <= 0 ? results[0].modified : null))}" />
+              <meta property="place:location:latitude" content="${escape(results[0].lat || lat())}">
+              <meta property="place:location:longitude" content="${escape(results[0].lon || lon())}">`;
 
             if (results[0].metakey)
               meta += results[0].metakey.split(",").reduce((res, tag) => res + `
@@ -118,11 +120,11 @@ const getArticleMeta = (dbRef, articleId) =>
 
 const getPoiMeta = (dbRef, poiId) => 
   db
-    .findByWithDB(dbRef, 'pois', { _id: new ObjectID(poiId) })
+    .findBy(dbRef, _const.PoisTable, { _id: new ObjectId(poiId) })
     .then(results => {
       if (results && results.length > 0) {
         return db
-          .findByWithDB(dbRef, 'users', { uid: results[0].uid })
+          .findBy(dbRef, _const.UsersTable, { uid: results[0].uid })
           .then(user => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
             const title = escape((results[0].name || 'Dôležité miesto') + WebSuffix);
@@ -185,16 +187,16 @@ const getPoiMeta = (dbRef, poiId) =>
 
 const getTravelerMeta = (dbRef, userId) => 
   db
-    .findByWithDB(dbRef, 'traveler_details', { user_id: userId })
+    .findBy(dbRef, _const.DetailsTable, { user_id: userId })
     .then(results => {
       if (results && results.length > 0) {
         const desc = escape(results[0].text);
         
         return db
-          .findByWithDB(dbRef, 'users', { $or: [{ sql_user_id: userId }, { uid: userId }] })
+          .findBy(dbRef, _const.UsersTable, { $or: [{ sql_user_id: userId }, { uid: userId }] })
           .then(user =>   
           db
-          .latestWithDB(dbRef, 'traveler_messages', { $and: [{ user_id: userId }, { deleted: { $ne: true }}] }, { pub_date: -1 })
+          .newestSorted(dbRef, _const.MessagesTable, { pub_date: -1 }, { $and: [{ user_id: userId }, _const.FilterNotDeleted] })
           .then(msg => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
             const title = escape(results[0].meno + WebSuffix);
@@ -273,12 +275,7 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
   }
 
   if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
-    var userId = url.substr(4);
-
-    if (userId && userId.length <= 3) {
-      userId = sanitize(parseInt(userId));
-    }
-    userId = sanitize(userId);
+    const userId = sanitizeUserId(url.substr(4));
 
     if (userId) {
       return resolve(getTravelerMeta(db, userId));

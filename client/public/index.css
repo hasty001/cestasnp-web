@@ -52,6 +52,12 @@ a {
   opacity : 1;
 }
 
+br.clear-both {
+  clear: both;
+  max-height: 0;
+  margin: 0;
+}
+
 a.red-button {
   display: block;
   width: 120px; /*for IE*/
@@ -108,6 +114,62 @@ a.white-button:active {
   border-color: red;
 }
 
+.pagination {
+  width: 100%;
+  min-height: 34px;
+  margin: 15px 0;
+}
+
+@media (max-width: 700px) {
+  .pagination.top {
+    display: none;
+  }
+}
+
+textarea.html {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.can-maximize:not(.maximized) .maximized {
+  display: none;
+}
+
+.can-maximize.maximized .not-maximized {
+  display: none;
+}
+
+.can-maximize.maximized {
+  margin-top: 80px;
+  width: 100%;
+  height: calc(100vh - 80px);
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 100;
+  background-color: white;
+  padding-top: 5px;
+}
+
+.can-maximize.maximized .action:first-of-type {
+  margin-right: 5px;
+}
+
+.can-maximize.maximized label>span {
+  margin-left: 5px;
+}
+
+.can-maximize.maximized .DraftEditor-root {
+  resize: none !important;
+  height: calc(100vh - 151px) !important;
+}
+
+.can-maximize.maximized textarea.html {
+  resize: none !important;
+  height: calc(100vh - 113px) !important;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/
@@ -132,21 +194,44 @@ html, body, #root {
   border-bottom: 1px solid red;
 }
 
+.article-preview-box, .article-diff-box  {
+  width: 100%;
+}
+
+.article-diff-box pre {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+
 .modal {
-  margin-top: 80px;
-} @media (max-width: 1000px) {
+  margin: 80px 0 0;
+  padding: 0 !important;
+} 
+
+.modal-dialog {
+  margin: 0 auto;
+}
+
+@media (max-width: 1000px) {
   .app-header {
     max-height: 70px;
   }
   .modal {
     margin-top: 70px;
   }
-} @media print {
-  .app-header { 
-    display: none;
+  .can-maximize.maximized {
+    margin-top: 70px;
+    height: calc(100vh - 70px);
+  }
+  .can-maximize.maximized .DraftEditor-root {
+    height: calc(100vh - 141px) !important;
+  }
+  .can-maximize.maximized textarea.html {
+    height: calc(100vh - 103px) !important;
   }
 } @media print {
-  .app-header {
+  .app-header { 
     display: none;
   }
 }
@@ -207,6 +292,7 @@ body {
   padding: 0;
   font-family: 'Ubuntu', sans-serif;
   box-sizing: border-box; 
+  color: black;
 }
 
 .app-body {
@@ -491,7 +577,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /***     HOME       ***/
 
-#Home {
+#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -561,16 +647,19 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.home-articles-and-box {
+.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
   overflow: hidden;
+}
+
+.home-articles-and-box {
   min-height: 800px;
 }
 
 @media (min-width: 1600px) {
-  .home-articles-and-box {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -681,7 +770,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 15px 0;
 }
 
-.active-traveller-item {
+.traveller-item {
   border-bottom: 1px solid red;
   margin: 15px 0 30px 0;
   padding-bottom: 15px;
@@ -770,7 +859,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media(max-width: 670px) {
-  .home-articles-and-box {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -793,14 +882,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 0;
 }
 
-#Home .article-div {
+#Home .article-div, #Articles .article-div {
   margin-top: 50px;
   margin-bottom: 50px;
   min-height: 20px;
   overflow: hidden;
 }
 
-#Home .article-div h2 {
+#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2 {
   margin-top: 0px;
   margin-bottom: 30px;
   font-size: 25px;
@@ -808,7 +897,29 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
 }
 
-#Home .article-image {
+.public-DraftEditor-content h2 {
+  margin-top: 30px;
+}
+
+#Article h3, .public-DraftEditor-content h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #58595B;
+  clear: both;
+}
+
+#Article h4, .public-DraftEditor-content h4 {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #58595B;
+  clear: both;
+}
+
+#Home .article-image, #Articles .article-image {
   float: left;
   min-width: 240px;
   max-width: 240px;
@@ -821,15 +932,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin-right: 30px;
 }
 
-#Home .article-image.before {
+#Home .article-image.before, #Articles .article-image.before {
   display: none;
 }
 
-#Home .article-text-col {
-  display: table-cell;
-}
-
-#Home .article-text {
+#Home .article-text, #Articles .article-text {
   display: -webkit-box;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;  
@@ -837,7 +944,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   max-height: 132px;
 }
 
-#Home .article-text img {
+#Home .article-text img, #Articles .article-text img {
   display: none;
 }
 
@@ -846,11 +953,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     margin-top: 30px;
   }
 
-  #Home .article-image {
+  #Home .article-image, #Articles .article-image {
     display: none;
   }
 
-  #Home .article-image.before {
+  #Home .article-image.before, #Articles .article-image.before {
     float: none;
     display: block;
     min-width: 240px;
@@ -864,7 +971,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     display: none;
   }
 
-  #Home .article-text-col {
+  #Home .article-text-col, #Articles .article-text-col {
     display: block;
     width: 100%;
     margin: 30px 0 0 0;
@@ -1017,25 +1124,17 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 /***     HOME       ***/
 /**********************/
-/***    KONTAKT     ***/
+/**KONTAKT + Cookies **/
 
-#Kontakt {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-} @media (max-width: 767px) {
-  #Kontakt {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
+#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive {
+  margin-top: 40px;
 }
 
-#Kontakt p {
+#Kontakt p, #Cookies p {
   margin: 0;
 }
 
-/***    KONTAKT     ***/
+/**KONTAKT + Cookies **/
 /**********************/
 /***     POIS       ***/
 
@@ -1174,19 +1273,20 @@ span.poi-text {
   }
 }
 
-.poi-actions {
+.poi-actions, .article-actions {
   font-size: 16px;
 }
 
-.poi-icon {
+.poi-icon, .article-icon {
   margin: 0 2px;
 }
 
-.poi-history-link {
+.action, .poi-history-link, .article-history-link, .article-diff-link, .article-edit-link {
   float: right;
+  padding-left: 8px;
 }
 
-#poi-map {
+#map, #poi-map {
   width: 100%;
   height: 30vh;
   margin-bottom: 10px;
@@ -1204,10 +1304,6 @@ span.poi-text {
     margin-bottom: 10px;
     width: 100%;
   }
-}
-
-.poi-item {
-  margin: 5px 0;
 }
 
 /***      POI       ***/
@@ -1231,14 +1327,16 @@ span.poi-text {
   }
 }
 
-.itinerary-table, .pois-table {
+.itinerary-table, .pois-table, .changes-table {
   width: 100%;
 }
 
 .itinerary-table td, 
 .itinerary-table th,
 .pois-table td,
-.pois-table th {
+.pois-table th,
+.changes-table td,
+.changes-table th {
   vertical-align: baseline;
   padding: 2px 4px;
 }
@@ -1261,21 +1359,6 @@ span.poi-text {
 /**********************/
 /***    ARTICLES    ***/
 
-#Articles,
-#Article {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-  min-height: 400px;
-} @media (max-width: 767px) {
-  #Articles, 
-  #Article {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
 .article-div {
   display: block;
   min-height: 250px;
@@ -1284,6 +1367,171 @@ span.poi-text {
 .no-article-div {
   display: block;
   margin-top: 15px;
+  min-height: 200px;
+}
+
+#Article {
+  margin-top: 10px;
+}
+
+#Article h2 {
+  margin-top: 30px;
+}
+
+img.preview {
+  cursor: pointer;
+}
+
+#AddArticle .DraftEditor-root {
+  display: block;
+  width: 100%;
+  border: 1px solid lightgray;
+  margin: 5px 0;
+  padding: 5px;
+  min-height: 100px;
+  height: 200px;
+  overflow: auto;
+  font-size: 15px;
+  font-weight: normal;
+  font-family: 'Ubuntu', sans-serif;
+  cursor: text;
+  resize: vertical;
+}
+
+.DraftEditor-editorContainer {
+  border: none !important;
+}
+
+.editor-image {
+  position: relative;
+  z-index: 10;
+}
+
+.editor-image-buttons {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.editor-image-buttons button, .editor-toolbar button {
+  display: inline-block!important;
+  margin: 0!important;
+  min-width: 26px;
+}
+
+.editor-image-buttons {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.editor-toolbar {
+  padding: 5px;
+}
+
+#Article img.row, .public-DraftEditor-content .editor-image.row>img,
+#Article img.left, .public-DraftEditor-content .editor-image.left>img,
+#Article img.right, .public-DraftEditor-content .editor-image.right>img,
+#Article img.center, .public-DraftEditor-content .editor-image.center>img {
+  border-radius: 8px;
+}
+
+#Article img.row, .public-DraftEditor-content .editor-image.row {
+  float: left;
+  margin: 10px;
+  max-width: 85vw !important;
+  max-height: 27vw !important; 
+}
+
+.public-DraftEditor-content .editor-image.row>img {
+  max-width: 85vw !important;
+  max-height: 27vw !important; 
+}
+
+#Article img.left, .public-DraftEditor-content .editor-image.left {
+  float: left;
+  margin-top: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  max-width: 27vw !important;
+  clear: left;
+}
+
+#Article img.right, .public-DraftEditor-content .editor-image.right {
+  float: right;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  max-width: 27vw !important;
+  clear: right;
+}
+
+#Article img.center, .public-DraftEditor-content .editor-image.center {
+  display: block;
+  margin: 10px auto;
+  max-width: 85vw !important;
+  clear: both;
+}
+
+.public-DraftEditor-content .editor-image.center {
+  width: fit-content;
+}
+
+img.row::after, .editor-image.row::after {
+  content: none;
+}
+
+img.row::before, .editor-image.row::before {
+  content: none;
+}
+
+@media (max-width: 750px) {
+  #Article img.row,
+  #Article img.right,
+  #Article img.left, 
+  .public-DraftEditor-content .editor-image.row,
+  .public-DraftEditor-content .editor-image.right,
+  .public-DraftEditor-content .editor-image.left {
+    float: none;
+    display: block;
+    margin: 10px auto;
+    max-width: 240px !important;
+    max-height: none !important;
+  }
+
+  .public-DraftEditor-content .editor-image.row>img {
+    max-width: 240px !important;
+    max-height: none !important;
+  }  
+}
+
+.article-img-item,
+.article-link-item {
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.image-list {
+  overflow: hidden;
+}
+
+.article-img-item .buttons {
+  float: left;
+  padding-right: 5px;
+}
+
+.article-img-item button {
+  display: inline-block !important;
+  margin: 0 !important;
+}
+
+.article-img-item img,
+.image-list img {
+  float: left;
+  max-width: 80px !important;
+  max-height: 80px !important;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 /***    ARTICLES    ***/
@@ -1503,8 +1751,17 @@ span.poi-text {
 
 .traveller-message-actions,
 .traveller-comment-actions,
-.poi-actions {
+.poi-actions,
+.article-actions {
   float: right;
+}
+
+.poi-item,
+.poi-history-item,
+.article-item,
+.article-history-item {
+  overflow: hidden;
+  margin-bottom: 8px;
 }
 
 .traveller-message-link, 
@@ -1513,7 +1770,11 @@ span.poi-text {
 .traveller-comment-delete,
 .poi-edit,
 .poi-delete,
-.poi-my {
+.poi-my,
+.article-edit,
+.article-history,
+.article-my,
+.article-state-icon {
   color: black;
   font-size: 16px;
   margin: 0 4px;
@@ -1660,64 +1921,45 @@ span.poi-text {
 
 /***   COMMENTBOX   ***/
 /**********************/
+/***    CHANGES     ***/
+
+#Changes label>input,
+#Changes label>select {
+  margin: 0 5px;
+}
+/***    CHANGE S    ***/
+/**********************/
 /***    ARCHIVE     ***/
 
-#NaCesteArchive {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-} @media (max-width: 767px) {
-  #NaCesteArchive {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
-#NaCesteArchive h2 {
-  margin-top: 0px;
-  text-align: left;
-}
-
-.archived-travellers {
+#NaCesteArchive .travellers {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.archived-traveller {
+#NaCesteArchive .traveller-item {
   display: flex;
   flex-flow: column;
   position: relative;
-  background-color: #ececec70;
-  width: 30%;
-  height: 360px;
-  padding: 10px;
-  margin: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-} @media (max-width: 767px) {
-  .archived-traveller {
-    width: 100%;
-    height: 260px;
+  min-width: calc(50% - 40px);
+  max-width: calc(50% - 40px);
+} @media (max-width: 670px) {
+  #NaCesteArchive .traveller-item {
+    min-width: 100%;
+    max-width: 100%;
   }
 }
 
-.archived-traveller-field {
-  flex: 0 1 auto
+#NaCesteArchive .traveller-item:nth-child(odd) {
+  margin-right: 80px;
 }
 
-.archived-traveller-field.name {
-  font-weight: 800
-}
-
-.archived-traveller-text {
-  overflow: auto;
-  flex: 1 1 auto;
-  margin: 10px 0px;
-}
-
-.archived-traveller-text p {
-  margin: 0px 5px 0px 0px;
+#NaCesteArchive .traveller-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  max-height: 88px;
 }
 
 /***    ARCHIVE     ***/
@@ -1766,26 +2008,6 @@ span.poi-text {
 
 /***    FOOTER      ***/
 /**********************/
-/***    COOKIES     ***/
-
-#Cookies {
-  width: 80%;
-  margin: 15px auto;
-  text-align: justify;
-} @media (max-width: 767px) {
-  #Cookies {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
-#Cookies p {
-  margin: 0;
-}
-
-/***    COOKIES     ***/
-/**********************/
 /***    ACCOUNT     ***/
 
 .resetPasswordModal {
@@ -1811,14 +2033,14 @@ span.poi-text {
   background: transparent;
 }
 
-.accountWrap, .fanAccountWrap, #AddPoi {
+.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle {
   width: 80%;
   margin: 20px auto;
   font-size: 16px;
 }
 
-.accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, 
-.edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label {
+.accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
+.edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label, .link-box label {
   display: block;
   width: 100%;
 }
@@ -1860,11 +2082,11 @@ span.poi-text {
   margin-left: 200px;
 }
 
-.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2 {
+.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2 {
   text-align: center;
 }
 
-.fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form {
+.fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form, #AddArticle p.form {
   text-align: justify;
   font-weight: 800;
 }
@@ -1874,9 +2096,25 @@ span.poi-text {
   margin-left: 200px;
 }
 
-.fanAccountWrap button, #AddPoi button, .edit-poi-box button {
+.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button {
   display: block;
   margin: 15px auto;
+}
+
+#AddArticle button.multiselect-option {
+  display: inline-block;
+  margin: 5px;
+  background: white;
+  border-radius: 8px;
+  max-width: 38vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#AddArticle button.multiselect-option.checked {
+  background: red;
+  color: white;
 }
 
 .accountWrap input {
@@ -1886,7 +2124,7 @@ span.poi-text {
   padding-left: 10px;
 }
 
-.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form {
+.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form, #AddArticle input.form, .link-box input {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1897,7 +2135,7 @@ span.poi-text {
 }
 
 .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form,
-.itinerary-dialog select.form {
+.itinerary-dialog select.form, #AddArticle select.form {
   height: 36px;
   border: solid 1px lightgray;
   width: 20%;
@@ -1905,7 +2143,7 @@ span.poi-text {
   margin: 5px 0;
 }
 
-.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form {
+.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -1980,16 +2218,16 @@ span.poi-text {
     font-size: 18px;
   }
 
-  .fanAccountWrap, #AddPoi {
+  .fanAccountWrap, #AddPoi, #AddArticle {
     width: 95%;
   }
 
-  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form {
+  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form, #AddArticle select.form {
     display: block;
     min-width: 200px;
   }
 
-  .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2 {
+  .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2 {
     text-align: left;
   }
 

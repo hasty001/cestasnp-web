@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
+import { fixImageUrl } from '../../helpers/helpers';
 
 const ImageBox = ({ url, show, onHide }) => (
   <Modal
@@ -9,7 +10,7 @@ const ImageBox = ({ url, show, onHide }) => (
     dialogClassName="travellerPhotoModal"
   >
     <Modal.Body>
-      <img src={url} width="100%" />
+      <img src={fixImageUrl(url)} width="100%" />
     </Modal.Body>
   </Modal>
 );

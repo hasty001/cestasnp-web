@@ -5,14 +5,13 @@ import Loader from './reusable/Loader';
 import NotFound from './reusable/NotFound';
 import CommentBox from './reusable/CommentBox';
 import ImageBox from './reusable/ImageBox';
-import { dateToStr, dateTimeToStr } from '../helpers/helpers';
+import { dateToStr, dateTimeToStr, htmlSimpleSanitize } from '../helpers/helpers';
 import * as Constants from './Constants';
 import { AuthContext } from './AuthContext';
 import ConfirmBox from './reusable/ConfirmBox';
 import UserLabel from './reusable/UserLabel';
 import DocumentTitle from 'react-document-title';
 import history from '../helpers/history';
-import DOMPurify from 'dompurify';
 
 const Traveller = (props) => {
   const authData = useContext(AuthContext);
@@ -414,7 +413,7 @@ class TravellerWithAuth extends Component {
 
             <div className="na-ceste-traveller" style={{ textAlign: 'center' }}>
               <p>{this.state.travellerData.meno}</p>
-              <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.state.travellerData.text) }}></p>
+              <p dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(this.state.travellerData.text) }}></p>
               <p>
                 Začiatok: {this.state.travellerData.start_miesto}{' '}
                 {dateToStr(this.state.travellerData.start_date)}
@@ -485,7 +484,7 @@ class TravellerWithAuth extends Component {
                           }}
                         />
                         )}                 
-                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }} />
+                      <p dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(message.text) }} />
                     </div>
                   );
                 }
@@ -523,7 +522,7 @@ class TravellerWithAuth extends Component {
                         <a href={`#${message.id}`} className="traveller-comment-link" title="odkaz na komentár"><i className="fas fa-link"/></a>
                       </span>
                     </p>
-                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }} />
+                    <p dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(message.text) }} />
                   </div>
                 );
               })}

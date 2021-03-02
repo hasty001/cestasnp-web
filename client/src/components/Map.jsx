@@ -3,12 +3,12 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
-import { dateTimeToStr, escapeHtml } from '../helpers/helpers';
+import { dateTimeToStr, escapeHtml, htmlSimpleSanitize } from '../helpers/helpers';
 import { findPoiCategory, PoiCategories } from './PoiCategories';
 import { useStateProp, useStateWithLocalStorage } from '../helpers/reactUtils';
 import * as Constants from './Constants';
 import { generateAnchor } from './reusable/Navigate';
-import DOMPurify from 'dompurify';
+import LonLayers from './reusable/LonLayers';
 
 const config = {
   params: {
@@ -69,7 +69,7 @@ const Map = (props) => {
     if (view && view.lat && view.lat) { params.center = [parse(view.lat, params.center[0]), parse(view.lon, params.center[1])] }
     if (view && view.zoom) { 
       params.zoom = parse(view.zoom, params.zoom); 
-    } else if (props.marker || (view && view.poi)) {
+    } else if ((props.markers && props.markers.filter(m => m).length > 0) || (view && view.poi)) {
       params.zoom = 13;
     }
 
@@ -107,9 +107,13 @@ const Map = (props) => {
 
     map.on('baselayerchange', e => setMapTilesLayer(e.name == "turistika + cyklo + běžky" ? "new" : null));
 
+    const guidepostZoomedLayers = new LonLayers(12, 1000);
+    
     const posChanged = () => { 
       const c = map.getCenter(); 
       setView(prev => { return {...prev, lat: c.lat, lon: c.lng, zoom: map.getZoom() }; }); 
+
+      guidepostZoomedLayers.refresh(map);
     };
 
     map.on("zoomend", posChanged);
@@ -121,8 +125,7 @@ const Map = (props) => {
     map.on("movestart", () => setZooming(true));
     map.on("moveend", () => setZooming(false));
 
-    const markerLayer = L.layerGroup();
-    const guidepostZoomedLayer = L.layerGroup();
+    const markerLayer = L.layerGroup();    
 
     const markerLayers = {};
     const legendLayers = {};
@@ -134,25 +137,15 @@ const Map = (props) => {
 
     markerLayers["marker"] = L.layerGroup();
 
-    const zoomChanged = () => {
-      if (map.getZoom() >= 12) {
-        markerLayers[Constants.PoiCategoryGuidepost].addLayer(guidepostZoomedLayer);
-      } else {
-        markerLayers[Constants.PoiCategoryGuidepost].removeLayer(guidepostZoomedLayer);
-      }
-    };
-    map.on("zoomend", zoomChanged);
-
     L.control.layers({"turistická": mapTiles, "turistika + cyklo + běžky": mapTilesNew}, 
       props.showLayers? legendLayers : {}).addTo(map);
 
     posChanged();
-    zoomChanged();
 
-    setMapObj({ map, markerLayer, markerLayers, guidepostZoomedLayer });
+    setMapObj({ map, markerLayer, markerLayers, guidepostZoomedLayers });
   }
 
-  const updateLayers = ({ map, markerLayer, markerLayers, guidepostZoomedLayer }) => {
+  const updateLayers = ({ map, markerLayer, markerLayers, guidepostZoomedLayers }) => {
     const poiPopupClose = (e) => {
       const poi = e.popup._source.options.poi;
       if (poi) {
@@ -169,10 +162,13 @@ const Map = (props) => {
     map.off("popupclose", poiPopupClose);
     map.off("popupopen", poiPopupOpen);
 
+    map.removeLayer(markerLayer);
+
     markerLayer.clearLayers();
-    guidepostZoomedLayer.clearLayers();
+    guidepostZoomedLayers.clear();
     const newMarkers = [];
 
+    markerLayer.addLayer(markerLayers["marker"]);
     markerLayer.addLayer(markerLayers["marker"]);
     Object.values(markerLayers).filter(l => l != markerLayers["marker"])
       .forEach(l => { l.clearLayers(); markerLayer.addLayer(l); });
@@ -206,40 +202,27 @@ const Map = (props) => {
     map.off("popupopen", popupOpen);
     map.on("popupopen", popupOpen);
 
-    const guideposts = (props.guideposts || []).concat((props.pois || []).filter(p => p.category == "razcestnik"));
-    // GUIDEPOSTS 
-    if (guideposts) {
-      const guidepostIcon = findPoiCategory(Constants.PoiCategoryGuidepost).icon;
-
-      guideposts.forEach(g => {
-        const icon = L.icon({
-          iconUrl: razcestnik,
-          iconSize: [16, 16],
-          iconAnchor: [8, 8],
-        });
-        
-        const marker = new MapMarker([g.lat, g.lon], {
-          icon, poi: g.id, zIndexOffset: -4000,
-          popupContent: `<h4>${generateAnchor(`/pred/itinerar#g${g.id}`, '', `<i class="${guidepostIcon}"></i> ${escapeHtml(g.name)} ${g.ele ? ` ${g.ele}\u00A0m`: ""}`)}</h4>`
-        }).addTo(g.main ? markerLayers[Constants.PoiCategoryGuidepost] : guidepostZoomedLayer);
-        newMarkers.push(marker);
-  
-        marker.bindPopup("");
-      });
-
-      if (map.getZoom() >= 12) {
-        markerLayers[Constants.PoiCategoryGuidepost].addLayer(guidepostZoomedLayer);
-      } else {
-        markerLayers[Constants.PoiCategoryGuidepost].removeLayer(guidepostZoomedLayer);
-      }
-    }
-
     // DOLEZITE MIESTA
     if (props.pois && props.pois.length > 0) {
       const food = findPoiCategory(Constants.PoiCategoryFood);
       const water = findPoiCategory(Constants.PoiCategoryWater);
 
-      props.pois.filter(p => (!p.deleted || props.showDeleted) && p.category != "razcestnik").forEach(p => {
+      const categoryIcons = {};
+      PoiCategories.filter(c => c.value != Constants.PoiCategoryGuidepost).forEach(category => { 
+        categoryIcons[category.value] = L.divIcon({
+          html: 
+            `<i class="fas fa-map-marker icon-stack" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px" ></i>
+            <i class="fas ${category.icon} fa-inverse icon-stack" style="width: ${Constants.PoiMarkerSize/2}px; height: ${Constants.PoiMarkerSize/2}px" data-fa-transform="up-3" ></i>`,
+            ...Constants.PoiMarkerIconProps,
+        })});
+
+      categoryIcons[Constants.PoiCategoryGuidepost] = L.icon({
+        iconUrl: razcestnik,
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+      });
+
+      props.pois.filter(p => (!p.deleted || props.showDeleted)).forEach(p => {
         
         const poiCategory = findPoiCategory(p.category);
 
@@ -254,20 +237,16 @@ const Map = (props) => {
         }
 
         categories.forEach((category, i) => {
-          const icon = L.divIcon({
-            html: 
-              `<i class="fas fa-map-marker icon-stack" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px" ></i>
-              <i class="fas ${category.icon} fa-inverse icon-stack" style="width: ${Constants.PoiMarkerSize/2}px; height: ${Constants.PoiMarkerSize/2}px" data-fa-transform="up-3" ></i>`,
-              ...Constants.PoiMarkerIconProps,
-          });
-
           const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
-            icon, poi: p._id, zIndexOffset: -i,
-            popupContent: `<h4>${generateAnchor(`/pred/pois/${p._id}`, '',
+            icon: categoryIcons[category.value], poi: p._id || p.id, zIndexOffset: -i,
+            popupContent: `<h4>${generateAnchor(p.url || `/pred/pois/${p._id}`, '',
               `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
             <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
-            <p>${DOMPurify.sanitize(p.text)}</p>`
-          }).addTo(markerLayers[category.value]);
+            <p>${htmlSimpleSanitize(p.text)}</p>`
+          }).addTo(
+            category.value == Constants.PoiCategoryGuidepost && !p.main ? 
+              guidepostZoomedLayers.match(p.coordinates[0])
+              : markerLayers[category.value]);
 
           newMarkers.push(marker);
 
@@ -286,7 +265,7 @@ const Map = (props) => {
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
             popupContent: `<p>${dateTimeToStr(stop.date)}</p>
-          <p>${DOMPurify.sanitize(stop.text)}</p>` }).addTo(markerLayer);
+          <p>${htmlSimpleSanitize(stop.text)}</p>` }).addTo(markerLayer);
           newMarkers.push(marker);
           marker.bindPopup("");
         }
@@ -310,7 +289,7 @@ const Map = (props) => {
               icon,
               popupContent: `<p><b>${generateAnchor(`/na/${trvlr.userId}`, 'style="{text-decoration: none;}"', escapeHtml(trvlr.meno))}</b></p>
           <p>${dateTimeToStr(trvlr.lastMessage.pub_date)}</p>
-          <p>${DOMPurify.sanitize(trvlr.lastMessage.text)}</p>`
+          <p>${htmlSimpleSanitize(trvlr.lastMessage.text)}</p>`
             }
           ).addTo(markerLayer);
           newMarkers.push(marker);
@@ -325,10 +304,15 @@ const Map = (props) => {
     map.on("popupopen", poiPopupOpen);
 
     setMarkers(newMarkers);
+
+    return () => {
+      map.off();
+      map.remove();
+    };
   }
 
   useEffect(() => {
-    init(props.use);
+    return init(props.use);
   }, []);
 
   useEffect(() => {   
@@ -385,29 +369,32 @@ const Map = (props) => {
     layer.clearLayers();
 
     // MARKER 
-    if (props.marker ) {
-      const icon = L.divIcon({
-        html: `<i class="fas fa-map-marker-alt" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px; color: ${props.marker.color || "blue"}" ></i>`,
-        ...Constants.PoiMarkerIconProps,
-      });
-      const marker = L.marker([props.marker.lat, props.marker.lon], {
-        icon, zIndexOffset: 2
-      }).addTo(layer);
-      if (props.marker.name) { 
-        marker.bindPopup(props.marker.name);
-      }
+    if (props.markers) {
+      props.markers.filter(m => m).forEach(m => {
+        const icon = L.divIcon({
+          html: `<i class="fas fa-map-marker-alt" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px; color: ${m.color || "blue"}" ></i>`,
+          ...Constants.PoiMarkerIconProps,
+        });
+        const marker = L.marker([m.lat, m.lon], {
+          icon, zIndexOffset: 2
+        }).addTo(layer);
 
-      if (props.marker.accuracy) {
-        const circle = L.circle([props.marker.lat, props.marker.lon], { 
-          zIndexOffset: -3999,
-          color: props.marker.color || "blue",
-          opacity: 0.5,
-          fillColor: props.marker.color || "blue",
-          fillOpacity: 0.2,
-          radius: props.marker.accuracy }).addTo(layer);
-      }
+        if (m.name) { 
+          marker.bindPopup(m.name);
+        }
+
+        if (m.accuracy) {
+          const circle = L.circle([m.lat, m.lon], { 
+            zIndexOffset: -3999,
+            color: m.color || "blue",
+            opacity: 0.5,
+            fillColor: m.color || "blue",
+            fillOpacity: 0.2,
+            radius: m.accuracy }).addTo(layer);
+        }
+      });
     }
-  }, [mapObj, props.marker]);
+  }, [mapObj, props.markers]);
 
   return <div id={props.use} data-nosnippet>{props.children}</div>;
 }

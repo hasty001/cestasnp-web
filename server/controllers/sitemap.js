@@ -1,17 +1,18 @@
 const express = require('express');
 const DB = require('../db/db');
 const { escape, escapeImg, escapeDate } = require('../util/escapeUtils');
+const _const = require('../../const');
 
 const db = new DB();
 
 const router = express.Router();
 
-const getJourneys = () =>
-  db.findBy('traveler_details')
+const getJourneys = (dbRef) =>
+  db.findBy(_const.DetailsTable, {}, { start_date: -1 })
     .then(travellers => {
       var travellersIds = travellers.map(({user_id}) => user_id);
 
-      return db.findBy('traveler_messages').then(messages => {
+      return db.findBy(dbRef, _const.MessagesTable).then(messages => {
         messages.map(msg => {
           const i = travellersIds.indexOf(msg.user_id);
           if (i >= 0 && (!travellers[i].modified || new Date(msg.pub_date) > travellers[i].modified))
@@ -35,9 +36,9 @@ const getJourneys = () =>
     });
 
 router.get('*', (req, res) => {
-  Promise.all([db.findBy('pois', { deleted: null }), db.findBy('articles'), getJourneys()])
+  Promise.all([db.findBy(req.app.locals.db, _const.PoisTable, _const.FilterPoiNotDeleted, { created: -1 }), 
+    db.findBy(req.app.locals.db, _const.ArticlesTable, _const.ArticlesFilterBy, { created: -1 }), getJourneys(req.app.locals.db)])
   .then(([pois, articles, journeys]) => {
-
       const urls = 
         [pois.map(p => {
         const image = escapeImg(p.img_url);
@@ -76,7 +77,7 @@ ${urls}
 </urlset>`);
     }).catch(error => {
       console.error(error);
-      res.sendStatus(500);
+      res.status(500).send(error.toString());
     });
 });
 

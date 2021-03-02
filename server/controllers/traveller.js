@@ -2,80 +2,51 @@
 /* eslint-disable array-callback-return */
 const express = require('express');
 const sanitize = require('mongo-sanitize');
-const moment = require('moment');
-
 const request = require('request');
 const DB = require('../db/db');
-const checkToken = require('../util/checkToken');
+const { checkToken, sanitizeUserId } = require('../util/checkUtils');
+const { promiseAsJson } = require('../util/promiseUtils');
+const _const = require('../../const');
+const { momentDate, momentDateTime } = require('../util/momentUtils');
 
 const db = new DB();
 const router = express.Router();
 
 // retrieve travellers details
 router.get('/details/:travellerId', (req, res) => {
-  const travellerId = sanitize(req.params.travellerId);
-  db.getTravellerDetails(travellerId)
-    .then(results => {
-      res.json(results);
-    })
-    .catch(e => {
-      console.error('err ', e);
-    });
+  promiseAsJson(() => db.getTravellerDetails(req.app.locals.db, req.params.travellerId), res);
 });
 
 router.get('/article/:travellerId', (req, res) => {
-  const travellerId = sanitize(req.params.travellerId);
-  db.getTravellerArticle(travellerId, results => {
-    res.json(results);
-  });
+  promiseAsJson(() => db.getTravellerArticle(req.app.locals.db, req.params.travellerId), res);
 });
 
 router.get('/messages/:travellerId', (req, res) => {
-  const travellerId = sanitize(req.params.travellerId);
-  db.getTravellerMessages(travellerId)
-    .then(results => {
-      res.json(results);
-    })
-    .catch(e => {
-      console.error('err ', e);
-    });
+  promiseAsJson(() => db.getTravellerMessages(req.app.locals.db, req.params.travellerId), res);
 });
 
 router.post('/lastMessages', (req, res) => {
-  db.getTravellersMessages(req.body.travellerIds, results => {
-    res.json(results);
-  });
+  promiseAsJson(() => db.getTravellersMessages(req.app.locals.db, req.body.travellerIds), res);
 });
 
 router.post('/comments', (req, res) => {
-  db.getTravellerComments(req.body.articleId, req.body.travellerId, results => {
-    res.json(results);
-  });
+  promiseAsJson(() => db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId), res);
 });
 
 router.get('/finishedTravellers', (req, res) => {
-  db.findBy('traveler_details', {
+  promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, {
     finishedTracking: true,
     end_date: { $ne: '' }
-  })
-    .then(results => {
-      res.json(results);
-    })
-    .catch(e => {
-      console.error('error ', e);
-    });
+  }, {}, { end_date: -1 }), res);
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {
-  db.getActiveTravellersWithLastMessage(req.query.date, req.query.maxCount)
-    .then(data => res.json(data))
-    .catch(e => { 
-      console.error(e);
-      res.status(500).json({ error: e.message })});
-  });
+  promiseAsJson(() => 
+    db.getActiveTravellersWithLastMessage(req.app.locals.db, req.query.date, req.query.maxCount), res);
+});
 
 router.get('/activeTravellers', (req, res) => {
-  db.findBy('traveler_details', { finishedTracking: false })
+  promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, { finishedTracking: false })
     .then(activeTravellers => {
       const trvlrsObject = {};
 
@@ -83,10 +54,11 @@ router.get('/activeTravellers', (req, res) => {
         trvlrsObject[user_id] = {
           start: start_date
         };
-        return db.getTravellerLastMessage(user_id);
+        
+        return db.getTravellerLastMessage(req.app.locals.db, user_id);
       });
 
-      Promise.all(trvlrPromises)
+      return Promise.all(trvlrPromises)
         .then(msgs => {
           const now = new Date();
           // TODO - why filter ?
@@ -107,7 +79,7 @@ router.get('/activeTravellers', (req, res) => {
               // eslint-disable-next-line no-param-reassign
               msg.completed = 0;
               // eslint-disable-next-line no-param-reassign
-              msg.pub_date = moment(startDate).format('YYYY-MM-DD');
+              msg.pub_date = momentDate(startDate);
               return msg;
             }
             if (
@@ -120,12 +92,12 @@ router.get('/activeTravellers', (req, res) => {
                 // eslint-disable-next-line no-param-reassign
                 msg.completed = 1;
                 // eslint-disable-next-line no-param-reassign
-                msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD');
+                msg.pub_date = momentDate(msg.pub_date);
               } else {
                 // eslint-disable-next-line no-param-reassign
                 msg.completed = 0;
                 // eslint-disable-next-line no-param-reassign
-                msg.pub_date = moment(msg.pub_date).format('YYYY-MM-DD');
+                msg.pub_date = momentDate(msg.pub_date);
               }
               return msg;
             }
@@ -137,24 +109,16 @@ router.get('/activeTravellers', (req, res) => {
                 return db.finishTracking(user_id, completed, pub_date);
               }
             );
-            Promise.all(finishPromises)
+
+            return Promise.all(finishPromises)
               .then(() => {
-                res.json(activeTravellers);
+                return Promise.resolve(activeTravellers);
               })
-              .catch(e => {
-                throw e;
-              });
           } else {
-            res.json(activeTravellers);
+            return Promise.resolve(activeTravellers);
           }
-        })
-        .catch(e => {
-          throw e;
         });
-    })
-    .catch(e => {
-      console.error('error ', e);
-    });
+    }), res);
 });
 
 router.post('/addComment', (req, res) => {
@@ -176,14 +140,12 @@ router.post('/addComment', (req, res) => {
   const processAddComment = (callback) =>
     {
       if (req.body.uid) {
-        checkToken(req, res, req.body.uid, callback);
+        checkToken(req, res, req.body.uid, callback, () => req.body.comment);
       } else {
        request(verificationURL, (error, response, body) => {
-          // TODO - new cost
-          // eslint-disable-next-line no-param-reassign
-          body = JSON.parse(body);
-          if (body.success) {   
-            callback();
+          const parsed = JSON.parse(body);
+          if (parsed.success) {   
+            promiseAsJson(() => callback(), res);
           } else {
             res.json({ responseError: 'Failed captcha verification' });
           }
@@ -191,8 +153,7 @@ router.post('/addComment', (req, res) => {
       }
     };
 
-    processAddComment(() =>
-    {
+    processAddComment(() => {
       const comment = {};
       if (req.body.articleId !== 0 && req.body.articleId !== '') {
         // old system of comments relating to sql article id from Joomla
@@ -224,17 +185,12 @@ router.post('/addComment', (req, res) => {
         comment.ip = sVisitorIp;
         const sArticleId = sanitize(req.body.articleId);
         comment.article_sql_id = sArticleId;
-        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
+        const sDate = sanitize(momentDateTime());
         comment.date = sDate;
-        const sUid = sanitize(req.body.uid);
-        if (sUid.length <= 3) {
-          sUid = parseInt(sUid, 10);
-        }
+        const sUid = sanitizeUserId(req.body.uid);
         comment.uid = sUid;
 
-        db.addCommentOldTraveller(comment, com => {
-          res.json(com);
-        });
+        return db.addCommentOldTraveller(comment);
       } else {
         // new system using traveler_comments collection in mongo
         comment.lang = 'sk-SK';
@@ -249,17 +205,12 @@ router.post('/addComment', (req, res) => {
         comment.travellerDetails.id = sTravellerId;
         const sTravellerName = sanitize(req.body.travellerName);
         comment.travellerDetails.name = sTravellerName;
-        const sDate = sanitize(moment().format('YYYY-MM-DD HH:mm:ss'));
+        const sDate = sanitize(momentDateTime());
         comment.date = sDate;
-        const sUid = sanitize(req.body.uid);
-        if (sUid.length <= 3) {
-          sUid = parseInt(sUid, 10);
-        }
+        const sUid = sanitizeUserId(req.body.uid);
         comment.uid = sUid;
 
-        db.addCommentNewTraveller(comment, com => {
-          res.json(com);
-        });
+        return db.addCommentNewTraveller(comment);
       }
     });
 });
@@ -267,13 +218,7 @@ router.post('/addComment', (req, res) => {
 router.post('/deleteComment', (req, res) => {
   const { id, uid, articleId } = req.body;
 
-  checkToken(req, res, uid, () =>
-  db.deleteComment(
-    id, uid, articleId,
-    resp => {
-      res.json(resp);
-    }
-  ));
+  checkToken(req, res, uid, () => db.deleteComment(id, uid, articleId));
 });
 
 router.post('/userCheck', (req, res) => {
@@ -281,34 +226,27 @@ router.post('/userCheck', (req, res) => {
 
   checkToken(req, res, uid, () =>
     Promise.all([
-      db.findBy('users', { uid }),
-      db.getTravellerDetails(uid),
-      db.getTravellerMessages(uid)
+      db.findBy(req.app.locals.db, _const.UsersTable, { uid }),
+      db.getTravellerDetails(req.app.locals.db, uid),
+      db.getTravellerMessages(req.app.locals.db, uid)
     ]).then(([userDetails, travellerDetails, travellerMessages]) => {
       if (userDetails && userDetails.length > 0) {
-        res.json({
+        return {
           userDetails: userDetails[0],
           travellerDetails: travellerDetails[0] || {},
           travellerMessages: travellerMessages || []
-        });
-        return;
+        };
       }
-      db.createUser({ email, name, uid }, creation => {
-        res.json(creation);
-      });
+
+      return db.createUser({ email, name, uid });
     }));
 });
 
 router.post('/setupTraveller', (req, res) => {
   const { meno, text, start_date, uid, start_miesto, number, email } = req.body;
 
-  checkToken(req, res, uid, () =>
-  db.createTraveller(
-    { meno, text, start_date, uid, start_miesto, number, email },
-    resp => {
-      res.json(resp);
-    }
-  ));
+  checkToken(req, res, uid, () => db.createTraveller({ meno, text, start_date, uid, start_miesto, number, email }),
+    () => meno && text && start_date);
 });
 
 router.post('/updateTraveller', (req, res) => {
@@ -326,23 +264,18 @@ router.post('/updateTraveller', (req, res) => {
   } = req.body;
 
   checkToken(req, res, uid, () =>
-        db.updateTraveller(
-          {
-            meno,
-            text,
-            start_date,
-            uid,
-            start_miesto,
-            number,
-            end_date,
-            completed,
-            email,
-            finishedTracking
-          },
-          resp => {
-            res.json(resp);
-          }
-        ));
+    db.updateTraveller({
+      meno,
+      text,
+      start_date,
+      uid,
+      start_miesto,
+      number,
+      end_date,
+      completed,
+      email,
+      finishedTracking
+    }), () => meno && text && start_date);
 });
 
 router.post('/sendMessage', (req, res) => {
@@ -357,32 +290,21 @@ router.post('/sendMessage', (req, res) => {
   } = req.body;
 
   checkToken(req, res, user_id, () =>
-    db.sendMessage(
-      {
-        lon,
-        lat,
-        accuracy,
-        text,
-        user_id,
-        img,
-        details_id
-      },
-      resp => {
-        res.json(resp);
-      }
-    ));
+    db.sendMessage({
+      lon,
+      lat,
+      accuracy,
+      text,
+      user_id,
+      img,
+      details_id
+    }), () => lat && lon && text);
   });
 
 router.post('/deleteMessage', (req, res) => {
   const { id, uid } = req.body;
 
-  checkToken(req, res, uid, () =>
-    db.deleteMessage(
-      id, uid,
-      resp => {
-        res.json(resp);
-      }
-    ));
-  });
+  checkToken(req, res, uid, () => db.deleteMessage(id, uid));
+});
 
 module.exports = router;

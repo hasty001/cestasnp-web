@@ -18,7 +18,9 @@ const ROUTES = {
   kontakt: '/kontakt',
   mojaCesta: '/ucet',
   pridatPOI: '/ucet/pridatpoi',
-  ucetPois: '/ucet/pois'
+  pridatClanok: '/ucet/pridatclanok',
+  ucetPois: '/ucet/pois',
+  zmeny: '/ucet/zmeny'
 };
 
 const Navigation = () => {
@@ -94,8 +96,28 @@ const Navigation = () => {
 
           {!!authData.isAuth && (
             <NavRouterItem
-              href="#"
+              href={ROUTES.pridatClanok}
               eventKey={3}
+              title="Pridať článok"
+              className="mobile"
+            >
+              Pridať článok           
+            </NavRouterItem>)}
+
+          {!!authData.isAuth && (
+            <NavRouterItem
+              href={ROUTES.zmeny}
+              eventKey={4}
+              title="Prehľad zmien"
+              className="mobile"
+            >
+              Prehľad zmien           
+            </NavRouterItem>)}
+
+          {!!authData.isAuth && (
+            <NavRouterItem
+              href="#"
+              eventKey={5}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="mobile"
@@ -180,8 +202,26 @@ const Navigation = () => {
             </NavRouterItem>
 
             <NavRouterItem
-              href="#"
+              href={ROUTES.pridatClanok}
               eventKey={23}
+              title="Pridať článok"
+              className="desktop"
+            >
+              Pridať článok           
+            </NavRouterItem>
+
+            <NavRouterItem
+              href={ROUTES.zmeny}
+              eventKey={24}
+              title="Prehľad zmien"
+              className="desktop"
+            >
+              Prehľad zmien           
+            </NavRouterItem>
+
+            <NavRouterItem
+              href="#"
+              eventKey={25}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="desktop"

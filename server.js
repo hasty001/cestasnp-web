@@ -9,6 +9,7 @@ const replaceAll = require('string.prototype.replaceall');
 
 const app = express();
 const http = require('http').Server(app);
+app.locals.cache = require('memory-cache');
 
 const promiseFinally = require('promise.prototype.finally');
 promiseFinally.shim();
@@ -70,6 +71,11 @@ app.get('/api', (req, res) => {
   res.json({ status: '200' });
 });
 
+app.get('/api/refresh', (req, res) => {
+  req.app.locals.cache.clear();
+  res.sendStatus(200);
+});
+
 app.use('/api/pois', require('./server/controllers/pois'));
 
 app.use('/api/itinerary', require('./server/controllers/itinerary'));
@@ -79,6 +85,8 @@ app.use('/api/articles', require('./server/controllers/articles'));
 app.use('/api/traveller', require('./server/controllers/traveller'));
 
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
+
+app.use('/api/changes', require('./server/controllers/changes'));
 
 app.use('/sitemap.xml', require('./server/controllers/sitemap'));
 

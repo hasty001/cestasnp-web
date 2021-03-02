@@ -5,6 +5,7 @@ import DivWithLoader from './reusable/DivWithLoader';
 import { A } from './reusable/Navigate';
 import ButtonReadMore from './reusable/ButtonReadMore';
 import { LocalSettingsContext } from './LocalSettingsContext';
+import { htmlClean, getArticleImage } from '../helpers/helpers';
 
 const Home = (props) => {
   const [articles, setArticles] = useState([]);
@@ -13,9 +14,9 @@ const Home = (props) => {
   useEffect(() => {
     setLoading(true);
     
-    Promise.all([fetchJson('/api/articles/for/home'), fetchJson('/api/articles/article/60')])
-      .then(([data, article]) => {
-        setArticles(article.concat(data));
+    fetchJson('/api/articles/for/home?first=60')
+      .then(data => {
+        setArticles(data);
         setLoading(false);
       })
       .catch(err => {
@@ -27,11 +28,6 @@ const Home = (props) => {
   const settingsData = useContext(LocalSettingsContext);
 
   const month = (new Date()).getMonth + 1;
-
-  const getArticleImage = (intro) => {
-      const res = intro && intro.match(/["'](https:\/\/res.cloudinary.com\/.*?)["']/);
-      return res && res.length > 1 ? res[1] : null;
-    };
 
   return (
     <div id="Home">
@@ -72,7 +68,7 @@ const Home = (props) => {
 
                       {!!imgUrl && <div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
                       <div className="article-text-col">
-                        <div className="article-text">{(article.introtext || '').replaceAll('<p>', "\n").replaceAll(/<[^>]+>/g, '')}</div>
+                        <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>
                         <ButtonReadMore href={`/pred/articles/article/${article.sql_article_id}`} />
                       </div>
                     </div>

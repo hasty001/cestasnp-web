@@ -153,4 +153,24 @@ const findNearestGuideposts = (coordinates) => {
   return getNearGuideposts(minId, coordinates, minDistance);
 }
 
-module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts };
+const sortNear = (obj, list, maxDistance) => {
+  const objIndex = list.findIndex(o => (o._id || o.id).toString() == (obj._id || obj.id).toString());
+  if (objIndex >= 0) {
+    list.splice(objIndex, 1);
+  }
+
+  // filter unique
+  list.splice(0, list.length, ...list.filter((o, i, a) => a.findIndex(l => (o._id || o.id).toString() == (l._id || l.id).toString()) == i));
+
+  list.forEach(o => {
+    o.distance = (obj.coordinates || (obj.lat && obj.lon)) && (o.coordinates || (o.lat && o.lon)) ?
+      WGS84Util.distanceBetween({ coordinates: obj.coordinates ? obj.coordinates : [obj.lon, obj.lat] },
+      { coordinates: o.coordinates ? o.coordinates : [o.lon, o.lat] }) : maxDistance;
+  });
+
+  list.splice(0, list.length, ...list.filter(o => o.distance <= maxDistance));
+
+  list.sort((a, b) => a.distance - b.distance);
+}
+
+module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts, sortNear };

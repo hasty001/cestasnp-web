@@ -2,8 +2,7 @@ import React, { Fragment } from 'react';
 import { useStateProp } from '../../helpers/reactUtils';
 import PoiIcon from './PoiIcon';
 import { A } from './Navigate';
-import { escapeHtml } from '../../helpers/helpers';
-import DOMPurify from 'dompurify';
+import { escapeHtml, htmlLineClean } from '../../helpers/helpers';
 
 const ItineraryTable = (props) => {
 
@@ -36,7 +35,7 @@ const ItineraryTable = (props) => {
           .replaceAll("[vľavo]", reverse ? "vpravo" : "vľavo")
           .replaceAll("[vpravo]", reverse ? "vľavo" : "vpravo")) 
           .replaceAll(/\[(.+?)\|(.+?)\]/gms, reverse ? "$2" : "$1"))
-        : [escapeHtml(poi.name), DOMPurify.sanitize(poi.text)].filter(s => s && s.trim().length > 0).join(" - ");
+        : [escapeHtml(poi.name), htmlLineClean(poi.text)].filter(s => s && s.trim().length > 0).join(" - ");
 
       return (
         <div key={index}>
@@ -133,7 +132,7 @@ const ItineraryTable = (props) => {
               <td className="itinerary-value">{formatNumber(item.km, 1)}</td>
               <td className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
               <td colSpan={props.noDetails ? 1 : 6}>
-                <A id={`g${item.id}`} href={`/pred/pois#poi=${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
+                <A id={`razcestnik${item.id}`} href={`/pred/pois#poi=razcestnik${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
                   <b>{guidepostName}</b>
                 </A>
               </td>

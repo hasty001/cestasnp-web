@@ -7,6 +7,8 @@ import AddPoi from './AddPoi';
 import FanAccount from './FanAccount';
 import TravellerAccount from './TravellerAccount';
 import * as Constants from '../Constants';
+import AddArticle from './AddArticle';
+import Changes from './Changes';
 
 const LoggedIn = (props) => {
 
@@ -18,13 +20,15 @@ const LoggedIn = (props) => {
     <>
       <DocumentTitle title={`Účet${Constants.WebTitleSuffix}`} />
 
-      {props.addPoi ? 
+      {props.addArticle ? 
+        <AddArticle /> : (props.addPoi ? 
         <AddPoi />
-        : (props.userData.travellerDetails &&
-          Object.keys(props.userData.travellerDetails).length > 0 ? (
-            <TravellerAccount traveller={props.userData} />
-          ) : (props.pois ? <></> : <FanAccount fan={props.userData} />
-      ))}
+        : (props.changes ? <Changes /> 
+          : (props.userData.travellerDetails &&
+            Object.keys(props.userData.travellerDetails).length > 0 ? (
+              <TravellerAccount traveller={props.userData} />
+            ) : (props.pois ? <></> : <FanAccount fan={props.userData} />
+      ))))}
     </>
   );
 }

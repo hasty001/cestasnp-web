@@ -116,6 +116,52 @@ Validation.prototype = {
       modified_by: sanitize(modified_by),
       modified_note: sanitize(modified_note)
     };
+  },
+
+  sanitizeArticle(article) {
+    const {
+      lat,
+      lon,
+      accuracy,
+      state,
+      tags,
+      title,
+      introtext,
+      fulltext,
+      sql_article_id,
+      created,
+      created_by,
+      modified,
+      modified_by,
+      proposed,
+      proposed_by,
+      proposed_note,
+      note,
+      historyId
+    } = article;
+    return {
+      lat: sanitize(lat),
+      lon: sanitize(lon),
+      accuracy: sanitize(accuracy),
+      state: sanitize(parseInt(state)),
+      tags: sanitize(tags),
+      title: sanitize(title),
+      introtext: sanitize(introtext),
+      fulltext: sanitize(fulltext),
+
+      sql_article_id: sanitize(parseInt(sql_article_id)),
+      created: sanitize(created),
+      created_by: sanitize(created_by),
+      modified: sanitize(modified),
+      modified_by: sanitize(modified_by),
+
+      proposed: sanitize(proposed),
+      proposed_by: sanitize(proposed_by),
+      proposed_note: sanitize(proposed_note),
+
+      note: sanitize(note),
+      historyId: sanitize(historyId)
+    };
   }
 };
 

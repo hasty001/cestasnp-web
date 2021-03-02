@@ -1,47 +1,80 @@
-import React, { Component } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
-import Loader from './reusable/Loader';
-import Meta from './reusable/Meta';
 import * as Constants from './Constants';
+import * as Texts from './Texts';
+import { htmlSanitize } from '../helpers/helpers';
+import { AuthContext } from './AuthContext';
+import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';
+import PageWithLoader from './reusable/PageWithLoader';
+import { A } from './reusable/Navigate';
+import Map from './Map';
+import ImageBox from './reusable/ImageBox';
+import PoiList from './reusable/PoiList';
 
-class Article extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      url: `/api/articles/article/${this.props.match.params.articleId}`,
-      og_url: `/pred/articles/article/${this.props.match.params.articleId}`,
-      loading: true,
-      article: []
-    };
-    this.updateArticleViews = this.updateArticleViews.bind(this);
-  }
+const Article = (props) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [article, setArticle] = useState(null);
+  const [preview, setPreview] = useState(null);
 
-  componentDidMount() {
-    fetch(this.state.url)
-      .then(resp => resp.json())
-      .then(data => {
-        this.setState({
-          article: data,
-          loading: false
-        });
-        // increase article count
-        this.updateArticleViews('/api/articles/increase_article_count', {
-          id: data[0]._id
-        })
-          .then(() => {})
-          .catch(err => {
-            throw err;
-          });
+  window.__setPreview = setPreview;
+
+  const authData = useContext(AuthContext);
+
+  const userDetails = authData ? authData.userDetails : null;
+      
+  const isMyArticle = 
+    (authData && authData.isAuth && userDetails && article) ? 
+      (userDetails.articlesMy && userDetails.articlesMy.indexOf(article.sql_article_id) >= 0)
+        || (article.created_by == userDetails.uid && !(userDetails.articlesNotMy && userDetails.articlesNotMy.indexOf(article.sql_article_id) >= 0))
+      : false;
+
+  const toggleIsMy = () => {
+    fetchPostJsonWithToken(authData.user, "/api/articles/toggleMy", { id: article.sql_article_id, uid: authData.userDetails.uid })
+    .then(res => {
+      authData.updateUserDetails(res);
+    })
+    .catch(error => { console.error(error); setArticle(Object.assign({ errorMsg: Texts.GenericError }, article)) });
+  };
+
+  const clearMsg = () => {
+    if (article) {
+      const newArticle = Object.assign({}, article);
+
+      delete newArticle.successMsg;
+      delete newArticle.errorMsg;
+
+      setArticle(article);
+    }
+  };
+
+  const fetchData = () => {
+    setLoading(true);
+    setError('');
+
+    fetchJson(`/api/articles/article/${props.match.params.articleId}`)
+      .then(value => {
+        if (!value || value.length == 0) {
+          throw "No article.";
+        }
+
+        updateArticleViews('/api/articles/increase_article_count', { id: value[0]._id });
+
+        setArticle(value[0]);
+        setLoading(false);
+        setError('');
       })
-      .catch(() => {
-        this.setState({
-          article: [{ title: '404', fulltext: 'Článok sme nenašli :(' }],
-          loading: false
-        });
-      });
-  }
+      .catch(e => {
+        setLoading(false);
+        setError('Článok sme nenašli :(');
 
-  updateArticleViews = (url, data) => {
+        console.error("Article loading error: ", e);
+      });
+  };
+
+  useEffect(() => { fetchData(); }, [props.match.params.articleId]);
+
+  const updateArticleViews = (url, data) => {
     // Default options are marked with *
     return fetch(url, {
       body: JSON.stringify(data), // must match 'Content-Type' header
@@ -56,46 +89,60 @@ class Article extends Component {
       referrer: 'no-referrer' // *client
     })
       .then(response => response.json()) // parses response to JSON
-      .catch(err => {
-        throw err;
+      .catch(e => {
+        console.error("Update article view error: ", e);
       });
   };
 
-  render() {
-    let header = '';
-    let introText = '';
-    let fullText = '';
-    if (this.state.article.length > 0) {
-      header = this.state.article[0].title;
-      introText = () => {
-        return { __html: this.state.article[0].introtext };
-      };
-      fullText = () => {
-        return { __html: this.state.article[0].fulltext };
-      };
-    }
-    return (
-      <div id="Article">
-        {this.state.loading && <Loader />}
-        {!this.state.loading && (
-          <div>
-            <Meta
-              title={this.state.article[0].title}
-              url={this.state.og_url}
-              metadesc={
-                this.state.article[0].ogdesc || this.state.article[0].metadesc
-              }
-              img={this.state.article[0].ogimg || ''}
-            />
-            <DocumentTitle title={`${this.state.article[0].title}${Constants.WebTitleSuffix}`} />
-            <h2>{header}</h2>
-            <div dangerouslySetInnerHTML={introText()} />
-            <div dangerouslySetInnerHTML={fullText()} />
-          </div>
-        )}
-      </div>
-    );
-  }
+  return (
+    <PageWithLoader pageId="Article" loading={loading} error={error}>
+      {!!article && (
+        <>
+          <DocumentTitle title={`${article.title}${Constants.WebTitleSuffix}`} />
+          {!!article.errorMsg && <div className="errorMsg">{article.errorMsg}</div>}
+          {!!article.successMsg && <div className="successMsg">{article.successMsg}</div>}
+          
+          <h2>{article.title}
+            <span className="article-actions">
+              {!!authData.isAuth && 
+                (<A href={`/pred/articles/article/${props.match.params.articleId}/historia`}
+                  className="article-history" title="história úprav článku"><i className="fas fa-info-circle"/></A>)}
+
+              {!!authData.isAuth && 
+                (<a href="#" onClick={e => { e.preventDefault(); toggleIsMy(); clearMsg(); }} 
+                   className="article-my" title={isMyArticle ? "odobrať z mojich člankov" :"pridať do mojich člankov"}>
+                   <span className={isMyArticle ? "" : "hidden"}><i className="fas fa-star" /></span>
+                   <span className={isMyArticle ? "hidden" : ""}><i className="far fa-star" /></span>
+                 </a>)}
+
+              {!!authData.isAuth && 
+                (<A href={`/pred/articles/article/${props.match.params.articleId}/upravit/${article.history && article.history.length > 0 && article.history[0].modified > article.modified ? `#${article.history[0]._id}` : ""}`}
+                  className="article-edit" title="upraviť článok"><i className="fas fa-pencil-alt"/></A>)}
+            </span>
+          </h2>
+          <div dangerouslySetInnerHTML={{ __html: htmlSanitize(article.introtext) }} />
+          <div dangerouslySetInnerHTML={{ __html: htmlSanitize(article.fulltext) }} />
+          
+          {!!article.lat && !!article.lon && (
+            <>
+              <h3>Poloha na mape:</h3>
+              <Map use="map" pois={[{ category: "clanok", id: `clanok${article.sql_article_id}`, 
+                name: article.title, text: "Článok", coordinates: [article.lon, article.lat], 
+                url: `/pred/articles/article/${article.sql_article_id}` }]} view={{ lat: article.lat, lon: article.lon, zoom: 13 }}/>
+              <A href={`/pred/pois#poi=clanok${article.sql_article_id}&lat=${article.lat}&lon=${article.lon}`}><span data-nosnippet>na celej mape</span></A>
+            </>)}
+
+          {!!article.related && article.related.length > 0 && (
+          <div data-nosnippet>
+            <h3>Súvisiace</h3>
+            <PoiList pois={article.related}/>
+          </div>)}
+
+          <ImageBox show={!!preview} url={preview} onHide={() => setPreview(null)} />
+        </>
+      )}
+    </PageWithLoader>
+  );
 }
 
 export default Article;

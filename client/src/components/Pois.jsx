@@ -93,7 +93,7 @@ const Pois = (props) => {
     setLoading(true);
     setError('');
 
-    fetchJson('/api/pois')
+    fetchJson('/api/pois/map')
       .then(value => {
         setPois(value);
         setLoading(false);
@@ -120,7 +120,8 @@ const Pois = (props) => {
     <PageWithLoader pageId="Pois" pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`}>
       <>
         <Map pois={pois || []} use="pois-map" 
-          view={[view, setView]} setView={null} marker={gpsMarker} showLayers />
+          view={[view, setView]} setView={null} 
+          markers={[gpsMarker]} showLayers />
         {!!loading && !error && <Loader />}
         {!!error && <div className="errorMsg">
             {error}
