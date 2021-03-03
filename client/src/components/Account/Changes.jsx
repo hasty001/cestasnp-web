@@ -19,18 +19,25 @@ const Changes = (props) => {
   const [error, setError] = useState(false);
   const [data, setData] = useState(null);
   const [items, setItems] = useStateWithLocalStorage("ChangesTableItems", '');
-  const [from, setFrom] = useStateWithLocalStorage("ChangesTableFrom", addDays(startOfToday(), -7).toISOString());
+  const [from, setFrom] = useStateWithLocalStorage("ChangesTableFrom", 1);
   const [to, setTo] = useState(null);
   const [my, setMy] = useStateWithLocalStorage("ChangesTableMy", true);
   const [page, setPage] = useState(0);
   
   const authData = useContext(AuthContext);
 
+  const fromValues = [
+    0,
+    addDays(startOfToday(), -7).toISOString(),
+    addMonths(startOfToday(), -1).toISOString(),
+    addYears(startOfToday(), -1).toISOString(),
+  ];
+
   const fetchData = () => {
     setLoading(true);
     setError('');
 
-    fetchPostJsonWithToken(authData.user, '/api/changes', { uid: authData.userDetails.uid, from, to, my, page, items })
+    fetchPostJsonWithToken(authData.user, '/api/changes', { uid: authData.userDetails.uid, from: fromValues[from], to, my, page, items })
       .then(data => {
         setData(data);
         setLoading(false);
@@ -98,10 +105,10 @@ const Changes = (props) => {
           <FormSelect value={[from, setFrom]} 
             valueLabel="Obdobie:" valueName="from" itemClassName="form" 
             options={[ 
-            { value: addDays(startOfToday(), -7).toISOString(), label: "posledných 7 dní" },
-            { value: addMonths(startOfToday(), -1).toISOString(), label: "posledný mesíc" },
-            { value: addYears(startOfToday(), -1).toISOString(), label: "posledný rok" },
-            { value: "0", label: "vše" } ]}/>
+            { value: 1, label: "posledných 7 dní" },
+            { value: 2, label: "posledný mesíc" },
+            { value: 3, label: "posledný rok" },
+            { value: 0, label: "vše" } ]}/>
 
           <FormCheckBox value={[my, setMy]} valueName="my" valueLabel="len moje" itemClassName="form" />
 

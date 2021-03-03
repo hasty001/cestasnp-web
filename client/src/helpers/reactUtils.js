@@ -65,7 +65,7 @@ const useStateWithLocalStorage = (key, defValue = null, callback = null) => {
 
   const [value, setValue] = useStateEx(itemValue == null ? defValue : parse(itemValue, defValue), callback);
  
-  const save = throttle((k, v) => localStorage.setItem(k, JSON.stringify(v || defValue)), 1000);
+  const save = throttle((k, v) => localStorage.setItem(k, JSON.stringify(v == null ? defValue : v)), 1000);
 
   useEffect(() => {
     if (key) {
@@ -87,7 +87,7 @@ const useStateWithSessionStorage = (key, defValue = null, callback = null) => {
     setValue(itemValue == null ? defValue : parse(itemValue, defValue));
   }, [key]);
 
-  const save = throttle((k, v) => sessionStorage.setItem(k, JSON.stringify(v || defValue)), 1000);
+  const save = throttle((k, v) => sessionStorage.setItem(k, JSON.stringify(v == null ? defValue : v)), 1000);
 
   useEffect(() => {
     if (key) {
