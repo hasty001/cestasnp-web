@@ -60,7 +60,7 @@ br.clear-both {
 
 a.red-button {
   display: block;
-  width: 120px; /*for IE*/
+  width: 155px; /*for IE*/
   width: fit-content;
   color: red !important;
   border: 1px solid red;
@@ -72,6 +72,7 @@ a.red-button {
   transition: background-color 0.4s, color 0.4s;
   font-size: 15px;
   font-weight: 400;
+  text-align: center;
 }
 
 a.red-button:hover,
@@ -890,6 +891,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   overflow: hidden;
 }
 
+@media (max-width: 1430px) and (min-width: 1300px) {
+  #Home .article-div .read-more.next-to-image {
+    margin-left: 270px;
+  }
+}
+
 #Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2 {
   margin-top: 0px;
   margin-bottom: 30px;
@@ -1363,6 +1370,12 @@ span.poi-text {
 .article-div {
   display: block;
   min-height: 250px;
+}
+
+@media (max-width: 800px) and (min-width: 670px) {
+  .article-div .read-more.next-to-image {
+    margin-left: 270px;
+  }
 }
 
 .no-article-div {
