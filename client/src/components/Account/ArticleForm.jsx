@@ -63,7 +63,7 @@ const ArticleForm = (props) => {
   const [imagesAdded, setImagesAdded] = useStateWithSessionStorage(getKey('imagesAdded'), [], clearMsg);
   const [links, setLinks] = useStateEx([], clearMsg);
 
-  const [note, setNote] = useStateWithSessionStorage(getKey('note'), clearMsg);
+  const [note, setNote] = useStateWithSessionStorage(getKey('note'), '', clearMsg);
 
   useEffect(() => {
     const beforeunload = (e) => {
@@ -153,8 +153,10 @@ const ArticleForm = (props) => {
 
       const latest = article.history && article.history.length > 0 ? 
         article.history[0] : article;
-      if (p.modified < latest.modified) {
-        setWarningMsgFirst((<>Existuje novšia verzia článku - <a href={`#${latest._id}`}>použiť pre úpravy</a>.</>));
+
+      if ((p.modified || p.created) < latest.modified) {
+        setTimeout(() =>
+          setWarningMsgFirst((<>Existuje novšia verzia článku - <a href={`#${latest._id}`}>použiť pre úpravy</a>.</>)), 1000);
       }
 
       setTimeout(() => setChanged(false), 1000);
@@ -243,11 +245,21 @@ const ArticleForm = (props) => {
 
         if (props.edit) {
           setArticle(msgRes);
+
+          if (msgRes.reviewId) {
+            window.location.hash = `#${msgRes.reviewId}`;
+          }
         }
 
-        msgRes.successMsg = props.edit ? 'Článok úspešne upravený!': 
-          'Článok úspešne pridaný!';
-        setSuccessMsg(msgRes.successMsg);
+        msgRes.successMsg = props.edit ? 'Článok úspešne upravený!' 
+          : 'Článok úspešne pridaný!';
+        if (msgRes.state == -1) {
+          msgRes.successMsg += props.edit ? ' Zmeny budú publikované po schválení administrátorom.'
+            : ' Publikovaný bude po schválení administrátorom.';
+        }
+
+        setTimeout(() =>
+          setSuccessMsg(msgRes.successMsg), 1000);
 
         if (props.onUpdate) {
           props.onUpdate(msgRes);
@@ -415,7 +427,7 @@ const ArticleForm = (props) => {
 
       {!!warningMsgFirst && (
         <div className="warningMsg">
-          {!!warningMsgFirst && warningMsgFirst}          
+          {warningMsgFirst}          
         </div>
       )}
 

@@ -1028,7 +1028,8 @@ DB.prototype = {
             return dbCollection(db, _const.ArticlesHistoryTable)
               .insertOne(forReview ? securityCheck.sanitizeArticle(article) : current).then(resInsert => {
                 if (forReview) {
-                  return this.fillArticleInfo(db, s_id, current);
+                  return this.fillArticleInfo(db, s_id, current).then(r =>
+                    Object.assign({ reviewId: resInsert.insertedId.toString() }, r));
                 } 
                 
                 article.historyId = resInsert.insertedId.toString();
