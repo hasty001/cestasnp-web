@@ -108,19 +108,20 @@ DB.prototype = {
     const getUsers = this.findBy(db, _const.UsersTable, 
       uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
 
+    /*
     const getDetails = this.findBy(db, _const.DetailsTable,
-      uids ? { user_id : { $in: uids } } : {}, { projection: { user_id: 1, meno: 1 } });
+      uids ? { user_id : { $in: uids } } : {}, { projection: { user_id: 1, meno: 1 } });*/
 
-    return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
+    return Promise.all([getUsers/*, getDetails*/]).then(([users/*, details*/]) => {                
       users.forEach(u => {
         if (!u.uid) {
           u.uid = u.sql_user_id;
         }
 
-        const cesta = details.find(t => t.user_id === u.uid);
+        /*const cesta = details.find(t => t.user_id === u.uid);
         if (cesta) {
           u.name = cesta.meno;
-        }
+        }*/
       });
 
       return Promise.resolve(users);
@@ -821,7 +822,7 @@ DB.prototype = {
 
   toggleArticleMy(uid, id) {
     return dbConnect(db => 
-      dbCollection(_const.ArticlesTable).findOne({ sql_article_id: id })
+      dbCollection(db, _const.ArticlesTable).findOne({ sql_article_id: id })
       .then(article => {
         if (!article) {
           return Promise.reject('Článok nebol nájdený.');            
@@ -853,7 +854,7 @@ DB.prototype = {
             }
           }
 
-          return dbCollection(_const.UsersTable).findOneAndUpdate({ uid },
+          return dbCollection(db, _const.UsersTable).findOneAndUpdate({ uid },
             { $set: { 
               articlesMy: userDetails.articlesMy, 
               articlesNotMy: userDetails.articlesNotMy } }, 
@@ -1028,7 +1029,8 @@ DB.prototype = {
             return dbCollection(db, _const.ArticlesHistoryTable)
               .insertOne(forReview ? securityCheck.sanitizeArticle(article) : current).then(resInsert => {
                 if (forReview) {
-                  return this.fillArticleInfo(db, s_id, current);
+                  return this.fillArticleInfo(db, s_id, current).then(r =>
+                    Object.assign({ reviewId: resInsert.insertedId.toString() }, r));
                 } 
                 
                 article.historyId = resInsert.insertedId.toString();

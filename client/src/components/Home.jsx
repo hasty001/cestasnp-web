@@ -37,7 +37,7 @@ const Home = (props) => {
             href={settingsData.activeLink.href}
             className="no-decoration"
           >
-            <h3 className="no-decoration">Info z cesty</h3>
+            <h3 className="no-decoration">LIVE sledovanie</h3>
           </A>     
           
           <ActiveLight box />
@@ -69,7 +69,7 @@ const Home = (props) => {
                       {!!imgUrl && <div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
                       <div className="article-text-col">
                         <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>
-                        <ButtonReadMore href={`/pred/articles/article/${article.sql_article_id}`} />
+                        <ButtonReadMore className={!!imgUrl ? "next-to-image" : ""} href={`/pred/articles/article/${article.sql_article_id}`} />
                       </div>
                     </div>
                   </div>);

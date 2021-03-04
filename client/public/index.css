@@ -60,7 +60,7 @@ br.clear-both {
 
 a.red-button {
   display: block;
-  width: 120px; /*for IE*/
+  width: 155px; /*for IE*/
   width: fit-content;
   color: red !important;
   border: 1px solid red;
@@ -72,6 +72,7 @@ a.red-button {
   transition: background-color 0.4s, color 0.4s;
   font-size: 15px;
   font-weight: 400;
+  text-align: center;
 }
 
 a.red-button:hover,
@@ -672,13 +673,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   width: calc(100vw - 600px);
 }
 
-@media (min-width: 1920px) {
-  .banner {
-    min-height: 860px;
-    max-height: 860px;
-  }
-}
-
 .home-intro {
   max-width: 860px;
   min-height: 270px;
@@ -845,6 +839,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   position: relative;
 }
 
+.active-travellers-box .active-travellers-items.no-photo {
+  max-height: 960px;
+}
+
+.active-travellers-box .footer {
+  min-height: 60px;
+}
+
 .active-travellers-items-more {
   display: none;
 }
@@ -932,6 +934,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin-bottom: 50px;
   min-height: 20px;
   overflow: hidden;
+}
+
+@media (max-width: 1430px) and (min-width: 1300px) {
+  #Home .article-div .read-more.next-to-image {
+    margin-left: 270px;
+  }
 }
 
 #Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2 {
@@ -1401,6 +1409,12 @@ span.poi-text {
 .article-div {
   display: block;
   min-height: 250px;
+}
+
+@media (max-width: 800px) and (min-width: 670px) {
+  .article-div .read-more.next-to-image {
+    margin-left: 270px;
+  }
 }
 
 .no-article-div {

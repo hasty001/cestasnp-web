@@ -104,7 +104,7 @@ const Articles = (props) => {
                 
                 <div className="article-text-col">
                   <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>
-                  <ButtonReadMore href={`/pred/articles/article/${article.sql_article_id}`} />
+                  <ButtonReadMore className={!!imgUrl ? "next-to-image" : ""} href={`/pred/articles/article/${article.sql_article_id}`} />
                 </div>
               </div>
             );
