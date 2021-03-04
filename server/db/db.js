@@ -821,7 +821,7 @@ DB.prototype = {
 
   toggleArticleMy(uid, id) {
     return dbConnect(db => 
-      dbCollection(_const.ArticlesTable).findOne({ sql_article_id: id })
+      dbCollection(db, _const.ArticlesTable).findOne({ sql_article_id: id })
       .then(article => {
         if (!article) {
           return Promise.reject('Článok nebol nájdený.');            
@@ -853,7 +853,7 @@ DB.prototype = {
             }
           }
 
-          return dbCollection(_const.UsersTable).findOneAndUpdate({ uid },
+          return dbCollection(db, _const.UsersTable).findOneAndUpdate({ uid },
             { $set: { 
               articlesMy: userDetails.articlesMy, 
               articlesNotMy: userDetails.articlesNotMy } }, 
