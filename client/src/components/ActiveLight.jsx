@@ -82,15 +82,16 @@ const ActiveLight = (props) => {
             {!hasActive && (
               <div className="active-travellers-info">
                 {hasPlanning ?
-                  "Momentálne nie je nikto na ceste, ale môžeš si pozrieť, kto cestu plánuje, alebo nedávna zaujímavá putovanie:"
-                  : "Momentálne nie je nikto na ceste ani cestu neplánuje, ale môžeš si pozrieť nedávna zaujímavá putovanie:"}
+                  "Momentálne nie je nikto na ceste, ale môžeš si pozrieť, kto cestu plánuje, alebo nedávne zaujímavé putovania:"
+                  : "Momentálne nie je nikto na ceste ani cestu neplánuje, ale môžeš si pozrieť nedávne zaujímavé putovania:"}
               </div>
             )}
 
-            <div className="active-travellers-items">
+            <div className={"active-travellers-items" + (!images || images.length <= 0 ? " no-photo" : "")}>
             {travellers.map((traveller, i) => <TravellerItem key={i} traveller={traveller} now={now}/>)}
+              {!!props.box && <div className="footer"/>}
               <div className="active-travellers-items-more">
-                <ButtonReadMore href="/na/ceste/light"/>
+                <ButtonReadMore href="/na/ceste/light" text="všetky správy"/>
               </div>
             </div>
 

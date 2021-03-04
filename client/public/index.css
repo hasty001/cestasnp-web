@@ -794,6 +794,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   position: relative;
 }
 
+.active-travellers-box .active-travellers-items.no-photo {
+  max-height: 960px;
+}
+
+.active-travellers-box .footer {
+  min-height: 60px;
+}
+
 .active-travellers-items-more {
   display: none;
 }

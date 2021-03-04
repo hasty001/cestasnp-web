@@ -37,7 +37,7 @@ const Home = (props) => {
             href={settingsData.activeLink.href}
             className="no-decoration"
           >
-            <h3 className="no-decoration">Info z cesty</h3>
+            <h3 className="no-decoration">LIVE sledovanie</h3>
           </A>     
           
           <ActiveLight box />
