@@ -672,13 +672,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   width: calc(100vw - 600px);
 }
 
-@media (min-width: 1920px) {
-  .banner {
-    min-height: 860px;
-    max-height: 860px;
-  }
-}
-
 .home-intro {
   max-width: 860px;
   min-height: 270px;
