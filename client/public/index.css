@@ -25,6 +25,19 @@ a {
   text-decoration: none !important;
 }
 
+a:hover, a:hover h1, a:hover h2, a:hover h3 {
+  color: red !important;
+}
+
+.no-decoration {
+  color: #58595b;
+}
+
+.no-decoration, .no-decoration:hover {
+  text-decoration: none !important;
+  list-style: none !important;
+}
+
 @media print {
   a[href]:after {
     content: none !important;
@@ -103,7 +116,7 @@ a.white-button {
   padding: 10px 20px;
   margin: 25px auto 15px auto;
   text-transform: uppercase;
-  transition: border-color 0.4s, color 0.4s;
+  transition: border-color 0.4s, background-color 0.4s, color 0.4s;
   font-size: 15px;
   font-weight: 400;
 }
@@ -111,8 +124,9 @@ a.white-button {
 a.white-button:hover,
 a.white-button:focus,
 a.white-button:active {
-  color: red !important;
-  border-color: red;
+  color: red!important;
+  border-color: white;
+  background-color: white;
 }
 
 .pagination {
@@ -393,6 +407,7 @@ body {
 .navbar-nav>li>a:hover,
 .navbar-nav>li>a:active,
 .navbar-nav>li>a:focus {
+  color: red!important;
   border-bottom: 2px solid red;
   transition: 0.1s, margin 0s, padding 0s, border-width 0s;
 }
@@ -404,6 +419,7 @@ body {
 
 .navbar-nav .open .dropdown-menu li>a:focus, 
 .navbar-nav .open .dropdown-menu li>a:hover {
+  color: red!important;
   background-color: #e0e0e0 !important;
 }
 
@@ -607,7 +623,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: calc(7.7vw);
   font-weight: 500;
   color: white;
-  text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 50%);
   transition: 0.4s;
   padding: 0 20px;
   line-height: normal;
@@ -618,6 +634,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 .banner>a:active {
   color: red;
   background-color: rgba(0, 0, 0, 0.3);
+  text-shadow: 0px 0px 30px rgba(255, 255, 255, 50%);
 }
 
 .home.banner {
@@ -687,7 +704,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 .home-intro .read-more {
   position: absolute;
-  bottom: 20px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -709,18 +726,13 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
   text-shadow: 0px 0px 10px #FFFFFF;
   position: absolute;
-  top: 104px;
+  top: 85px;
   width: 100%;
   text-align: center;
   font-weight: 500;
 }
 
 @media (max-width: 670px) {
-  .home-intro {
-    background-image: url("/img/cestasnp_desktop.jpg");
-    background-position-x: 27%;
-  }
-
   .home-intro h1,
   .home-intro-text,
   .home-intro .read-more {
@@ -729,10 +741,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media (max-width: 395px) {
-  .home-intro {
-    background-position-x: 20%;
-  }
-
   .home-intro {
     min-width: 85vw;
     max-width: 85vw;
@@ -825,6 +833,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595b;
 }
 
+.traveller-name:hover, .traveller-message-name:hover {
+  text-decoration: underline !important;
+}
+
 .traveller-date {
   display: table-cell;
   float: right;
@@ -857,18 +869,18 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   bottom: 0;
   left: 0;
   right: 0;
-  height: 80px;
+  height: 150px;
   
   background: white;
-  background: -moz-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 60%, rgba(255,255,255,1) 100%);
-  background: -webkit-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 60%, rgba(255,255,255,1) 100%);
-  background: -o-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 60%, rgba(255,255,255,1) 100%);
-  background: -ms-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 60%, rgba(255,255,255,1) 100%);
-  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 60%, rgba(255,255,255,1) 100%);
+  background: -moz-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%);
+  background: -webkit-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%);
+  background: -o-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%);
+  background: -ms-linear-gradient(-90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%);
 }
 
 .active-travellers-box .active-travellers-items-more .read-more {
-  margin-top: 30px;
+  margin-top: 105px;
   background-color: white;
 }
 
@@ -1096,6 +1108,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   padding: 2px 4.5px;
   font-size: 24px;
 }
+
+.site-footer a.facebook:hover, .site-footer a.instagram:hover {
+  background-color: red;
+  color: #fff !important;
+ }
 
 .site-footer .col1 .list {
   margin: 0 auto;
@@ -1593,12 +1610,6 @@ img.row::before, .editor-image.row::before {
 
 .pagination {
   display: block;
-}
-
-.no-decoration, .no-decoration:hover {
-  text-decoration: none !important;
-  list-style: none !important;
-  color: #333;
 }
 
 .pagination>.active>a, 
@@ -2334,6 +2345,10 @@ img.row::before, .editor-image.row::before {
   overflow-x: hidden;
   white-space: nowrap;
   margin: 15px 0;
+}
+
+.active-travellers-box .simple-masonry {
+  margin-top: 30px;
 }
 
 .simple-masonry-item {
