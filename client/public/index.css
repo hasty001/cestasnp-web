@@ -67,7 +67,8 @@ a:hover, a:hover h1, a:hover h2, a:hover h3 {
 
 br.clear-both {
   clear: both;
-  max-height: 0;
+  min-height: 15px;
+  max-height: 15px;
   margin: 0;
 }
 
@@ -726,7 +727,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
   text-shadow: 0px 0px 10px #FFFFFF;
   position: absolute;
-  top: 85px;
+  top: 95px;
   width: 100%;
   text-align: center;
   font-weight: 500;
@@ -1409,6 +1410,10 @@ span.poi-text {
   margin-top: 30px;
 }
 
+.article-author {
+  margin: 50px 0 30px;
+}
+
 img.preview {
   cursor: pointer;
 }
@@ -1469,7 +1474,7 @@ img.preview {
 
 #Article img.row, .public-DraftEditor-content .editor-image.row {
   float: left;
-  margin: 10px;
+  margin: 15px;
   max-width: 85vw !important;
   max-height: 27vw !important; 
 }
@@ -1482,8 +1487,8 @@ img.preview {
 #Article img.left, .public-DraftEditor-content .editor-image.left {
   float: left;
   margin-top: 5px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-right: 30px;
+  margin-bottom: 30px;
   max-width: 27vw !important;
   clear: left;
 }
@@ -1491,16 +1496,16 @@ img.preview {
 #Article img.right, .public-DraftEditor-content .editor-image.right {
   float: right;
   margin-top: 5px;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin-left: 30px;
+  margin-bottom: 30px;
   max-width: 27vw !important;
   clear: right;
 }
 
 #Article img.center, .public-DraftEditor-content .editor-image.center {
   display: block;
-  margin: 10px auto;
-  max-width: 85vw !important;
+  margin: 30px auto;
+  max-width: 60vw !important;
   clear: both;
 }
 
@@ -1525,7 +1530,7 @@ img.row::before, .editor-image.row::before {
   .public-DraftEditor-content .editor-image.left {
     float: none;
     display: block;
-    margin: 10px auto;
+    margin: 30px auto;
     max-width: 240px !important;
     max-height: none !important;
   }
@@ -1535,6 +1540,13 @@ img.row::before, .editor-image.row::before {
     max-height: none !important;
   }  
 }
+
+@media (max-width: 400px) {
+  #Article img.center, .public-DraftEditor-content .editor-image.center {
+    max-width: 240px !important;
+  }
+}
+
 
 .article-img-item,
 .article-link-item {
