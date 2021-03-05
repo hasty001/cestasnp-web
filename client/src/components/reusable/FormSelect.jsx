@@ -7,7 +7,7 @@ const FormSelect = (props) => {
   const [value, setValue] = useStateProp(props.value);
   
   return (
-    <FormItem {...props} value={value} >
+    <FormItem {...props} value={props.valueText || value} >
       <select
         className={props.itemClassName}
         id={props.valueName}

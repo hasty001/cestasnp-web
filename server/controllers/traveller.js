@@ -313,4 +313,9 @@ router.post('/deleteMessage', (req, res) => {
   checkToken(req, res, uid, () => db.deleteMessage(id, uid));
 });
 
+router.get('/users', (req, res) => {
+  promiseAsJson(() => db.getUserNames(req.app.locals.db, null), res);
+});
+
+
 module.exports = router;

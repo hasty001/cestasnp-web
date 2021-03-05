@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { getArticleState, htmlSanitize } from '../../helpers/helpers';
+import { dateToStr, getArticleState, htmlSanitize, htmlSimpleSanitize } from '../../helpers/helpers';
 import * as Constants from '../Constants';
 import ImageBox from './ImageBox';
+import UserLabel from './UserLabel';
 
-const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, tags, gps }) => {
+const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, tags, gps,
+  created, author, authorName, authorText }) => {
   
   const [preview, setPreview] = useState(null);
 
@@ -37,6 +39,14 @@ const ArticlePreviewBox = ({ title, intro, text, show, onHide, children, state, 
         
         <div dangerouslySetInnerHTML={{ __html: htmlSanitize(intro) }} />
         <div dangerouslySetInnerHTML={{ __html: htmlSanitize(text) }} />
+
+        <div className="article-author">
+            {dateToStr(created) + ` `}
+            {authorText ? 
+              <span dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(authorText) }} /> 
+              : <UserLabel name={authorName} uid={author} />}
+          </div>
+
         {children}
         <ImageBox show={!!preview} url={preview} onHide={() => setPreview(null)} />
       </div>

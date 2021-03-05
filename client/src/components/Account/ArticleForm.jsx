@@ -20,6 +20,7 @@ import CloudinaryWidget from '../reusable/CloudinaryWidget';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CanMaximize from '../reusable/CanMaximize';
 import { Prompt } from 'react-router';
+import { htmlLineClean } from '../../helpers/helpers';
 
 const ArticleForm = (props) => {
 
@@ -56,6 +57,9 @@ const ArticleForm = (props) => {
   const [title, setTitle] = useStateWithSessionStorage(getKey('title'), '', clearMsg);
   const [intro, setIntro] = useStateWithSessionStorage(getKey('intro'), '', clearMsg);
   const [text, setText] = useStateWithSessionStorage(getKey('text'), '', clearMsg);
+  const [author, setAuthor] = useStateWithSessionStorage(getKey('author'), '', clearMsg);
+  const [authorText, setAuthorText] = useStateWithSessionStorage(getKey('authorText'), '', clearMsg);
+  const [users, setUsers] = useState([]);
   const [introHtml, setIntroHtml] = useStateWithSessionStorage(getKey('introHtml'), true);
   const [textHtml, setTextHtml] = useStateWithSessionStorage(getKey('textHtml'), true);
 
@@ -126,6 +130,24 @@ const ArticleForm = (props) => {
         setErrorMsg(Texts.GenericError);
       });
     }
+
+    setLoading(true);
+
+    fetchJson('/api/traveller/users')
+    .then(data => {
+      
+      data.sort((a, b) => a.name.localeCompare(b.name));
+
+      setUsers([{ value: '', label: '' }]
+        .concat(data.map(u => { return { userName: u.name, value: u.uid || u.sql_user_id, label: u.name + (u.cesta ? ` - ${u.cesta}` : "") } })));
+      setLoading(false);
+    })
+    .catch(e => {
+      console.error('Users error: ', e);
+
+      setLoading(false);
+      setErrorMsg(Texts.GenericError);
+    });
   }, []);
 
   useEffect(() => { setArticle(props.article); }, [props.article]);
@@ -149,6 +171,8 @@ const ArticleForm = (props) => {
       setTextHtml(supported(p.fulltext));
       setIntro(p.introtext);
       setText(p.fulltext);
+      setAuthor(p.author);
+      setAuthorText(p.author_text);
       setChanged(false);
 
       const latest = article.history && article.history.length > 0 ? 
@@ -209,6 +233,8 @@ const ArticleForm = (props) => {
     data.title = title;
     data.introtext = intro;
     data.fulltext = text;
+    data.author = author;
+    data.author_text = authorText;
     if (props.edit) {
       data.sql_article_id = article.sql_article_id;
       data.uid = props.uid;
@@ -237,6 +263,8 @@ const ArticleForm = (props) => {
           setTitle('');
           setIntro('');
           setText('');
+          setAuthor('');
+          setAuthorText('');
           setImages([]);
           setArticleId((msgRes.sql_article_id + 1).toString());
         }
@@ -417,6 +445,18 @@ const ArticleForm = (props) => {
   }
 
   const allImages = images.concat(imagesAdded.filter(t => images.findIndex(i => i.src == t.src) < 0));
+
+  const getAuthor = () => {
+    const index = authorText && !author ? -1  
+      : users.findIndex(u => u.value == (author || (article ? article.created_by : props.uid)));
+    return (index >= 0 ? users[index].label : "") + (authorText ? ` ako ${htmlLineClean(authorText)}` : "");
+  }
+
+  const getAuthorName = () => {
+    const index = authorText && !author ? -1  
+      : users.findIndex(u => u.value == (author || (article ? article.created_by : props.uid)));
+    return (index >= 0 ? users[index].userName : "");
+  }
   
   return (
     <FormWithLoader formId="add-article" 
@@ -487,11 +527,18 @@ const ArticleForm = (props) => {
         {!!links && links.map((link, i) => <div key={i} className="article-link-item"><a href={link.href}>{link.href}</a></div>)}
       </FormItem>
 
+      <FormSelect value={[author, setAuthor]} valueName="author" valueLabel="Autor" valueText={getAuthor()} 
+        options={users} itemClassName="form" useEdit
+        labelChildren={<FormText value={[authorText, setAuthorText]} valueName="authorText" valueLabel="Iný autor:" itemClassName="form"/>}>
+      </FormSelect>
+
       <button className="snpBtnWhite" accessKey="N" onClick={() => setPreview(true)}>
         Náhľad článku
       </button>
       {!!props.edit && (<button className="snpBtnWhite" accessKey="R" onClick={() => setDiff({ state: parseInt(state), tags, 
-          gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text })}>
+          gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text,
+          author_name: getAuthorName(),
+          author_text: authorText })}>
           Rozdiel
         </button>)}
 
@@ -505,7 +552,9 @@ const ArticleForm = (props) => {
         </div>
       )}
 
-      <ArticlePreviewBox show={preview} title={title} intro={intro} text={text} onHide={() => setPreview(false)}/>
+      <ArticlePreviewBox show={preview} title={title} intro={intro} text={text} 
+        created={article ? article.created : Date.now()} author={author || (article ? article.created_by : props.uid)}
+        authorName={getAuthorName()} authorText={authorText} onHide={() => setPreview(false)}/>
       <ArticleDiffBox show={diff != null} 
         oldArticle={article}
         newArticle={diff}

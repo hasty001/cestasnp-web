@@ -57,7 +57,9 @@ router.post('/add', (req, res) => {
     introtext,
     fulltext,
     sql_article_id,
-    created_by
+    created_by,
+    author,
+    author_text
   } = req.body;
 
   checkToken(req, res, created_by, () =>
@@ -71,7 +73,9 @@ router.post('/add', (req, res) => {
       introtext,
       fulltext,
       sql_article_id,
-      created_by
+      created_by,
+      author,
+      author_text
     }), () => tags && tags.length && title && introtext && sql_article_id);
 });
 
@@ -87,7 +91,9 @@ router.post('/update', (req, res) => {
     fulltext,
     sql_article_id,
     note,
-    uid
+    uid,
+    author,
+    author_text
   } = req.body;
 
   checkToken(req, res, uid, () =>
@@ -102,7 +108,9 @@ router.post('/update', (req, res) => {
       fulltext,
       sql_article_id,
       note,
-      uid
+      uid,
+      author,
+      author_text
     }), () => tags && tags.length && title && introtext && sql_article_id && note);
 });
 

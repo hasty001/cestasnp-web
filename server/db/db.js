@@ -93,6 +93,10 @@ DB.prototype = {
   },
 
   findUserName(uid, users) {
+    if (!uid) {
+      return null;
+    }
+
     const index = users.findIndex(u => u.uid === uid);
     return index >= 0 ? users[index].name : null;
   },
@@ -108,20 +112,20 @@ DB.prototype = {
     const getUsers = this.findBy(db, _const.UsersTable, 
       uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
 
-    /*
+    
     const getDetails = this.findBy(db, _const.DetailsTable,
-      uids ? { user_id : { $in: uids } } : {}, { projection: { user_id: 1, meno: 1 } });*/
+      uids ? { user_id : { $in: uids } } : {}, { projection: { user_id: 1, meno: 1 } });
 
-    return Promise.all([getUsers/*, getDetails*/]).then(([users/*, details*/]) => {                
+    return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
       users.forEach(u => {
         if (!u.uid) {
           u.uid = u.sql_user_id;
         }
 
-        /*const cesta = details.find(t => t.user_id === u.uid);
+        const cesta = details.find(t => t.user_id === u.uid);
         if (cesta) {
-          u.name = cesta.meno;
-        }*/
+          u.cesta = cesta.meno;
+        }
       });
 
       return Promise.resolve(users);
@@ -836,20 +840,21 @@ DB.prototype = {
 
           const isMy = 
             (userDetails.articlesMy && userDetails.articlesMy.indexOf(id) >= 0)
-            || (article.created_by == userDetails.uid && !(userDetails.articlesNotMy && userDetails.articlesNotMy.indexOf(id) >= 0));
+            || ((article.created_by == userDetails.uid || article.author == userDetails.uid) && !(userDetails.articlesNotMy && userDetails.articlesNotMy.indexOf(id) >= 0));
 
           if (isMy) {
             userDetails.articlesMy = (userDetails.articlesMy || []).filter(t => t != id);
             userDetails.articlesNotMy = userDetails.articlesNotMy || [];
 
-            if (article.created_by == userDetails.uid && userDetails.articlesNotMy.indexOf(id) < 0) {
+            if ((article.created_by == userDetails.uid || article.author == userDetails.uid) && userDetails.articlesNotMy.indexOf(id) < 0) {
               userDetails.articlesNotMy.push(id);
             }
           } else {
             userDetails.articlesNotMy = (userDetails.articlesNotMy || []).filter(t => t != id);
             userDetails.articlesMy = userDetails.articlesMy || [];
 
-            if (article.created_by != userDetails.uid && userDetails.articlesMy.indexOf(id) < 0) {
+            if (article.created_by != userDetails.uid && article.author != userDetails.uid 
+              && userDetails.articlesMy.indexOf(id) < 0) {
               userDetails.articlesMy.push(id);
             }
           }
@@ -898,7 +903,7 @@ DB.prototype = {
       }
 
       const uids = this.getUids([article].concat(history || []), [p => p.created_by, 
-        p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id]);
+        p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id, p => p.author]);
 
       return Promise.all([
         this.findBy(db, _const.PoisTable, this.getNearPoisFilter(article.lat, article.lon)), 
@@ -918,6 +923,7 @@ DB.prototype = {
 
           a.created_by_name = this.findUserName(a.created_by || a.created_by_user_sql_id, users); 
           a.modified_by_name = this.findUserName(a.modified_by || a.modified_by_user_sql_id, users);
+          a.author_name = this.findUserName(a.author, users);
         });
 
         article.related = (nearPois || []).concat(((nearArticles || [])
@@ -938,11 +944,11 @@ DB.prototype = {
     .then(user => this.findBy(db, _const.ArticlesTable,
         { $and: [ 
           { sql_article_id: { $nin: (user[0].articlesNotMy || []) } },
-          { $or: [{ sql_article_id: { $in: (user[0].articlesMy || []) } }, { created_by: s_uid }] },
+          { $or: [{ sql_article_id: { $in: (user[0].articlesMy || []) } }, { created_by: s_uid }, { author: s_uid }] },
         ]})
       .then(articles => {
         const uids = this.getUids(articles, [p => p.created_by, 
-          p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id]);
+          p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id, p => p.author]);
 
         return this.getUserNames(db, uids).then(users => {
           articles.forEach(a => {
@@ -956,6 +962,7 @@ DB.prototype = {
 
             a.created_by_name = this.findUserName(a.created_by || a.created_by_user_sql_id, users) 
             a.modified_by_name = this.findUserName(a.modified_by || a.modified_by_user_sql_id, users);
+            a.author_name = this.findUserName(a.author, users);
           });
 
           return Promise.resolve(articles);
