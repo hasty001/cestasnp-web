@@ -133,11 +133,10 @@ Validation.prototype = {
       created_by,
       modified,
       modified_by,
-      proposed,
-      proposed_by,
-      proposed_note,
       note,
-      historyId
+      historyId,
+      author,
+      author_text
     } = article;
     return {
       lat: sanitize(lat),
@@ -155,9 +154,8 @@ Validation.prototype = {
       modified: sanitize(modified),
       modified_by: sanitize(modified_by),
 
-      proposed: sanitize(proposed),
-      proposed_by: sanitize(proposed_by),
-      proposed_note: sanitize(proposed_note),
+      author: sanitize(author),
+      author_text: sanitize(author_text),
 
       note: sanitize(note),
       historyId: sanitize(historyId)

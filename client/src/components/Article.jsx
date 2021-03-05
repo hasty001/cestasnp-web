@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import * as Constants from './Constants';
 import * as Texts from './Texts';
-import { dateToStr, htmlSanitize } from '../helpers/helpers';
+import { dateToStr, htmlSanitize, htmlSimpleSanitize } from '../helpers/helpers';
 import { AuthContext } from './AuthContext';
 import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';
 import PageWithLoader from './reusable/PageWithLoader';
@@ -125,7 +125,10 @@ const Article = (props) => {
           <div dangerouslySetInnerHTML={{ __html: htmlSanitize(article.fulltext) }} />
 
           <div className="article-author">
-            {dateToStr(article.created) + ` `}<UserLabel name={article.created_by_name} uid={article.created_by} />
+            {dateToStr(article.created) + ` `}
+            {article.author_text ? 
+              <span dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(article.author_text) }} /> 
+              : <UserLabel name={article.author_name || article.created_by_name} uid={article.author || article.created_by} />}
           </div>
           
           {!!article.lat && !!article.lon && (

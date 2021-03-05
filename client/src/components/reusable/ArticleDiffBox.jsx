@@ -30,6 +30,8 @@ const ArticleDiffBox = ({ oldArticle, newArticle, show, onHide }) => {
     result.push(article.introtext);
     result.push("Text:");
     result.push(article.fulltext);
+    result.push("Autor:");
+    result.push((article.author_name || article.created_by_name || '') + (article.author_text ? ` ako ${article.author_text}` : ''));
 
     return result.join("\n");
   }
