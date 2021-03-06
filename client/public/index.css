@@ -1624,6 +1624,10 @@ img.row::before, .editor-image.row::before {
   margin-bottom: 10px;
 }
 
+#MyArticles {
+  margin: 30px 0;
+}
+
 /***    ARTICLES    ***/
 /**********************/
 /***   PAGINATION   ***/
