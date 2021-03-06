@@ -773,11 +773,19 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 15px 0;
 }
 
-.traveller-item, .traveller-message, .traveller-comment {
+.traveller-item {
   margin: 15px 0 30px 0;
   padding-bottom: 15px;
   overflow: auto;
   border-bottom: 1px solid red;
+}
+
+.traveller-message, .traveller-comment {
+  margin: 15px 0 30px 0;
+  padding: 15px;
+  overflow: auto;
+  border: 1px solid red;
+  border-radius: 8px;
 }
 
 .traveller-comment {
