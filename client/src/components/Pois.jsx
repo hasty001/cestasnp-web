@@ -121,7 +121,7 @@ const Pois = (props) => {
       <>
         <Map pois={pois || []} use="pois-map" 
           view={[view, setView]} setView={null} 
-          markers={[gpsMarker]} showLayers />
+          markers={[gpsMarker]} showLayers canScroll />
         {!!loading && !error && <Loader />}
         {!!error && <div className="errorMsg">
             {error}
