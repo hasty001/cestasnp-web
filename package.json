@@ -42,6 +42,7 @@
     "firebase-admin": "^9.4.2",
     "history": "^4.10.1",
     "leaflet": "^1.6.0",
+    "leaflet-gesture-handling": "^1.2.1",
     "load-script-once": "^2.0.1",
     "lodash.throttle": "^4.1.1",
     "logrocket": "^1.0.7",
