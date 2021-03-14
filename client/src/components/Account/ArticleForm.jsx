@@ -384,6 +384,17 @@ const ArticleForm = (props) => {
     setImageId(Date.now());
   }
 
+  const imageHas = (image, value) => {
+    var newHtml = image.html.replaceAll(/(width|height|style)="[^"]*"/g, '');
+    const match = newHtml.match(/class="([^"]*)"/)
+    
+    if (match && match.length > 1) {
+      return match[1].split(" ").indexOf(value) >= 0 ? "down" : "";
+    }
+
+    return "";
+  }
+
   const imageAlign = (image, align) => {
     var newHtml = image.html.replaceAll(/(width|height|style)="[^"]*"/g, '');
     const match = newHtml.match(/class="([^"]*)"/)
@@ -397,7 +408,7 @@ const ArticleForm = (props) => {
         list.push(align);
       }
 
-      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ").trim()}"`);
     }
 
     if (newHtml.indexOf(" class=") < 0) {
@@ -427,7 +438,7 @@ const ArticleForm = (props) => {
         list.push(value);
       }
 
-      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ").trim()}"`);
     }
 
     if (newHtml.indexOf(" class=") < 0) {
@@ -507,11 +518,12 @@ const ArticleForm = (props) => {
               <img src={image.src}/>
 
               <span className="buttons">
-                <button className="" title="Vľavo" onClick={() => imageAlign(image, 'left')}><i className="fas fa-align-left" /></button>
-                <button className="" title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
-                <button className="" title="V rade" onClick={() => imageAlign(image, 'row')}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
-                <button className="" title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
-                <button className="" title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
+                <button className={imageHas(image, 'left')} title="Vľavo" onClick={() => imageAlign(image, 'left')}><i className="fas fa-align-left" /></button>
+                <button className={imageHas(image, 'center')} title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
+                <button className={imageHas(image, 'row')} title="V rade" onClick={() => imageAlign(image, 'row')}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
+                <button className={imageHas(image, 'right')} title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
+                <button className={imageHas(image, 'small')} title="Malý" onClick={() => imageToggleClass(image, 'small')}><i className="fas fa-compress" /></button>
+                <button className={imageHas(image, 'preview')} title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
               </span>
 
               {image.html.replace('https://res.cloudinary.com/cestasnp-sk/image/upload', '...')}

@@ -178,7 +178,8 @@ router.get('/for/home', (req, res) => {
   promiseAsJson(() => Promise.all([
     db.findBy(req.app.locals.db, _const.ArticlesTable, { sql_article_id: first }, { projection: { fulltext: 0 }}),
     db.newestSorted(req.app.locals.db,
-      _const.ArticlesTable, ORDER.newestFirst, { $and: [_const.ArticlesFilterBy, { sql_article_id: { $ne: first } }]},
+      _const.ArticlesTable, ORDER.newestFirst, 
+        { $and: [_const.ArticlesFilterBy, { sql_article_id: { $ne: first } }, { tags: { $nin: ['no-home'] } }]},
       _const.HomeArticlesCount + 1, { projection: { fulltext: 0 }})])
     .then(([first, articles]) => first.concat(articles).slice(0, _const.HomeArticlesCount + 1)), res);
 });

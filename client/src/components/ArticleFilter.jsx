@@ -10,7 +10,7 @@ const ArticleFilter = (props) => {
       id="dropdown-basic-1"
       style={{ display: 'block' }}
     >
-      {!!props.articleCategories && props.articleCategories.map((category, i) => (
+      {!!props.articleCategories && props.articleCategories.filter(c => !c.hidden).map((category, i) => (
           <MenuItem
             eventKey={i}
             key={i}
