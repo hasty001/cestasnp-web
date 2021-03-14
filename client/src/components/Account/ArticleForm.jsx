@@ -397,7 +397,7 @@ const ArticleForm = (props) => {
         list.push(align);
       }
 
-      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ").trim()}"`);
     }
 
     if (newHtml.indexOf(" class=") < 0) {
@@ -427,7 +427,7 @@ const ArticleForm = (props) => {
         list.push(value);
       }
 
-      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ").trim()}"`);
     }
 
     if (newHtml.indexOf(" class=") < 0) {
@@ -511,6 +511,7 @@ const ArticleForm = (props) => {
                 <button className="" title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
                 <button className="" title="V rade" onClick={() => imageAlign(image, 'row')}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
                 <button className="" title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
+                <button className="" title="Malý" onClick={() => imageToggleClass(image, 'small')}><i className="fas fa-compress" /></button>
                 <button className="" title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
               </span>
 

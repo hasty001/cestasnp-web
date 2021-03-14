@@ -52,7 +52,7 @@ const Image = (props) => {
       list.push(align);
     }
 
-    props.mergeEntityData(props.blockKey, props.start, props.end, props.entityKey, { className: list.join(' ') });
+    props.mergeEntityData(props.blockKey, props.start, props.end, props.entityKey, { className: list.join(' ').trim() });
   }
 
   const imageToggleClass = (value) => {
@@ -66,7 +66,7 @@ const Image = (props) => {
       list.push(value);
     }
 
-    props.mergeEntityData(props.blockKey, props.start, props.end, props.entityKey, { className: list.join(' ') });
+    props.mergeEntityData(props.blockKey, props.start, props.end, props.entityKey, { className: list.join(' ').trim() });
   } 
 
   const block = props.contentState.getBlockForKey(props.blockKey);
@@ -90,6 +90,7 @@ const Image = (props) => {
           <button title="Na stred" onMouseDown={e => { e.preventDefault(); imageAlign('center'); }}><i className="fas fa-align-center" /></button>
           <button title="V rade" onMouseDown={e => { e.preventDefault(); imageAlign('row'); }}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
           <button title="Vpravo" onMouseDown={e => { e.preventDefault(); imageAlign('right'); }}><i className="fas fa-align-right" /></button>
+          <button title="Malý" onMouseDown={e => { e.preventDefault(); imageToggleClass('small'); }}><i className="fas fa-compress" /></button>
           <button title="S náhľadom" onMouseDown={e => { e.preventDefault(); imageToggleClass('preview'); }}><i className="fas fa-external-link-alt" /></button>
           <button title="Zmazať" onMouseDown={e => { e.preventDefault(); props.removeEntity(props.blockKey, props.start, props.end); }}><i className="fas fa-trash-alt" /></button>
         </span>
