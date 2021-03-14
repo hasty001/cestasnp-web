@@ -1456,6 +1456,10 @@ img.preview {
   min-width: 26px;
 }
 
+.editor-image-buttons button.down, .editor-toolbar button.down {
+  background-color: silver;
+}
+
 .editor-image-buttons {
   position: absolute;
   left: 10px;
@@ -1532,13 +1536,21 @@ img.preview {
   clear: both;
 }
 
+.public-DraftEditor-content .editor-image.center>img {
+  max-width: 60vw !important;
+  max-height: 60vh !important;
+}
+
 #Article img.center.small, .public-DraftEditor-content .editor-image.center.small {
+  max-width: 30vw !important;
+}
+
+.public-DraftEditor-content .editor-image.center.small>img {
   max-width: 30vw !important;
 }
 
 .public-DraftEditor-content .editor-image.center {
   width: fit-content;
-  height: fit-content;
 }
 
 img.row::after, .editor-image.row::after {
@@ -1612,6 +1624,10 @@ img.row::before, .editor-image.row::before {
 .article-img-item button {
   display: inline-block !important;
   margin: 0 !important;
+}
+
+.article-img-item button.down {
+  background-color: silver;
 }
 
 .article-img-item img,
