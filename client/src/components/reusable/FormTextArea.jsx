@@ -9,6 +9,8 @@ import { findImageEntities, findLinkEntities, Image, Link, optionsFromHTML, opti
 import LinkBox from './LinkBox';
 import CloudinaryWidget from './CloudinaryWidget';
 import * as Constants from '../Constants';
+import {getDefaultKeyBinding, KeyBindingUtil} from 'draft-js';
+const {hasCommandModifier} = KeyBindingUtil;
 
 const FormTextArea = (props) => {
 
@@ -136,6 +138,29 @@ const FormTextArea = (props) => {
     focus(savedSelection, savedScrollTop);
   }
 
+  const keyBindingFn = (e) => {
+    if (e.keyCode === 66 /* `B` key */ && hasCommandModifier(e)) {
+      return 'toggle-bold';
+    }
+    if (e.keyCode === 75 /* `K` key */ && hasCommandModifier(e)) {
+      return 'insert-link';
+    }
+
+    return getDefaultKeyBinding(e);
+  }
+
+  const handleKeyCommand = (command) => {
+    if (command === 'insert-link') {
+      showLink();
+      return 'handled';
+    }
+    if (command === 'toggle-bold') {
+      toggleInline("BOLD"); 
+      return 'handled';
+    }
+    return 'not-handled';
+  }
+
   const decorator = new CompositeDecorator([
     {
       strategy: findLinkEntities,
@@ -166,6 +191,47 @@ const FormTextArea = (props) => {
     }
   }
 
+  const inlineHas = (value) => {
+    if (editorState)
+    try {
+      return editorState.getCurrentInlineStyle().has(value) ? "down" : ""; 
+    } catch (e) {
+      console.error(e);
+    }
+    return "";
+  }
+
+  const blockHas = (value) => {
+    if (editorState)
+    try {
+      return RichUtils.getCurrentBlockType(editorState) == value ? "down" : "";
+    } catch (e) {
+      console.error(e);
+    }
+    return "";
+  }
+
+  const hasLink = () => {
+    if (editorState)
+    try {
+      const selection = editorState.getSelection();
+
+      if (selection.getStartKey() == selection.getEndKey()) {
+        const content = editorState.getCurrentContent();
+        const block = content.getBlockForKey(selection.getStartKey());
+
+        const entityKey = block.getEntityAt(selection.getStartOffset());
+        const entity = entityKey ? content.getEntity(entityKey) : null;
+
+        return (entity && entity.getType() == "LINK") ? "down" : "";
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    return "";
+  }
+
   return (
     <FormItem {...props} value={value}>
       {!!props.html ? 
@@ -179,20 +245,21 @@ const FormTextArea = (props) => {
         <CloudinaryWidget show={!!imageId} uid={props.uid} imageId={imageId} 
             updateImageDetails={i => insertImage(i)} type={Constants.ImageType.Clanky} />
          <div className="editor-toolbar">
-           <button title="Tučne" onMouseDown={e => { e.preventDefault(); toggleInline("BOLD"); }}><strong>B</strong></button>
-           <button title="Kurzíva" onMouseDown={e => { e.preventDefault(); toggleInline("ITALIC"); }}><em>I</em></button>
-           <button title="Normálny" onMouseDown={e => { e.preventDefault(); toggleBlock("unstyled"); }}>t</button>
-           <button title="Veľký nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-two"); }}>H2</button>
-           <button title="Nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-three"); }}>H3</button>
-           <button title="Malý nadpis" onMouseDown={e => { e.preventDefault(); toggleBlock("header-four"); }}>H4</button>
-           <button title="Citácie" onMouseDown={e => { e.preventDefault(); toggleBlock("blockquote"); }}>""</button>
-           <button title="Odrážky" onMouseDown={e => { e.preventDefault(); toggleBlock("unordered-list-item"); }}>-t</button>
-           <button title="Číslovaný zoznam" onMouseDown={e => { e.preventDefault(); toggleBlock("ordered-list-item"); }}>1.</button>
-           <button title="Odkaz" onMouseDown={e => { e.preventDefault(); showLink(); }}><i className="fas fa-link"></i></button>
+           <button title="Tučne" className={inlineHas("BOLD")} onMouseDown={e => { e.preventDefault(); toggleInline("BOLD"); }}><strong>B</strong></button>
+           <button title="Kurzíva" className={inlineHas("ITALIC")} onMouseDown={e => { e.preventDefault(); toggleInline("ITALIC"); }}><em>I</em></button>
+           <button title="Normálny" className={blockHas("unstyled")} onMouseDown={e => { e.preventDefault(); toggleBlock("unstyled"); }}>t</button>
+           <button title="Veľký nadpis" className={blockHas("header-two")} onMouseDown={e => { e.preventDefault(); toggleBlock("header-two"); }}>H2</button>
+           <button title="Nadpis" className={blockHas("header-three")} onMouseDown={e => { e.preventDefault(); toggleBlock("header-three"); }}>H3</button>
+           <button title="Malý nadpis" className={blockHas("header-four")} onMouseDown={e => { e.preventDefault(); toggleBlock("header-four"); }}>H4</button>
+           <button title="Citácie" className={blockHas("blockquote")} onMouseDown={e => { e.preventDefault(); toggleBlock("blockquote"); }}>""</button>
+           <button title="Odrážky" className={blockHas("unordered-list-item")} onMouseDown={e => { e.preventDefault(); toggleBlock("unordered-list-item"); }}>-t</button>
+           <button title="Číslovaný zoznam" className={blockHas("ordered-list-item")} onMouseDown={e => { e.preventDefault(); toggleBlock("ordered-list-item"); }}>1.</button>
+           <button title="Odkaz" className={hasLink()} onMouseDown={e => { e.preventDefault(); showLink(); }}><i className="fas fa-link"></i></button>
            <button title="Obrázok" onMouseDown={e => { e.preventDefault(); showImage(); }}><i className="far fa-images"></i></button>
          </div>
          
          <Editor ref={editor} editorState={editorState} onChange={s => setEditorState(s)} handlePastedText={paste}
+         keyBindingFn={keyBindingFn} handleKeyCommand={handleKeyCommand}
            onBlur={() => { setValue(stateToHTML(editorState.getCurrentContent(), optionsToHTML).replaceAll('>&nbsp;</img>', '/>')); }}/>
        </div>)
       :
