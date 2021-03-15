@@ -990,7 +990,6 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: 18px;
   font-weight: 500;
   color: #58595B;
-  clear: both;
 }
 
 #Home .article-image, #Articles .article-image {
