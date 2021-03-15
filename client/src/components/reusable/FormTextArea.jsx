@@ -248,7 +248,6 @@ const FormTextArea = (props) => {
            <button title="Tučne" className={inlineHas("BOLD")} onMouseDown={e => { e.preventDefault(); toggleInline("BOLD"); }}><strong>B</strong></button>
            <button title="Kurzíva" className={inlineHas("ITALIC")} onMouseDown={e => { e.preventDefault(); toggleInline("ITALIC"); }}><em>I</em></button>
            <button title="Normálny" className={blockHas("unstyled")} onMouseDown={e => { e.preventDefault(); toggleBlock("unstyled"); }}>t</button>
-           <button title="Veľký nadpis" className={blockHas("header-two")} onMouseDown={e => { e.preventDefault(); toggleBlock("header-two"); }}>H2</button>
            <button title="Nadpis" className={blockHas("header-three")} onMouseDown={e => { e.preventDefault(); toggleBlock("header-three"); }}>H3</button>
            <button title="Malý nadpis" className={blockHas("header-four")} onMouseDown={e => { e.preventDefault(); toggleBlock("header-four"); }}>H4</button>
            <button title="Citácie" className={blockHas("blockquote")} onMouseDown={e => { e.preventDefault(); toggleBlock("blockquote"); }}>""</button>
