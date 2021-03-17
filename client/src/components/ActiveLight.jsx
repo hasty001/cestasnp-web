@@ -62,10 +62,10 @@ const ActiveLight = (props) => {
     }) : [];
 
   const hasActive = travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && t.start_date <= now, false) : false;
+    travellers.reduce((r, t) => r || !t.finishedTracking && new Date(t.start_date) <= now, false) : false;
 
   const hasPlanning =  travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && t.start_date > now, false) : false;
+    travellers.reduce((r, t) => r || !t.finishedTracking && new Date(t.start_date) > now, false) : false;
 
   const settingsData = useContext(LocalSettingsContext);
 
