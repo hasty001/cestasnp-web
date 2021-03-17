@@ -97,7 +97,9 @@ DB.prototype = {
       return null;
     }
 
-    const index = users.findIndex(u => u.uid === uid);
+    const sUid = sanitizeUserId(uid);
+
+    const index = users.findIndex(u => u.uid == sUid || u.sql_user_id == sUid);
     return index >= 0 ? users[index].name : null;
   },
 
@@ -109,12 +111,14 @@ DB.prototype = {
    * Returns list of users with name or journey name for specified uids.
    */
   getUserNames(db, uids) {
+    const sUids = uids ? uids.map(u => sanitizeUserId(u)) : null;
+
     const getUsers = this.findBy(db, _const.UsersTable, 
-      uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
+      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
 
     
     const getDetails = this.findBy(db, _const.DetailsTable,
-      uids ? { user_id : { $in: uids } } : {}, { projection: { user_id: 1, meno: 1 } });
+      sUids ? { user_id : { $in: sUids } } : {}, { projection: { user_id: 1, meno: 1 } });
 
     return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
       users.forEach(u => {
