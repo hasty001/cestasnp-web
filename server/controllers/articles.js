@@ -57,7 +57,9 @@ router.post('/add', (req, res) => {
     introtext,
     fulltext,
     sql_article_id,
-    created_by
+    created_by,
+    author,
+    author_text
   } = req.body;
 
   checkToken(req, res, created_by, () =>
@@ -71,7 +73,9 @@ router.post('/add', (req, res) => {
       introtext,
       fulltext,
       sql_article_id,
-      created_by
+      created_by,
+      author,
+      author_text
     }), () => tags && tags.length && title && introtext && sql_article_id);
 });
 
@@ -87,7 +91,9 @@ router.post('/update', (req, res) => {
     fulltext,
     sql_article_id,
     note,
-    uid
+    uid,
+    author,
+    author_text
   } = req.body;
 
   checkToken(req, res, uid, () =>
@@ -102,7 +108,9 @@ router.post('/update', (req, res) => {
       fulltext,
       sql_article_id,
       note,
-      uid
+      uid,
+      author,
+      author_text
     }), () => tags && tags.length && title && introtext && sql_article_id && note);
 });
 
@@ -170,7 +178,8 @@ router.get('/for/home', (req, res) => {
   promiseAsJson(() => Promise.all([
     db.findBy(req.app.locals.db, _const.ArticlesTable, { sql_article_id: first }, { projection: { fulltext: 0 }}),
     db.newestSorted(req.app.locals.db,
-      _const.ArticlesTable, ORDER.newestFirst, { $and: [_const.ArticlesFilterBy, { sql_article_id: { $ne: first } }]},
+      _const.ArticlesTable, ORDER.newestFirst, 
+        { $and: [_const.ArticlesFilterBy, { sql_article_id: { $ne: first } }, { tags: { $nin: ['no-home'] } }]},
       _const.HomeArticlesCount + 1, { projection: { fulltext: 0 }})])
     .then(([first, articles]) => first.concat(articles).slice(0, _const.HomeArticlesCount + 1)), res);
 });

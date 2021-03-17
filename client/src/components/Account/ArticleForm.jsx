@@ -20,6 +20,7 @@ import CloudinaryWidget from '../reusable/CloudinaryWidget';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CanMaximize from '../reusable/CanMaximize';
 import { Prompt } from 'react-router';
+import { htmlLineClean } from '../../helpers/helpers';
 
 const ArticleForm = (props) => {
 
@@ -56,6 +57,9 @@ const ArticleForm = (props) => {
   const [title, setTitle] = useStateWithSessionStorage(getKey('title'), '', clearMsg);
   const [intro, setIntro] = useStateWithSessionStorage(getKey('intro'), '', clearMsg);
   const [text, setText] = useStateWithSessionStorage(getKey('text'), '', clearMsg);
+  const [author, setAuthor] = useStateWithSessionStorage(getKey('author'), '', clearMsg);
+  const [authorText, setAuthorText] = useStateWithSessionStorage(getKey('authorText'), '', clearMsg);
+  const [users, setUsers] = useState([]);
   const [introHtml, setIntroHtml] = useStateWithSessionStorage(getKey('introHtml'), true);
   const [textHtml, setTextHtml] = useStateWithSessionStorage(getKey('textHtml'), true);
 
@@ -63,7 +67,7 @@ const ArticleForm = (props) => {
   const [imagesAdded, setImagesAdded] = useStateWithSessionStorage(getKey('imagesAdded'), [], clearMsg);
   const [links, setLinks] = useStateEx([], clearMsg);
 
-  const [note, setNote] = useStateWithSessionStorage(getKey('note'), clearMsg);
+  const [note, setNote] = useStateWithSessionStorage(getKey('note'), '', clearMsg);
 
   useEffect(() => {
     const beforeunload = (e) => {
@@ -126,6 +130,24 @@ const ArticleForm = (props) => {
         setErrorMsg(Texts.GenericError);
       });
     }
+
+    setLoading(true);
+
+    fetchJson('/api/traveller/users')
+    .then(data => {
+      
+      data.sort((a, b) => a.name.localeCompare(b.name));
+
+      setUsers([{ value: '', label: '' }]
+        .concat(data.map(u => { return { userName: u.name, value: u.uid || u.sql_user_id, label: u.name + (u.cesta ? ` - ${u.cesta}` : "") } })));
+      setLoading(false);
+    })
+    .catch(e => {
+      console.error('Users error: ', e);
+
+      setLoading(false);
+      setErrorMsg(Texts.GenericError);
+    });
   }, []);
 
   useEffect(() => { setArticle(props.article); }, [props.article]);
@@ -149,12 +171,16 @@ const ArticleForm = (props) => {
       setTextHtml(supported(p.fulltext));
       setIntro(p.introtext);
       setText(p.fulltext);
+      setAuthor(p.author);
+      setAuthorText(p.author_text);
       setChanged(false);
 
       const latest = article.history && article.history.length > 0 ? 
         article.history[0] : article;
-      if (p.modified < latest.modified) {
-        setWarningMsgFirst((<>Existuje novšia verzia článku - <a href={`#${latest._id}`}>použiť pre úpravy</a>.</>));
+
+      if ((p.modified || p.created) < latest.modified) {
+        setTimeout(() =>
+          setWarningMsgFirst((<>Existuje novšia verzia článku - <a href={`#${latest._id}`}>použiť pre úpravy</a>.</>)), 1000);
       }
 
       setTimeout(() => setChanged(false), 1000);
@@ -207,6 +233,8 @@ const ArticleForm = (props) => {
     data.title = title;
     data.introtext = intro;
     data.fulltext = text;
+    data.author = author;
+    data.author_text = authorText;
     if (props.edit) {
       data.sql_article_id = article.sql_article_id;
       data.uid = props.uid;
@@ -235,6 +263,8 @@ const ArticleForm = (props) => {
           setTitle('');
           setIntro('');
           setText('');
+          setAuthor('');
+          setAuthorText('');
           setImages([]);
           setArticleId((msgRes.sql_article_id + 1).toString());
         }
@@ -243,11 +273,21 @@ const ArticleForm = (props) => {
 
         if (props.edit) {
           setArticle(msgRes);
+
+          if (msgRes.reviewId) {
+            window.location.hash = `#${msgRes.reviewId}`;
+          }
         }
 
-        msgRes.successMsg = props.edit ? 'Článok úspešne upravený!': 
-          'Článok úspešne pridaný!';
-        setSuccessMsg(msgRes.successMsg);
+        msgRes.successMsg = props.edit ? 'Článok úspešne upravený!' 
+          : 'Článok úspešne pridaný!';
+        if (msgRes.state == -1) {
+          msgRes.successMsg += props.edit ? ' Zmeny budú publikované po schválení administrátorom.'
+            : ' Publikovaný bude po schválení administrátorom.';
+        }
+
+        setTimeout(() =>
+          setSuccessMsg(msgRes.successMsg), 1000);
 
         if (props.onUpdate) {
           props.onUpdate(msgRes);
@@ -344,6 +384,17 @@ const ArticleForm = (props) => {
     setImageId(Date.now());
   }
 
+  const imageHas = (image, value) => {
+    var newHtml = image.html.replaceAll(/(width|height|style)="[^"]*"/g, '');
+    const match = newHtml.match(/class="([^"]*)"/)
+    
+    if (match && match.length > 1) {
+      return match[1].split(" ").indexOf(value) >= 0 ? "down" : "";
+    }
+
+    return "";
+  }
+
   const imageAlign = (image, align) => {
     var newHtml = image.html.replaceAll(/(width|height|style)="[^"]*"/g, '');
     const match = newHtml.match(/class="([^"]*)"/)
@@ -357,7 +408,7 @@ const ArticleForm = (props) => {
         list.push(align);
       }
 
-      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ").trim()}"`);
     }
 
     if (newHtml.indexOf(" class=") < 0) {
@@ -387,7 +438,7 @@ const ArticleForm = (props) => {
         list.push(value);
       }
 
-      newHtml = newHtml.replace(match[0], `class="${list.join(" ")}"`);
+      newHtml = newHtml.replace(match[0], `class="${list.join(" ").trim()}"`);
     }
 
     if (newHtml.indexOf(" class=") < 0) {
@@ -405,6 +456,18 @@ const ArticleForm = (props) => {
   }
 
   const allImages = images.concat(imagesAdded.filter(t => images.findIndex(i => i.src == t.src) < 0));
+
+  const getAuthor = () => {
+    const index = authorText && !author ? -1  
+      : users.findIndex(u => u.value == (author || (article ? article.created_by : props.uid)));
+    return (index >= 0 ? users[index].label : "") + (authorText ? ` ako ${htmlLineClean(authorText)}` : "");
+  }
+
+  const getAuthorName = () => {
+    const index = authorText && !author ? -1  
+      : users.findIndex(u => u.value == (author || (article ? article.created_by : props.uid)));
+    return (index >= 0 ? users[index].userName : "");
+  }
   
   return (
     <FormWithLoader formId="add-article" 
@@ -415,7 +478,7 @@ const ArticleForm = (props) => {
 
       {!!warningMsgFirst && (
         <div className="warningMsg">
-          {!!warningMsgFirst && warningMsgFirst}          
+          {warningMsgFirst}          
         </div>
       )}
 
@@ -455,11 +518,12 @@ const ArticleForm = (props) => {
               <img src={image.src}/>
 
               <span className="buttons">
-                <button className="" title="Vľavo" onClick={() => imageAlign(image, 'left')}><i className="fas fa-align-left" /></button>
-                <button className="" title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
-                <button className="" title="V rade" onClick={() => imageAlign(image, 'row')}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
-                <button className="" title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
-                <button className="" title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
+                <button className={imageHas(image, 'left')} title="Vľavo" onClick={() => imageAlign(image, 'left')}><i className="fas fa-align-left" /></button>
+                <button className={imageHas(image, 'center')} title="Na stred" onClick={() => imageAlign(image, 'center')}><i className="fas fa-align-center" /></button>
+                <button className={imageHas(image, 'row')} title="V rade" onClick={() => imageAlign(image, 'row')}><i className="fas fa-align-center" /><i className="fas fa-align-center" /></button>
+                <button className={imageHas(image, 'right')} title="Vpravo" onClick={() => imageAlign(image, 'right')}><i className="fas fa-align-right" /></button>
+                <button className={imageHas(image, 'small')} title="Malý" onClick={() => imageToggleClass(image, 'small')}><i className="fas fa-compress" /></button>
+                <button className={imageHas(image, 'preview')} title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
               </span>
 
               {image.html.replace('https://res.cloudinary.com/cestasnp-sk/image/upload', '...')}
@@ -475,11 +539,18 @@ const ArticleForm = (props) => {
         {!!links && links.map((link, i) => <div key={i} className="article-link-item"><a href={link.href}>{link.href}</a></div>)}
       </FormItem>
 
+      <FormSelect value={[author, setAuthor]} valueName="author" valueLabel="Autor" valueText={getAuthor()} 
+        options={users} itemClassName="form" useEdit
+        labelChildren={<FormText value={[authorText, setAuthorText]} valueName="authorText" valueLabel="Iný autor:" itemClassName="form"/>}>
+      </FormSelect>
+
       <button className="snpBtnWhite" accessKey="N" onClick={() => setPreview(true)}>
         Náhľad článku
       </button>
       {!!props.edit && (<button className="snpBtnWhite" accessKey="R" onClick={() => setDiff({ state: parseInt(state), tags, 
-          gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text })}>
+          gps: gps && gps.latlon ? parseGPSPos(gps.latlon).map(f => f.toFixed(6)).join(", ") : null, title, introtext: intro, fulltext: text,
+          author_name: getAuthorName(),
+          author_text: authorText })}>
           Rozdiel
         </button>)}
 
@@ -493,7 +564,9 @@ const ArticleForm = (props) => {
         </div>
       )}
 
-      <ArticlePreviewBox show={preview} title={title} intro={intro} text={text} onHide={() => setPreview(false)}/>
+      <ArticlePreviewBox show={preview} title={title} intro={intro} text={text} 
+        created={article ? article.created : Date.now()} author={author || (article ? article.created_by : props.uid)}
+        authorName={getAuthorName()} authorText={authorText} onHide={() => setPreview(false)}/>
       <ArticleDiffBox show={diff != null} 
         oldArticle={article}
         newArticle={diff}

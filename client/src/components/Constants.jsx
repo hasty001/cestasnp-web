@@ -71,5 +71,6 @@ export const ArticleCategories = [
   // { tag: 'nezaradene', text: 'Nezaradené' },
   // { tag: 'spravy-z-terenu', text: 'Správy z terénu' },
   //{ tag: 'live-sledovanie-clanky', text: 'Články o LIVE Sledovaní' },
-  { tag: 'rozhovory', text: 'Rozhovory' }
+  { tag: 'rozhovory', text: 'Rozhovory' },
+  { tag: 'no-home', text: 'Nezobrazovať na home', hidden: true },
 ];

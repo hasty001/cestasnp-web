@@ -125,7 +125,7 @@ const Active = (props) => {
   
   return (
     <PageWithLoader pageId="NaCesteActive" pageTitle={`LIVE sledovanie${Constants.WebTitleSuffix}`} >
-      <Map use="na-ceste-map-active" travellers={travellers} />
+      <Map use="na-ceste-map-active" travellers={travellers} canScroll/>
       <button className="snpBtn active-kind-link no-print" title="Textovo" 
         onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/light'); }}><i className="fas fa-align-justify"></i></button>
       <DivWithLoader absolute className="active-travellers" 

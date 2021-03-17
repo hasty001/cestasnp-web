@@ -104,7 +104,7 @@ const Navigation = () => {
               Pridať článok           
             </NavRouterItem>)}
 
-          {!!authData.isAuth && (
+          {!!authData.isAuth && !!authData.userDetails && authData.userDetails.articlesRole == 'admin' && (
             <NavRouterItem
               href={ROUTES.zmeny}
               eventKey={4}
@@ -210,14 +210,14 @@ const Navigation = () => {
               Pridať článok           
             </NavRouterItem>
 
-            <NavRouterItem
+            {!!authData.userDetails && authData.userDetails.articlesRole == 'admin' && <NavRouterItem
               href={ROUTES.zmeny}
               eventKey={24}
               title="Prehľad zmien"
               className="desktop"
             >
               Prehľad zmien           
-            </NavRouterItem>
+            </NavRouterItem>}
 
             <NavRouterItem
               href="#"

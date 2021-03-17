@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
+import { GestureHandling } from "leaflet-gesture-handling";
 import 'leaflet/dist/leaflet.css';
+import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
 import { dateTimeToStr, escapeHtml, htmlSimpleSanitize } from '../helpers/helpers';
@@ -72,6 +74,9 @@ const Map = (props) => {
     } else if ((props.markers && props.markers.filter(m => m).length > 0) || (view && view.poi)) {
       params.zoom = 13;
     }
+
+    L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
+    params.gestureHandling = !props.canScroll;
 
     const map = L.map(id, params);
     L.control

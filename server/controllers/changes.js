@@ -25,7 +25,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
     const s_count = sanitize(count) || 20;
     const s_items = items ? items.split(',') : null;
 
-    const check = (changedProp, myItems, authorProp, userProp) => {
+    const check = (changedProp, myItems, authorProps, userProp) => {
       const fromFilter = {};
       fromFilter[changedProp] = { $gte: s_from };
 
@@ -34,8 +34,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
       const myFilter = {};
       if (my) {
-        const authorFilter = {};
-        authorFilter[authorProp] = s_uid;
+        const authorFilters = authorProps.map(p => { const f = {}; f[p] = s_uid; return f; });
 
         const userFilter = {};
         userFilter[userProp] = s_uid;
@@ -43,7 +42,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
         const inMyItems = myItems ? { _id: { $in: myItems } } : { _id: null };
         const inMyItemsOld = myItems ? { sql_article_id: { $in: myItems } } : { _id: null };
 
-        myFilter["$or"] = [authorFilter, userFilter, inMyItems, inMyItemsOld];
+        myFilter["$or"] = [...authorFilters, userFilter, inMyItems, inMyItemsOld];
       }
 
       return { $and: [fromFilter, toFilter, myFilter]};
@@ -70,9 +69,9 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       'introtext': 0, 'fulltext': 0, 'attribs': 0, 'metakey': 0, 'metadesc': 0,
       'comment': 0, 'img': 0};
 
-    const dbPromise = (table, myItems, authorProp, change, changedProp, userProp, 
+    const dbPromise = (table, myItems, authorProps, change, changedProp, userProp, 
         getName = () => {}, noteProp = '', getUrl = () => {}, getItemUserName = () => {}) => db.findBy(dbRef, table, 
-      { $or: [ check(changedProp, myItems, authorProp, userProp) ] }, { projection: ignoreProps }).then(data => data.map(item => {
+      { $or: [ check(changedProp, myItems, authorProps, userProp) ] }, { projection: ignoreProps }).then(data => data.map(item => {
         return { table, change, date: item[changedProp], user: item[userProp] || item[userProp + "_user_sql_id"], 
           userName: getUserName(item[userProp] || item[userProp + "_user_sql_id"]) || getItemUserName(item), 
           note: noteProp ? item[noteProp] : null, name: getName(item), url: getUrl(item), item };
@@ -83,38 +82,38 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
     const myPois = user ? (user.poisMy || []).map(p => new ObjectId(p)) : null;
     const getPoiUrl = (item) => `/pred/pois/${item.poiId || item._id}`;
     const promisePois = (!s_items || s_items.indexOf('pois') >= 0) ? Promise.all([
-      dbPromise(_const.PoisTable, myPois, 'user_id', 'created', 'created', 'user_id', item => item['name'], '', getPoiUrl),
-      dbPromise(_const.PoisTable, myPois, 'user_id', 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
-      dbPromise(_const.PoisTable, myPois, 'user_id', 'deleted', 'deleted', 'deleted_by', item => item['name'], 'deleted_note', getPoiUrl),
-      dbPromise(_const.PoisHistoryTable, myPois, 'user_id', 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
+      dbPromise(_const.PoisTable, myPois, ['user_id'], 'created', 'created', 'user_id', item => item['name'], '', getPoiUrl),
+      dbPromise(_const.PoisTable, myPois, ['user_id'], 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
+      dbPromise(_const.PoisTable, myPois, ['user_id'], 'deleted', 'deleted', 'deleted_by', item => item['name'], 'deleted_note', getPoiUrl),
+      dbPromise(_const.PoisHistoryTable, myPois, ['user_id'], 'modified', 'modified', 'modified_by', item => item['name'], 'modified_note', getPoiUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const myArticles = user ? user.articlesMy : null;
     const getArticleUrl = (item) => `/pred/articles/article/${item.sql_article_id}`;
     const promiseArtcles = (!s_items || s_items.indexOf('articles') >= 0) ? Promise.all([
-      dbPromise(_const.ArticlesTable, myArticles, 'created_by', 'created', 'created', 'created_by', item => item['title'], '', getArticleUrl),
-      dbPromise(_const.ArticlesTable, myArticles, 'created_by', 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
-      dbPromise(_const.ArticlesHistoryTable, myArticles, 'created_by', 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
+      dbPromise(_const.ArticlesTable, myArticles, ['created_by', 'author'], 'created', 'created', 'created_by', item => item['title'], '', getArticleUrl),
+      dbPromise(_const.ArticlesTable, myArticles, ['created_by', 'author'], 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
+      dbPromise(_const.ArticlesHistoryTable, myArticles, ['created_by', 'author'], 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getDetailUrl = (item) => `/na/${item.user_id}`;
     const promiseDetails = (!s_items || s_items.indexOf('details') >= 0) ? Promise.all([
-      dbPromise(_const.DetailsTable, null, 'user_id', 'created', 'created', 'user_id', item => item['meno'], '', getDetailUrl),
-      dbPromise(_const.DetailsTable, null, 'user_id', 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
+      dbPromise(_const.DetailsTable, null, ['user_id'], 'created', 'created', 'user_id', item => item['meno'], '', getDetailUrl),
+      dbPromise(_const.DetailsTable, null, ['user_id'], 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getMessageUrl = (item) => `/na/${item.user_id}#${item._id}`;
     const promiseMessages = (!s_items || s_items.indexOf('messages') >= 0) ? Promise.all([
-      dbPromise(_const.MessagesTable, null, 'user_id', 'created', 'pub_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
-      dbPromise(_const.MessagesTable, null, 'user_id', 'deleted', 'del_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
+      dbPromise(_const.MessagesTable, null, ['user_id'], 'created', 'pub_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
+      dbPromise(_const.MessagesTable, null, ['user_id'], 'deleted', 'del_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getCommentUrl = (item) => `/na/${getDetailUserId(item)}#${item._id}`;
     const promiseComments = (!s_items || s_items.indexOf('comments') >= 0) ? Promise.all([
-      dbPromise(_const.CommentsTable, null, 'uid', 'created', 'date', 'uid', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),
-      dbPromise(_const.CommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),
-      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'created', 'date', 'uid', item => getDetailName(item), '', getCommentUrl, item => item.name),
-      dbPromise(_const.ArticleCommentsTable, null, 'uid', 'deleted', 'del_date', 'del_by', item => getDetailName(item), '', getCommentUrl, item => item.name),
+      dbPromise(_const.CommentsTable, null, ['uid'], 'created', 'date', 'uid', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),
+      dbPromise(_const.CommentsTable, null, ['uid'], 'deleted', 'del_date', 'del_by', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),
+      dbPromise(_const.ArticleCommentsTable, null, ['uid'], 'created', 'date', 'uid', item => getDetailName(item), '', getCommentUrl, item => item.name),
+      dbPromise(_const.ArticleCommentsTable, null, ['uid'], 'deleted', 'del_date', 'del_by', item => getDetailName(item), '', getCommentUrl, item => item.name),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getDate = (date) => {

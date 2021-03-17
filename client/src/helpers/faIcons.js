@@ -3,8 +3,8 @@ import { faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExterna
   faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
   faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap, 
   faStar as fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
-  faListOl } from '@fortawesome/free-solid-svg-icons';
-import { faStar, faImages, faCopy } from '@fortawesome/free-regular-svg-icons';
+  faListOl, faCompress } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faImages, faCopy, faWindowRestore } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 var faPristresek = {
@@ -28,9 +28,9 @@ const faIconsRegister = () => {
     faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
     faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap,
     fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
-    faListOl);
+    faListOl, faCompress);
 
-  library.add(faStar, faImages, faCopy);
+  library.add(faStar, faImages, faCopy, faWindowRestore);
 
   library.add(faFacebookF, faInstagram);
   

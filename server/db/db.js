@@ -93,7 +93,13 @@ DB.prototype = {
   },
 
   findUserName(uid, users) {
-    const index = users.findIndex(u => u.uid === uid);
+    if (!uid) {
+      return null;
+    }
+
+    const sUid = sanitizeUserId(uid);
+
+    const index = users.findIndex(u => u.uid == sUid || u.sql_user_id == sUid);
     return index >= 0 ? users[index].name : null;
   },
 
@@ -105,11 +111,14 @@ DB.prototype = {
    * Returns list of users with name or journey name for specified uids.
    */
   getUserNames(db, uids) {
-    const getUsers = this.findBy(db, _const.UsersTable, 
-      uids ? { $or: [ { uid : { $in: uids } }, { sql_user_id : { $in: uids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
+    const sUids = uids ? uids.map(u => sanitizeUserId(u)) : null;
 
+    const getUsers = this.findBy(db, _const.UsersTable, 
+      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
+
+    
     const getDetails = this.findBy(db, _const.DetailsTable,
-      uids ? { user_id : { $in: uids } } : {}, { projection: { user_id: 1, meno: 1 } });
+      sUids ? { user_id : { $in: sUids } } : {}, { projection: { user_id: 1, meno: 1 } });
 
     return Promise.all([getUsers, getDetails]).then(([users, details]) => {                
       users.forEach(u => {
@@ -119,7 +128,7 @@ DB.prototype = {
 
         const cesta = details.find(t => t.user_id === u.uid);
         if (cesta) {
-          u.name = cesta.meno;
+          u.cesta = cesta.meno;
         }
       });
 
@@ -821,7 +830,7 @@ DB.prototype = {
 
   toggleArticleMy(uid, id) {
     return dbConnect(db => 
-      dbCollection(_const.ArticlesTable).findOne({ sql_article_id: id })
+      dbCollection(db, _const.ArticlesTable).findOne({ sql_article_id: id })
       .then(article => {
         if (!article) {
           return Promise.reject('Článok nebol nájdený.');            
@@ -835,25 +844,26 @@ DB.prototype = {
 
           const isMy = 
             (userDetails.articlesMy && userDetails.articlesMy.indexOf(id) >= 0)
-            || (article.created_by == userDetails.uid && !(userDetails.articlesNotMy && userDetails.articlesNotMy.indexOf(id) >= 0));
+            || ((article.created_by == userDetails.uid || article.author == userDetails.uid) && !(userDetails.articlesNotMy && userDetails.articlesNotMy.indexOf(id) >= 0));
 
           if (isMy) {
             userDetails.articlesMy = (userDetails.articlesMy || []).filter(t => t != id);
             userDetails.articlesNotMy = userDetails.articlesNotMy || [];
 
-            if (article.created_by == userDetails.uid && userDetails.articlesNotMy.indexOf(id) < 0) {
+            if ((article.created_by == userDetails.uid || article.author == userDetails.uid) && userDetails.articlesNotMy.indexOf(id) < 0) {
               userDetails.articlesNotMy.push(id);
             }
           } else {
             userDetails.articlesNotMy = (userDetails.articlesNotMy || []).filter(t => t != id);
             userDetails.articlesMy = userDetails.articlesMy || [];
 
-            if (article.created_by != userDetails.uid && userDetails.articlesMy.indexOf(id) < 0) {
+            if (article.created_by != userDetails.uid && article.author != userDetails.uid 
+              && userDetails.articlesMy.indexOf(id) < 0) {
               userDetails.articlesMy.push(id);
             }
           }
 
-          return dbCollection(_const.UsersTable).findOneAndUpdate({ uid },
+          return dbCollection(db, _const.UsersTable).findOneAndUpdate({ uid },
             { $set: { 
               articlesMy: userDetails.articlesMy, 
               articlesNotMy: userDetails.articlesNotMy } }, 
@@ -897,7 +907,7 @@ DB.prototype = {
       }
 
       const uids = this.getUids([article].concat(history || []), [p => p.created_by, 
-        p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id]);
+        p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id, p => p.author]);
 
       return Promise.all([
         this.findBy(db, _const.PoisTable, this.getNearPoisFilter(article.lat, article.lon)), 
@@ -917,6 +927,7 @@ DB.prototype = {
 
           a.created_by_name = this.findUserName(a.created_by || a.created_by_user_sql_id, users); 
           a.modified_by_name = this.findUserName(a.modified_by || a.modified_by_user_sql_id, users);
+          a.author_name = this.findUserName(a.author, users);
         });
 
         article.related = (nearPois || []).concat(((nearArticles || [])
@@ -937,11 +948,11 @@ DB.prototype = {
     .then(user => this.findBy(db, _const.ArticlesTable,
         { $and: [ 
           { sql_article_id: { $nin: (user[0].articlesNotMy || []) } },
-          { $or: [{ sql_article_id: { $in: (user[0].articlesMy || []) } }, { created_by: s_uid }] },
+          { $or: [{ sql_article_id: { $in: (user[0].articlesMy || []) } }, { created_by: s_uid }, { author: s_uid }] },
         ]})
       .then(articles => {
         const uids = this.getUids(articles, [p => p.created_by, 
-          p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id]);
+          p => p.created_by_user_sql_id, p => p.modified_by, p => p.modified_by_user_sql_id, p => p.author]);
 
         return this.getUserNames(db, uids).then(users => {
           articles.forEach(a => {
@@ -955,6 +966,7 @@ DB.prototype = {
 
             a.created_by_name = this.findUserName(a.created_by || a.created_by_user_sql_id, users) 
             a.modified_by_name = this.findUserName(a.modified_by || a.modified_by_user_sql_id, users);
+            a.author_name = this.findUserName(a.author, users);
           });
 
           return Promise.resolve(articles);
@@ -1028,7 +1040,8 @@ DB.prototype = {
             return dbCollection(db, _const.ArticlesHistoryTable)
               .insertOne(forReview ? securityCheck.sanitizeArticle(article) : current).then(resInsert => {
                 if (forReview) {
-                  return this.fillArticleInfo(db, s_id, current);
+                  return this.fillArticleInfo(db, s_id, current).then(r =>
+                    Object.assign({ reviewId: resInsert.insertedId.toString() }, r));
                 } 
                 
                 article.historyId = resInsert.insertedId.toString();

@@ -87,6 +87,10 @@ const ArticleHistory = (props) => {
             state={preview ? preview.state : ""} 
             tags={preview ? preview.tags : []} 
             gps={preview && preview.lat && preview.lon ? preview.lat + ", " + preview.lon : ""} 
+            created={preview ? preview.created : 0}
+            author={preview ? preview.author || preview.created_by : ""}
+            authorName={preview ? preview.author_name || preview.created_by_name : ""}
+            authorText={preview ? preview.author_text : ""}
             onHide={() => setPreview(null)}/>
 
           <ArticleDiffBox show={diff != null} 
