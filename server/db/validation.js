@@ -1,4 +1,5 @@
 const sanitize = require('mongo-sanitize');
+const { sanitizeUserId } = require('../util/checkUtils');
 
 // eslint-disable-next-line func-names
 const Validation = function() {};
@@ -70,7 +71,7 @@ Validation.prototype = {
       accuracy: sanitize(accuracy),
       text: sanitize(text),
       pub_date: sanitize(pub_date),
-      user_id: sanitize(user_id),
+      user_id: sanitizeUserId(user_id),
       img: sanitize(img),
       pub_date_milseconds: sanitize(pub_date_milseconds),
       details_id: sanitize(details_id)
@@ -104,7 +105,7 @@ Validation.prototype = {
       name: sanitize(name),
       text: sanitize(text),
       created: sanitize(created),
-      user_id: sanitize(user_id),
+      user_id: sanitizeUserId(user_id),
       img_url: sanitize(img_url),
       food: sanitize(food),
       water: sanitize(water),
@@ -113,7 +114,7 @@ Validation.prototype = {
         : null,
       historyId: sanitize(historyId),
       modified: sanitize(modified),
-      modified_by: sanitize(modified_by),
+      modified_by: sanitizeUserId(modified_by),
       modified_note: sanitize(modified_note)
     };
   },
@@ -150,11 +151,11 @@ Validation.prototype = {
 
       sql_article_id: sanitize(parseInt(sql_article_id)),
       created: sanitize(created),
-      created_by: sanitize(created_by),
+      created_by: sanitizeUserId(created_by),
       modified: sanitize(modified),
-      modified_by: sanitize(modified_by),
+      modified_by: sanitizeUserId(modified_by),
 
-      author: sanitize(author),
+      author: sanitizeUserId(author),
       author_text: sanitize(author_text),
 
       note: sanitize(note),
