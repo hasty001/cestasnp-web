@@ -836,14 +836,15 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: red;
 }
 
+.traveller-name:hover,
+.traveller-message-name:hover {
+  text-decoration: underline !important;
+}
+
 .traveller-comment-name {
   font-size: 16px;
   font-weight: 500;
   color: #58595b;
-}
-
-.traveller-name:hover, .traveller-message-name:hover {
-  text-decoration: underline !important;
 }
 
 .traveller-date {
@@ -861,7 +862,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .active-travellers-box .active-travellers-items.no-photo {
-  max-height: 960px;
+  max-height: 800px;
 }
 
 .active-travellers-box .footer {

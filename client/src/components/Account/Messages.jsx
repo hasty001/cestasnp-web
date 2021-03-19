@@ -58,7 +58,7 @@ const Messages = ({ messages, updateMessages, userData }) => {
       <h2>Moje správy</h2>
       {(messages || []).map(message =>
         <TravellerMessage key={message._id} message={message} travellerName={userData.travellerDetails.meno}
-          userData={userData} deleteMessage={handleDeleteMessageClick} />)}
+          userData={userData} travellerUserId={userData.userDetails.uid} deleteMessage={handleDeleteMessageClick} />)}
 
       <ConfirmBox
         title="Zmazať správu"

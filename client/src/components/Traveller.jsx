@@ -197,7 +197,8 @@ const Traveller = (props) => {
         </div>
 
         <div className="na-ceste-traveller-msgs">
-          {messages.map((message, i) => <TravellerMessage key={i} inTraveller
+          {messages.map((message, i) => <TravellerMessage key={i} inTraveller 
+            travellerUserId={traveller ? traveller.user_id : ''}
             message={message} travellerName={traveller ? traveller.meno : ''}
             userData={authData} deleteMessage={message.isComment ? 
               handleDeleteCommentClick : handleDeleteMessageClick}/>)}

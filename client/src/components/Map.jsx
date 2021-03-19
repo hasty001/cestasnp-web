@@ -231,6 +231,9 @@ const Map = (props) => {
         iconAnchor: [8, 8],
       });
 
+      const categoryZIndexOffset = {};
+      PoiCategories.forEach((c, i) => categoryZIndexOffset[c.value] = i * 10);
+
       props.pois.filter(p => (!p.deleted || props.showDeleted)).forEach(p => {
         
         const poiCategory = findPoiCategory(p.category);
@@ -247,7 +250,7 @@ const Map = (props) => {
 
         categories.forEach((category, i) => {
           const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
-            icon: categoryIcons[category.value], poi: p._id || p.id, zIndexOffset: -i,
+            icon: categoryIcons[category.value], poi: p._id || p.id, zIndexOffset: categoryZIndexOffset[category.value] + -i,
             popupContent: `<h4>${generateAnchor(p.url || `/pred/pois/${p._id}`, '',
               `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
             <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
@@ -385,7 +388,7 @@ const Map = (props) => {
           ...Constants.PoiMarkerIconProps,
         });
         const marker = L.marker([m.lat, m.lon], {
-          icon, zIndexOffset: 2
+          icon, zIndexOffset: 200
         }).addTo(layer);
 
         if (m.name) { 
