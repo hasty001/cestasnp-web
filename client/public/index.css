@@ -837,7 +837,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .traveller-name:hover,
-.traveller-message-name {
+.traveller-message-name:hover {
   text-decoration: underline !important;
 }
 
@@ -862,7 +862,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .active-travellers-box .active-travellers-items.no-photo {
-  max-height: 960px;
+  max-height: 800px;
 }
 
 .active-travellers-box .footer {
