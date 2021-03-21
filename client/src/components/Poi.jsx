@@ -16,6 +16,7 @@ import * as Constants from './Constants';
 import ItineraryTable from './reusable/ItineraryTable';
 import { A } from './reusable/Navigate';
 import DocumentTitle from 'react-document-title';
+import DivWithLoader from './reusable/DivWithLoader';
 
 const Poi = (props) => {
   const [loading, setLoading] = useState(false);
@@ -88,11 +89,11 @@ const Poi = (props) => {
   const caption = poi ? (historyPoi || poi).name || findPoiCategory((historyPoi || poi).category).label : "";
 
   return (
-    <PageWithLoader pageId="PoiDetail" loading={loading} error={error}>
-      <>
+    <PageWithLoader pageId="PoiDetail">
+      {!!poi && <Map use="poi-map" showDeleted pois={[historyPoi || poi]} view={{ lat: (historyPoi || poi).coordinates[1], lon: (historyPoi || poi).coordinates[0], zoom: 13 }}/>}
+      <DivWithLoader className="PoiDetail" loading={loading} error={error}>
       {!!poi && (
         <>
-          <Map use="poi-map" showDeleted pois={[historyPoi || poi]} view={{ lat: (historyPoi || poi).coordinates[1], lon: (historyPoi || poi).coordinates[0], zoom: 13 }}/>
           <DocumentTitle title={`${caption}${Constants.WebTitleSuffix}`} />
           {!!historyPoi && <div className="warningMsg">
             <>Verzia:{' '}
@@ -129,7 +130,7 @@ const Poi = (props) => {
 
           {!!(historyPoi || poi).guideposts && !!(historyPoi || poi).itinerary && !!((historyPoi || poi).itinerary.near || (historyPoi || poi).itinerary.after) 
             && <ItineraryTable noTotals noDetails fullKm itinerary={(historyPoi || poi).guideposts} insert={historyPoi || poi}
-              insertNear={(historyPoi || poi).itinerary.near} insertAfter={(historyPoi || poi).itinerary.after} />}
+              insertNear={(historyPoi || poi).itinerary.near || null} insertAfter={(historyPoi || poi).itinerary.after || null} />}
           
           {!historyPoi && !poi.deleted && <A href={`/pred/pois#poi=${poi._id}&lat=${poi.coordinates[1]}&lon=${poi.coordinates[0]}`}><span data-nosnippet>na celej mape</span></A>}
           
@@ -146,7 +147,7 @@ const Poi = (props) => {
             <>
               {!historyPoi && !poi.deleted && <EditPoiBox uid={authData.userDetails.uid} user={authData.user} poi={poi} onUpdate={setPoi} show={editBox} onHide={() => setEditBox(false)}/>}
               {!historyPoi && !poi.deleted && <DeletePoiBox uid={authData.userDetails.uid} user={authData.user} poi={poi} onUpdate={setPoi} show={deleteBox} onHide={() => setDeleteBox(false)}/>}
-              <h4>História</h4>
+              <h3>História</h3>
 
               {!!poi.deleted &&
                 <div className="poi-history-item">{dateTimeToStr(poi.deleted)} zmazal <UserLabel uid={poi.deleted_by} name={poi.deleted_by_name}/>{' Poznámka: '}{poi.deleted_note}
@@ -167,7 +168,7 @@ const Poi = (props) => {
             </>
           )}
         </>)}
-      </>
+      </DivWithLoader>
     </PageWithLoader>
   )
 }

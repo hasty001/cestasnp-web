@@ -595,7 +595,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /***     HOME       ***/
 
-#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller {
+#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller, #PoiDetail {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -666,7 +666,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller {
+.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
+.PoiDetail {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -678,7 +679,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media (min-width: 1600px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
+  .PoiDetail {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -771,6 +773,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 .active-travellers-info {
   margin: 15px 0;
+}
+
+.traveller .errorMsg {
+  margin-top: 15px;
 }
 
 .traveller-item {
@@ -928,7 +934,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 @media(max-width: 670px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive,
-  .traveller {
+  .traveller, .PoiDetail {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -964,7 +970,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2 {
+#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2, .PoiDetail h2 {
   margin-top: 0px;
   margin-bottom: 30px;
   font-size: 25px;
@@ -972,11 +978,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
 }
 
-.public-DraftEditor-content h2 {
+.public-DraftEditor-content h2, .PoiDetail h2 {
   margin-top: 30px;
 }
 
-#Article h3, .public-DraftEditor-content h3 {
+#Article h3, .public-DraftEditor-content h3, .PoiDetail h3 {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 20px;
@@ -1338,18 +1344,6 @@ span.poi-text {
 /**********************/
 /***      POI       ***/
 
-#PoiDetail {
-  width: 80%;
-  margin: 15px auto;
-  overflow: hidden;
-} @media (max-width: 767px) {
-  #PoiDetail {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
 .poi-icon, .article-icon {
   margin: 0 2px;
 }
@@ -1368,13 +1362,13 @@ span.poi-text {
 
 #PoiDetail .poi-image {
   float: right;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin-left: 30px;
+  margin-bottom: 30px;
   width: 40vw;
+  border-radius: 8px;
 } @media (max-width: 600px) {
   #PoiDetail .poi-image {
     margin-left: 0px;
-    margin-bottom: 10px;
     width: 100%;
   }
 }
@@ -1402,6 +1396,7 @@ span.poi-text {
 
 .itinerary-table, .pois-table, .changes-table {
   width: 100%;
+  font-size: 14px;
 }
 
 .itinerary-table td, 
