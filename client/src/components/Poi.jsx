@@ -117,7 +117,7 @@ const Poi = (props) => {
               {!historyPoi && !!authData.isAuth && !poi.deleted && 
                 (<a href="#" onClick={e => { e.preventDefault(); setEditBox(true); clearMsg(); }} 
                   className="poi-edit" title="upraviť dôležité miesto"><i className="fas fa-pencil-alt"/></a>)}
-              {!historyPoi && !!authData.isAuth && !poi.deleted && userDetails && (poi.user_id == userDetails.uid) &&
+              {!historyPoi && !!authData.isAuth && !poi.deleted && userDetails && (poi.user_id == userDetails.uid || userDetails.articlesRole == 'admin') &&
                 (<a href="#" onClick={e => { e.preventDefault(); setDeleteBox(true); clearMsg(); }} 
                   className="poi-delete" title="zmazať dôležité miesto"><i className="fas fa-trash-alt"/></a>)}
             </span>

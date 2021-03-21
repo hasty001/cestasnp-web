@@ -76,7 +76,7 @@ const AddPoi = (props) => {
       pageTitle={`Pridať dôležité miesto${Constants.WebTitleSuffix}`}
       error={authData && authData.authProviderMounted && !authData.isAuth ? 'Pridať dôležité miesto môže len prihlásený užívateľ.' : ''}>
       
-      <PoiForm uid={authData.userDetails.uid} user={authData.user} onUpdate={updatePois}/>
+      <PoiForm uid={authData.userDetails.uid} user={authData.user} userDetails={authData.userDetails} onUpdate={updatePois}/>
 
       <PageWithLoader pageId="MyPois" loading={loading} error={error} title="Moje dôležité miesta" className="thinRedWrap">
         <PoiList my showDeleted showLastChange pois={pois} userDetails={authData.userDetails} onMyRemove={toggleIsMy}/>

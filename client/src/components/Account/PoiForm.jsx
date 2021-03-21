@@ -147,7 +147,7 @@ const PoiForm = (props) => {
       return;
     }
 
-    if (!gps.accuracy && !props.edit && !image) {
+    if (!gps.accuracy && !props.edit && !image && (!props.userDetails || props.userDetails.articlesRole != 'admin')) {
       setErrorMsg('Pre GPS súradnice zadané ručne alebo vybrané na mape je nutné pridať fotku miesta.');
       return;
     }
