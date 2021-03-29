@@ -7,7 +7,7 @@ const escape = (html) => {
     .replace(/>/g, '&gt;');
 }
 
-const escapeImg = (img) => {
+const escapeImg = (img, def = "") => {
   if (img && typeof img == "string") {
     if (img != "None") {
       if (img.indexOf('res.cloudinary.com') === -1) {
@@ -17,14 +17,14 @@ const escapeImg = (img) => {
       }
     }
 
-    return "";
+    return def;
   }
   
   if (img && img.secure_url) {
     return escape(img.secure_url);
   }
 
-  return "";  
+  return def;  
 }
 
 const escapeDate = (date) => {
