@@ -8,6 +8,7 @@ const { sanitizeUserId } = require('./util/checkUtils');
 const db = new DB();
 
 const WebSuffix = " - CestaSNP";
+const defImg = "https://cestasnp.sk/logo.png";
 
 const getPublisher = () => 
   `"publisher": {
@@ -74,7 +75,7 @@ const getArticleMeta = (dbRef, articleId) =>
               <meta property="og:title" content="${title}" />
               <meta property="og:type" content="article" />
               <meta property="og:description" content="${desc}"/>
-              <meta property="og:image" content="${escapeImg(results[0].ogimg || imgRegEx())}" />
+              <meta property="og:image" content="${escapeImg(results[0].ogimg || imgRegEx(), defImg)}" />
               <meta property="og:article:published_time" content="${escapeDate(results[0].publish_up || (results[0].state > 0 ? results[0].created : null))}" />
               <meta property="og:article:modified_time" content="${escapeDate(results[0].modified)}" />
               <meta property="og:article:expiration_time" content="${escapeDate(results[0].publish_down || (results[0].state <= 0 ? results[0].modified : null))}" />
@@ -105,7 +106,7 @@ const getArticleMeta = (dbRef, articleId) =>
                   "name": "${author}"},
                 "image": {
                   "@type": "ImageObject",
-                  "url": "${escapeImg(results[0].ogimg)}"
+                  "url": "${escapeImg(results[0].ogimg, defImg)}"
                 },   
                 ${getPublisher()}
               }
@@ -141,7 +142,7 @@ const getPoiMeta = (dbRef, poiId) =>
               <meta property="og:title" content="${title}" />
               <meta property="og:type" content="article" />
               <meta property="og:description" content="${desc}"/>
-              <meta property="og:image" content="${escapeImg(results[0].img_url)}" />
+              <meta property="og:image" content="${escapeImg(results[0].img_url, defImg)}" />
               <meta property="og:article:published_time" content="${escapeDate(results[0].created)}" />
               <meta property="og:article:modified_time" content="${escapeDate(results[0].modified)}" />
               <meta property="og:article:expiration_time" content="${escapeDate(results[0].deleted)}" />
@@ -172,7 +173,7 @@ const getPoiMeta = (dbRef, poiId) =>
                   "name": "${author}"},
                 "image": {
                   "@type": "ImageObject",
-                  "url": "${escapeImg(results[0].img_url)}"
+                  "url": "${escapeImg(results[0].img_url, defImg)}"
                 },   
                 ${getPublisher()}
               }
@@ -203,11 +204,11 @@ const getTravelerMeta = (dbRef, userId) =>
             const url = `https://cestasnp.sk/na/${escape(userId)}`;
             const created = escapeDate(results[0].created);
             const published = escapeDate(results[0].start_date);
-            const modified = msg ? escapeDate(msg[0].pub_date) : '';
-            const lat = msg ? escape(msg[0].lat) : '';
-            const lon = msg ? escape(msg[0].lon) : '';
+            const modified = msg && msg.length > 0 ? escapeDate(msg[0].pub_date) : '';
+            const lat = msg && msg.length > 0 ? escape(msg[0].lat) : '';
+            const lon = msg && msg.length > 0 ? escape(msg[0].lon) : '';
 
-            const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img.url || msg[0].img : '');
+            const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img.url || msg[0].img : '', defImg);
 
             var meta = `
               <meta name="description" content="${desc}" />
