@@ -114,7 +114,7 @@ const Traveller = (props) => {
       return;
     }
 
-    const updatedMessages = messages;
+    const updatedMessages = messagesData.map(m => m);
 
     var error = "";
     var success = "";
@@ -144,7 +144,7 @@ const Traveller = (props) => {
           msg.deleted = msg.deleted || (msg._id === targetId && success);
         });
       
-      setMessages(updatedMessages);
+      setMessagesData(updatedMessages);
       
       if (comment) {
         setShowConfirmDeleteComment(false);
@@ -168,7 +168,7 @@ const Traveller = (props) => {
   }
 
   const updateComments = (comment) => {
-    const msgs = messages;
+    const msgs = messagesData.map(m => m);
 
     msgs.forEach(msg => {
       msg.error = "";
@@ -178,7 +178,7 @@ const Traveller = (props) => {
     msgs.push(Object.assign({ isComment: true }, comment));
     window.location.hash = "#" + comment._id;
 
-    setMessages(msgs);
+    setMessagesData(msgs);
   }
 
   return (
