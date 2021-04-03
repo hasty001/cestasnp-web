@@ -10,6 +10,7 @@ import FormCheckBox from './reusable/FormCheckBox';
 import { useStateWithLocalStorage } from '../helpers/reactUtils';
 import { PoiCategories } from './PoiCategories';
 import { navigate } from './reusable/Navigate';
+import { parseDate } from '../helpers/helpers';
 
 const PoisInTable = (props) => {
 
@@ -34,9 +35,9 @@ const PoisInTable = (props) => {
       const f = sort ? (sort.asc ? 1 : -1) : -1;
       switch (sort ? sort.by : null) {
         case "created":
-          return f * (new Date(a.created) - new Date(b.created));
+          return f * (parseDate(a.created) - parseDate(b.created));
         case "lastModified":
-          return f * (new Date(a.deleted || a.modified || 0) - new Date(b.deleted || b.modified || 0));
+          return f * (parseDate(a.deleted || a.modified || 0) - parseDate(b.deleted || b.modified || 0));
         case "lastModified_action":
           return f * ((a.deleted ? 2 : (a.modified ? 1 : 0)) - (b.deleted ? 2 : (b.modified ? 1 : 0)));
         case "lastModified_by_name":

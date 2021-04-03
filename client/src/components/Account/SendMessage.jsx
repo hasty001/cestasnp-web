@@ -6,6 +6,7 @@ import * as Texts from '../Texts';
 import PageWithLoader from '../reusable/PageWithLoader';
 import DivWithLoader from '../reusable/DivWithLoader';
 import { fetchJson } from '../../helpers/fetchUtils';
+import { sortByDate } from '../../helpers/helpers';
 
 const SendMessage = (props) => {
 
@@ -25,7 +26,7 @@ const SendMessage = (props) => {
         return;
       }
 
-      data.sort((a, b) => new Date(b.pub_date) - new Date(a.pub_date));
+      sortByDate(data, a => a.pub_date, false);
       setMessages(data);
     })
     .catch(err => {
