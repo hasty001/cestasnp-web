@@ -1,5 +1,5 @@
 import React from 'react';
-import { dateTimeToStr, dateToStr, htmlSimpleSanitize } from '../../helpers/helpers';
+import { dateTimeToStr, dateToStr, htmlSimpleSanitize, parseDate } from '../../helpers/helpers';
 import { A } from './Navigate';
 import * as Constants from '../Constants';
 
@@ -13,12 +13,12 @@ const TravellerItem = ({ traveller, now }) => {
         </A>
 
         <span className="traveller-date">              
-          {(!traveller.finishedTracking && !!traveller.lastMessage && (new Date(traveller.start_date) <= now)) &&  (
+          {(!traveller.finishedTracking && !!traveller.lastMessage && (parseDate(traveller.start_date) <= now)) &&  (
           <span>
             {dateTimeToStr(traveller.lastMessage.pub_date)}
           </span>)} 
 
-          {((new Date(traveller.start_date) > now) || !traveller.lastMessage) && (
+          {((parseDate(traveller.start_date) > now) || !traveller.lastMessage) && (
           <span>
             {traveller.start_miesto}{' '}
             {dateToStr(traveller.start_date)}                           

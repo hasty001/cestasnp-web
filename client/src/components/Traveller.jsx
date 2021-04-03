@@ -11,6 +11,7 @@ import DivWithLoader from './reusable/DivWithLoader';
 import PageWithLoader from './reusable/PageWithLoader';
 import TravellerItem from './reusable/TravellerItem';
 import TravellerMessage from './reusable/TravellerMessage';
+import { sortByDate } from '../helpers/helpers';
 
 const Traveller = (props) => {
   const [loading, setLoading] = useState(true);
@@ -76,8 +77,7 @@ const Traveller = (props) => {
     }
   }, [messages, window.location.hash]);
 
-  const sortMessages = (msgs, order) => 
-    msgs.sort((a, b) => (order ? 1 : -1) * (new Date(a.date || a.pub_date) - new Date(b.date || b.pub_date)));
+  const sortMessages = (msgs, order) => sortByDate(msgs, a => a.date || a.pub_date, order);
 
   useEffect(() => {
     const msgs = messagesData.map(m => m);
