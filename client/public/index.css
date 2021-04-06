@@ -595,7 +595,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /***     HOME       ***/
 
-#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller, #PoiDetail {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -666,7 +666,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
+.PoiDetail {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -678,7 +679,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media (min-width: 1600px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
+  .PoiDetail {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -773,13 +775,57 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   margin: 15px 0;
 }
 
-.traveller-item {
-  border-bottom: 1px solid red;
-  margin: 15px 0 30px 0;
-  padding-bottom: 15px;
+.traveller .errorMsg {
+  margin-top: 15px;
 }
 
-.traveller-item-header {
+.traveller-item {
+  margin: 15px 0 30px 0;
+  padding-bottom: 15px;
+  overflow: auto;
+  border-bottom: 1px solid red;
+}
+
+.traveller-message, .traveller-comment {
+  margin: 15px 0 30px 0;
+  padding: 15px;
+  overflow: auto;
+  border: 1px solid red;
+  border-radius: 8px;
+}
+
+.traveller-comment {
+  margin-left: 10vw;
+  border-color: #58595b;
+}
+
+#Traveller .traveller-item {
+  margin: 30px 0 15px 0;
+}
+
+.traveller-message.highlighted, .traveller-comment.highlighted {
+  padding-bottom: 14px;
+  border-bottom-width: 2px;
+}
+
+.traveller-message-image {
+  float: left;
+  max-width: 240px;
+  max-height: 240px;
+  border-radius: 8px;
+  margin-right: 30px;
+  margin-bottom: 10px;
+}
+
+@media(max-width: 670px) {
+  .traveller-message-image {
+    float: none;
+    display: block;
+    margin: 0px auto 15px;
+  }
+}
+
+.traveller-item-header, .traveller-message-header, .traveller-comment-header {
   overflow-y: hidden;
   margin-bottom: 15px;
 }
@@ -790,8 +836,21 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: red;
 }
 
-.traveller-name:hover {
+.traveller-message-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: red;
+}
+
+.traveller-name:hover,
+.traveller-message-name:hover {
   text-decoration: underline !important;
+}
+
+.traveller-comment-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #58595b;
 }
 
 .traveller-date {
@@ -809,7 +868,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .active-travellers-box .active-travellers-items.no-photo {
-  max-height: 960px;
+  max-height: 800px;
 }
 
 .active-travellers-box .footer {
@@ -874,7 +933,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media(max-width: 670px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive,
+  .traveller, .PoiDetail {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -910,7 +970,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2 {
+#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2, .PoiDetail h2 {
   margin-top: 0px;
   margin-bottom: 30px;
   font-size: 25px;
@@ -918,11 +978,11 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   color: #58595B;
 }
 
-.public-DraftEditor-content h2 {
+.public-DraftEditor-content h2, .PoiDetail h2 {
   margin-top: 30px;
 }
 
-#Article h3, .public-DraftEditor-content h3 {
+#Article h3, .public-DraftEditor-content h3, .PoiDetail h3 {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 20px;
@@ -1225,20 +1285,18 @@ span.poi-text {
   position: absolute;
   left: 10px;
   top: 10px;
-  padding: 5px 15px !important;
   z-index: 9998;
 }
 
 .pois-map-itinerary-link,
 .pois-map-link {
-  padding: 5px 15px !important;
+  margin: 5px 10px 5px 0 !important;
 }
 
 .pois-map-watch-gps {
   position: absolute;
-  left: 65px;
+  left: 75px;
   top: 10px;
-  padding: 5px 15px !important;
   z-index: 9998;
 }
 
@@ -1286,22 +1344,6 @@ span.poi-text {
 /**********************/
 /***      POI       ***/
 
-#PoiDetail {
-  width: 80%;
-  margin: 15px auto;
-  overflow: hidden;
-} @media (max-width: 767px) {
-  #PoiDetail {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-  }
-}
-
-.poi-actions, .article-actions {
-  font-size: 16px;
-}
-
 .poi-icon, .article-icon {
   margin: 0 2px;
 }
@@ -1320,13 +1362,13 @@ span.poi-text {
 
 #PoiDetail .poi-image {
   float: right;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin-left: 30px;
+  margin-bottom: 30px;
   width: 40vw;
+  border-radius: 8px;
 } @media (max-width: 600px) {
   #PoiDetail .poi-image {
     margin-left: 0px;
-    margin-bottom: 10px;
     width: 100%;
   }
 }
@@ -1354,6 +1396,7 @@ span.poi-text {
 
 .itinerary-table, .pois-table, .changes-table {
   width: 100%;
+  font-size: 14px;
 }
 
 .itinerary-table td, 
@@ -1638,6 +1681,10 @@ img.row::before, .editor-image.row::before {
   margin-bottom: 10px;
 }
 
+#MyArticles {
+  margin: 30px 0;
+}
+
 /***    ARTICLES    ***/
 /**********************/
 /***   PAGINATION   ***/
@@ -1735,10 +1782,42 @@ img.row::before, .editor-image.row::before {
   display: inline-block;
   vertical-align: middle;
   font-size: 16px;
-  min-width: 200px;
-  margin: 5px;
-  padding: 10px;
-  height: 80px;
+  font-weight: 500;
+  min-width: 120px;
+  margin: 8px;
+  padding: 5px 15px;
+  height: 70px;
+  color: white;
+  border-radius: 8px;
+}
+
+.active-traveller-name {
+  margin-top: 4px;
+}
+
+.active-traveller.started>.active-traveller-name {
+  margin-top: 8px;
+}
+
+.active-traveller-marker {
+  display: inline-block;
+  position: relative;
+  width: 38px;
+  height: 38px;
+  vertical-align: middle;
+  margin-bottom: 5px;
+}
+
+.active-traveller-marker .marker-border {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.active-traveller-marker .marker-image {
+  position: absolute;
+  left: 3px;
+  top: 3px;
 }
 
 #NaCesteActiveLight,
@@ -1779,72 +1858,22 @@ img.row::before, .editor-image.row::before {
   min-height: 1200px;
 }
 
+#Traveller .traveller-item .traveller-name {
+  font-size: 25px;
+  font-weight: 500;
+  color: #58595b;
+}
+
 #na-ceste-map-traveller {
   width: 100%;
-  height: 450px;
-}
-
-@media (max-width: 767px) and (max-height: 580px) {
-  #na-ceste-map-traveller {
-    height: 300px;
-  }
-}
-
-@media (max-width: 767px) and (min-height: 580px) {
-  #na-ceste-map-traveller {
-    height: 400px;
-  }
-}
-
-.na-ceste-traveller {
-  display: block;
-  width: 100%;
-  padding: 10px;
+  height: 40vw;
+  min-height: 240px;
+  max-height: 420px;
 }
 
 .na-ceste-traveller-sort {
   display: block;
   width: 100%;
-  padding: 0px 10px 5px 10px;
-}
-
-.na-ceste-traveller-msgs {
-  display: block;
-  padding: 0 10px;
-  overflow-y: hidden;
-}
-
-.traveller-message-deleted, 
-.traveller-comment-deleted {
-  display: block;
-  width: 90%;
-  padding: 15px;
-  margin: 4px 0;
-  float: left;
-  text-align: justify;
-}
-
-.traveller-comment-deleted {
-  float: right;
-}
-
-.traveller-message, 
-.traveller-comment {
-  display: block;
-  width: 90%;
-  padding: 15px;
-  margin: 4px 0;
-  float: left;
-  text-align: justify;
-  background-color: #ffdbdb;
-}
-
-.traveller-message.highlighted, 
-.traveller-comment.highlighted{
-  margin: 8px 4px;
-  -webkit-box-shadow: 0px 0px 50px 15px rgba(0,0,0,0.5);
-  -moz-box-shadow: 0px 0px 50px 15px rgba(0,0,0,0.5);
-  box-shadow: 0px 0px 50px 15px rgba(0,0,0,0.5);
 }
 
 .traveller-message-actions,
@@ -1852,6 +1881,9 @@ img.row::before, .editor-image.row::before {
 .poi-actions,
 .article-actions {
   float: right;
+  line-height: 25px;
+  margin-left: 5px;
+  font-size: 16px;
 }
 
 .poi-item,
@@ -1886,23 +1918,6 @@ img.row::before, .editor-image.row::before {
   height: 0px;
 }
 
-.traveller-comment {
-  float: right;
-  text-align: justify;
-  background-color: white;
-  border: 1px solid #ccc2c2;
-}
-
-.red-stripe {
-  display: inline-block;
-  height: 12px;
-  background-color: red;
-  width: 14px;
-  border-bottom: solid 4px white;
-  border-top: solid 4px white;
-  margin-right: 5px;
-}
-
 .travellerPhotoModal {
   width: 900px;
   max-width: 90%;
@@ -1923,33 +1938,13 @@ img.row::before, .editor-image.row::before {
 /***   COMMENTBOX   ***/
 
 .comment-box-btn {
-  background: #f97474;
-  border: solid 0px;
-  border-radius: 20px;
-  bottom: 0px;
-  box-shadow: #867e7e 2px 2px 3px;
-  color: #f5f5f5;
-  font-size: 18px;
-  height: 40px;
-  margin: 5px;
-  min-width: 120px;
-  left: 45%;
   position: fixed;
-  text-align: center;
-  width: 10%;
+  bottom: 0;
   z-index: 999;
-  outline: none;
-} @media(max-width: 464px) {
-  .comment-box-btn {
-    left: 33%;
-    width: 33%;
-  }
-}
-
-.comment-box-btn:hover {
-    color: #f53838;
-    background-color: #fffdfd;
-    border-color: #fffefe;
+  display: block;
+  margin-bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .modal-content {
@@ -2131,13 +2126,13 @@ img.row::before, .editor-image.row::before {
   background: transparent;
 }
 
-.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle {
+.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle, #SendMessage {
   width: 80%;
   margin: 20px auto;
   font-size: 16px;
 }
 
-.accountWrap label, .fanAccountWrap>label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
+.accountWrap label, .fanAccountWrap label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
 .edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label, .link-box label {
   display: block;
   width: 100%;
@@ -2180,8 +2175,9 @@ img.row::before, .editor-image.row::before {
   margin-left: 200px;
 }
 
-.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2 {
+.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2, #SendMessage h2 {
   text-align: center;
+  padding-bottom: 15px;
 }
 
 .fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form, #AddArticle p.form {
@@ -2194,7 +2190,7 @@ img.row::before, .editor-image.row::before {
   margin-left: 200px;
 }
 
-.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button {
+.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button, #SendMessage button {
   display: block;
   margin: 15px auto;
 }
@@ -2241,7 +2237,8 @@ img.row::before, .editor-image.row::before {
   margin: 5px 0;
 }
 
-.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form {
+.fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form,
+#MessageForm textarea {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -2266,7 +2263,9 @@ img.row::before, .editor-image.row::before {
   left: 50%;
   transform: translateX(-50%);
   margin: 10px 0;
-  max-height: 200px;
+  max-height: 240px;
+  max-width: 240px;
+  border-radius: 8px;
 }
 
 .errorMsg {
@@ -2300,7 +2299,7 @@ img.row::before, .editor-image.row::before {
   padding-left: 10px;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 600px) {
   
   #resetWrap button {
     margin-left: 15px;
@@ -2370,30 +2369,38 @@ img.row::before, .editor-image.row::before {
 
 }
 
-.snpBtn {
-  background: #f97474;
-  border: solid 0px;
-  padding: 5px 30px;
-  font-size: 18px;
-  height: 40px;
+.snpBtn, .snpBtnWhite {
+  box-sizing: border-box;
+  border: 1px solid red;
   border-radius: 20px;
-  color: #f5f5f5;
-  box-shadow: #867e7e 2px 2px 3px;
-  margin: 10px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  transition: background-color 0.4s, color 0.4s;
+  font-size: 15px;
+  font-weight: 400;
   outline: none;
 }
 
+.snpBtn {
+  background-color: red;
+  color: white;
+}
+
+.snpBtn:hover,
+.snpBtn:focus,
+.snpBtn:active {
+  background-color: #E00000;
+}
+
 .snpBtnWhite {
-  background: white;
-  border: 1px solid #f97474;
-  color: #333333;
-  padding: 5px 30px;
-  font-size: 18px;
-  height: 40px;
-  border-radius: 20px;
-  box-shadow: #867e7e 2px 2px 3px;
-  margin: 10px;
-  outline: none;
+  background-color: white;
+  color: red;
+}
+
+.snpBtnWhite:hover,
+.snpBtnWhite:focus,
+.snpBtnWhite:active {
+  background-color: #FFE0E0;
 }
 
 .snpBtn.down {
@@ -2401,11 +2408,12 @@ img.row::before, .editor-image.row::before {
 }
 
 .thinRedWrap {
-  border: solid 1px #f97474;
+  border: solid 1px red;
+  border-radius: 8px;
   padding: 15px;
 }
 
-#SentMessages {
+#Messages {
   overflow: hidden;
   margin: 30px 0;
 }

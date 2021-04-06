@@ -17,6 +17,7 @@ const ROUTES = {
   archiv: '/na/archive',
   kontakt: '/kontakt',
   mojaCesta: '/ucet',
+  poslatSpravu: '/ucet/poslatspravu',
   pridatPOI: '/ucet/pridatpoi',
   pridatClanok: '/ucet/pridatclanok',
   ucetPois: '/ucet/pois',
@@ -26,6 +27,9 @@ const ROUTES = {
 const Navigation = () => {
   const authData = useContext(AuthContext);
   const settingsData = useContext(LocalSettingsContext);
+  const isTraveler = authData.travellerDetails &&
+    Object.keys(authData.travellerDetails).length > 0;
+
   return (
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
@@ -74,11 +78,31 @@ const Navigation = () => {
               {authData.userDetails.email}
             </NavRouterItem>)}
 
-          {!!authData.isAuth && (
+          {!!authData.isAuth && !isTraveler && (
+            <NavRouterItem
+              href={ROUTES.mojaCesta}
+              eventKey={1}
+              title="Založiť LIVE Sledovanie"
+              className="mobile"
+            >
+              Založiť LIVE Sledovanie
+            </NavRouterItem>)}
+
+          {!!authData.isAuth && isTraveler && (
             <NavRouterItem
               href={ROUTES.mojaCesta}
               eventKey={1}
               title="Moja cesta"
+              className="mobile"
+            >
+              Moja cesta
+            </NavRouterItem>)}
+
+          {!!authData.isAuth && isTraveler && (
+            <NavRouterItem
+              href={ROUTES.poslatSpravu}
+              eventKey={2}
+              title="Poslať správu"
               className="mobile"
             >
               Poslať správu
@@ -87,7 +111,7 @@ const Navigation = () => {
           {!!authData.isAuth && (
             <NavRouterItem
               href={ROUTES.pridatPOI}
-              eventKey={2}
+              eventKey={3}
               title="Pridať dôležité miesto"
               className="mobile"
             >
@@ -97,7 +121,7 @@ const Navigation = () => {
           {!!authData.isAuth && (
             <NavRouterItem
               href={ROUTES.pridatClanok}
-              eventKey={3}
+              eventKey={4}
               title="Pridať článok"
               className="mobile"
             >
@@ -107,7 +131,7 @@ const Navigation = () => {
           {!!authData.isAuth && !!authData.userDetails && authData.userDetails.articlesRole == 'admin' && (
             <NavRouterItem
               href={ROUTES.zmeny}
-              eventKey={4}
+              eventKey={5}
               title="Prehľad zmien"
               className="mobile"
             >
@@ -117,7 +141,7 @@ const Navigation = () => {
           {!!authData.isAuth && (
             <NavRouterItem
               href="#"
-              eventKey={5}
+              eventKey={6}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="mobile"
@@ -183,14 +207,35 @@ const Navigation = () => {
               {authData.userDetails.email}
             </NavRouterItem>
 
+          {!isTraveler && (
             <NavRouterItem
               href={ROUTES.mojaCesta}
-              eventKey={21}
+              eventKey={20}
+              title="Založiť LIVE Sledovanie"
+              className="desktop"
+            >
+              Založiť LIVE Sledovanie
+            </NavRouterItem>)}
+
+          {isTraveler && (
+            <NavRouterItem
+              href={ROUTES.mojaCesta}
+              eventKey={20}
               title="Moja cesta"
               className="desktop"
             >
+              Moja cesta
+            </NavRouterItem>)}
+
+          {isTraveler && (
+            <NavRouterItem
+              href={ROUTES.poslatSpravu}
+              eventKey={21}
+              title="Poslať správu"
+              className="desktop"
+            >
               Poslať správu
-            </NavRouterItem>          
+            </NavRouterItem>)}          
 
             <NavRouterItem
               href={ROUTES.pridatPOI}

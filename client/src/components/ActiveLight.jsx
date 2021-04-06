@@ -9,6 +9,7 @@ import { LocalSettingsContext } from './LocalSettingsContext';
 import ButtonReadMore from './reusable/ButtonReadMore';
 import { addDays } from 'date-fns';
 import TravellerItem from './reusable/TravellerItem';
+import { parseDate } from '../helpers/helpers';
 
 const ActiveLight = (props) => {
   const [loading, setLoading] = useState(false);
@@ -25,10 +26,10 @@ const ActiveLight = (props) => {
       .then(data => {     
         const activeTravellers = data;
 
-        const getSortValue = t => (t.finishedTracking ? "11_" + new Date(t.start_date).valueOf() 
-          : ("0" + (new Date(t.start_date) <= now && t.lastMessage ? 
-            ("0_" + (addDays(now, 1) - new Date(t.lastMessage.pub_date))) 
-            : ("1_" + new Date(t.start_date).valueOf()))));
+        const getSortValue = t => (t.finishedTracking ? "11_" + parseDate(t.start_date).valueOf() 
+          : ("0" + (parseDate(t.start_date) <= now && t.lastMessage ? 
+            ("0_" + (addDays(now, 1) - parseDate(t.lastMessage.pub_date))) 
+            : ("1_" + parseDate(t.start_date).valueOf()))));
 
         activeTravellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
         
@@ -62,10 +63,10 @@ const ActiveLight = (props) => {
     }) : [];
 
   const hasActive = travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && new Date(t.start_date) <= now, false) : false;
+    travellers.reduce((r, t) => r || !t.finishedTracking && parseDate(t.start_date) <= now, false) : false;
 
   const hasPlanning =  travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && new Date(t.start_date) > now, false) : false;
+    travellers.reduce((r, t) => r || !t.finishedTracking && parseDate(t.start_date) > now, false) : false;
 
   const settingsData = useContext(LocalSettingsContext);
 

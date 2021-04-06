@@ -35,6 +35,7 @@ const Active = (props) => {
 
   const fetchData = () => {
     setLoading(true);
+    setError('');
 
     fetchJson('/api/traveller/activeTravellers')
       .then(data => {
@@ -52,7 +53,9 @@ const Active = (props) => {
           activeTravellers.push(travellerData);
           travellerIds.push(traveller.user_id);
         });
+        
         sortByDateAsc(activeTravellers, 'startDate');
+
         if (activeTravellers.length === 0) {
           setTravellers([]);
           setError(Texts.NoTravellersError);
@@ -61,11 +64,9 @@ const Active = (props) => {
           let colorCount = 0;
           
           activeTravellers.forEach(trvlr => {
-            trvlr.color = trvlr.startDate <= now ? colors[colorCount] : grey;
-            colorCount += 1;
-            if (colorCount >= colors.length - 1) {
-              colorCount = 0;
-            }
+            trvlr.started = trvlr.startDate <= now;
+            trvlr.color = trvlr.started ? colors[colorCount % colors.length] : grey;
+            colorCount++;
           });
         }
         return { activeTravellers, travellerIds };
@@ -129,47 +130,21 @@ const Active = (props) => {
       <button className="snpBtn active-kind-link no-print" title="Textovo" 
         onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/light'); }}><i className="fas fa-align-justify"></i></button>
       <DivWithLoader absolute className="active-travellers" 
-        loading={loading} error={error} style={{ position: "absolute" }}>
-        {!!error && error}
-        {!loading && !error && !!travellers && travellers.map((traveller, i) => {
-          return (
-            <A
-              href={`/na/${traveller.userId}`}
-              key={i}
-            >
-              {traveller.color !== grey ? (
-                <div
-                  className="active-traveller"
-                  style={{
-                    border: `1px solid ${traveller.color}`,
-                    textAlign: 'center'
-                  }}
-                >
-                  <p
-                    style={{
-                      color: traveller.color,
-                      margin: '12px 0 0 0'
-                    }}
-                  >
-                    {traveller.meno}{' '}
-                    <i className="fas fa-map-marker-alt" 
-                      style={{ width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} alt="Vzor ukazovatela"></i>
-                  </p>
-                </div>
-              ) : (
-                <div
-                  className="active-traveller"
-                  style={{ border: `1px solid ${grey}`, color: grey }}
-                >
-                  <p style={{ margin: '8px 0 0 0' }}>{traveller.meno}</p>
-                  <p style={{ margin: '0px', fontSize: '12px' }}>
-                    vyráža {dateToStr(traveller.startDate, "kdoviekdy")}
-                  </p>
-                </div>
-              )}
-            </A>
-          );
-        })}
+        loading={loading} error={error}>
+        {!loading && !error && !!travellers && travellers.map((traveller, i) => (
+          <A key={i} href={`/na/${traveller.userId}`}>
+            <div className={`active-traveller ${traveller.started ? 'started' : ''}`.trim()} style={{backgroundColor: traveller.color}}>
+              <div className="active-traveller-name">               
+                {traveller.started && <div className="active-traveller-marker">
+                  <i className="fas fa-map-marker marker-border" style={{ width: `${Constants.PoiMarkerSize + 6}px`, height: `${Constants.PoiMarkerSize + 6}px` }}></i>
+                  <i className="fas fa-map-marker-alt marker-image" style={{ color: traveller.color, width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} title="vzor ukazovatela"></i>
+                </div>}
+                {' '}{traveller.meno} 
+              </div>
+              {!traveller.started && <div className="active-traveller-start">vyráža {dateToStr(traveller.startDate, "kdoviekdy")}</div>}
+            </div>
+          </A>
+        ))}
       </DivWithLoader>
     </PageWithLoader>
   );

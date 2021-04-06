@@ -147,7 +147,7 @@ const PoiForm = (props) => {
       return;
     }
 
-    if (!gps.accuracy && !props.edit && !image) {
+    if (!gps.accuracy && !props.edit && !image && (!props.userDetails || props.userDetails.articlesRole != 'admin')) {
       setErrorMsg('Pre GPS súradnice zadané ručne alebo vybrané na mape je nutné pridať fotku miesta.');
       return;
     }
@@ -254,7 +254,7 @@ const PoiForm = (props) => {
   return (
     <FormWithLoader formId="add-poi" title={props.edit ? "Upraviť dôležité miesto" : "Pridať dôležité miesto" }
       submitText={props.edit ? "Upraviť" : (warningMsg ? "Naozaj pridať" : "Pridať")}
-      onSubmit={addPoi} loading={loading} errorMsg={errorMsg} errorMsgFirst={errorMsgFirst} successMsg={successMsg} description={!props.edit && (
+      onSubmit={addPoi} loading={loading} error={errorMsg} errorFirst={errorMsgFirst} success={successMsg} description={!props.edit && (
       <>
         <p>Pomôž nám vytvoriť databázu dôležitých miest a zberaj body z terénu. Vďaka dôležitým miestam,
           ktoré spolu vytvoríme budú pútnici vedieť kde je na Ceste voda či útulňa a teda kde môžu doplniť energiu.

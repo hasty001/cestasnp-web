@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import * as Constants from './Constants';
-import { dateTimeToStr, getArticleStateIcon } from '../helpers/helpers';
+import { dateTimeToStr, getArticleStateIcon, sortByDate } from '../helpers/helpers';
 import { AuthContext } from './AuthContext';
 import { fetchJson } from '../helpers/fetchUtils';
 import PageWithLoader from './reusable/PageWithLoader';
@@ -51,7 +51,7 @@ const ArticleHistory = (props) => {
     article.history.forEach(h => history.push(h));
   }
 
-  history.sort((a, b) => new Date(b.modified || 0) - new Date(a.modified || 0));
+  sortByDate(history, a => a.modified || 0, false);
 
   return (
     <PageWithLoader pageId="Article" loading={loading} error={error}>

@@ -119,8 +119,7 @@ router.post('/add', (req, res) => {
       itineraryNear,
       itineraryAfter,
       itineraryInfo
-    }), () => coordinates && coordinates.length >= 2 && category && (name || text)
-      && (accuracy || img_url));
+    }), () => coordinates && coordinates.length >= 2 && category && (name || text));
 
   if (confirmed) {
     addPoi();

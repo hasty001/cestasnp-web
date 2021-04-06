@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Constants from '../components/Constants';
 import format from 'date-fns/format';
+import parse from 'date-fns/parse';
 import DOMPurify from 'dompurify';
 import { navigate } from '../components/reusable/Navigate';
 
@@ -14,6 +15,13 @@ const sortByDateAsc = (array, date = 'date') => {
   return array.sort((a, b) => {
     return a[date] > b[date] ? 1 : a[date] < b[date] ? -1 : 0;
   });
+};
+
+/**
+ * Sorts array by date ascending if order or descending if not order.
+ */
+const sortByDate = (array, getDate = (a) => a.date, order = true) => {
+  array.sort((a, b) => (order ? 1 : -1) * (parseDate(getDate(a)) - parseDate(getDate(b))));
 };
 
 const dateToStrFormat = (date, strFormat, def = "") => 
@@ -36,6 +44,11 @@ const dateToStrFormat = (date, strFormat, def = "") =>
 
 const dateTimeToStr = (date, def = "") => dateToStrFormat(date, Constants.DateTimeViewFormat, def);
 const dateToStr = (date, def = "") => dateToStrFormat(date, Constants.DateViewFormat, def);
+
+/**
+ * Parse string to date (with time).
+ */
+const parseDate = (date) => parse(date);
 
 /**
  * Escape html special characters.
@@ -209,6 +222,6 @@ const getArticleCategoryText = (tag) => {
   return index >= 0 ? Constants.ArticleCategories[index].text : "";
 }
 
-export { sortByDateDesc, sortByDateAsc, dateToStr, dateTimeToStr, 
+export { sortByDateDesc, sortByDateAsc, sortByDate, dateToStr, dateTimeToStr, parseDate,
   escapeHtml, htmlSanitize, htmlSimpleSanitize, htmlLineSimpleSanitize, htmlClean, htmlLineClean,
   getArticleState, getArticleStateIcon, getArticleImage, fixImageUrl, getArticleCategoryText };

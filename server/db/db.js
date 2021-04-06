@@ -334,7 +334,7 @@ DB.prototype = {
               .then(commentRes => {
                 comment._id = commentRes.insertedId;
                 
-                return Promsie.resolve(comment);
+                return Promise.resolve(comment);
               });
           } else {
             return Promise.reject('Malicious comment');
@@ -491,8 +491,8 @@ DB.prototype = {
               finishedTracking: sanitize(finishedTracking),
               lastUpdated: momentDateTime()
             }
-          }
-        ));
+          }, { returnOriginal: false }
+        )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
   },
 
   sendMessage(message) {
@@ -550,19 +550,27 @@ DB.prototype = {
   },
 
   addPoi(poi) {
-    return dbConnect(db => {
-      poi.created = momentDateTime();
+    const sUid = sanitize(poi.user_id);
 
-      return dbCollection(db, _const.PoisTable)
-        .insertOne(securityCheck.sanitizePoi(poi))
-        .then(poiRes => {
-          poi._id = poiRes.insertedId;
+    return dbConnect(db => 
+      dbCollection(db, _const.UsersTable)
+        .findOne({ uid: sUid }).then(user => {
+        poi.created = momentDateTime();
 
-          return this.fillPoiInfo(db, poi._id, poi).then(poi => {
-            return Promise.resolve(poi);
+        if (!(poi.accuracy || poi.img_url || (user && user.articlesRole == 'admin'))) {
+          return Promise.reject('Data is not valid.');
+        }
+
+        return dbCollection(db, _const.PoisTable)
+          .insertOne(securityCheck.sanitizePoi(poi))
+          .then(poiRes => {
+            poi._id = poiRes.insertedId;
+
+            return this.fillPoiInfo(db, poi._id, poi).then(poi => {
+              return Promise.resolve(poi);
+            });
           });
-        });
-      }
+      })
     )
   },
 
@@ -650,30 +658,38 @@ DB.prototype = {
   },
 
   deletePoi(uid, id, note) {
+    const sUid = sanitize(uid);
+
     return dbConnect(db => 
-      dbCollection(db, _const.PoisTable)
-        .findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }, { user_id: uid }] },
-          { $set: { deleted: momentDateTime(), deleted_by: uid, deleted_note: note } }, 
-          { returnOriginal: false })
-        .then(res => {
-          if (res.value) {
-            return this.fillPoiInfo(db, res.value._id, res.value);
-          } else {
-            return Promise.reject('Dôležité miesto nebolo nájdené.');
-          }
-      }));
+      dbCollection(db, _const.UsersTable)
+        .findOne({ uid: sUid }).then(user =>
+        dbCollection(db, _const.PoisTable)
+          .findOneAndUpdate({ $and: [{ _id: new ObjectId(sanitize(id)) }, 
+            user.articlesRole != "admin" ? { user_id: sUid } : {}] },
+            { $set: { deleted: momentDateTime(), deleted_by: sUid, deleted_note: sanitize(note) } }, 
+            { returnOriginal: false })
+          .then(res => {
+            if (res.value) {
+              return this.fillPoiInfo(db, res.value._id, res.value);
+            } else {
+              return Promise.reject('Dôležité miesto nebolo nájdené.');
+            }
+        })));
   },
 
   togglePoiMy(uid, id) {
+    const sId = sanitize(id);
+    const sUid = sanitize(uid);
+
     return dbConnect(db => 
       dbCollection(db, _const.PoisTable)
-      .findOne({ _id: new ObjectId(id) }).then(poi => {
+      .findOne({ _id: new ObjectId(sId) }).then(poi => {
         if (!poi) {
           return Promise.reject('Dôležité miesto nebolo nájdené.');            
         }
 
         return dbCollection(db, _const.UsersTable)
-        .findOne({ uid }).then(userDetails => {
+        .findOne({ uid: sUid }).then(userDetails => {
           if (!userDetails) {
             return Promise.reject('Neexistujúci užívateľ.');
           }
@@ -687,19 +703,19 @@ DB.prototype = {
             userDetails.poisNotMy = userDetails.poisNotMy || [];
 
             if (poi.user_id == userDetails.uid && userDetails.poisNotMy.indexOf(id) < 0) {
-              userDetails.poisNotMy.push(id);
+              userDetails.poisNotMy.push(sId);
             }
           } else {
             userDetails.poisNotMy = (userDetails.poisNotMy || []).filter(t => t != id);
             userDetails.poisMy = userDetails.poisMy || [];
 
             if (poi.user_id != userDetails.uid && userDetails.poisMy.indexOf(id) < 0) {
-              userDetails.poisMy.push(id);
+              userDetails.poisMy.push(sId);
             }
           }
 
           return dbCollection(db, _const.UsersTable)
-            .findOneAndUpdate({ uid },
+            .findOneAndUpdate({ uid: sUid },
             { $set: { 
               poisMy: userDetails.poisMy, 
               poisNotMy: userDetails.poisNotMy } }, 
@@ -829,14 +845,17 @@ DB.prototype = {
   },
 
   toggleArticleMy(uid, id) {
+    const sId = sanitize(id);
+    const sUid = sanitize(uid);
+
     return dbConnect(db => 
-      dbCollection(db, _const.ArticlesTable).findOne({ sql_article_id: id })
+      dbCollection(db, _const.ArticlesTable).findOne({ sql_article_id: sId })
       .then(article => {
         if (!article) {
           return Promise.reject('Článok nebol nájdený.');            
         }
 
-        return dbCollection(db, _const.UsersTable).findOne({ uid })
+        return dbCollection(db, _const.UsersTable).findOne({ uid: sUid })
         .then(userDetails => {
           if (!userDetails) {
             return Promise.reject('Neexistujúci užívateľ.');
@@ -851,7 +870,7 @@ DB.prototype = {
             userDetails.articlesNotMy = userDetails.articlesNotMy || [];
 
             if ((article.created_by == userDetails.uid || article.author == userDetails.uid) && userDetails.articlesNotMy.indexOf(id) < 0) {
-              userDetails.articlesNotMy.push(id);
+              userDetails.articlesNotMy.push(sId);
             }
           } else {
             userDetails.articlesNotMy = (userDetails.articlesNotMy || []).filter(t => t != id);
@@ -859,11 +878,11 @@ DB.prototype = {
 
             if (article.created_by != userDetails.uid && article.author != userDetails.uid 
               && userDetails.articlesMy.indexOf(id) < 0) {
-              userDetails.articlesMy.push(id);
+              userDetails.articlesMy.push(sId);
             }
           }
 
-          return dbCollection(db, _const.UsersTable).findOneAndUpdate({ uid },
+          return dbCollection(db, _const.UsersTable).findOneAndUpdate({ uid: sUid },
             { $set: { 
               articlesMy: userDetails.articlesMy, 
               articlesNotMy: userDetails.articlesNotMy } }, 

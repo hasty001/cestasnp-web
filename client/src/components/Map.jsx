@@ -227,6 +227,9 @@ const Map = (props) => {
         iconAnchor: [8, 8],
       });
 
+      const categoryZIndexOffset = {};
+      PoiCategories.forEach((c, i) => categoryZIndexOffset[c.value] = i * 10);
+
       props.pois.filter(p => (!p.deleted || props.showDeleted)).forEach(p => {
         
         const poiCategory = findPoiCategory(p.category);
@@ -243,7 +246,7 @@ const Map = (props) => {
 
         categories.forEach((category, i) => {
           const marker = new MapMarker([p.coordinates[1], p.coordinates[0]], {
-            icon: categoryIcons[category.value], poi: p._id || p.id, zIndexOffset: -i,
+            icon: categoryIcons[category.value], poi: p._id || p.id, zIndexOffset: categoryZIndexOffset[category.value] + -i,
             popupContent: `<h4>${generateAnchor(p.url || `/pred/pois/${p._id}`, '',
               `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
             <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
@@ -263,13 +266,13 @@ const Map = (props) => {
     // TRAVELLER MSGs
     if (props.stops && props.stops.length > 0) {
       props.stops.forEach(stop => {
-        if (stop.type === 'message') {
+        if (!stop.isComment && stop.lat && stop.lon) {
           const icon = L.divIcon({
             html: `<i class="fas fa-map-marker-alt mapMarker" alt="Ukazovatel na mape" style="width: ${Constants.PoiMarkerSize}px; height: ${Constants.PoiMarkerSize}px"></i>`,
             ...Constants.PoiMarkerIconProps,
           });
           const marker = L.marker([stop.lat, stop.lon], { icon,
-            popupContent: `<p>${dateTimeToStr(stop.date)}</p>
+            popupContent: `<p>${dateTimeToStr(stop.pub_date)}</p>
           <p>${htmlSimpleSanitize(stop.text)}</p>` }).addTo(markerLayer);
           newMarkers.push(marker);
           marker.bindPopup("");
@@ -363,7 +366,7 @@ const Map = (props) => {
     if (mapObj) {
       updateLayers(mapObj);
     }
-  }, [mapObj, props.pois, props.guideposts, props.stop, props.travellers]);
+  }, [mapObj, props.pois, props.guideposts, props.stops, props.travellers]);
 
   useEffect(() => {
     if (!mapObj || !mapObj.markerLayers || !mapObj.markerLayers["marker"]) {
@@ -381,7 +384,7 @@ const Map = (props) => {
           ...Constants.PoiMarkerIconProps,
         });
         const marker = L.marker([m.lat, m.lon], {
-          icon, zIndexOffset: 2
+          icon, zIndexOffset: 200
         }).addTo(layer);
 
         if (m.name) { 
