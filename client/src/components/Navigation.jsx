@@ -27,6 +27,9 @@ const ROUTES = {
 const Navigation = () => {
   const authData = useContext(AuthContext);
   const settingsData = useContext(LocalSettingsContext);
+  const isTraveler = authData.travellerDetails &&
+    Object.keys(authData.travellerDetails).length > 0;
+
   return (
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
@@ -75,7 +78,17 @@ const Navigation = () => {
               {authData.userDetails.email}
             </NavRouterItem>)}
 
-          {!!authData.isAuth && (
+          {!!authData.isAuth && !isTraveler && (
+            <NavRouterItem
+              href={ROUTES.mojaCesta}
+              eventKey={1}
+              title="Založiť LIVE Sledovanie"
+              className="mobile"
+            >
+              Založiť LIVE Sledovanie
+            </NavRouterItem>)}
+
+          {!!authData.isAuth && isTraveler && (
             <NavRouterItem
               href={ROUTES.mojaCesta}
               eventKey={1}
@@ -85,7 +98,7 @@ const Navigation = () => {
               Moja cesta
             </NavRouterItem>)}
 
-          {!!authData.isAuth && (
+          {!!authData.isAuth && isTraveler && (
             <NavRouterItem
               href={ROUTES.poslatSpravu}
               eventKey={2}
@@ -194,6 +207,17 @@ const Navigation = () => {
               {authData.userDetails.email}
             </NavRouterItem>
 
+          {!isTraveler && (
+            <NavRouterItem
+              href={ROUTES.mojaCesta}
+              eventKey={20}
+              title="Založiť LIVE Sledovanie"
+              className="desktop"
+            >
+              Založiť LIVE Sledovanie
+            </NavRouterItem>)}
+
+          {isTraveler && (
             <NavRouterItem
               href={ROUTES.mojaCesta}
               eventKey={20}
@@ -201,8 +225,9 @@ const Navigation = () => {
               className="desktop"
             >
               Moja cesta
-            </NavRouterItem> 
+            </NavRouterItem>)}
 
+          {isTraveler && (
             <NavRouterItem
               href={ROUTES.poslatSpravu}
               eventKey={21}
@@ -210,7 +235,7 @@ const Navigation = () => {
               className="desktop"
             >
               Poslať správu
-            </NavRouterItem>          
+            </NavRouterItem>)}          
 
             <NavRouterItem
               href={ROUTES.pridatPOI}
