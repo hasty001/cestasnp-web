@@ -2299,7 +2299,7 @@ img.row::before, .editor-image.row::before {
   padding-left: 10px;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 600px) {
   
   #resetWrap button {
     margin-left: 15px;
