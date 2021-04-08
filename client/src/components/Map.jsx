@@ -104,13 +104,13 @@ const Map = (props) => {
     const mapTiles = L.tileLayer(config.tileLayer.uri, config.tileLayer.params);
     const mapTilesNew = L.tileLayer(config.tileLayerNew.uri, config.tileLayerNew.params);
 
-    if (mapTilesLayer == "new") {
+    if (mapTilesLayer != "old") {
       mapTilesNew.addTo(map);
     } else {
       mapTiles.addTo(map);
     }
 
-    map.on('baselayerchange', e => setMapTilesLayer(e.name == "turistika + cyklo + běžky" ? "new" : null));
+    map.on('baselayerchange', e => setMapTilesLayer(e.name == "turistika + cyklo + běžky" ? "new" : "old"));
 
     const guidepostZoomedLayers = new LonLayers(12, 1000);
     
@@ -142,8 +142,8 @@ const Map = (props) => {
 
     markerLayers["marker"] = L.layerGroup();
 
-    L.control.layers({"turistická": mapTiles, "turistika + cyklo + běžky": mapTilesNew}, 
-      props.showLayers? legendLayers : {}).addTo(map);
+    L.control.layers({ "turistika + cyklo + běžky": mapTilesNew, "turistická": mapTiles }, 
+      props.showLayers ? legendLayers : {}).addTo(map);
 
     posChanged();
 
