@@ -10,6 +10,8 @@ import FormTextArea from '../reusable/FormTextArea';
 import { useStateEx } from '../../helpers/reactUtils';
 import FormSelect from '../reusable/FormSelect';
 import PageWithLoader from '../reusable/PageWithLoader';
+import { format } from 'date-fns';
+import { parseDate } from '../../helpers/helpers';
 
 const TravellerAccount = (props) => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ const TravellerAccount = (props) => {
     (isDuklaDevin ? props.userData.travellerDetails.start_miesto : 'oth') : 'Dukla', clearMsg);
   const [startOther, setStartOther] = useStateEx(props.edit && !isDuklaDevin ? props.userData.travellerDetails.start_miesto : '', clearMsg);
   const [startDate, setStartDate] = useStateEx(props.edit ? props.userData.travellerDetails.start_date : '', clearMsg);
-  const [count, setCount] = useStateEx(props.edit ? props.userData.travellerDetails.number : '', clearMsg);
+  const [count, setCount] = useStateEx(props.edit ? (props.userData.travellerDetails.number || '0').toString() : '', clearMsg);
 
   const createTraveller = () => {
     if (props.edit) {
@@ -74,13 +76,15 @@ const TravellerAccount = (props) => {
       return;
     }
 
-    if (count.trim().length === 0 || parseInt(count) < 0) {
+    if (count == null || count.trim().length === 0 || parseInt(count) < 0) {
       setError('Počet účasníkov nesmie byť záporný!');
       return;
     }
 
-    if (differenceInDays(startDate, new Date()) < -5) {
-      logDev(differenceInDays(startDate, new Date()));
+    const sStartDate = parseDate(startDate);
+    logDev(sStartDate);
+    if (differenceInDays(sStartDate, new Date()) < -5) {
+      logDev(differenceInDays(sStartDate, new Date()));
       
       setError('Začiatok cesty je viac než 5 dni v minulosti. Vyber iný dátum!');
       return;
@@ -92,7 +96,7 @@ const TravellerAccount = (props) => {
     const data = {
       meno: name,
       text: text,
-      start_date: startDate,
+      start_date: format(sStartDate, 'YYYY-MM-DD'),
       uid: props.userData.userDetails.uid,
       start_miesto: start === 'oth' ? startOther : start,
       number: parseInt(count),
