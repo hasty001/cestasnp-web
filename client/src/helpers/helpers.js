@@ -48,7 +48,28 @@ const dateToStr = (date, def = "") => dateToStrFormat(date, Constants.DateViewFo
 /**
  * Parse string to date (with time).
  */
-const parseDate = (date) => parse(date);
+const parseDate = (date) => {
+  if (date && date.length && date.trim().length <= 10) {
+
+    if (date.indexOf(".") > 0) {
+      // parse sk formated date
+      const parts = date.trim().split('.');
+      if (parts && parts.length == 3) {
+        return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+      }
+    }
+
+    if (date.indexOf("-") > 0) {
+      // parse en formated date
+      const parts = date.trim().split('-');
+      if (parts && parts.length == 3) {
+        return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      }
+    }
+  }
+
+  parse(date);
+}
 
 /**
  * Escape html special characters.
