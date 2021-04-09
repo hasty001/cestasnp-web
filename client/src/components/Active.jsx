@@ -133,7 +133,7 @@ const Active = (props) => {
         loading={loading} error={error}>
         {!loading && !error && !!travellers && travellers.map((traveller, i) => (
           <A key={i} href={`/na/${traveller.userId}`}>
-            <div className={`active-traveller ${traveller.started ? 'started' : ''}`.trim()} style={{backgroundColor: traveller.color}}>
+            <div className={`active-traveller ${traveller.started ? 'started' : ''}`.trim()} style={{backgroundColor: traveller.color, borderColor: traveller.color}}>
               <div className="active-traveller-name">               
                 {traveller.started && <div className="active-traveller-marker">
                   <i className="fas fa-map-marker marker-border" style={{ width: `${Constants.PoiMarkerSize + 6}px`, height: `${Constants.PoiMarkerSize + 6}px` }}></i>
