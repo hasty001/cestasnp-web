@@ -2261,7 +2261,11 @@ button#dropdown-basic-1 {
 
 .accountWrap button {
   display: block;
-  margin-left: 200px;
+  margin: 15px 0 15px 200px;
+}
+
+.accountWrap button.linkLikeButton {
+  margin: 0 0 0 200px;
 }
 
 .fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button, #SendMessage button {
@@ -2422,19 +2426,23 @@ button#dropdown-basic-1 {
   .accountWrap span {
     width: 100%;
     text-align: left;
-    padding-left: 50px;
-  }
-  
-  .accountWrap button {
-    margin-left: 50px;
+    padding-left: 0;
   }
   
   .accountWrap input {
-    margin-left: 50px;
+    margin-left: 0;
+  }
+
+  .accountWrap button {
+    margin: 15px auto;
+  }
+
+  .accountWrap button.linkLikeButton {
+    margin: 0;
   }
 
   .accountWrap h2 {
-    margin-left: 50px;
+    margin-left: 0;
   }
 
   .errorMsg {
