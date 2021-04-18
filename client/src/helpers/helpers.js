@@ -50,7 +50,6 @@ const dateToStr = (date, def = "") => dateToStrFormat(date, Constants.DateViewFo
  */
 const parseDate = (date) => {
   if (date && date.length && date.trim().length <= 10) {
-
     if (date.indexOf(".") > 0) {
       // parse sk formated date
       const parts = date.trim().split('.');
@@ -68,7 +67,7 @@ const parseDate = (date) => {
     }
   }
 
-  parse(date);
+  return parse(date);
 }
 
 /**
