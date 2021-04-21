@@ -12,6 +12,7 @@ import PageWithLoader from './reusable/PageWithLoader';
 import TravellerItem from './reusable/TravellerItem';
 import TravellerMessage from './reusable/TravellerMessage';
 import { sortByDate } from '../helpers/helpers';
+import { A, navigate } from './reusable/Navigate';
 
 const Traveller = (props) => {
   const [loading, setLoading] = useState(true);
@@ -190,7 +191,7 @@ const Traveller = (props) => {
       />
 
       <DivWithLoader className="traveller" loading={loading} error={error}>
-        <TravellerItem traveller={traveller || {}} now={Date.now()} />         
+        <TravellerItem traveller={traveller || {}} now={Date.now()} userData={authData} />         
 
         <div className="na-ceste-traveller-sort" data-nosnippet >
           Zoradiť: <a href="#" onClick={handleOrderClick}>{orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
@@ -202,15 +203,6 @@ const Traveller = (props) => {
             message={message} travellerName={traveller ? traveller.meno : ''}
             userData={authData} deleteMessage={message.isComment ? 
               handleDeleteCommentClick : handleDeleteMessageClick}/>)}
-
-          {props.scrollTop > Constants.ShowCommentBoxScrollOffset && (
-            <button
-              className="comment-box-btn snpBtn"
-              onClick={() => setShowCommentBox(true)}
-            >
-              Komentuj
-            </button>
-          )}
 
           <CommentBox
             show={showCommentBox}
@@ -240,6 +232,25 @@ const Traveller = (props) => {
           />
         </div>
       </DivWithLoader>
+
+      <div className="traveller-buttons-panel">
+        <div className="traveller-buttons">
+          {!!authData.userDetails && authData.userDetails.uid == travellerId && 
+            <button
+              className="snpBtn"
+              onClick={() => navigate("/ucet/poslatspravu")}
+            >
+              Pridaj správu
+            </button>}
+
+          <button
+            className="snpBtn"
+            onClick={() => setShowCommentBox(true)}
+          >
+            Komentuj
+          </button>
+        </div>
+      </div>
     </PageWithLoader>
   );
 }

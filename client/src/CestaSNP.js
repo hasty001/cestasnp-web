@@ -37,11 +37,9 @@ class CestaSNP extends Component {
     super(props);
 
     this.state = {
-      fillContent: false,
-      scrollTop: 0,
+      fillContent: false
     };
 
-    this.handleScroll = this.handleScroll.bind(this);
     this.appBodyRef = React.createRef();
     this.prevPath = '';
   }
@@ -75,18 +73,10 @@ class CestaSNP extends Component {
     this.removeListener = history.listen((params) => {
       this.pathChanged(params.pathname);
     });
-
-    this.appBodyRef.current.addEventListener('scroll', e => this.handleScroll(e), detectIt.passiveEvents ? { passive: true } : null);
   }
 
   componentWillUnmount() {
     this.removeListener();
-  }
-
-  handleScroll(event) {
-    const scrollTop = event.target.scrollTop;
-    if (scrollTop != this.state.scrollTop)
-      this.setState({ scrollTop: event.target.scrollTop });
   }
 
   render() {
@@ -128,7 +118,7 @@ class CestaSNP extends Component {
               <Route exact path="/na/ceste/light" component={ActiveLight} />
               <Route exact path="/na/ceste/fotky" component={ActivePhotos} />
               <Route exact path="/na/archive" component={Archive} />
-              <Route path="/na/:traveller" render={(props) => (<Traveller {...props} scrollTop={this.state.scrollTop} />)}/>
+              <Route path="/na/:traveller" render={(props) => (<Traveller {...props} />)}/>
               <Route exact path="/kontakt" component={Kontakt} />
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" render={(props) => (<Account {...props} />)}/>
