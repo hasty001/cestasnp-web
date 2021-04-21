@@ -12,6 +12,7 @@ import FormSelect from '../reusable/FormSelect';
 import PageWithLoader from '../reusable/PageWithLoader';
 import { format } from 'date-fns';
 import { parseDate } from '../../helpers/helpers';
+import { A } from '../reusable/Navigate';
 
 const TravellerAccount = (props) => {
   const [loading, setLoading] = useState(false);
@@ -135,7 +136,7 @@ const TravellerAccount = (props) => {
         <>
           <h2>Moja cesta</h2>
           <p>
-            Tu si môžeš upraviť detaily:
+            Tu si môžeš upraviť detaily <A href={`/na/${props.userData.userDetails.uid}`}>tvojej cesty</A>:
           </p>
         </>)
         : (
