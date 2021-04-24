@@ -69,8 +69,8 @@ const Home = (props) => {
                       {!!imgUrl && <div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
                       <div className="article-text-col">
                         <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>
-                        <ButtonReadMore className={!!imgUrl ? "next-to-image" : ""} href={`/pred/articles/article/${article.sql_article_id}`} />
                       </div>
+                      <ButtonReadMore className={!!imgUrl ? "next-to-image" : ""} href={`/pred/articles/article/${article.sql_article_id}`} />
                     </div>
                   </div>);
               })}

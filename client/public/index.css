@@ -72,6 +72,13 @@ br.clear-both {
   margin: 0;
 }
 
+.btn-default:hover,
+.btn-default:focus {
+  color: red;
+  background-color: white;
+  border-color: red;
+}
+
 a.red-button {
   display: block;
   width: 155px; /*for IE*/
@@ -79,7 +86,7 @@ a.red-button {
   color: red !important;
   border: 1px solid red;
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: 25px;
   padding: 10px 20px;
   margin: 40px auto 15px auto;
   text-transform: uppercase;
@@ -90,8 +97,7 @@ a.red-button {
 }
 
 a.red-button:hover,
-a.red-button:focus,
-a.red-button:active {
+a.red-button:focus {
   background-color: red !important;
   color: white !important;
 }
@@ -113,7 +119,7 @@ a.white-button {
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px solid white;
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: 25px;
   padding: 10px 20px;
   margin: 25px auto 15px auto;
   text-transform: uppercase;
@@ -123,8 +129,7 @@ a.white-button {
 }
 
 a.white-button:hover,
-a.white-button:focus,
-a.white-button:active {
+a.white-button:focus {
   color: red!important;
   border-color: white;
   background-color: white;
@@ -383,6 +388,10 @@ body {
   transition: 0.4s, margin 0s, padding 0s;
 }
 
+.navbar-nav li.account-name {
+  margin: 10px 0;
+}
+
 .navbar-nav>li.account-name>a,
 .navbar-nav .open .dropdown-menu>li.account-name>a {
   pointer-events: none;
@@ -405,11 +414,13 @@ body {
   border-bottom: 2px solid transparent;
 }
 
+.navbar-nav>li.dropdown.open>a,
 .navbar-nav>li>a:hover,
 .navbar-nav>li>a:active,
 .navbar-nav>li>a:focus {
   color: red!important;
-  border-bottom: 2px solid red;
+  background-color: transparent!important;
+  border-bottom: 2px solid red!important;
   transition: 0.1s, margin 0s, padding 0s, border-width 0s;
 }
 
@@ -418,41 +429,42 @@ body {
   margin-right: 14px;
 }
 
+.navbar-nav .open .dropdown-menu li>a {
+  padding: 10px 10px;
+}
+
 .navbar-nav .open .dropdown-menu li>a:focus, 
 .navbar-nav .open .dropdown-menu li>a:hover {
   color: red!important;
-  background-color: #e0e0e0 !important;
+  background-color: transparent !important;
+}
+
+.navbar-nav>li>.dropdown-menu {
+  padding: 5px 15px 15px 15px;
 }
 
 @media(max-width: 1000px) {
   .navbar-nav>li>a {
-    padding-bottom: 10px;
-    border-bottom: none;
+    padding: 10px;
+    border-bottom: none !important;
   }
 
   .navbar-nav>li>a:hover,
   .navbar-nav>li>a:active,
   .navbar-nav>li>a:focus {
-    border-bottom: none;
-  }
-
-  .navbar-collapse>.navbar-nav li>a {
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
+    border-bottom: none !important;
   }
 
   .navbar-nav li>a:hover {
-    background-color: #e0e0e0 !important;
+    background-color: transparent !important;
   }
 }
 
 li.red-button>a {
   color: red !important;
-  border: 1px solid red;
+  border: 1px solid red !important;
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: 25px;
   padding: 10px 20px;
   margin: 5px 21px;
   transition: color 0.4s, background-color 0.4s;
@@ -466,7 +478,7 @@ li.red-button>a {
 li.red-button>a:hover,
 li.red-button>a:focus,
 li.red-button>a:active {
-  border: 1px solid red;
+  border: 1px solid red !important;
   background-color: red !important;
   color: white !important;
 }
@@ -537,9 +549,16 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
       padding-top: 10px;
   }
 
+  li.red-button>a {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: fit-content;
+  }
+
   .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
     border-color: transparent;
     border-bottom: 1px solid red;
+    padding-bottom: 20px;
   }
 }
 
@@ -1685,6 +1704,10 @@ img.row::before, .editor-image.row::before {
   margin: 30px 0;
 }
 
+button#dropdown-basic-1 {
+  border-radius: 25px;
+}
+
 /***    ARTICLES    ***/
 /**********************/
 /***   PAGINATION   ***/
@@ -1693,19 +1716,29 @@ img.row::before, .editor-image.row::before {
   display: block;
 }
 
-.pagination>.active>a, 
+.pagination>.active>a,  
+.pagination>.active>span {
+  color: #fff;
+  background-color: red;
+  border-color: red;
+}
+
+.pagination>li>a:focus, 
+.pagination>li>a:hover, 
+.pagination>li>span:focus, 
+.pagination>li>span:hover,
 .pagination>.active>a:focus, 
 .pagination>.active>a:hover, 
-.pagination>.active>span, 
 .pagination>.active>span:focus, 
 .pagination>.active>span:hover {
-  color: #fff;
-  background-color: #ff2730;
-  border-color: #ff2730;
+  z-index: 2;
+  color: red;
+  background-color: white;
+  border-color: red;
 }
 
 .pagination>li>a, .pagination>li>span {
-  color: #ff2730;
+  color: red;
 }
 
 /***   PAGINATION   ***/
@@ -1789,6 +1822,24 @@ img.row::before, .editor-image.row::before {
   height: 70px;
   color: white;
   border-radius: 8px;
+  border: 2px solid;
+  transition: color 0.4s, background-color 0.4s, border-color 0.4s;
+}
+
+.active-traveller:focus,
+.active-traveller:hover {
+  color: red;
+  border-color: red !important;
+  background-color: white !important;
+}
+
+.active-traveller .marker-border {
+  transition: color 0.4s;
+}
+
+.active-traveller:focus .marker-border,
+.active-traveller:hover .marker-border {
+  color: white !important;
 }
 
 .active-traveller-name {
@@ -1838,6 +1889,30 @@ img.row::before, .editor-image.row::before {
 }
 
 .mapMarker, .mapMarkerPos {
+  color: red;
+  filter: drop-shadow(0px 0px 4px white);
+  transition: color 0.4s;
+}
+
+.mapMarker:hover,
+.mapMarker:focus,
+.mapMarker:active {
+  color: white !important;
+}
+
+.poiMarker {
+  color: black;
+  transition: color 0.4s;
+}
+
+.poiMarkerSymbol {
+  color: white;
+  pointer-events: none;
+}
+
+.poiMarker:hover,
+.poiMarker:focus,
+.poiMarker:active {
   color: red;
 }
 
@@ -2187,7 +2262,11 @@ img.row::before, .editor-image.row::before {
 
 .accountWrap button {
   display: block;
-  margin-left: 200px;
+  margin: 15px 0 15px 200px;
+}
+
+.accountWrap button.linkLikeButton {
+  margin: 0 0 0 200px;
 }
 
 .fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button, #SendMessage button {
@@ -2348,19 +2427,23 @@ img.row::before, .editor-image.row::before {
   .accountWrap span {
     width: 100%;
     text-align: left;
-    padding-left: 50px;
-  }
-  
-  .accountWrap button {
-    margin-left: 50px;
+    padding-left: 0;
   }
   
   .accountWrap input {
-    margin-left: 50px;
+    margin-left: 0;
+  }
+
+  .accountWrap button {
+    margin: 15px auto;
+  }
+
+  .accountWrap button.linkLikeButton {
+    margin: 0;
   }
 
   .accountWrap h2 {
-    margin-left: 50px;
+    margin-left: 0;
   }
 
   .errorMsg {
@@ -2372,7 +2455,7 @@ img.row::before, .editor-image.row::before {
 .snpBtn, .snpBtnWhite {
   box-sizing: border-box;
   border: 1px solid red;
-  border-radius: 20px;
+  border-radius: 25px;
   padding: 10px 20px;
   text-transform: uppercase;
   transition: background-color 0.4s, color 0.4s;
@@ -2387,9 +2470,9 @@ img.row::before, .editor-image.row::before {
 }
 
 .snpBtn:hover,
-.snpBtn:focus,
-.snpBtn:active {
-  background-color: #E00000;
+.snpBtn:focus {
+  background-color: white;
+  color: red;
 }
 
 .snpBtnWhite {
@@ -2398,9 +2481,9 @@ img.row::before, .editor-image.row::before {
 }
 
 .snpBtnWhite:hover,
-.snpBtnWhite:focus,
-.snpBtnWhite:active {
-  background-color: #FFE0E0;
+.snpBtnWhite:focus {
+  background-color: red;
+  color: white;
 }
 
 .snpBtn.down {
