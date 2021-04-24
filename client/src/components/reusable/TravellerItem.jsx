@@ -3,7 +3,7 @@ import { dateTimeToStr, dateToStr, htmlSimpleSanitize, parseDate } from '../../h
 import { A } from './Navigate';
 import * as Constants from '../Constants';
 
-const TravellerItem = ({ traveller, now }) => {
+const TravellerItem = ({ traveller, now, userData }) => {
   
   return (
     <div className="traveller-item" >
@@ -11,6 +11,10 @@ const TravellerItem = ({ traveller, now }) => {
         <A className="traveller-name" href={`/na/${traveller.user_id}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
           {traveller.meno}                          
         </A>
+
+        {!!userData && !!userData.isAuth && userData.userDetails.uid == traveller.user_id && (<span className="traveller-item-actions">
+            <A href="/ucet" className="traveller-edit" title="upraviť moju cestu"><i className="fas fa-pencil-alt"/></A>
+        </span>)}
 
         <span className="traveller-date">              
           {(!traveller.finishedTracking && !!traveller.lastMessage && (parseDate(traveller.start_date) <= now)) &&  (

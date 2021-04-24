@@ -1954,7 +1954,8 @@ button#dropdown-basic-1 {
 .traveller-message-actions,
 .traveller-comment-actions,
 .poi-actions,
-.article-actions {
+.article-actions,
+.traveller-item-actions {
   float: right;
   line-height: 25px;
   margin-left: 5px;
@@ -1979,7 +1980,8 @@ button#dropdown-basic-1 {
 .article-edit,
 .article-history,
 .article-my,
-.article-state-icon {
+.article-state-icon,
+.traveller-edit {
   color: black;
   font-size: 16px;
   margin: 0 4px;
@@ -2008,19 +2010,30 @@ button#dropdown-basic-1 {
   padding: 5px;
 }
 
+.traveller-buttons-panel {
+  z-index: 999;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 0 15px;
+  pointer-events: none;
+}
+
+.traveller-buttons {
+  margin: 0 auto; 
+  width: fit-content;
+  pointer-events: none;
+}
+
+.traveller-buttons > .snpBtn {
+  margin-right: 15px;
+  margin-bottom: 15px;
+  pointer-events: auto;
+}
+
 /***   TRAVELLER    ***/
 /**********************/
 /***   COMMENTBOX   ***/
-
-.comment-box-btn {
-  position: fixed;
-  bottom: 0;
-  z-index: 999;
-  display: block;
-  margin-bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-}
 
 .modal-content {
   border-radius: 0px;

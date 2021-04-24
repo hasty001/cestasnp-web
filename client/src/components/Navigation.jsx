@@ -231,10 +231,10 @@ const Navigation = () => {
             <NavRouterItem
               href={ROUTES.poslatSpravu}
               eventKey={21}
-              title="Poslať správu"
+              title="Poslať správu z cesty"
               className="desktop"
             >
-              Poslať správu
+              Poslať správu z cesty
             </NavRouterItem>)}          
 
             <NavRouterItem
