@@ -114,6 +114,33 @@ a.white-button:active {
   border-color: red;
 }
 
+.leaflet-container a.leaflet-popup-close-button {
+  color: black;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  margin: 5px 5px 0 0;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover, 
+.leaflet-container a.leaflet-popup-close-button:focus {
+  color: red;
+  outline: none;
+}
+
+button.close {
+  opacity: 1;
+  font-size: 24px;
+  font-family: Tahoma,Verdana,sans-serif;
+  text-shadow: none;
+}
+
+button.close:hover, 
+button.close:focus {
+  color: red;
+  opacity: 1;
+}
+
 .pagination {
   width: 100%;
   min-height: 34px;
