@@ -11,6 +11,7 @@ import { useStateProp, useStateWithLocalStorage } from '../helpers/reactUtils';
 import * as Constants from './Constants';
 import { generateAnchor } from './reusable/Navigate';
 import LonLayers from './reusable/LonLayers';
+import { Modal } from 'react-bootstrap';
 
 const config = {
   params: {
@@ -52,6 +53,7 @@ const Map = (props) => {
   const [markers, setMarkers] = useState([]);
   const [moving, setMoving] = useState();
   const [zooming, setZooming] = useState();
+  const [popupContent, setPopupContent] = useState('');
 
   const [mapTilesLayer, setMapTilesLayer] = useStateWithLocalStorage("MapTilesLayer", props.tiles);
 
@@ -203,6 +205,8 @@ const Map = (props) => {
       if (newContent && content != newContent) {
         e.popup.setContent(newContent);
       }
+
+      setPopupContent(newContent);
     };
     map.off("popupopen", popupOpen);
     map.on("popupopen", popupOpen);
@@ -404,7 +408,19 @@ const Map = (props) => {
     }
   }, [mapObj, props.markers]);
 
-  return <div id={props.use} data-nosnippet>{props.children}</div>;
+  return (
+    <div id={props.use} data-nosnippet>
+      {props.children}
+
+      <Modal className="map-popup-dialog" show={!!popupContent && window.innerWidth <= 600} onHide={() => { setPopupContent(''); mapObj.map.closePopup(); }}>
+        <Modal.Header closeButton/>
+        <Modal.Body>
+          <div className="map-popup-content" dangerouslySetInnerHTML={{ __html: popupContent }}>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>{' '}</Modal.Footer>
+      </Modal>
+    </div>);
 }
 
 export default Map;
