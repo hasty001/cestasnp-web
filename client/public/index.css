@@ -141,12 +141,12 @@ a.white-button:focus {
   height: 24px;
   font-size: 24px;
   margin: 5px 5px 0 0;
+  outline: none;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover, 
 .leaflet-container a.leaflet-popup-close-button:focus {
   color: red;
-  outline: none;
 }
 
 button.close {
@@ -154,6 +154,7 @@ button.close {
   font-size: 24px;
   font-family: Tahoma,Verdana,sans-serif;
   text-shadow: none;
+  outline: none;
 }
 
 button.close:hover, 
