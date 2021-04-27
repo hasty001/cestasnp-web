@@ -10,13 +10,13 @@ import FormSelect from '../reusable/FormSelect';
 import FormTextArea from '../reusable/FormTextArea';
 import FormImage from '../reusable/FormImage';
 import { findPoiCategory, PoiCategories } from '../PoiCategories';
-import Map from '../Map';
 import PoiList from '../reusable/PoiList';
 import ItineraryTable from '../reusable/ItineraryTable';
 import { useStateEx, useStateWithSessionStorage } from '../../helpers/reactUtils';
 import FormCheckBox from '../reusable/FormCheckBox';
 import { ImageType } from '../reusable/CloudinaryWidget';
 import { Prompt } from 'react-router';
+import MapControl from '../MapControl';
 
 const PoiForm = (props) => {
 
@@ -290,7 +290,7 @@ const PoiForm = (props) => {
           {!!warningMsg.distance && <h4>Miesto je príliš ďaleko od cesty SNP: {(warningMsg.distance/1000).toFixed(1)} km</h4>}
           {!!warningMsg.pois && <h4>Skontroluj blízke dôležité miesta kvôli možnej duplicite:</h4>  }
           
-          <Map use="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
+          <MapControl id="add-poi-map" view={{ lat: warningMsg.lat, lon: warningMsg.lon, zoom: warningMsg.zoom }}
             markers={[{ lat: warningMsg.lat, lon: warningMsg.lon, name: "nové miesto", accuracy: warningMsg.poi.accuracy }]} 
             pois={(warningMsg.pois || [].concat(guidepostsPois || []))}  showDeleted />
 

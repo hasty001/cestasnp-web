@@ -7,10 +7,10 @@ import { AuthContext } from './AuthContext';
 import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';
 import PageWithLoader from './reusable/PageWithLoader';
 import { A } from './reusable/Navigate';
-import Map from './Map';
 import ImageBox from './reusable/ImageBox';
 import PoiList from './reusable/PoiList';
 import UserLabel from './reusable/UserLabel';
+import MapControl from './MapControl';
 
 const Article = (props) => {
   const [loading, setLoading] = useState(false);
@@ -134,7 +134,7 @@ const Article = (props) => {
           {!!article.lat && !!article.lon && (
             <>
               <h3>Poloha na mape:</h3>
-              <Map use="map" pois={[{ category: "clanok", id: `clanok${article.sql_article_id}`, 
+              <MapControl id="map" pois={[{ category: "clanok", id: `clanok${article.sql_article_id}`, 
                 name: article.title, text: "Článok", coordinates: [article.lon, article.lat], 
                 url: `/pred/articles/article/${article.sql_article_id}` }]} view={{ lat: article.lat, lon: article.lon, zoom: 13 }}/>
               <A href={`/pred/pois#poi=clanok${article.sql_article_id}&lat=${article.lat}&lon=${article.lon}`}><span data-nosnippet>na celej mape</span></A>

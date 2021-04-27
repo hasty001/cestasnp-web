@@ -12,6 +12,7 @@ export const PoiCategoryArticle = "clanok";
 export const PoiCategoryWater = "pramen";
 export const PoiCategoryFood = "krcma_jedlo";
 export const NearByMarkersDistance = 10; // in map pixels
+export const MaxFullscreenPopupWidth = 600;
 
 export const PoiMarkerSize = 32; // in pixels
 export const PoiIconSize = 15; // in pixels

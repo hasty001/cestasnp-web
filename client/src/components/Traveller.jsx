@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Map from './Map';
 import CommentBox from './reusable/CommentBox';
 import * as Texts from './Texts';
 import * as Constants from './Constants';
@@ -13,6 +12,7 @@ import TravellerItem from './reusable/TravellerItem';
 import TravellerMessage from './reusable/TravellerMessage';
 import { sortByDate } from '../helpers/helpers';
 import { A, navigate } from './reusable/Navigate';
+import MapControl from './MapControl';
 
 const Traveller = (props) => {
   const [loading, setLoading] = useState(true);
@@ -184,8 +184,8 @@ const Traveller = (props) => {
 
   return (
     <PageWithLoader pageId="Traveller" pageTitle={traveller ? (traveller.meno + Constants.WebTitleSuffix) : null}>
-      <Map
-        use="na-ceste-map-traveller"
+      <MapControl
+        id="na-ceste-map-traveller"
         start={traveller ? traveller.start_miesto : null}
         stops={messages || []}
       />
@@ -237,14 +237,14 @@ const Traveller = (props) => {
         <div className="traveller-buttons">
           {!!authData.userDetails && authData.userDetails.uid == travellerId && 
             <button
-              className="snpBtn"
+              className="snpBtn no-print"
               onClick={() => navigate("/ucet/poslatspravu")}
             >
               Pridaj správu
             </button>}
 
           <button
-            className="snpBtn"
+            className="snpBtn no-print"
             onClick={() => setShowCommentBox(true)}
           >
             Komentuj
