@@ -26,10 +26,12 @@ const ActiveLight = (props) => {
       .then(data => {     
         const activeTravellers = data;
 
-        const getSortValue = t => (t.finishedTracking ? "11_" + parseDate(t.start_date).valueOf() 
+        const pad = t => ("00000000000000000000" + t).slice(-20);
+
+        const getSortValue = t => (t.finishedTracking ? "11_" + pad(parseDate(t.start_date).valueOf()) 
           : ("0" + (parseDate(t.start_date) <= now && t.lastMessage ? 
-            ("0_" + (addDays(now, 1) - parseDate(t.lastMessage.pub_date))) 
-            : ("1_" + parseDate(t.start_date).valueOf()))));
+            ("0_" + pad(addDays(now, 1).valueOf() - parseDate(t.lastMessage.pub_date).valueOf())) 
+            : ("1_" + pad(parseDate(t.start_date).valueOf())))));
 
         activeTravellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
         
