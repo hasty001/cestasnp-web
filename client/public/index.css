@@ -870,6 +870,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
     display: block;
     margin: 0px auto 15px;
   }
+
+  .traveller-text.with-photo {
+    padding-left: 0 !important;
+  }
 }
 
 .traveller-item-header, .traveller-message-header, .traveller-comment-header {
@@ -906,6 +910,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   line-height: 30px;
   font-weight: 500;
   color: #58595b;
+}
+
+.traveller-text.with-photo {
+  padding-left: 270px;
 }
 
 .active-travellers-box .active-travellers-items {

@@ -153,7 +153,8 @@ const ArticleForm = (props) => {
   useEffect(() => { setArticle(props.article); }, [props.article]);
 
   const supported = (code) => {
-    return code.indexOf('<div') < 0 && code.indexOf('style=') < 0 && code.indexOf('<table') < 0;
+    return !code || 
+      (code.indexOf('<div') < 0 && code.indexOf('style=') < 0 && code.indexOf('<table') < 0);
   }
 
   useEffect(() => {
