@@ -60,8 +60,8 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
         </span>
       </div>
 
-      {!!message.img && <Image value={message.img} alt={`Fotka z putovanie - ${travellerName}`} itemClassName="traveller-message-image" small/>}
-      <div className="traveller-text" dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(message.text || message.comment) }} />
+      {!!message.img && message.img != 'None' && <Image value={message.img} alt={`Fotka z putovanie - ${travellerName}`} itemClassName="traveller-message-image" small/>}
+      <div className={"traveller-text" + ((message.img && message.img != 'None') ? ' with-photo' : '')} dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(message.text || message.comment) }} />
     </div> 
   )
 }
