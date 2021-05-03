@@ -2495,7 +2495,7 @@ button#dropdown-basic-1 {
 
 }
 
-.snpBtn, .snpBtnWhite {
+.snpBtn, .snpBtnWhite, div.wpcc-container a.wpcc-btn {
   box-sizing: border-box;
   border: 1px solid red;
   border-radius: 25px;
@@ -2507,13 +2507,15 @@ button#dropdown-basic-1 {
   outline: none;
 }
 
-.snpBtn {
+.snpBtn, div.wpcc-container a.wpcc-btn {
   background-color: red;
   color: white;
 }
 
 .snpBtn:hover,
-.snpBtn:focus {
+.snpBtn:focus,
+div.wpcc-container a.wpcc-btn:hover,
+div.wpcc-container a.wpcc-btn:focus {
   background-color: white;
   color: red;
 }
