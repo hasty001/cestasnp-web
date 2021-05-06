@@ -65,14 +65,23 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       return index >= 0 ? details[index].meno : "";
     }
 
+    const getProp = (item, propName) => {
+      if (propName && propName.indexOf('.') > 0) {
+        const parts = propName.split('.', 2);
+        return (item[parts[0]] || {})[parts[1]] 
+      } else {
+        return item[propName];
+      }
+    } 
+
     const ignoreProps = {'text': 0, 'itinerary': 0, 'img_url': 0,
       'introtext': 0, 'fulltext': 0, 'attribs': 0, 'metakey': 0, 'metadesc': 0,
       'comment': 0, 'img': 0};
 
     const dbPromise = (table, myItems, authorProps, change, changedProp, userProp, 
-        getName = () => {}, noteProp = '', getUrl = () => {}, getItemUserName = () => {}) => db.findBy(dbRef, table, 
-      { $or: [ check(changedProp, myItems, authorProps, userProp) ] }, { projection: ignoreProps }).then(data => data.map(item => {
-        return { table, change, date: item[changedProp], user: item[userProp] || item[userProp + "_user_sql_id"], 
+        getName = () => {}, noteProp = '', getUrl = () => {}, getItemUserName = () => {}, proj = null) => db.findBy(dbRef, table, 
+      { $or: [ check(changedProp, myItems, authorProps, userProp) ] }, { projection: proj || ignoreProps }).then(data => data.map(item => {
+        return { table, change, date: getProp(item, changedProp), user: item[userProp] || item[userProp + "_user_sql_id"], 
           userName: getUserName(item[userProp] || item[userProp + "_user_sql_id"]) || getItemUserName(item), 
           note: noteProp ? item[noteProp] : null, name: getName(item), url: getUrl(item), item };
       }));
@@ -102,6 +111,12 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       dbPromise(_const.DetailsTable, null, ['user_id'], 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
+    const getUserDetailUrl = (item) => `/pred/hladampartakov/${item.uid}`;
+    const promiseUserDetails = (!s_items || s_items.indexOf('buddies') >= 0) ? Promise.all([
+      dbPromise(_const.UsersTable, null, ['uid'], 'modified', 'findBuddies.lastUpdated', 'uid', item => item['name'], '', getUserDetailUrl,
+      () => {}, { uid: 1, name: 1, findBuddies: 1 }),
+    ]).then(d => concat(d)) : Promise.resolve([]);
+
     const getMessageUrl = (item) => `/na/${item.user_id}#${item._id}`;
     const promiseMessages = (!s_items || s_items.indexOf('messages') >= 0) ? Promise.all([
       dbPromise(_const.MessagesTable, null, ['user_id'], 'created', 'pub_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
@@ -127,7 +142,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       }
     }
 
-    return Promise.all([promisePois, promiseArtcles, promiseDetails, promiseMessages, promiseComments]).then(results => {
+    return Promise.all([promisePois, promiseArtcles, promiseDetails, promiseUserDetails, promiseMessages, promiseComments]).then(results => {
       const items = concat(results);
       const count = items.length;
 
@@ -153,6 +168,8 @@ const getTableAsText = (table) => {
     case _const.CommentsTable:
     case _const.ArticleCommentsTable:
       return "Komentár";
+    case _const.UsersTable:
+      return "Hľadanie parťákov";  
     default:
       return table;
   }
