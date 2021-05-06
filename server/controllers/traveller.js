@@ -46,7 +46,7 @@ router.post('/listFindBuddies',(req, res) => {
   checkToken(req, res, uid, () => db.findBy(req.app.locals.db, _const.UsersTable, {
     'findBuddies.enabled': true,
     'findBuddies.start_date': { $gte: formatAsDate(new Date()) }
-  }, { projection: { uid: 1, name: 1, findBuddies: 1 } }, { start_date: 1 }));
+  }, { projection: { uid: 1, name: 1, findBuddies: 1 } }, { 'findBuddies.start_date': 1 }));
 });
 
 router.post('/findBuddies/:travellerId',(req, res) => {
