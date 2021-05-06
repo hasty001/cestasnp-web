@@ -7,7 +7,7 @@ const DB = require('../db/db');
 const { checkToken, sanitizeUserId } = require('../util/checkUtils');
 const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
-const { momentDate, momentDateTime } = require('../util/momentUtils');
+const { momentDate, momentDateTime, formatAsDate } = require('../util/momentUtils');
 
 const db = new DB();
 const router = express.Router();
@@ -38,6 +38,37 @@ router.get('/finishedTravellers', (req, res) => {
     finishedTracking: true,
     end_date: { $ne: '' }
   }, {}, { end_date: -1 }), res);
+});
+
+router.post('/listFindBuddies',(req, res) => {
+  const { uid } = req.body;
+
+  checkToken(req, res, uid, () => db.findBy(req.app.locals.db, _const.UsersTable, {
+    'findBuddies.enabled': true,
+    'findBuddies.start_date': { $gte: formatAsDate(new Date()) }
+  }, { projection: { uid: 1, name: 1, findBuddies: 1 } }, { start_date: 1 }));
+});
+
+router.post('/findBuddies/:travellerId',(req, res) => {
+  const { uid, user_id } = req.body;
+
+  checkToken(req, res, uid, () => db.findOne(req.app.locals.db, _const.UsersTable, {
+     uid: sanitize(req.params.travellerId),
+    'findBuddies.enabled': true
+  }, { projection: { uid: 1, name: 1, email: 1, findBuddies: 1 } }, { start_date: 1 }));
+});
+
+router.post('/updateFindBuddies',(req, res) => {
+  const { enabled, text, start_date, uid, start_miesto } = req.body;
+
+  checkToken(req, res, uid, () =>
+    db.updateFindBuddies({
+      enabled,
+      text,
+      start_date,
+      uid,
+      start_miesto
+    }), () => text && start_date);
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {

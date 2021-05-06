@@ -50,6 +50,11 @@ DB.prototype = {
       .toArray();
   },
 
+  findOne(db, collection, findBy = {}, options = {}) {
+    return dbCollection(db, collection)
+      .findOne(findBy, options);
+  },
+
   findBy(db, collection, findBy = {}) {
     return dbCollection(db, collection)
       .find(findBy)
@@ -493,6 +498,29 @@ DB.prototype = {
             }
           }, { returnOriginal: false }
         )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
+  },
+
+  updateFindBuddies({
+    enabled,
+    text,
+    start_date,
+    uid,
+    start_miesto
+  }) {
+  return dbConnect(db =>
+    dbCollection(db, _const.UsersTable)
+      .findOneAndUpdate({ uid: uid }, {
+          $set: {
+            findBuddies: {
+              enabled: sanitize(enabled),
+              text: sanitize(text),
+              start_date: sanitize(start_date),
+              start_miesto: sanitize(start_miesto),
+              lastUpdated: momentDateTime()
+            }
+          }
+        }, { returnOriginal: false }
+      )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Uživatel nebol nájdený."));
   },
 
   sendMessage(message) {
