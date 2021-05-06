@@ -135,20 +135,6 @@ a.white-button:focus {
   background-color: white;
 }
 
-.leaflet-container a.leaflet-popup-close-button {
-  color: black;
-  width: 24px;
-  height: 24px;
-  font-size: 24px;
-  margin: 5px 5px 0 0;
-  outline: none;
-}
-
-.leaflet-container a.leaflet-popup-close-button:hover, 
-.leaflet-container a.leaflet-popup-close-button:focus {
-  color: red;
-}
-
 button.close {
   opacity: 1;
   font-size: 24px;
@@ -1282,6 +1268,88 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
+.map-layer-switch {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 9997;
+}
+
+.map-layer-switch>button {
+  height: 32px;
+  width: 32px;
+  font-size: 20px;
+}
+
+.map-layer-switch>div {
+  padding: 15px;
+}
+
+.map-layer-switch input {
+  margin: 5px;
+}
+
+.ol-zoom {
+  top: auto;
+  bottom: 80px;
+  right: 15px;
+  left: auto;
+}
+
+@media print {
+  .ol-zoom,
+  .map-layer-switch {
+    display: none;
+  }
+
+}
+
+.close {
+  font-family: Tahoma,Verdana,sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 0.8;
+  opacity: 1;
+}
+
+.close:hover, 
+.close:focus {
+  opacity: 1;
+}
+
+button.ol-zoom-in,
+button.ol-zoom-out {
+  width: 25px;
+  height: 25px;
+}
+
+.ol-control button {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.ol-control button:hover,
+.ol-control button:focus {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.ol-scale-line {
+  right: 15px;
+  bottom: 30px;
+  left: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.ol-attribution {
+  font-size: 10px !important;
+}
+
+.map-popup {
+  border: 1px solid grey;
+  background-color: white;
+  padding: 15px;
+  max-width: 66vw;
+}
+
 /***     HOME       ***/
 /**********************/
 /**KONTAKT + Cookies **/
@@ -1394,6 +1462,7 @@ span.poi-text {
 
 #select-pos-map {
   min-height: 60vh;
+  height: 60vh;
 }
 
 .map-pos {
@@ -1800,19 +1869,6 @@ button#dropdown-basic-1 {
 }
 
 /***   PAGINATION   ***/
-/**********************/
-/***    MAP         ***/
-
-.leaflet-div-icon {
-  background: transparent;
-  border: 0px;
-}
-
-.leaflet-popup-content-wrapper {
-  border-radius: 0px;
-}
-
-/***    MAP         ***/
 /**********************/
 /***    NA CESTE    ***/
 
@@ -2340,7 +2396,8 @@ button#dropdown-basic-1 {
   margin: 0 0 0 200px;
 }
 
-.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button, #SendMessage button {
+.fanAccountWrap button, #AddPoi button.snpBtn, #AddPoi button.snpBtnWhite, 
+.edit-poi-box button, #AddArticle button, #SendMessage button {
   display: block;
   margin: 15px auto;
 }
@@ -2484,10 +2541,6 @@ button#dropdown-basic-1 {
 
   #AddPoi .itinerary-attribution, .edit-poi-box .itinerary-attribution {
     font-size: 10px;
-  }
-
-  .leaflet-control-attribution {
-    font-size: 10px !important;
   }
 
   #inyZaciatok {
@@ -2654,13 +2707,17 @@ div.wpcc-container a.wpcc-btn:focus {
   z-index: 9998;
 }
 
-.map-popup-content {
+.map-popup-dialog-content {
   overflow: auto;
-  max-height: calc(100vh - 144px);
+  max-height: calc(100vh - 139px);
+}
+
+.map-popup-content {
+  margin-right: 30px;
 }
 
 @media (max-width: 600px) {
-  .leaflet-popup {
+  .map-popup {
     visibility: collapse;
   }
 }
