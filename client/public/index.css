@@ -262,7 +262,7 @@ html, body, #root {
   margin: 0 auto;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1180px) {
   .app-header {
     max-height: 70px;
   }
@@ -301,7 +301,7 @@ html, body, #root {
   display: block;
 }
 
-@media (max-width: 1000px ) {
+@media (max-width: 1180px) {
   .logo-mobile {
     margin-left: 15px;
     height: 35px;
@@ -350,7 +350,7 @@ body {
   bottom: 0px;
   width: 100%;
   overflow-y: auto;
-} @media (max-width: 1000px) {
+} @media (max-width: 1180px) {
   .app-body {
     top: 70px;
   }
@@ -375,14 +375,14 @@ body {
 
 .navbar-header {
   height: 76px;
-} @media (max-width: 1000px) {
+} @media (max-width: 1180px) {
   .navbar-header {
     /* padding: 0 15px; */
     height: 66px;
   }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1180px) {
   .navbar .container {
     width: 100%;
     padding: 0;
@@ -471,7 +471,7 @@ body {
   padding: 5px 15px 15px 15px;
 }
 
-@media(max-width: 1000px) {
+@media(max-width: 1180px) {
   .navbar-nav>li>a {
     padding: 10px;
     border-bottom: none !important;
@@ -517,7 +517,7 @@ li.red-button>a:active {
   right: 16px;
   background-color: #ffffff;
   border-color: #ffffff;
-} @media(max-width: 1000px) {
+} @media(max-width: 1180px) {
   .navbar-toggle {
     top: 10px;
     right: 10px;
@@ -531,7 +531,7 @@ li.red-button>a:active {
   border-color: #ffffff;  
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1180px) {
   .navbar-right {
     margin-top: 17px;
   }
@@ -571,7 +571,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   content: url("data:image/svg+xml,%3Csvg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='times' class='svg-inline--fa fa-times fa-w-11' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 512'%3E%3Cpath fill='currentColor' d='M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z'%3E%3C/path%3E%3C/svg%3E");
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1180px) {
   .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
       padding-bottom: 10px;
       padding-top: 10px;
@@ -594,7 +594,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   padding-right: 0px;
   padding-left: 0px;
   width: 90%;
-} @media (max-width: 1000px) {
+} @media (max-width: 1180px) {
   .navbar .container {
     width: 100%;
     overflow-x: hidden;
@@ -606,7 +606,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   display: block;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1180px) {
     .navbar-header {
         float: none;
     }
@@ -642,7 +642,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /***     HOME       ***/
 
-#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller, #PoiDetail {
+#Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller, #PoiDetail,
+#Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -713,8 +714,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   }
 }
 
-.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
-.PoiDetail {
+.home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller .traveller,
+.PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -726,8 +727,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media (min-width: 1600px) {
-  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
-  .PoiDetail {
+  .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller .traveller,
+  .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -989,7 +990,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 @media(max-width: 670px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive,
-  .traveller, .PoiDetail {
+  #Traveller .traveller, .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -1266,7 +1267,8 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /**********************/
 /**KONTAKT + Cookies **/
 
-#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive {
+#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive, #Itinerary, #PoisInTable, #FindBuddies,
+#FindBuddiesDetail {
   margin-top: 40px;
 }
 
@@ -1434,16 +1436,7 @@ span.poi-text {
 /**********************/
 /***    ITINERARY   ***/
 
-#Itinerary, #PoisInTable {
-  width: 80%;
-  margin: 15px auto;
-} @media (max-width: 767px) {
-#Itinerary, #PoisInTable {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-}
-} @media print {
+@media print {
   #Itinerary, #PoisInTable {
       width: 100%;
       margin: 0;
@@ -2069,6 +2062,19 @@ button#dropdown-basic-1 {
   pointer-events: auto;
 }
 
+#FindBuddies {
+  min-height: 100vh;
+}
+
+#FindBuddies button.add {
+  margin: 15px 0; 
+  z-index: 999;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
 /***   TRAVELLER    ***/
 /**********************/
 /***   COMMENTBOX   ***/
@@ -2150,30 +2156,32 @@ button#dropdown-basic-1 {
 /**********************/
 /***    ARCHIVE     ***/
 
-#NaCesteArchive .travellers {
+#NaCesteArchive .travellers, #FindBuddies .travellers {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-#NaCesteArchive .traveller-item {
+#NaCesteArchive .traveller-item, #FindBuddies .traveller-item {
   display: flex;
   flex-flow: column;
   position: relative;
   min-width: calc(50% - 40px);
   max-width: calc(50% - 40px);
 } @media (max-width: 670px) {
-  #NaCesteArchive .traveller-item {
+  #NaCesteArchive .traveller-item, #FindBuddies .traveller-item {
     min-width: 100%;
     max-width: 100%;
   }
 }
 
-#NaCesteArchive .traveller-item:nth-child(odd) {
+#NaCesteArchive .traveller-item:nth-child(odd),
+#FindBuddies .traveller-item:nth-child(odd) {
   margin-right: 80px;
 }
 
-#NaCesteArchive .traveller-text {
+#NaCesteArchive .traveller-text,
+#FindBuddies .traveller-text {
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;  
@@ -2252,14 +2260,16 @@ button#dropdown-basic-1 {
   background: transparent;
 }
 
-.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle, #SendMessage {
+.accountWrap, .fanAccountWrap, #AddPoi, #AddArticle, #SendMessage,
+#EditFindBuddies {
   width: 80%;
   margin: 20px auto;
   font-size: 16px;
 }
 
 .accountWrap label, .fanAccountWrap label, #MessageForm label, #MyJourney label, #AddPoi label, #AddArticle label,
-.edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label, .link-box label {
+.edit-poi-box label, .confirm-box label, .itinerary-dialog label, .pois-table-dalog label, .link-box label,
+#EditFindBuddies label {
   display: block;
   width: 100%;
 }
@@ -2272,13 +2282,15 @@ button#dropdown-basic-1 {
   margin: 20px 0;
 }
 
-#AddPoi label.form-checkbox, .edit-poi-box label.form-checkbox {
+#AddPoi label.form-checkbox, .edit-poi-box label.form-checkbox,
+#EditFindBuddies label.form-checkbox {
   display: inline;
   margin-right: 15px;
   vertical-align: middle;
 }
 
-#AddPoi input.form-checkbox, .edit-poi-box input.form-checkbox, .pois-table-dalog input.form-checkbox  {
+#AddPoi input.form-checkbox, .edit-poi-box input.form-checkbox, .pois-table-dalog input.form-checkbox,
+#EditFindBuddies input.form-checkbox {
   height: 16px;
   width: 16px;
   margin: 5px 5px 15px 5px;
@@ -2301,12 +2313,14 @@ button#dropdown-basic-1 {
   margin-left: 200px;
 }
 
-.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2, #SendMessage h2 {
+.fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2, #SendMessage h2,
+#EditFindBuddies h2 {
   text-align: center;
   padding-bottom: 15px;
 }
 
-.fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form, #AddArticle p.form {
+.fanAccountWrap p, #AddPoi p.form, .edit-poi-box p.form, #AddArticle p.form,
+#EditFindBuddies p.form {
   text-align: justify;
   font-weight: 800;
 }
@@ -2320,7 +2334,8 @@ button#dropdown-basic-1 {
   margin: 0 0 0 200px;
 }
 
-.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button, #SendMessage button {
+.fanAccountWrap button, #AddPoi button, .edit-poi-box button, #AddArticle button, #SendMessage button,
+#EditFindBuddies button {
   display: block;
   margin: 15px auto;
 }
@@ -2348,7 +2363,8 @@ button#dropdown-basic-1 {
   padding-left: 10px;
 }
 
-.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form, #AddArticle input.form, .link-box input {
+.fanAccountWrap input, #AddPoi input.form, .edit-poi-box input.form, #AddArticle input.form, .link-box input,
+#EditFindBuddies input.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -2359,7 +2375,7 @@ button#dropdown-basic-1 {
 }
 
 .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form,
-.itinerary-dialog select.form, #AddArticle select.form {
+.itinerary-dialog select.form, #AddArticle select.form, #EditFindBuddies select.form {
   height: 36px;
   border: solid 1px lightgray;
   width: 20%;
@@ -2368,7 +2384,7 @@ button#dropdown-basic-1 {
 }
 
 .fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form,
-#MessageForm textarea {
+#MessageForm textarea, #EditFindBuddies textarea.form {
   display: block;
   width: 100%;
   border: 1px solid lightgray;
@@ -2445,16 +2461,17 @@ button#dropdown-basic-1 {
     font-size: 18px;
   }
 
-  .fanAccountWrap, #AddPoi, #AddArticle {
+  .fanAccountWrap, #AddPoi, #AddArticle, #EditFindBuddies {
     width: 95%;
   }
 
-  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form, #AddArticle select.form {
+  .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form, #AddArticle select.form,
+  #EditFindBuddies select.form {
     display: block;
     min-width: 200px;
   }
 
-  .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2 {
+  .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2, #EditFindBuddies h2 {
     text-align: left;
   }
 

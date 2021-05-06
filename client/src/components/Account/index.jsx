@@ -6,7 +6,9 @@ import Loader from '../reusable/Loader';
 import { AuthContext } from '../AuthContext';
 
 const Account = (props) => {
+  
   const authData = useContext(AuthContext);
+
   return (
     <>
       {!authData.authProviderMounted ? (

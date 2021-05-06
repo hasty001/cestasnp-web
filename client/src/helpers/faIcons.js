@@ -3,7 +3,7 @@ import { faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExterna
   faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
   faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap, 
   faStar as fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
-  faListOl, faCompress } from '@fortawesome/free-solid-svg-icons';
+  faListOl, faCompress, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faImages, faCopy, faWindowRestore } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
@@ -28,7 +28,7 @@ const faIconsRegister = () => {
     faMapMarkerAlt, faMapMarker, faMapMarkedAlt, faPencilAlt, faTable, faComment, faTint,
     faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap,
     fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
-    faListOl, faCompress);
+    faListOl, faCompress, faUserFriends);
 
   library.add(faStar, faImages, faCopy, faWindowRestore);
 

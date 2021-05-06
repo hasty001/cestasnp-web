@@ -3,17 +3,23 @@ import { dateTimeToStr, dateToStr, htmlSimpleSanitize, parseDate } from '../../h
 import { A } from './Navigate';
 import * as Constants from '../Constants';
 
-const TravellerItem = ({ traveller, now, userData }) => {
+const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
   
   return (
     <div className="traveller-item" >
       <div className="traveller-item-header"> 
-        <A className="traveller-name" href={`/na/${traveller.user_id}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
+        <A className="traveller-name" href={
+          findBuddies ? `/pred/hladampartakov/${traveller.user_id}` : `/na/${traveller.user_id}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
           {traveller.meno}                          
         </A>
 
+        {!!traveller.email &&
+          <>{` `}<a className="traveller-email" href={`mailto:${traveller.email}`}>
+            {traveller.email}                          
+          </a></>}
+
         {!!userData && !!userData.isAuth && userData.userDetails.uid == traveller.user_id && (<span className="traveller-item-actions">
-            <A href="/ucet" className="traveller-edit" title="upraviť moju cestu"><i className="fas fa-pencil-alt"/></A>
+            <A href={findBuddies ? "/ucet/hladampartakov" : "/ucet"} className="traveller-edit" title={findBuddies ? "upraviť" : "upraviť moju cestu"}><i className="fas fa-pencil-alt"/></A>
         </span>)}
 
         <span className="traveller-date">              
@@ -25,6 +31,7 @@ const TravellerItem = ({ traveller, now, userData }) => {
           {((parseDate(traveller.start_date) > now) || !traveller.lastMessage) && (
           <span>
             {traveller.start_miesto}{' '}
+            {!!findBuddies && <>±{' '}</>}
             {dateToStr(traveller.start_date)}                           
           </span>)}  
 
