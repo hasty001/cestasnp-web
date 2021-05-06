@@ -2715,9 +2715,3 @@ div.wpcc-container a.wpcc-btn:focus {
 .map-popup-content {
   margin-right: 30px;
 }
-
-@media (max-width: 600px) {
-  .map-popup {
-    visibility: collapse;
-  }
-}

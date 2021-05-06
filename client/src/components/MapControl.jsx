@@ -15,9 +15,8 @@ import { ScaleLine, Attribution, defaults as defaultControls } from 'ol/control'
 import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
 import * as Constants from './Constants';
-
 import { faMapMarkerAlt, faMapMarker } from '@fortawesome/free-solid-svg-icons';
-import { useStateEx, useStateProp, useStateWithLocalStorage } from "../helpers/reactUtils";
+import { useStateProp, useStateWithLocalStorage } from "../helpers/reactUtils";
 import { findPoiCategory, PoiCategories } from "./PoiCategories";
 import { generateAnchor } from "./reusable/Navigate";
 import { dateTimeToStr, escapeHtml, htmlSimpleSanitize } from "../helpers/helpers";
@@ -124,7 +123,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
   const [viewProp, setViewProp] = useStateProp(view);
   const [popupContent, setPopupContent] = useState('');
   const [popupFeature, setPopupFeature] = useState(null);
-  const [canFullScreen, setCanFullScreen] = useState(false);
+  const [canFullScreen, setCanFullScreen] = useState(() => window.innerWidth <= Constants.MaxFullscreenPopupWidth);
   const [moving, setMoving] = useState(false);
   const [showLayersPanel, setShowLayersPanel] = useState(false);
   const [mapLayersHide, setMapLayersHide] = useStateWithLocalStorage("MapLayersHide", []);
@@ -136,9 +135,10 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
 
     setViewProp(prev => { return {...prev, poi: feature.get('popupId') || '' }; });
 
-    const coords = feature.getGeometry().getCoordinates();
-    map.getOverlays().item(0).setPosition(coords);
-    const extent = map.getView().calculateExtent(map.getSize());
+    if (window.innerWidth > Constants.MaxFullscreenPopupWidth) {
+      const coords = feature.getGeometry().getCoordinates();
+      map.getOverlays().item(0).setPosition(coords);
+    }
   }
 
   useEffect(() => {
@@ -228,7 +228,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
     let mapObject = new ol.Map(options);
     mapObject.setTarget(mapRef.current);
 
-    mapObject.on('moveend', event => {
+    mapObject.on('movestart', event => {
       setMoving(true);
     });
 
@@ -264,19 +264,15 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
         }, hitTolerance: Constants.NearByMarkersDistance }
       );
 
+      closePopup();
+
       if (data.length > 0 && first) {
         const content = data.filter(i => i).join("\n<hr/>");
-        
-        closePopup();
-
         setMoving(true);
         setPopupFeature(first);
         setPopupContent(content);
         showPopup(mapObject, first);
-      } else {
-        setPopupContent('');
-        setPopupFeature(null);
-        setViewProp(prev => { return {...prev, poi: '' }; });
+        setTimeout(() => setMoving(false), 500);
       }
     });
 
@@ -488,7 +484,8 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
       }
     };
 
-    window.addEventListener('resize', handleResize)
+    window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => window.removeEventListener('resize', handleResize);
   }, [canFullScreen]);
@@ -532,20 +529,21 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
         {children}
       </div>
 
-      <div ref={popupRef} className="map-popup" hidden={!popupContent}>
-        <a className="close" onClick={() => { closePopup(); }}>×</a>
+      <div ref={popupRef} className="map-popup" style={{ display: !canFullScreen && popupContent ? 'block' : 'none'}}>
+        <a className="close" onClick={() => closePopup()}>×</a>
         <div className="map-popup-content" dangerouslySetInnerHTML={{ __html: popupContent }}>
         </div>
       </div>
 
-      <Modal className="map-popup-dialog" show={!!popupContent && canFullScreen} onHide={() => { closePopup(); }}>
+      {!!canFullScreen && <Modal className="map-popup-dialog" show={!!popupContent} 
+        onHide={() => { if (moving) { return; } closePopup(); }}>
         <Modal.Header closeButton/>
         <Modal.Body>
           <div className="map-popup-dialog-content" dangerouslySetInnerHTML={{ __html: popupContent }}>
           </div>
         </Modal.Body>
         <Modal.Footer>{' '}</Modal.Footer>
-      </Modal>
+      </Modal>}
     </MapContext.Provider>
   )
 }
