@@ -236,13 +236,10 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
       const newCenter = toLonLat(mapObject.getView().getCenter());
       const newZoom = mapObject.getView().getZoom();
 
-      if (center[0].toFixed(10) != newCenter[0].toFixed(10)
-        || center[1].toFixed(10) != newCenter[1].toFixed(10) || zoom != newZoom) {
-        setCenter(newCenter);
-        setZoom(newZoom);
-        setViewProp(prev => { return { lat: newCenter[1], lon: newCenter[0], zoom: newZoom, poi: prev ? prev.poi : ''}; });
-      }
-      //console.log("moveend", { lat: newCenter[1], lon: newCenter[0] });
+      setCenter(newCenter);
+      setZoom(newZoom);
+      setViewProp(prev => { return { lat: newCenter[1], lon: newCenter[0], zoom: newZoom, poi: prev ? prev.poi : ''}; });
+
       setMoving(false);
     });
 
