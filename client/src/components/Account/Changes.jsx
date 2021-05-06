@@ -68,6 +68,8 @@ const Changes = (props) => {
       case "traveler_comments":
       case "article_comments":
         return "komentár";
+      case "traveler_find_buddies":
+        return "hľadanie parťakov";
       default:
         return table;
     }
@@ -99,7 +101,8 @@ const Changes = (props) => {
             options={[{ value: "", label: "vše" }, 
               { value: "pois,articles,details", label: "dôležité miesta, články a cesty" }, { value: "details,messages,comments", label: "cesty, zprávy a komentáre" },
               { value: "pois", label: "dôležité miesta" }, { value: "articles", label: "články" }, { value: "details", label: "cesty" },
-              { value: "messages", label: "zprávy" }, { value: "comments", label: "komentáre" }
+              { value: "messages", label: "zprávy" }, { value: "comments", label: "komentáre" }, 
+              { value: "buddies", label: "hľadanie parťakov" }
             ]}/>
           
           <FormSelect value={[from, setFrom]} 

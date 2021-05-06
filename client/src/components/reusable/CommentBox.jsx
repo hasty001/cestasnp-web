@@ -89,6 +89,7 @@ const CommentBox = (props) => {
     data.articleId = props.articleID;
     data.travellerName = props.travellerName;
     data.travellerId = props.travellerId;
+    data.findBuddiesId = props.findBuddiesId;
     data['g-recaptcha-response'] = captcha;
     data.uid = authData.isAuth ? authData.userDetails.uid : null;
 

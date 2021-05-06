@@ -16,6 +16,7 @@ const ROUTES = {
   clanky: '/pred/articles/1',
   pois: '/pred/pois',
   itinerary: '/pred/itinerar',
+  hladamPartakov: '/pred/hladampartakov',
   naCeste: '/na/ceste',
   archiv: '/na/archive',
   kontakt: '/kontakt',
@@ -24,7 +25,8 @@ const ROUTES = {
   pridatPOI: '/ucet/pridatpoi',
   pridatClanok: '/ucet/pridatclanok',
   ucetPois: '/ucet/pois',
-  zmeny: '/ucet/zmeny'
+  ucetHladamPartakov: '/ucet/hladampartakov',
+  zmeny: '/ucet/zmeny',
 };
 
 const Navigation = () => {
@@ -171,10 +173,20 @@ const Navigation = () => {
               Pridať článok           
             </NavRouterItem>)}
 
+          {!!authData.isAuth && (
+            <NavRouterItem
+              href={ROUTES.ucetHladamPartakov}
+              eventKey={5}
+              title="Hľadám parťákov"
+              className="mobile"
+            >
+              Hľadám parťákov - môj inzerát           
+            </NavRouterItem>)}
+
           {!!authData.isAuth && !!authData.userDetails && authData.userDetails.articlesRole == 'admin' && (
             <NavRouterItem
               href={ROUTES.zmeny}
-              eventKey={5}
+              eventKey={6}
               title="Prehľad zmien"
               className="mobile"
             >
@@ -184,7 +196,7 @@ const Navigation = () => {
           {!!authData.isAuth && (
             <NavRouterItem
               href="#"
-              eventKey={6}
+              eventKey={7}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="mobile"
@@ -222,6 +234,14 @@ const Navigation = () => {
             title="LIVE sledovanie"
           >
             LIVE sledovanie
+          </NavRouterItem>
+
+          <NavRouterItem
+            href={ROUTES.hladamPartakov}
+            eventKey={14}
+            title="Hľadám parťákov"
+          >
+            Hľadám parťákov
           </NavRouterItem>
 
           <NavRouterItem
@@ -308,9 +328,18 @@ const Navigation = () => {
               Pridať článok           
             </NavRouterItem>
 
+            <NavRouterItem
+              href={ROUTES.ucetHladamPartakov}
+              eventKey={24}
+              title="Hľadám parťákov"
+              className="desktop"
+            >
+              Hľadám parťákov - môj inzerát          
+            </NavRouterItem>
+
             {!!authData.userDetails && authData.userDetails.articlesRole == 'admin' && <NavRouterItem
               href={ROUTES.zmeny}
-              eventKey={24}
+              eventKey={25}
               title="Prehľad zmien"
               className="desktop"
             >
@@ -319,7 +348,7 @@ const Navigation = () => {
 
             <NavRouterItem
               href="#"
-              eventKey={25}
+              eventKey={26}
               title="Odhlásiť"
               onClick={() => auth.signOut()}
               className="desktop"

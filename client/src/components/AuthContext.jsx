@@ -7,9 +7,11 @@ export const AuthContext = React.createContext({
   user: null,
   userDetails: {},
   travellerDetails: {},
+  findBuddies: {},
   authProviderMounted: 0,
   updateTravellerDetails: () => {},
-  updateUserDetails: () => {}
+  updateUserDetails: () => {},
+  updateFindBuddies: () => {}
 });
 
 export class AuthProvider extends React.Component {
@@ -20,9 +22,11 @@ export class AuthProvider extends React.Component {
       user: null,
       userDetails: {},
       travellerDetails: {},
+      findBuddies: {},
       authProviderMounted: 0,
       updateTravellerDetails: this.updateTravellerDetails.bind(this),
-      updateUserDetails: this.updateUserDetails.bind(this)
+      updateUserDetails: this.updateUserDetails.bind(this),
+      updateFindBuddies: this.updateFindBuddies.bind(this)
     };
   }
 
@@ -40,6 +44,7 @@ export class AuthProvider extends React.Component {
           user: null,
           userDetails: {},
           travellerDetails: {},
+          findBuddies: {},
           authProviderMounted: 1
         });
       } 
@@ -58,12 +63,13 @@ export class AuthProvider extends React.Component {
       } else { 
         return r; 
       }})
-    .then(({ userDetails, travellerDetails }) => {
+    .then(({ userDetails, travellerDetails, findBuddies }) => {
       this.setState({
         isAuth: 1,
         user,
         userDetails,
         travellerDetails,
+        findBuddies,
         authProviderMounted: 1
       });
     })
@@ -80,6 +86,7 @@ export class AuthProvider extends React.Component {
         user: null,
         userDetails: {},
         travellerDetails: {},
+        findBuddies: {},
         authProviderMounted: 1
       });
     });
@@ -94,6 +101,12 @@ export class AuthProvider extends React.Component {
   updateUserDetails(details) {
     this.setState({
       userDetails: details
+    });
+  }
+
+  updateFindBuddies(data) {
+    this.setState({
+      findBuddies: data || {}
     });
   }
 

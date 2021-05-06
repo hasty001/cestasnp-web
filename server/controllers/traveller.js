@@ -7,7 +7,7 @@ const DB = require('../db/db');
 const { checkToken, sanitizeUserId } = require('../util/checkUtils');
 const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
-const { momentDate, momentDateTime } = require('../util/momentUtils');
+const { momentDate, momentDateTime, formatAsDate } = require('../util/momentUtils');
 const { differenceInDays } = require('date-fns');
 
 const db = new DB();
@@ -31,7 +31,11 @@ router.post('/lastMessages', (req, res) => {
 });
 
 router.post('/comments', (req, res) => {
-  promiseAsJson(() => db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId), res);
+  if (req.body.findBuddiesId) {
+    checkToken(req, res, req.body.uid, () => db.getTravellerComments(req.app.locals.db, null, null, req.body.findBuddiesId));
+  } else {
+    promiseAsJson(() => db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId), res);
+  }
 });
 
 router.get('/finishedTravellers', (req, res) => {
@@ -39,6 +43,38 @@ router.get('/finishedTravellers', (req, res) => {
     finishedTracking: true,
     end_date: { $ne: '' }
   }, {}, { end_date: -1 }), res);
+});
+
+router.post('/listFindBuddies',(req, res) => {
+  const { uid } = req.body;
+
+  checkToken(req, res, uid, () => db.listFindBuddies(req.app.locals.db));
+});
+
+router.post('/findBuddies/:travellerId', (req, res) => {
+  const { uid } = req.body;
+
+  checkToken(req, res, uid, () => db.getFindBuddies(req.app.locals.db, 
+    sanitizeUserId(req.params.travellerId), false));
+});
+
+router.post('/updateFindBuddies',(req, res) => {
+  const { enabled, showEmail, showComments, text, start_date, uid, start_miesto, end_miesto } = req.body;
+
+  checkToken(req, res, uid, () =>
+    db.updateFindBuddies({
+      enabled, showEmail, showComments,
+      text,
+      start_date,
+      uid: sanitizeUserId(uid),
+      start_miesto, end_miesto
+    }), () => text && start_date);
+});
+
+router.post('/deleteFindBuddies',(req, res) => {
+  const { uid } = req.body;
+
+  checkToken(req, res, uid, () => db.deleteFindBuddies(sanitizeUserId(uid)));
 });
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {
@@ -169,31 +205,39 @@ router.post('/addComment', (req, res) => {
         comment.name = sName;
         const sVisitorIp = sanitize(ipAddr);
         comment.ip = sVisitorIp;
-        comment.travellerDetails = {};
-        const sTravellerId = sanitize(req.body.travellerId);
-        comment.travellerDetails.id = sTravellerId;
-        const sTravellerName = sanitize(req.body.travellerName);
-        comment.travellerDetails.name = sTravellerName;
+
+        if (req.body.travellerId) {
+          comment.travellerDetails = {};
+          const sTravellerId = sanitize(req.body.travellerId);
+          comment.travellerDetails.id = sTravellerId;
+          const sTravellerName = sanitize(req.body.travellerName);
+          comment.travellerDetails.name = sTravellerName;
+        }
+
+        if (req.body.findBuddiesId) {
+          comment.findBuddiesId = sanitize(req.body.findBuddiesId);
+        }
+
         const sDate = sanitize(momentDateTime());
         comment.date = sDate;
         const sUid = sanitizeUserId(req.body.uid);
         comment.uid = sUid;
 
-        return db.addCommentNewTraveller(comment);
+        return db.addCommentNewTraveller(comment, !!req.body.findBuddiesId);
       }
     });
 });
 
 router.post('/deleteComment', (req, res) => {
-  const { id, uid, articleId } = req.body;
+  const { id, uid, articleId, findBuddiesId } = req.body;
 
-  checkToken(req, res, uid, () => db.deleteComment(id, uid, articleId));
+  checkToken(req, res, uid, () => db.deleteComment(id, sanitizeUserId(uid), articleId, findBuddiesId));
 });
 
 router.post('/newComments', (req, res) => {
   const { uid, detailsId, articleId, date } = req.body;
 
-  checkToken(req, res, uid, () => db.getTravellerComments(req.app.locals.db, articleId, detailsId, date));
+  checkToken(req, res, uid, () => db.getTravellerComments(req.app.locals.db, articleId, detailsId, null, date));
 });
 
 router.post('/view', (req, res) => {
@@ -212,12 +256,14 @@ router.post('/userCheck', (req, res) => {
   checkToken(req, res, uid, () =>
     Promise.all([
       db.findBy(req.app.locals.db, _const.UsersTable, { uid }),
-      db.getTravellerDetails(req.app.locals.db, uid)
-    ]).then(([userDetails, travellerDetails]) => {
+      db.getTravellerDetails(req.app.locals.db, uid),
+      db.getFindBuddies(req.app.locals.db, uid, uid, true),
+    ]).then(([userDetails, travellerDetails, findBuddies]) => {
       if (userDetails && userDetails.length > 0) {
         return {
           userDetails: userDetails[0],
-          travellerDetails: travellerDetails[0] || {}
+          travellerDetails: travellerDetails[0] || {},
+          findBuddies: findBuddies || {}
         };
       }
 

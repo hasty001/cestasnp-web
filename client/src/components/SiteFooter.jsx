@@ -30,6 +30,7 @@ const SiteFooter = (props) => {
               <span>prispievať do databázy<br/><A href="/pred/pois">DÔLEŽITÝCH MIEST</A></span>
             </p>
             <p><span className="icon"><i className="fas fa-comment icon"/></span><span>komentovať LIVE Sledovanie<br/>bez ďalšieho overenia</span></p>
+            <p><span className="icon"><i className="fas fa-user-friends icon"/></span><span>hľadať parťákov</span></p>
             <p><span className="icon"><i className="fas fa-map-marker-alt icon"/></span><span>vyvoriť si LIVE Sledovanie<br/>a posielať správy</span></p>
           </div>
         </div>
@@ -39,6 +40,7 @@ const SiteFooter = (props) => {
           <A className="footer-link" href="/pred/articles/1">Články</A>
           <A className="footer-link" href="/pred/pois">Dôležité miesta</A>
           <A className="footer-link" href="/pred/itinerar">Itinerár</A>
+          <A className="footer-link" href="/pred/hladampartakov">Hľadám parťákov</A>
           <A className="footer-link" href={settingsData.activeLink.href}>LIVE sledovanie</A>
           <A className="footer-link" href="/na/archive">Archív</A>
           <A className="footer-link" href="/pred/articles/article/379">Zoznam darcov</A>
