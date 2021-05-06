@@ -60,8 +60,8 @@ class Login extends React.Component {
             prihlás sa na tejto stránke.
           </p>
           <p>
-            Tento účet slúži <b>najmä pre zasielanie správ</b> do LIVE Sledovanie, ale aj pre možnosť pridať dôležité miesta a
-            komentovať LIVE Sledovanie bez ďalšieho overenia.
+            Tento účet slúži <b>najmä pre zasielanie správ</b> do LIVE Sledovanie, ale aj pre možnosť pridať dôležité miesta,
+            hľadať parťákov a komentovať LIVE Sledovanie bez ďalšieho overenia.
           </p>
         </div>
         <form
