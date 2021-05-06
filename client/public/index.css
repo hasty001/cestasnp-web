@@ -740,6 +740,22 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   width: calc(100vw - 600px);
 }
 
+.home-intro-mobile {
+  display: none;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.home-intro-mobile>a {
+  color: red !important;
+  font-style: italic;
+}
+
+.home-intro-mobile>a:focus,
+.home-intro-mobile>a:hover {
+  text-decoration: underline !important;
+}
+
 .home-intro {
   max-width: 860px;
   min-height: 270px;
@@ -964,6 +980,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media(max-width: 1300px) {
+  .home-intro-mobile {
+    display: block;
+  }
+
   .home-articles {
     display: block;
     min-width: 100%;
