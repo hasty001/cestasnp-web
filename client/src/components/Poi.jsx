@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { fetchJson, fetchPostJsonWithToken } from '../helpers/fetchUtils';
 import { dateTimeToStr, htmlSimpleSanitize } from '../helpers/helpers';
 import { AuthContext } from './AuthContext';
-import Map from './Map';
 import { findPoiCategory } from './PoiCategories';
 import DeletePoiBox from './reusable/DeletePoiBox';
 import EditPoiBox from './reusable/EditPoiBox';
@@ -17,6 +16,7 @@ import ItineraryTable from './reusable/ItineraryTable';
 import { A } from './reusable/Navigate';
 import DocumentTitle from 'react-document-title';
 import DivWithLoader from './reusable/DivWithLoader';
+import MapControl from './MapControl';
 
 const Poi = (props) => {
   const [loading, setLoading] = useState(false);
@@ -90,7 +90,7 @@ const Poi = (props) => {
 
   return (
     <PageWithLoader pageId="PoiDetail">
-      {!!poi && <Map use="poi-map" showDeleted pois={[historyPoi || poi]} view={{ lat: (historyPoi || poi).coordinates[1], lon: (historyPoi || poi).coordinates[0], zoom: 13 }}/>}
+      {!!poi && <MapControl id="poi-map" showDeleted pois={[historyPoi || poi]} view={{ lat: (historyPoi || poi).coordinates[1], lon: (historyPoi || poi).coordinates[0], zoom: 13 }}/>}
       <DivWithLoader className="PoiDetail" loading={loading} error={error}>
       {!!poi && (
         <>

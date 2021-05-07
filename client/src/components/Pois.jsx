@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { fetchJson } from '../helpers/fetchUtils';
-import Map from './Map';
+import MapControl from './MapControl';
 import PageWithLoader from './reusable/PageWithLoader';
 import Close from './reusable/Close';
 import * as Texts from './Texts';
@@ -119,9 +119,10 @@ const Pois = (props) => {
   return (
     <PageWithLoader pageId="Pois" pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`}>
       <>
-        <Map pois={pois || []} use="pois-map" 
-          view={[view, setView]} setView={null} 
+        <MapControl pois={pois || []} id="pois-map" 
+          view={[view, setView]} 
           markers={[gpsMarker]} showLayers canScroll />
+
         {!!loading && !error && <Loader />}
         {!!error && <div className="errorMsg">
             {error}

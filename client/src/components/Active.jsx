@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import format from 'date-fns/format';
-import Map from './Map';
 import { sortByDateAsc, dateToStr } from '../helpers/helpers';
 import * as Constants from './Constants';
 import { A, navigate } from './reusable/Navigate';
@@ -9,20 +8,21 @@ import * as Texts from './Texts';
 import PageWithLoader from './reusable/PageWithLoader';
 import DivWithLoader from './reusable/DivWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
+import MapControl from './MapControl';
 
 const colors = [
-  '#ff0000',
-  '#000',
-  '#153fca',
-  '#7807ed',
-  '#a45311',
-  '#ff9c00',
-  '#d509ed',
-  '#ea34af',
-  '#30ff00',
-  '#923333',
-  '#158ccb',
-  '#ffe401'
+  'rgb(255,0,0)',
+  'rgb(0,0,0)',
+  'rgb(21,63,202)',
+  'rgb(120,7,237)',
+  'rgb(164,83,17)',
+  'rgb(255,156,0)',
+  'rgb(213,9,237)',
+  'rgb(234,52,175)',
+  'rgb(48,255,0)',
+  'rgb(146,51,51)',
+  'rgb(21,140,203)',
+  'rgb(255,228,1)'
 ];
 
 const grey = '#b19494';
@@ -126,7 +126,7 @@ const Active = (props) => {
   
   return (
     <PageWithLoader pageId="NaCesteActive" pageTitle={`LIVE sledovanie${Constants.WebTitleSuffix}`} >
-      <Map use="na-ceste-map-active" travellers={travellers} canScroll/>
+      <MapControl id="na-ceste-map-active" travellers={travellers} canScroll/>
       <button className="snpBtn active-kind-link no-print" title="Textovo" 
         onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/light'); }}><i className="fas fa-align-justify"></i></button>
       <DivWithLoader absolute className="active-travellers" 

@@ -6,8 +6,8 @@ import { parseGPSPos } from '../../helpers/GPSPosParser';
 import { useStateProp } from '../../helpers/reactUtils';
 import * as Texts from '../Texts';
 import { logDev } from '../../helpers/logDev';
-import Map from '../Map';
 import { Button, Modal } from 'react-bootstrap';
+import MapControl from '../MapControl';
 
 const FormLatLon = (props) => {
   const [loading, setLoading] = useState(false);
@@ -99,9 +99,9 @@ const FormLatLon = (props) => {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Map use="select-pos-map" view={[mapCenter, setMapCenter]} tiles="new">
+            <MapControl id="select-pos-map" view={[mapCenter, setMapCenter]} tiles="new">
               <i className="fas fa-map-marker-alt map-pos"/>
-            </Map>
+            </MapControl>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={() => { setValue({ latlon: mapCenter.lat.toFixed(6) + ", " + mapCenter.lon.toFixed(6), accuracy: 0 }); setMapSelect(false); }}>Vybrať</Button>
