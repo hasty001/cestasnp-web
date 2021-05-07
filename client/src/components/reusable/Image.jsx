@@ -11,35 +11,17 @@ const Image = (props) => {
   var imagePreview = null;
 
   if (props.value && props.value != "None") {
-    if (typeof props.value == "string") {
-      
-      image = props.value.indexOf('res.cloudinary.com') === -1 
+    if (typeof props.value == "string") {  
+      image = fixImageUrl(props.value.indexOf('res.cloudinary.com') === -1 
         ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${props.value}`
-        : props.value;
-
-      imagePreview = props.small ? fixImageUrl(image, 'c_fill,w_240,h_240') : image;
-
+        : props.value, 'f_auto');
     } else {
-      image = props.value.secure_url;
-      imagePreview = image;
-
-      if (props.small) {
-        imagePreview = fixImageUrl(image, 'c_fill,w_240,h_240');
-      } else {
-        if (props.large) {
-          if (props.value.eager) {
-            const i = props.value.eager.findIndex(e => e.width >= 800);
-            if ( i >= 0) {
-              imagePreview = props.value.eager[i].secure_url;
-            }
-          } 
-        } else {
-          if (props.value.eager && props.value.eager.length > 0) {
-            imagePreview = props.value.eager[0].secure_url;
-          } 
-        }
-      }
+      image = fixImageUrl(props.value.secure_url, 'f_auto');
     }
+
+    imagePreview = props.small ? fixImageUrl(image, 'c_fill,f_auto,w_240,h_240') 
+      : props.large ? fixImageUrl(props.value.secure_url, 'c_limit,f_auto,w_800,h_800')
+        : fixImageUrl(props.value.secure_url, 'c_limit,f_auto,w_400,h_400');
   }
 
   return (

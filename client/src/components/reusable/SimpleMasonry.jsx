@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { fixImageUrl } from '../../helpers/helpers';
 import { A } from './Navigate';
 
 class SimpleMasonry extends Component {
@@ -140,21 +141,14 @@ class SimpleMasonry extends Component {
           const innerRow = r < imageRows.length - 1;
           
           const getImage = (img, width, height) => {
-            if (!img.eager) {
-              return img.src;
-            }
-
-            var minSrc = img.src;
-            var minW = 10000;
-
-            img.eager.forEach(e => {
-              if (e,width >= width && e.height >= height && e.width < minW) {
-                minW = e.width;
-                minSrc = e.secure_url;
-              }
-            });
-
-            return minSrc;
+            const value = Math.max(width, height);
+            return value > 800 ? 
+              fixImageUrl(img.src, 'f_auto')
+              : value > 400 ?
+                fixImageUrl(img.src, 'c_limit,f_auto,w_800,h_800')
+                : value > 240 ?
+                fixImageUrl(img.src, 'c_limit,f_auto,w_400,h_400')
+                : fixImageUrl(img.src, 'c_limit,f_auto,w_240,h_240');
           };
 
           return (
