@@ -314,7 +314,7 @@ const ArticleForm = (props) => {
     var result = text;
 
     // fix images crop
-    result = result.replaceAll('/c_fill', '/c_limit');
+    result = result.replaceAll('/c_fill', '/c_limit,f_auto');
 
     result = result.replaceAll(curlyRegEx, ''); // remove {...}
     result = result.replaceAll(indexLinkRegEx, ''); // remove index links

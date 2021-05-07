@@ -10,7 +10,7 @@ const ImageBox = ({ url, show, onHide }) => (
     dialogClassName="travellerPhotoModal"
   >
     <Modal.Body>
-      <img src={fixImageUrl(url)} width="100%" />
+      <img src={fixImageUrl(url, 'f_auto')} width="100%" />
     </Modal.Body>
   </Modal>
 );
