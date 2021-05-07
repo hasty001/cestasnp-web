@@ -1,6 +1,6 @@
 import * as Constants from './Constants';
 import { faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignLeft, faTint } from '@fortawesome/free-solid-svg-icons';
-import { faPosed, faPristresek } from '../helpers/faIcons';
+import { faPosed, faPristresek, faAnjel } from '../helpers/faIcons';
 
 const PoiCategories = [
   { value: Constants.PoiCategoryGuidepost, label: "rázcestník", icon: "fas fa-plus poi-icon", iconDefinition: faPlus,  hidden: true },
@@ -13,6 +13,7 @@ const PoiCategories = [
   { value: "potraviny", label: "potraviny", icon: "fas fa-shopping-basket poi-icon", iconDefinition: faShoppingBasket, description: "predajňa potravín" },
   { value: "utulna", label: "útulňa", icon: "fas fa-home poi-icon", iconDefinition: faHome, description: "skromnejší ubytovanie, za dobrovoľný poplatok" },
   { value: "chata", label: "ubytovanie", icon: "fas fa-bed poi-icon", iconDefinition: faBed, description: "napr. hotel, horská chata, penzión, turistická ubytovňa" },
+  { value: "anjel", label: "Anjel na Ceste", icon: "fac fa-anjel poi-icon", iconDefinition: faAnjel, description: "dobrá bytosť nezištne pomáhajúca ľuďom putujúcim po ceste SNP" },
 ];
 
 const findPoiCategory = (category) => {
