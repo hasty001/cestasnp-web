@@ -6,10 +6,13 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   mode: 'development',
-  entry: ['./src/index.js', "./public/index.css"],
+  entry: { 
+    bundle: ['./src/index.js', "./public/index.css"], 
+    book: ['./src/book.js', "./public/book.css"]
+  },
   output: {
     path: path.resolve('./build'),
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   devtool: 'source-map',
   resolve: {

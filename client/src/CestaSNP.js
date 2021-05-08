@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Router, Switch, Route } from 'react-router';
-import detectIt from 'detect-it';
 
 import LogRocket from 'logrocket';
 import history from './helpers/history';
@@ -32,55 +31,47 @@ import EditArticle from './components/Account/EditArticle';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
-class CestaSNP extends Component {
-  constructor(props) {
-    super(props);
+const CestaSNP = props => {
+  const [fillContent, setFillContent] = useState(false);
+  const prevFillContent = useRef(false);
+  const prevPath = useRef('');
+  
+  const appBodyRef = useRef();
 
-    this.state = {
-      fillContent: false
-    };
-
-    this.appBodyRef = React.createRef();
-    this.prevPath = '';
-  }
-
-  removeListener = null;
-
-  pathChanged(path) {
-    if (path != this.prevPath && this.appBodyRef.current) {
-      if (this.appBodyRef.current.scrollTo) {
-        this.appBodyRef.current.scrollTo(0, 0);
+  const pathChanged = path => {
+    if (path != prevPath.current && appBodyRef.current) {
+      if (appBodyRef.current.scrollTo) {
+        appBodyRef.current.scrollTo(0, 0);
       } else {
-        this.appBodyRef.current.scrollTop = 0;
-        this.appBodyRef.current.scrollLeft = 0;
+        appBodyRef.current.scrollTop = 0;
+        appBodyRef.current.scrollLeft = 0;
       }
     }
-    this.prevPath = path;
+    prevPath.current = path;
 
     const newState = 
       (path == "/na/ceste" || path == "/pred/pois" || path == "/na/ceste/fotky") ||
       (path == "/na/ceste/" || path == "/pred/pois/" || path == "/na/ceste/fotky/");
       
-    if (this.state.fillContent != newState)
-      this.setState({
-        fillContent: newState
-      });
+    if (prevFillContent.current != newState) {
+      prevFillContent.current = newState;
+      setFillContent(newState);
+    }
   }
 
-  componentDidMount() {
-    this.pathChanged(window.location.pathname);
+  pathChanged(window.location.pathname);
 
-    this.removeListener = history.listen((params) => {
-      this.pathChanged(params.pathname);
+  useEffect(() => {
+    pathChanged(window.location.pathname);
+
+    const listener = history.listen((params) => {
+      pathChanged(params.pathname);
     });
-  }
 
-  componentWillUnmount() {
-    this.removeListener();
-  }
+    return () => listener();
+  }, []);
 
-  render() {
-    return (
+  return (
   <AuthProvider>
     <LocalSettingsProvider>
     <DocumentTitle title={Constants.WebTitle}>
@@ -89,8 +80,8 @@ class CestaSNP extends Component {
         <div className="app-header" data-nosnippet>
           <Navigation />
         </div>
-        <div className="app-body" ref={this.appBodyRef}>
-          <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
+        <div className="app-body" ref={appBodyRef}>
+          <div className={fillContent ? "content-fill" : "content-wrap"}>
             <Switch>
               <Route exact path="/" component={Home} />
               <Route
@@ -129,7 +120,7 @@ class CestaSNP extends Component {
               <Route exact path="/ucet/zmeny" render={(props) => (<Account {...props} changes />)} />
               <Route path="*" component={NotFound} />
             </Switch>
-            {!this.state.fillContent && <SiteFooter/>}
+            {!fillContent && <SiteFooter/>}
           </div>
         </div>
       </div>
@@ -137,7 +128,7 @@ class CestaSNP extends Component {
     </DocumentTitle>
     </LocalSettingsProvider>
   </AuthProvider>
-  );}
+  );
 }
 
 export default CestaSNP;

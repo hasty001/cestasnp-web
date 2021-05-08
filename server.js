@@ -4,8 +4,10 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const { getMeta } = require('./server/meta');
 const { MongoClient } = require('mongodb');
+const DB = require('./server/db/db');
 const compression = require('compression');
 const replaceAll = require('string.prototype.replaceall');
+const _const = require('./const');
 
 const app = express();
 const http = require('http').Server(app);
@@ -91,7 +93,7 @@ app.use('/api/changes', require('./server/controllers/changes'));
 app.use('/sitemap.xml', require('./server/controllers/sitemap'));
 
 app.get('/*', (req, res) => {
-  fs.readFile(path.join(root, 'index.html'), 'utf8')
+  fs.readFile(path.join(root, req.path.startsWith('/na/dennik/') ? 'book.html' : 'index.html'), 'utf8')
   .then(data => getMeta(req.app.locals.db, req.path)
     .then(meta => 
       res.send(meta ? 

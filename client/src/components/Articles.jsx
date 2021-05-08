@@ -84,7 +84,7 @@ const Articles = (props) => {
           handlePageSelect={handlePageSelect}
         />
         {!!loading && <Loader />}
-        {!loading && error && <div class="errorMsg">{error}</div>}
+        {!loading && error && <div className="errorMsg">{error}</div>}
         {!loading &&
           articles.length > 0 &&
           articles.map((article, i) => {

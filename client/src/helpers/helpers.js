@@ -241,6 +241,8 @@ const getArticleImage = (intro) => {
   return fixImageUrl(url, 'c_fill,f_auto,w_240,h_240');
 }
 
+const isImageValid = (image) => image && image != 'None';
+
 const fixImageUrl = (url, code) => {
   return ((url && url != 'None') ? (url.secure_url || ((url.indexOf("/") < 0 && url.indexOf('res.cloudinary.com') === -1)?
       `${Constants.CloudinaryPath}${url}` : url)) 
@@ -278,5 +280,5 @@ const sortActiveTravellers = (travellers, now) => {
 
 export { sortByDateDesc, sortByDateAsc, sortByDate, dateToStr, dateTimeToStr, parseDate,
   escapeHtml, htmlSanitize, htmlSimpleSanitize, htmlLineSimpleSanitize, htmlClean, htmlLineClean,
-  getArticleState, getArticleStateIcon, getArticleImage, fixImageUrl, getArticleCategoryText, 
+  getArticleState, getArticleStateIcon, getArticleImage, isImageValid, fixImageUrl, getArticleCategoryText, 
   getTravellersImages, sortActiveTravellers };
