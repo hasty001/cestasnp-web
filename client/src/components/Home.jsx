@@ -6,10 +6,13 @@ import { A } from './reusable/Navigate';
 import ButtonReadMore from './reusable/ButtonReadMore';
 import { LocalSettingsContext } from './LocalSettingsContext';
 import { htmlClean, getArticleImage } from '../helpers/helpers';
+import Close from './reusable/Close';
+import { useStateWithLocalStorage } from '../helpers/reactUtils';
 
 const Home = (props) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showShortIntro, setShowShortIntro] = useStateWithLocalStorage('HomeShortIntroShow', true);
 
   useEffect(() => {
     setLoading(true);
@@ -31,6 +34,10 @@ const Home = (props) => {
 
   return (
     <div id="Home">
+      {!!showShortIntro && <div className="home-intro-mobile">
+        <Close onClose={() => setShowShortIntro(false)}/>
+        <A href="/pred/articles/article/60">Cesta hrdinov SNP je 770 km dlhá pešia trasa na Slovensku a zážitok na celý život. <strong>Čítaj viac</strong>.</A>
+      </div>}
       <div className="home-articles-and-box">
         <div className="active-travellers-box">            
           <A

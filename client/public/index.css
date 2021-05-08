@@ -726,6 +726,38 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   width: calc(100vw - 600px);
 }
 
+.home-intro-mobile {
+  display: none;
+  text-align: center;
+  background-color: red;
+  color: white;
+  padding: 15px;
+}
+
+.home-intro-mobile strong {
+  font-weight: 500;
+}
+
+.home-intro-mobile .close {
+  margin-left: 15px;
+  float: right;
+  opacity: 1;
+}
+
+.home-intro-mobile .close:hover {
+  opacity: 0.5;
+}
+
+.home-intro-mobile>a {
+  color: white !important;
+  font-style: italic;
+}
+
+.home-intro-mobile>a:focus,
+.home-intro-mobile>a:hover {
+  text-decoration: underline !important;
+}
+
 .home-intro {
   max-width: 860px;
   min-height: 270px;
@@ -871,6 +903,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: 20px;
   font-weight: 500;
   color: red;
+  line-height: 30px;
 }
 
 .traveller-message-name {
@@ -950,6 +983,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 @media(max-width: 1300px) {
+  .home-intro-mobile {
+    display: block;
+  }
+
   .home-articles {
     display: block;
     min-width: 100%;
