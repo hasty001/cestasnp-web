@@ -729,12 +729,28 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 .home-intro-mobile {
   display: none;
-  margin-top: 15px;
   text-align: center;
+  background-color: red;
+  color: white;
+  padding: 15px;
+}
+
+.home-intro-mobile strong {
+  font-weight: 500;
+}
+
+.home-intro-mobile .close {
+  margin-left: 15px;
+  float: right;
+  opacity: 1;
+}
+
+.home-intro-mobile .close:hover {
+  opacity: 0.5;
 }
 
 .home-intro-mobile>a {
-  color: red !important;
+  color: white !important;
   font-style: italic;
 }
 
@@ -888,6 +904,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: 20px;
   font-weight: 500;
   color: red;
+  line-height: 30px;
 }
 
 .traveller-message-name {
