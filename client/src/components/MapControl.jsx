@@ -243,7 +243,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
       setMoving(false);
     });
 
-    mapObject.on('click', (event) => {
+    mapObject.on('singleclick', (event) => {
       const data = [];
       var first = null;
       mapObject.forEachFeatureAtPixel(event.pixel,
