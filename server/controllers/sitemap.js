@@ -8,7 +8,7 @@ const db = new DB();
 const router = express.Router();
 
 const getJourneys = (dbRef) =>
-  db.findBy(_const.DetailsTable, {}, { start_date: -1 })
+  db.findBy(dbRef, _const.DetailsTable, {}, { start_date: -1 })
     .then(travellers => {
       var travellersIds = travellers.map(({user_id}) => user_id);
 

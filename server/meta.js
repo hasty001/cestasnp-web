@@ -267,8 +267,8 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
     }
   }
 
-  if (path.startsWith('/pred/pois/') && !path.startsWith('pred/pois/tabulka')) {
-    const poiId = sanitize(url.substr(11));
+  if (path.startsWith('/pred/pois/') && !path.startsWith('/pred/pois/tabulka')) {
+    const poiId = sanitize(url.substr(11, 24));
 
     if (poiId) {
       return resolve(getPoiMeta(db, poiId));
