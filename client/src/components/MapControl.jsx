@@ -217,11 +217,11 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
 
     let options = {
       view: new ol.View({ zoom, center: fromLonLat(center), minZoom: 8, maxZoom: 19, constrainRotation: true,
-      extent: fromLonLat([16, 48]).concat(fromLonLat([22, 50])), constrainOnlyCenter: true }),
+      extent: fromLonLat([16, 46]).concat(fromLonLat([24, 50])), constrainOnlyCenter: true }),
       layers: [FreeMapTiles, routeLayer, markerLayer],
       controls: defaultControls({ attribution: false }).extend([new ScaleLine(), new Attribution()]),
       overlays: [popupOverlay],
-      keyboardEventTarget: document,
+      keyboardEventTarget: canScroll ? document : mapRef.current,
       interactions: defaultInteraction({ mouseWheelZoom: !!canScroll, zoomDuration: 0 })
     };
     
@@ -512,7 +512,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
 
   return (
     <MapContext.Provider value={{ map }}>
-      <div ref={mapRef} id={id} className="ol-map">
+      <div ref={mapRef} id={id} className="ol-map" tabIndex="1">
         {!!showLayers && <div className="ol-control map-layer-switch">
           {!showLayersPanel && <button onMouseEnter={() => setShowLayersPanel(true)}><i className="fas fa-layer-group"/></button>}
           {showLayersPanel && <div onMouseLeave={() => setShowLayersPanel(false)}>
