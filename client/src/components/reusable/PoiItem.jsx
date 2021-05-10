@@ -3,7 +3,7 @@ import { findPoiCategory } from '../PoiCategories';
 import * as Constants from '../Constants'; 
 import PoiIcon from './PoiIcon';
 import UserLabel from './UserLabel';
-import { dateTimeToStr, htmlLineSimpleSanitize } from '../../helpers/helpers';
+import { dateTimeToStr, fixImageUrl, htmlLineSimpleSanitize } from '../../helpers/helpers';
 import { AuthContext } from '../AuthContext';
 import { A } from './Navigate';
 
@@ -15,11 +15,13 @@ const PoiItem = (props) => {
   const space = props.tableRow ? null : ` `;
 
   const getImgUrl = (image) => {
+    console.log(image);
+    
     if (image && image != "None") {
-      return image.secure_url ||
+      return fixImageUrl(image.secure_url ||
         (image.indexOf('res.cloudinary.com') === -1 
         ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${image}`
-        : image);
+        : image), "f_auto");
     } else {
       return "";
     }

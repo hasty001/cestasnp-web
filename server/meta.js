@@ -208,7 +208,7 @@ const getTravelerMeta = (dbRef, userId) =>
             const lat = msg && msg.length > 0 ? escape(msg[0].lat) : '';
             const lon = msg && msg.length > 0 ? escape(msg[0].lon) : '';
 
-            const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img.url || msg[0].img : '', defImg);
+            const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img : '', defImg);
 
             var meta = `
               <meta name="description" content="${desc}" />
@@ -267,8 +267,8 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
     }
   }
 
-  if (path.startsWith('/pred/pois/') && !path.startsWith('pred/pois/tabulka')) {
-    const poiId = sanitize(url.substr(11));
+  if (path.startsWith('/pred/pois/') && !path.startsWith('/pred/pois/tabulka')) {
+    const poiId = sanitize(url.substr(11, 24));
 
     if (poiId) {
       return resolve(getPoiMeta(db, poiId));

@@ -7,13 +7,18 @@ const escape = (html) => {
     .replace(/>/g, '&gt;');
 }
 
+const fixImageUrl = (url, code) => {
+  return (url || '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
+    `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`);
+};
+
 const escapeImg = (img, def = "") => {
   if (img && typeof img == "string") {
     if (img != "None") {
       if (img.indexOf('res.cloudinary.com') === -1) {
-        return escape(`https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${img}`);
+        return escape(`https://res.cloudinary.com/cestasnp-sk/image/upload/f_auto/v1520586674/img/sledovanie/${img}`);
       } else {
-        return escape(img);
+        return escape(fixImageUrl(img, "f_auto"));
       }
     }
 
@@ -21,7 +26,7 @@ const escapeImg = (img, def = "") => {
   }
   
   if (img && img.secure_url) {
-    return escape(img.secure_url);
+    return escape(fixImageUrl(img.secure_url, "f_auto"));
   }
 
   return def;  
