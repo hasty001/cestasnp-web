@@ -1364,7 +1364,9 @@ button.ol-zoom-out {
   border: 1px solid grey;
   background-color: white;
   padding: 15px;
-  max-width: 66vw;
+  max-width: 50vw;
+  max-height: 66vh;
+  overflow: hidden;
 }
 
 /***     HOME       ***/
@@ -2731,4 +2733,6 @@ div.wpcc-container a.wpcc-btn:focus {
 
 .map-popup-content {
   margin-right: 30px;
+  max-height: calc(66vh - 30px);
+  overflow-y: auto;
 }
