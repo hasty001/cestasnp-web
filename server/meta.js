@@ -208,7 +208,7 @@ const getTravelerMeta = (dbRef, userId) =>
             const lat = msg && msg.length > 0 ? escape(msg[0].lat) : '';
             const lon = msg && msg.length > 0 ? escape(msg[0].lon) : '';
 
-            const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img.url || msg[0].img : '', defImg);
+            const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img : '', defImg);
 
             var meta = `
               <meta name="description" content="${desc}" />
