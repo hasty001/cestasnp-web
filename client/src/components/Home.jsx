@@ -30,7 +30,7 @@ const Home = (props) => {
 
   const settingsData = useContext(LocalSettingsContext);
 
-  const month = (new Date()).getMonth + 1;
+  const month = (new Date()).getMonth() + 1;
 
   return (
     <div id="Home">
@@ -85,7 +85,7 @@ const Home = (props) => {
       </div>
 
       <div className="home banner">
-        { (month >= 5 && mont <= 10)
+        { (month >= 5 && month <= 10)
           ? <A href={settingsData.activeLink.href}>LIVE sledovanie</A>
           : <A href="/pred/pois">Mapa</A>}
       </div>

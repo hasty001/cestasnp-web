@@ -8,7 +8,9 @@ const TravellerItem = ({ traveller, now, userData }) => {
   return (
     <div className="traveller-item" >
       <div className="traveller-item-header"> 
-        <A className="traveller-name" href={`/na/${traveller.user_id}${traveller.finishedTracking ? Constants.FromOldQuery : ""}`}>
+        <A className="traveller-name" 
+          href={`/na/${traveller.user_id}${traveller.finishedTracking ? 
+            Constants.FromOldQuery : (traveller.lastMessage ? (`#${traveller.lastMessage._id}`) : "")}`}>
           {traveller.meno}                          
         </A>
 
