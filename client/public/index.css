@@ -248,7 +248,7 @@ html, body, #root {
   margin: 0 auto;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1270px) {
   .app-header {
     max-height: 70px;
   }
@@ -287,7 +287,7 @@ html, body, #root {
   display: block;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1270px) {
   .logo-mobile {
     margin-left: 15px;
     height: 35px;
@@ -336,7 +336,7 @@ body {
   bottom: 0px;
   width: 100%;
   overflow-y: auto;
-} @media (max-width: 1180px) {
+} @media (max-width: 1270px) {
   .app-body {
     top: 70px;
   }
@@ -361,14 +361,14 @@ body {
 
 .navbar-header {
   height: 76px;
-} @media (max-width: 1180px) {
+} @media (max-width: 1270px) {
   .navbar-header {
     /* padding: 0 15px; */
     height: 66px;
   }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1270px) {
   .navbar .container {
     width: 100%;
     padding: 0;
@@ -457,7 +457,7 @@ body {
   padding: 5px 15px 15px 15px;
 }
 
-@media(max-width: 1180px) {
+@media(max-width: 1270px) {
   .navbar-nav>li>a {
     padding: 10px;
     border-bottom: none !important;
@@ -503,7 +503,7 @@ li.red-button>a:active {
   right: 16px;
   background-color: #ffffff;
   border-color: #ffffff;
-} @media(max-width: 1180px) {
+} @media(max-width: 1270px) {
   .navbar-toggle {
     top: 10px;
     right: 10px;
@@ -517,7 +517,7 @@ li.red-button>a:active {
   border-color: #ffffff;  
 }
 
-@media (min-width: 1180px) {
+@media (min-width: 1270px) {
   .navbar-right {
     margin-top: 17px;
   }
@@ -557,7 +557,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   content: url("data:image/svg+xml,%3Csvg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='times' class='svg-inline--fa fa-times fa-w-11' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 512'%3E%3Cpath fill='currentColor' d='M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z'%3E%3C/path%3E%3C/svg%3E");
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1270px) {
   .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
       padding-bottom: 10px;
       padding-top: 10px;
@@ -580,7 +580,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   padding-right: 0px;
   padding-left: 0px;
   width: 90%;
-} @media (max-width: 1180px) {
+} @media (max-width: 1270px) {
   .navbar .container {
     width: 100%;
     overflow-x: hidden;
@@ -592,7 +592,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   display: block;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1270px) {
     .navbar-header {
         float: none;
     }
