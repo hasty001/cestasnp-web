@@ -629,7 +629,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 /***     HOME       ***/
 
 #Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller, #PoiDetail,
-#Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
+#Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -701,7 +701,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller .traveller,
-.PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
+.PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -714,7 +714,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 @media (min-width: 1600px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller .traveller,
-  .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
+  .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -1013,7 +1013,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 @media(max-width: 670px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive,
-  #Traveller .traveller, .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail {
+  #Traveller .traveller, .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -1375,7 +1375,7 @@ button.ol-zoom-out {
 /**KONTAKT + Cookies **/
 
 #Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive, #Itinerary, #PoisInTable, #FindBuddies,
-#FindBuddiesDetail {
+#FindBuddiesDetail, #Search {
   margin-top: 40px;
 }
 
@@ -1384,6 +1384,79 @@ button.ol-zoom-out {
 }
 
 /**KONTAKT + Cookies **/
+/**********************/
+/***     SEARCH     ***/
+#Search {
+  min-height: 300px;
+}
+
+.gs-webResult div.gs-visibleUrl {
+  color: #58595B !important;
+  font-weight: 300;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+}
+
+a.gs-title:focus, 
+a.gs-title:hover,
+a.gs-title:focus b, 
+a.gs-title:hover b {
+  color: red !important;
+}
+
+a.gs-title,
+a.gs-title b  {
+  color: #58595B !important;
+  font-weight: 500;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px !important;
+}
+
+a.gs-label {
+  font-weight: 500;
+}
+
+.gsc-webResult.gsc-result {
+  margin: 20px 0 !important;
+}
+
+button.gsc-search-button {
+  border-radius: 25px !important;
+  padding: 12px 15px 3px;
+}
+
+.gsc-control-cse,
+.gsc-control-cse .gsc-table-result,
+.gsc-selected-option-container,
+.gsc-result-info {
+  font-weight: 300;
+  font-family: 'Ubuntu', sans-serif !important;
+  font-size: 15px !important;
+}
+
+.gsc-selected-option-container {
+  font-weight: 500 !important;
+}
+
+.gsc-control-cse .gsc-table-result b {
+  font-weight: 500;
+}
+
+.gsc-tabHeader,
+.gsc-refinementHeader {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+.gsc-url-top {
+  margin: 5px 0 !important;
+}
+
+.gs-no-results-result .gs-snippet {
+  background-color: transparent !important;
+  border: none !important;
+}
+/***     SEARCH     ***/
 /**********************/
 /***     POIS       ***/
 
