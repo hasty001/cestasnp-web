@@ -6,7 +6,7 @@ export const LocalSettingsContext = React.createContext( {
 } );
 
 const activeKindReducer = (state, action) => {
-  return { kind: action, href: action == "light" ? "/na/ceste/light" : (action == "fotky" ? "/na/ceste/fotky" : "/na/ceste") }};
+  return { kind: action, href: action == "light" ? "/na/ceste/textovo" : (action == "fotky" ? "/na/ceste/fotky" : "/na/ceste") }};
 
 export const LocalSettingsProvider = ({ children }) => {
   const settings = JSON.parse(localStorage.getItem("Settings")) || {};
