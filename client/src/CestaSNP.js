@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Router, Switch, Route } from 'react-router';
-import detectIt from 'detect-it';
 
 import LogRocket from 'logrocket';
 import history from './helpers/history';
@@ -29,6 +28,7 @@ import ActivePhotos from './components/ActivePhotos';
 import { LocalSettingsProvider } from './components/LocalSettingsContext';
 import ArticleHistory from './components/ArticleHistory';
 import EditArticle from './components/Account/EditArticle';
+import Search from './components/Search';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -120,6 +120,7 @@ class CestaSNP extends Component {
               <Route exact path="/na/archive" component={Archive} />
               <Route path="/na/:traveller" render={(props) => (<Traveller {...props} />)}/>
               <Route exact path="/kontakt" component={Kontakt} />
+              <Route exact path="/hladanie" component={Search} />
               <Route exact path="/cookies" component={Cookies} />
               <Route exact path="/ucet" render={(props) => (<Account {...props} />)}/>
               <Route exact path="/ucet/poslatspravu" render={(props) => (<Account {...props} sendMessage/>)}/>

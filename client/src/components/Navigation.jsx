@@ -15,6 +15,7 @@ const ROUTES = {
   itinerary: '/pred/itinerar',
   naCeste: '/na/ceste',
   archiv: '/na/archive',
+  hladanie: '/hladanie',
   kontakt: '/kontakt',
   mojaCesta: '/ucet',
   poslatSpravu: '/ucet/poslatspravu',
@@ -274,6 +275,24 @@ const Navigation = () => {
               Odhlásiť             
             </NavRouterItem>
           </NavDropdown>)}
+
+          <NavRouterItem
+              href={ROUTES.hladanie}
+              eventKey={30}
+              title="Hľadanie"
+              className="desktop"
+            >
+              <i className="fas fa-search"></i>         
+          </NavRouterItem>
+
+          <NavRouterItem
+              href={ROUTES.hladanie}
+              eventKey={3}
+              title="Hľadanie"
+              className="mobile"
+            >
+              Hľadanie
+          </NavRouterItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

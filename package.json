@@ -32,7 +32,6 @@
     "cloudinary": "^1.20.0",
     "compression": "^1.7.4",
     "date-fns": "^1.29.0",
-    "detect-it": "^3.0.7",
     "dompurify": "^2.2.4",
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
