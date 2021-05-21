@@ -88,7 +88,7 @@ const getArticleMeta = (dbRef, articleId) =>
 
             meta += `
               <script type="application/ld+json">
-              {
+              [{
                 "@context": "http://schema.org",
                 "@type": "Article",
                 "@id": "${url}",
@@ -109,7 +109,17 @@ const getArticleMeta = (dbRef, articleId) =>
                   "url": "${escapeImg(results[0].ogimg, defImg)}"
                 },   
                 ${getPublisher()}
-              }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [{
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Články",
+                  "item": "https://cestasnp.sk/pred/articles/1"
+                }]
+              }]
               </script>`;
 
             return Promise.resolve(meta);
@@ -155,7 +165,7 @@ const getPoiMeta = (dbRef, poiId) =>
 
             meta += `
               <script type="application/ld+json">
-              {
+              [{
                 "@context": "http://schema.org",
                 "@type": "Article",
                 "@id": "${url}",
@@ -176,7 +186,17 @@ const getPoiMeta = (dbRef, poiId) =>
                   "url": "${escapeImg(results[0].img_url, defImg)}"
                 },   
                 ${getPublisher()}
-              }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [{
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Dôležité miesta",
+                  "item": "https://cestasnp.sk/pred/pois"
+                }]
+              }]
               </script>`;
 
             return Promise.resolve(meta);
@@ -210,7 +230,10 @@ const getTravelerMeta = (dbRef, userId) =>
 
             const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img : '', defImg);
 
+            const finished = results[0].finishedTracking && results[0].end_date;
+
             var meta = `
+              <link rel="canonical" href="${url}" />
               <meta name="description" content="${desc}" />
               <meta name="author" content="${author}">
               <meta name="keywords" content="${escape(results[0].metakey)}" />
@@ -226,7 +249,7 @@ const getTravelerMeta = (dbRef, userId) =>
 
             meta += `
               <script type="application/ld+json">
-              {
+              [{
                 "@context": "http://schema.org",
                 "@type": "Article",
                 "@id": "${url}",
@@ -246,7 +269,17 @@ const getTravelerMeta = (dbRef, userId) =>
                   "url": "${img}"
                 },  
                 ${getPublisher()}
-              }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [{
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "${finished ? 'Archív' : 'Na ceste'}",
+                  "item": "${finished ? 'https://cestasnp.sk/na/archive' : 'https://cestasnp.sk/na/ceste'}"
+                }]
+              }]
               </script>`;
 
             return Promise.resolve(meta);
@@ -273,6 +306,16 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
     if (poiId) {
       return resolve(getPoiMeta(db, poiId));
     }
+  }
+
+  if (path.startsWith('/pred/itinerar')) {
+    return resolve(`
+      <meta name="description" content="Itinerár Cesty hrdinov SNP" />
+      <meta property="og:url" content="https://cestasnp.sk/pred/itinerar" />
+      <meta property="og:title" content="Itinerár${WebSuffix}" />
+      <meta property="og:type" content="article" />
+      <meta property="og:description" content="Itinerár Cesty hrdinov SNP"/>              
+      <meta property="og:image" content="${defImg}" />`);
   }
 
   if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
