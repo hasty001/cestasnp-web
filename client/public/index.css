@@ -287,10 +287,27 @@ html, body, #root {
   display: block;
 }
 
+.navbar li.navbar-search {
+  display: none;
+}
+
 @media (max-width: 1100px ) {
   .logo-mobile {
     margin-left: 15px;
     height: 35px;
+  }
+
+  .navbar li.navbar-search {
+    display: block;
+    float: right;
+    position: relative;
+    right: 30px;
+    top: 22px;
+    font-size: 18px;
+  }
+
+  li.navbar-search a {
+   color: black;
   }
 
   .navbar-nav > li.mobile {
@@ -498,6 +515,7 @@ li.red-button>a:active {
 }
 
 .navbar-toggle {
+  min-width: 44px;
   position: relative;
   top: 20px;
   right: 16px;
@@ -527,11 +545,6 @@ li.red-button>a:active {
   padding-top: 13px;
 }
 
-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, 
-.navbar-inverse .navbar-nav>.open>a:hover {
-  background-color: #ffb8b8;
-}
-
 .navbar-inverse .navbar-toggle:not(.collapsed) {
   padding-top: 5px;
   padding-right: 13px;
@@ -541,8 +554,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   display: none;
 }
 
+.navbar-inverse .navbar-toggle:hover .icon-bar {
+  background-color: red;
+}
+
 .navbar-inverse .navbar-toggle .icon-bar {
-  background-color: #ff2730;
+  background-color: black;
 }
 
 .navbar-inverse .navbar-toggle:not(.collapsed) .icon-bar:nth-child(2) {
@@ -554,7 +571,12 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 
 /* Icon https://fontawesome.com/icons/times?style=solid */
 .navbar-inverse .navbar-toggle:not(.collapsed) .icon-bar:nth-child(2)::before {
+  padding-left: 4px;
   content: url("data:image/svg+xml,%3Csvg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='times' class='svg-inline--fa fa-times fa-w-11' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 512'%3E%3Cpath fill='currentColor' d='M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.navbar-inverse .navbar-toggle:not(.collapsed):hover .icon-bar:nth-child(2)::before {
+  content: url("data:image/svg+xml,%3Csvg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='times' class='svg-inline--fa fa-times fa-w-11' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 512'%3E%3Cpath fill='#f00' d='M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z'%3E%3C/path%3E%3C/svg%3E");
 }
 
 @media (max-width: 1100px) {
@@ -1389,6 +1411,10 @@ button.ol-zoom-out {
   min-height: 300px;
 }
 
+.gsc-search-button {
+  margin-left: 15px;
+}
+
 .gs-webResult div.gs-visibleUrl {
   color: #58595B !important;
   font-weight: 300;
@@ -1419,9 +1445,24 @@ a.gs-label {
   margin: 20px 0 !important;
 }
 
+button.gsc-search-button:focus,
+button.gsc-search-button:hover {
+  background-color: white !important;
+}
+
+button.gsc-search-button:focus svg,
+button.gsc-search-button:hover svg {
+  fill: red !important;
+}
+
+button.gsc-search-button svg {
+  transition: fill 0.4s;
+}
+
 button.gsc-search-button {
   border-radius: 25px !important;
   padding: 12px 15px 3px;
+  transition: background-color 0.4s;
 }
 
 .gsc-control-cse,
