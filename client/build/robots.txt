@@ -1,4 +1,6 @@
 User-agent: *
 Disallow: /*from-old
+Disallow: /api/articles/increase_article_count
+Disallow: /ads.txt
 
 Sitemap: https://cestasnp.sk/sitemap.xml
