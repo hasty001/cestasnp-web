@@ -60,7 +60,15 @@ const Navigation = () => {
             </div>
           </A>
         </Navbar.Brand>
-        <Navbar.Toggle />
+        <Navbar.Toggle title="Menu" />
+        <NavRouterItem
+          href={ROUTES.hladanie}
+          eventKey={99}
+          title="Hľadanie"
+          className="navbar-search"
+        >
+          <i className="fas fa-search"></i>
+        </NavRouterItem>
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav pullRight className={!authData.isAuth ? "not-auth" : "auth"}>
@@ -311,16 +319,7 @@ const Navigation = () => {
               title="Hľadanie"
               className="desktop"
             >
-              <i className="fas fa-search"></i>         
-          </NavRouterItem>
-
-          <NavRouterItem
-              href={ROUTES.hladanie}
-              eventKey={3}
-              title="Hľadanie"
-              className="mobile"
-            >
-              Hľadanie
+              <i className="fas fa-search"></i>
           </NavRouterItem>
         </Nav>
       </Navbar.Collapse>

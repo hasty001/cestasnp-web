@@ -12,7 +12,7 @@ const Search = () => {
 
     loadScript("https://cse.google.com/cse.js?cx=117643e9e51a56509", {}, 
       () => {
-        setSearch(<div className="gcse-search" data-linkTarget="_self"></div>);
+        setSearch(<div className="gcse-search" data-linktarget="_self" data-enablehistory={true}></div>);
         setLoading(false);
       });
   }, []);
