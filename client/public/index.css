@@ -886,6 +886,7 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: 20px;
   font-weight: 500;
   color: red;
+  margin-right: 15px;
 }
 
 .traveller-message-name {
@@ -903,6 +904,10 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
   font-size: 16px;
   font-weight: 500;
   color: #58595b;
+}
+
+.traveller-item-email {
+  display: inline-block;
 }
 
 .traveller-date {
