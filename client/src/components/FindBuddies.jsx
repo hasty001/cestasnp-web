@@ -44,7 +44,7 @@ const FindBuddies = (props) => {
         </div>}
 
         <button className="snpBtn add" onClick={() => navigate("/ucet/hladampartakov")}>
-          {!authData.isAuth || !authData.userDetails.findBuddies || !authData.userDetails.findBuddies.enabled ? "Pridaj" : "Uprav"}
+          {!authData.isAuth || !authData.userDetails.findBuddies || !authData.userDetails.findBuddies.enabled ? "Pridaj svoj inzerát" : "Uprav svoj inzerát"}
         </button>
       </>
     </PageWithLoader>

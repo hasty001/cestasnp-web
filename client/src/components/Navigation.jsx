@@ -146,7 +146,7 @@ const Navigation = () => {
               title="Hľadám parťákov"
               className="mobile"
             >
-              Hľadám parťákov           
+              Hľadám parťákov - môj inzerát           
             </NavRouterItem>)}
 
           {!!authData.isAuth && !!authData.userDetails && authData.userDetails.articlesRole == 'admin' && (
@@ -290,7 +290,7 @@ const Navigation = () => {
               title="Hľadám parťákov"
               className="desktop"
             >
-              Hľadám parťákov           
+              Hľadám parťákov - môj inzerát          
             </NavRouterItem>
 
             {!!authData.userDetails && authData.userDetails.articlesRole == 'admin' && <NavRouterItem

@@ -104,17 +104,15 @@ const EditFindBuddies = (props) => {
   }
 
   return (
-    <PageWithLoader pageId="EditFindBuddies" pageTitle={`Hľadám parťákov${Constants.WebTitleSuffix}`}>
+    <PageWithLoader pageId="EditFindBuddies" pageTitle={`Hľadám parťákov - môj inzerát${Constants.WebTitleSuffix}`}>
       <FormWithLoader
         loading={loading} error={error} success={success}
-        submitText={"Uložiť zmeny"} onSubmit={save}>
-
-        <h2>Hľadám parťákov</h2>
-        <p className="form">
+        submitText={"Uložiť zmeny"} onSubmit={save} title={"Hľadám parťákov - môj inzerát"}
+        description={(<p>
           Tvoj inzerát bude zverejnený na stránke <A href="/pred/hladampartakov">Hľadám parťákov</A> len 
           pre prihlásených užívateľov. 
-          Prípadní záujemcovia ťa budú môcť kontaktovať cez email, cez ktorý si zaregistrovaný. 
-        </p>
+          Prípadní záujemcovia ťa budú môcť kontaktovať cez email, cez ktorý si zaregistrovaný.
+        </p>)}>
 
         <FormCheckBox itemClassName="form-checkbox" valueName="enabled" valueLabel="Zverejniť môj inzerát" value={[enabled, setEnabled]}/>
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { dateTimeToStr, dateToStr, htmlSimpleSanitize, parseDate } from '../../helpers/helpers';
 import { A } from './Navigate';
 import * as Constants from '../Constants';
+import { DivIcon } from 'leaflet';
 
 const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
   
@@ -16,12 +17,13 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
         </A>
 
         {!!traveller.email &&
-          <>{` `}<a className="traveller-email" href={`mailto:${traveller.email}`}>
+          <div className="traveller-item-email"><a className="traveller-email" href={`mailto:${traveller.email}`}>
+            <i class="far fa-envelope"></i>{` `}
             {traveller.email}                          
-          </a></>}
+          </a></div>}
 
         {!!userData && !!userData.isAuth && userData.userDetails.uid == traveller.user_id && (<span className="traveller-item-actions">
-            <A href={findBuddies ? "/ucet/hladampartakov" : "/ucet"} className="traveller-edit" title={findBuddies ? "upraviť" : "upraviť moju cestu"}><i className="fas fa-pencil-alt"/></A>
+            <A href={findBuddies ? "/ucet/hladampartakov" : "/ucet"} className="traveller-edit" title={findBuddies ? "upraviť môj inzerát" : "upraviť moju cestu"}><i className="fas fa-pencil-alt"/></A>
         </span>)}
 
         <span className="traveller-date">              
