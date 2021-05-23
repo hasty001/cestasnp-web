@@ -15,7 +15,8 @@ module.exports = merge(common, {
         NODE_ENV: JSON.stringify('production'),
         FIREBASE_API_KEY: JSON.stringify(process.env.FIREBASE_API_KEY),
         FIREBASE_PROJECT_ID: JSON.stringify(process.env.FIREBASE_PROJECT_ID),
-        FIREBASE_MESSAGING_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_ID)
+        FIREBASE_MESSAGING_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_ID),
+        SEARCH: JSON.stringify(process.env.SEARCH),
       }
     })
   ]
