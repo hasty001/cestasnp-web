@@ -19,18 +19,18 @@ const NearMaxLonDistance = 1/16; // in °
 const NearMaxDistance = 5000; // in m
 
 const ArticlesRelatedByTagsCount = 5;
+const ArticlesFilterTagsAllowed = ['rozhovory'];
+const ArticlesFilterTagsNotAllowed = ['akcie',
+  'spravy-z-terenu',
+  'spravy_z_terenu',
+  'oznamy',
+  'akcie-ostatne',
+  'nezaradene'];
 const ArticlesFilterBy = { $and: [{ state: { $gt: 0 } }, {
   $or: [
-  { tags: {$in: ['rozhovory']}},
+  { tags: {$in: ArticlesFilterTagsAllowed}},
   { tags: {
-    $nin: [
-      'akcie',
-      'spravy-z-terenu',
-      'spravy_z_terenu',
-      'oznamy',
-      'akcie-ostatne',
-      'nezaradene'
-    ]
+    $nin: ArticlesFilterTagsNotAllowed
   }
 }]}]};
 
@@ -51,7 +51,8 @@ const ArticleCommentsTable = "article_comments";
 module.exports = {
   Minute, Hour, Day,
   InterestingShowCount, InterestingPrevMonths, MinRating, CommentRating, ImageRating, TextRatingPerChar, 
-  ArticlesRelatedByTagsCount, ArticlesFilterBy, FilterNoResult, FilterPoiNotDeleted, FilterNotDeleted, 
+  ArticlesRelatedByTagsCount, ArticlesFilterTagsAllowed, ArticlesFilterTagsNotAllowed,
+  ArticlesFilterBy, FilterNoResult, FilterPoiNotDeleted, FilterNotDeleted, 
   HomeArticlesCount, PageSize, NearPoisWarningDistance,
   NearMaxLatDistance, NearMaxLonDistance, NearMaxDistance,
   UsersTable, DetailsTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,

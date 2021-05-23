@@ -41,11 +41,12 @@ const getArticleMeta = (dbRef, articleId) =>
           return i > 0 ? t.slice(0, i + 1) : t;
         };
         const desc = escape(results[0].ogdesc || results[0].metadesc || getDesc());
-        
+       
         return db
-          .findBy(dbRef, _const.UsersTable, { sql_user_id: results[0].created_by_user_sql_id })
+          .findBy(dbRef, _const.UsersTable, { $or: [{ sql_user_id: results[0].author || results[0].created_by_user_sql_id || -1 }, 
+            { uid: results[0].author || results[0].created_by || -1 }] })
           .then(user => {  
-            const author = user && user.length > 0 ? escape(user[0].name) : '';
+            const author = escape(results[0].author_text || (user && user.length > 0 ? user[0].name : ''));
             const title = escape((results[0].title || 'Článok') + WebSuffix);
             const url = `https://cestasnp.sk/pred/articles/article/${escape(articleId)}`;
 
@@ -70,7 +71,7 @@ const getArticleMeta = (dbRef, articleId) =>
             var meta = `
               <meta name="description" content="${desc}" />
               <meta name="author" content="${author}">
-              <meta name="keywords" content="${escape(results[0].metakey)}" />
+              <meta name="keywords" content="${escape(results[0].metakey || (results[0].tags || []).join(','))}" />
               <meta property="og:url" content="${url}" />
               <meta property="og:title" content="${title}" />
               <meta property="og:type" content="article" />
@@ -82,18 +83,25 @@ const getArticleMeta = (dbRef, articleId) =>
               <meta property="place:location:latitude" content="${escape(results[0].lat || lat())}">
               <meta property="place:location:longitude" content="${escape(results[0].lon || lon())}">`;
 
-            if (results[0].metakey)
-              meta += results[0].metakey.split(",").reduce((res, tag) => res + `
+            if (results[0].state > 0 && results[0].tags && 
+              _const.ArticlesFilterTagsAllowed.reduce((p, t) => p + (results[0].tags.indexOf(t) >= 0 ? 1 : 0), 0) == 0
+                && _const.ArticlesFilterTagsNotAllowed.reduce((p, t) => p + (results[0].tags.indexOf(t) >= 0 ? 1 : 0), 0) > 0) {
+              meta += `
+              <meta name="robots" content="noindex">`;
+            }
+
+            if (results[0].metakey || results[0].tags)
+              meta += (results[0].metakey ? results[0].metakey.split(",") : results[0].tags).reduce((res, tag) => res + `
               <meta property="og:article:tag" content="${escape(tag.trim())}" />`, "");
 
             meta += `
               <script type="application/ld+json">
               [{
                 "@context": "http://schema.org",
-                "@type": "Article",
+                "@type": "NewsArticle",
                 "@id": "${url}",
                 "mainEntityOfPage": {
-                  "@type": "Article",
+                  "@type": "NewsArticle",
                   "@id": "${url}"
                 },
                 "headline": "${title}",
@@ -106,7 +114,7 @@ const getArticleMeta = (dbRef, articleId) =>
                   "name": "${author}"},
                 "image": {
                   "@type": "ImageObject",
-                  "url": "${escapeImg(results[0].ogimg, defImg)}"
+                  "url": "${escapeImg(results[0].ogimg || imgRegEx(), defImg)}"
                 },   
                 ${getPublisher()}
               },
@@ -126,7 +134,7 @@ const getArticleMeta = (dbRef, articleId) =>
           });
       }
 
-      return Promise.resolve('');
+      return Promise.reject(404);
   });
 
 const getPoiMeta = (dbRef, poiId) => 
@@ -159,6 +167,11 @@ const getPoiMeta = (dbRef, poiId) =>
               <meta property="place:location:latitude" content="${escape(results[0].coordinates[1])}">
               <meta property="place:location:longitude" content="${escape(results[0].coordinates[0])}">`;
 
+            if (results[0].deleted) {
+              meta += `
+              <meta name="robots" content="noindex">`;
+            }
+
             if (results[0].metakey)
               meta += tags.reduce((res, tag) => res + `
               <meta property="og:article:tag" content="${escape(tag.trim())}" />`, "");
@@ -167,10 +180,10 @@ const getPoiMeta = (dbRef, poiId) =>
               <script type="application/ld+json">
               [{
                 "@context": "http://schema.org",
-                "@type": "Article",
+                "@type": "NewsArticle",
                 "@id": "${url}",
                 "mainEntityOfPage": {
-                  "@type": "Article",
+                  "@type": "NewsArticle",
                   "@id": "${url}"
                 },
                 "headline": "${title}",
@@ -203,7 +216,7 @@ const getPoiMeta = (dbRef, poiId) =>
           });
       }
 
-      return Promise.resolve('');
+      return Promise.reject(404);
   });
 
 const getTravelerMeta = (dbRef, userId) => 
@@ -214,7 +227,7 @@ const getTravelerMeta = (dbRef, userId) =>
         const desc = escape(results[0].text);
         
         return db
-          .findBy(dbRef, _const.UsersTable, { $or: [{ sql_user_id: userId }, { uid: userId }] })
+          .findBy(dbRef, _const.UsersTable, { $or: [{ sql_user_id: userId || -1 }, { uid: userId || -1 }] })
           .then(user =>   
           db
           .newestSorted(dbRef, _const.MessagesTable, { pub_date: -1 }, { $and: [{ user_id: userId }, _const.FilterNotDeleted] })
@@ -236,7 +249,7 @@ const getTravelerMeta = (dbRef, userId) =>
               <link rel="canonical" href="${url}" />
               <meta name="description" content="${desc}" />
               <meta name="author" content="${author}">
-              <meta name="keywords" content="${escape(results[0].metakey)}" />
+              <meta name="keywords" content="cesta,putovanie,správy,live,sledovanie" />
               <meta property="og:url" content="${url}" />
               <meta property="og:title" content="${title}" />
               <meta property="og:type" content="article" />
@@ -251,10 +264,10 @@ const getTravelerMeta = (dbRef, userId) =>
               <script type="application/ld+json">
               [{
                 "@context": "http://schema.org",
-                "@type": "Article",
+                "@type": "NewsArticle",
                 "@id": "${url}",
                 "mainEntityOfPage": {
-                  "@type": "Article",
+                  "@type": "NewsArticle",
                   "@id": "${url}"
                 },
                 "headline": "${title}",
@@ -286,7 +299,7 @@ const getTravelerMeta = (dbRef, userId) =>
           }));
       }
 
-      return Promise.resolve('');
+      return Promise.reject(404);
   });
 
 const getMeta = (db, url) => new Promise((resolve, reject) => {
@@ -297,14 +310,17 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
 
     if (articleId) {
       return resolve(getArticleMeta(db, articleId));
-    }
+    } else
+      return reject(404);
   }
 
   if (path.startsWith('/pred/pois/') && !path.startsWith('/pred/pois/tabulka')) {
     const poiId = sanitize(url.substr(11, 24));
 
-    if (poiId) {
+    if (poiId && poiId.length == 24) {
       return resolve(getPoiMeta(db, poiId));
+    } else {
+      return reject(404);
     }
   }
 
@@ -323,6 +339,8 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
 
     if (userId) {
       return resolve(getTravelerMeta(db, userId));
+    } else {
+      return reject(404);
     }
   }
 
