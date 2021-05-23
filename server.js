@@ -100,8 +100,12 @@ app.get('/*', (req, res) => {
             `<!-- SSR META INSERTED -->${meta || ''}\n<!-- SSR META INSERTED -->`)
         : data))
     .catch((error) => {
-      console.error(error);
-      res.send(data);
+      if (error == 404) {
+        res.status(404).send(data);
+      } else {
+        console.error(error);
+        res.send(data);
+      }
     }))
   .catch((error) => {
     console.error(error);
