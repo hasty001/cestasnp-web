@@ -2,7 +2,6 @@ import React from 'react';
 import { dateTimeToStr, dateToStr, htmlSimpleSanitize, parseDate } from '../../helpers/helpers';
 import { A } from './Navigate';
 import * as Constants from '../Constants';
-import { DivIcon } from 'leaflet';
 
 const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
   
