@@ -92,7 +92,7 @@ const Articles = (props) => {
 
             return (
               <div key={i} className="article-div">
-                {!!imgUrl && <LazyLoadComponent placeholder={<div className="article-image"/>}><div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
+                {!!imgUrl && <LazyLoadComponent placeholder={<div className="article-image before"/>}><div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
                     
                 <A
                   className="no-decoration"
