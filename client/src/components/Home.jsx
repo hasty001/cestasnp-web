@@ -8,6 +8,7 @@ import { LocalSettingsContext } from './LocalSettingsContext';
 import { htmlClean, getArticleImage } from '../helpers/helpers';
 import Close from './reusable/Close';
 import { useStateWithLocalStorage } from '../helpers/reactUtils';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 const Home = (props) => {
   const [articles, setArticles] = useState([]);
@@ -51,12 +52,14 @@ const Home = (props) => {
         </div>
 
         <DivWithLoader className="home-articles" loading={loading}>
-          <div className="home-intro">
-            <h1>Cesta hrdinov SNP</h1>
-            <div className="home-intro-text">Najdlhšia pešia trasa na Slovensku je zážitok na celý život.
-               <br/>Celková dĺžka je cca 770 km a v priemere sa  zvláda za 25 - 28 dní.</div>
-            <ButtonReadMore white href="/pred/articles/article/60"/>
-          </div>
+          <LazyLoadComponent>
+            <div className="home-intro">
+              <h1>Cesta hrdinov SNP</h1>
+              <div className="home-intro-text">Najdlhšia pešia trasa na Slovensku je zážitok na celý život.
+                <br/>Celková dĺžka je cca 770 km a v priemere sa  zvláda za 25 - 28 dní.</div>
+              <ButtonReadMore white href="/pred/articles/article/60"/>
+            </div>
+          </LazyLoadComponent>
         
           {articles && articles.map((article, i) => { 
             const imgUrl = getArticleImage(article.introtext);
@@ -64,7 +67,7 @@ const Home = (props) => {
             return (
                   <div id={`home${i + 1}`} key={i}>
                     <div className="article-div">
-                      {!!imgUrl && <div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
+                      {!!imgUrl && <LazyLoadComponent><div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
                       
                       <A
                         className="no-decoration"
@@ -73,7 +76,7 @@ const Home = (props) => {
                         <h2 className="no-decoration">{article.title}</h2>
                       </A>
 
-                      {!!imgUrl && <div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
+                      {!!imgUrl && <LazyLoadComponent><div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
                       <div className="article-text-col">
                         <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>
                       </div>
@@ -84,11 +87,13 @@ const Home = (props) => {
         </DivWithLoader>
       </div>
 
-      <div className="home banner">
-        { (month >= 5 && month <= 10)
-          ? <A href={settingsData.activeLink.href}>LIVE sledovanie</A>
-          : <A href="/pred/pois">Mapa</A>}
-      </div>
+      <LazyLoadComponent>
+        <div className="home banner">
+          { (month >= 5 && month <= 10)
+            ? <A href={settingsData.activeLink.href}>LIVE sledovanie</A>
+            : <A href="/pred/pois">Mapa</A>}
+        </div>
+      </LazyLoadComponent>
     </div>
   );
 }
