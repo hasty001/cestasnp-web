@@ -9,6 +9,7 @@ import * as Texts from './Texts';
 import ButtonReadMore from './reusable/ButtonReadMore';
 import { htmlClean, getArticleImage, getArticleCategoryText } from '../helpers/helpers';
 import { fetchJson } from '../helpers/fetchUtils';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 const Articles = (props) => {
   const [loading, setLoading] = useState(true);
@@ -91,7 +92,7 @@ const Articles = (props) => {
 
             return (
               <div key={i} className="article-div">
-                {!!imgUrl && <div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
+                {!!imgUrl && <LazyLoadComponent><div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
                     
                 <A
                   className="no-decoration"
@@ -100,7 +101,7 @@ const Articles = (props) => {
                   <h2 className="no-decoration">{article.title}</h2>
                 </A>
                 
-                {!!imgUrl && <div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/>}
+                {!!imgUrl && <LazyLoadComponent><div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
                 
                 <div className="article-text-col">
                   <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>

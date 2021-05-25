@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { fixImageUrl } from '../../helpers/helpers';
 import ImageBox from './ImageBox';
 import { A, isNormalClickEvent } from './Navigate';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 const Image = (props) => {
 
@@ -25,7 +26,7 @@ const Image = (props) => {
   }
 
   return (
-    <>
+    <LazyLoadComponent>
       {!!image && (
         <A href={image} onClick={(e) => { if (isNormalClickEvent(e)) { e.preventDefault(); setImageVisible(true); } }}>
           <img
@@ -39,7 +40,7 @@ const Image = (props) => {
         onHide={() => setImageVisible(false)}
         url={image}
       />
-    </>
+    </LazyLoadComponent>
   )
 }
 export default Image;

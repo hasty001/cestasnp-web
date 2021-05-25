@@ -1,6 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { fixImageUrl } from '../../helpers/helpers';
 import { A } from './Navigate';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 class SimpleMasonry extends Component {
   constructor(props) {
@@ -152,7 +153,7 @@ class SimpleMasonry extends Component {
           };
 
           return (
-            <Fragment key={r}>
+            <LazyLoadComponent key={r}>
               {row.map((item, i) => {
                 const img = this.state.images[item.index];
 
@@ -167,7 +168,7 @@ class SimpleMasonry extends Component {
                   </div>
                   );})}
               {innerRow && (<div className="simple-masonry-br"/>)}
-            </Fragment>)}
+            </LazyLoadComponent>)}
           )}
       </div>);
     }
