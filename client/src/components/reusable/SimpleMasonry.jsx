@@ -82,7 +82,7 @@ class SimpleMasonry extends Component {
 
             const mulAspect = row.reduce((r, i) => r * i.aspect, 1);
             const sumAspects = row.reduce((r, i) => r + row.reduce((res, v) => res * (i !== v ? v.aspect : 1), 1), 0);
-            const h = (width - gap * (row.length - 1)) * mulAspect / sumAspects;
+            const h = Math.max(1, (width - gap * (row.length - 1)) * mulAspect / sumAspects);
 
             row.forEach(img => { 
               img.width = h / img.aspect; 
@@ -118,7 +118,7 @@ class SimpleMasonry extends Component {
           - rowDiff * 50;
         
         /*console.log(rows.map(r => r.length).join(","), 
-          "SumHeight", sumHeight, "Factor", factor, "RowDiff", rowDiff, "Total", sumHeightWithFactor);*/
+          "Width", width, "SumHeight", sumHeight, "Factor", factor, "RowDiff", rowDiff, "Total", sumHeightWithFactor);*/
 
         if (sumHeightWithFactor > rowsMaxHeight) {
           rowsMaxHeight = sumHeightWithFactor;
