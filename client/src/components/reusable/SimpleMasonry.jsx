@@ -3,6 +3,8 @@ import { fixImageUrl } from '../../helpers/helpers';
 import { A } from './Navigate';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
+const gap = 15;
+
 class SimpleMasonry extends Component {
   constructor(props) {
     super(props);
@@ -69,8 +71,6 @@ class SimpleMasonry extends Component {
           pos += itemsPerRow;
         }
 
-        const gap = 15;
-
         var sumHeight = 0;
         rows.forEach(row => {
           
@@ -109,22 +109,25 @@ class SimpleMasonry extends Component {
           factor += (diff.length / Math.max(1, div1.length + div2.length)) / r;
         }
 
-        const sumHeightWithFactor = sumHeight 
-          - (sumHeight > targetHeight ? (sumHeight - targetHeight) : 0)
-          + (targetHeight / 3) * factor;
-        
-        //console.log("Rows: " + rows.map(r => r.length).join(",") + " Height: " + sumHeight + " + Factor: " + factor + " = " + sumHeightWithFactor);
+        const cols = rows.map(r => r.length);
+        cols.sort((a, b) => b - a);
+        const rowDiff = cols.length >= 2 ? cols[0] - cols[1] : 0;
 
-        if (sumHeight <= targetHeight * 1.25 && sumHeightWithFactor > rowsMaxHeight) {
+        const sumHeightWithFactor = targetHeight +
+          (targetHeight / 3) * factor - Math.abs(sumHeight - targetHeight) 
+          - rowDiff * 50;
+        
+        /*console.log(rows.map(r => r.length).join(","), 
+          "SumHeight", sumHeight, "Factor", factor, "RowDiff", rowDiff, "Total", sumHeightWithFactor);*/
+
+        if (sumHeightWithFactor > rowsMaxHeight) {
           rowsMaxHeight = sumHeightWithFactor;
           rowsMax = rows;
         }
+      }
 
-        if (sumHeight > targetHeight * 1.25)
-        {
-          //console.timeEnd("calcImages");
-          return rowsMax || rows;
-        }
+      if (targetHeight - Math.abs(sumHeight - targetHeight) < rowsMaxHeight) {
+        break;
       }
     }
 
@@ -153,7 +156,7 @@ class SimpleMasonry extends Component {
           };
 
           return (
-            <LazyLoadComponent key={r}>
+            <LazyLoadComponent key={r} heigth={row[0].height + (innerRow ? gap : 0)}>
               {row.map((item, i) => {
                 const img = this.state.images[item.index];
 

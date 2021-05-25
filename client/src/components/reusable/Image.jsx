@@ -26,13 +26,19 @@ const Image = (props) => {
   }
 
   return (
-    <LazyLoadComponent>
+    <LazyLoadComponent placeholder={image ? (<img
+      className={`${props.itemClassName || 'image-preview'}`}
+      width={props.small ? 240 : ""}
+      height={props.small ? 240 : ""}
+  />) : <span/>}>
       {!!image && (
         <A href={image} onClick={(e) => { if (isNormalClickEvent(e)) { e.preventDefault(); setImageVisible(true); } }}>
           <img
             className={`${props.itemClassName || 'image-preview'}`}
             src={imagePreview}
             alt={props.alt}
+            width={props.small ? 240 : ""}
+            height={props.small ? 240 : ""}
         /></A>)}
       {props.children}
       <ImageBox

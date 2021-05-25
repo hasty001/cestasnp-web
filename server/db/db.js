@@ -310,7 +310,7 @@ DB.prototype = {
               }
                 
               const now = formatAsDate(date || Date.now());
-              if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < maxCount || _const.InterestingShowCount) {
+              if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < (maxCount || _const.InterestingShowCount)) {
                 // no active only few planning, add some interesting
 
                 return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length)
