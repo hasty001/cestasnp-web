@@ -100,7 +100,7 @@ const ActiveLight = (props) => {
             </div>
 
             {!!props.box && images && images.length > 0 && 
-              (<LazyLoadComponent><SimpleMasonry images={images} targetHeight={560} /></LazyLoadComponent>)}
+              (<SimpleMasonry images={images} targetHeight={560} />)}
           </div>
       )}
     </PageWithLoader>
