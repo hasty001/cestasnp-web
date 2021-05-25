@@ -156,7 +156,8 @@ class SimpleMasonry extends Component {
           };
 
           return (
-            <LazyLoadComponent key={r} heigth={row[0].height + (innerRow ? gap : 0)}>
+            <LazyLoadComponent key={r} placeholder={<div><div
+              className={`simple-masonry-item${innerRow ? ' inner' : ''}`} style={{ height: row[0].height, maxHeight: this.state.targetHeight }}/>{innerRow && (<div className="simple-masonry-br"/>)}</div>}>
               {row.map((item, i) => {
                 const img = this.state.images[item.index];
 
