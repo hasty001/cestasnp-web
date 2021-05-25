@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { fixImageUrl } from '../../helpers/helpers';
 import { A } from './Navigate';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
@@ -155,14 +155,14 @@ class SimpleMasonry extends Component {
                 : fixImageUrl(img.src, 'c_limit,f_auto,w_240,h_240');
           };
 
-          return (
-            <LazyLoadComponent key={r} placeholder={<div><div
-              className={`simple-masonry-item${innerRow ? ' inner' : ''}`} style={{ height: row[0].height, maxHeight: this.state.targetHeight }}/>{innerRow && (<div className="simple-masonry-br"/>)}</div>}>
-              {row.map((item, i) => {
-                const img = this.state.images[item.index];
+          return (<Fragment key={r}>
+            {row.map((item, i) => {
+              const img = this.state.images[item.index];
 
-                return (
-                  <div key={i} className={`simple-masonry-item${innerRow ? ' inner' : ''}`} 
+              return (
+                <LazyLoadComponent key={i} placeholder={<div
+                  className={`simple-masonry-item${innerRow ? ' inner' : ''}`} style={{ hwidth: item.width, height: item.height, maxHeight: this.state.targetHeight }}/>}>
+                  <div className={`simple-masonry-item${innerRow ? ' inner' : ''}`} 
                     style={{ width: item.width, height: item.height, maxHeight: this.state.targetHeight }}>
                     <A href={img.url} title={item.width < 100 ? img.title : ""} >
                       <div className="simple-masonry-image" style={{ backgroundImage: "url(" + getImage(img, item.width, item.height) + ")"}}/>
@@ -170,9 +170,9 @@ class SimpleMasonry extends Component {
                         {item.height >= 100 ? img.title : ""}<span><i className="fas fa-external-link-alt"/></span></div>)}
                     </A>
                   </div>
-                  );})}
-              {innerRow && (<div className="simple-masonry-br"/>)}
-            </LazyLoadComponent>)}
+                </LazyLoadComponent>);})}
+            {innerRow && (<div className="simple-masonry-br"/>)}           
+          </Fragment>)}
           )}
       </div>);
     }
