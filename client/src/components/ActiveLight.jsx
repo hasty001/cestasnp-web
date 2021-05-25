@@ -10,6 +10,7 @@ import ButtonReadMore from './reusable/ButtonReadMore';
 import { addDays } from 'date-fns';
 import TravellerItem from './reusable/TravellerItem';
 import { parseDate } from '../helpers/helpers';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 
 const ActiveLight = (props) => {
   const [loading, setLoading] = useState(false);
@@ -73,7 +74,7 @@ const ActiveLight = (props) => {
   const settingsData = useContext(LocalSettingsContext);
 
   return (
-    <PageWithLoader pageId="NaCesteActiveLight" 
+    <PageWithLoader pageId="NaCesteActiveLight" className={loading ? "loading" : ""}
       pageTitle={props.box ? null : `LIVE sledovanie${Constants.WebTitleSuffix}`}
       loading={loading} error={error}>
 
@@ -99,7 +100,7 @@ const ActiveLight = (props) => {
             </div>
 
             {!!props.box && images && images.length > 0 && 
-              (<SimpleMasonry images={images} targetHeight={560} />)}
+              (<LazyLoadComponent><SimpleMasonry images={images} targetHeight={560} /></LazyLoadComponent>)}
           </div>
       )}
     </PageWithLoader>

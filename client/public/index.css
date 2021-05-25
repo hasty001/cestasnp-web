@@ -1030,9 +1030,14 @@ nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus,
 }
 
 .active-travellers-box #NaCesteActiveLight { 
-  width: 100%; 
+  width: 100%;
+  min-height: 500px; 
   padding: 0px; 
   margin: 0;
+}
+
+.active-travellers-box #NaCesteActiveLight.loading { 
+  min-height: 800px;
 }
 
 #Home .article-div, #Articles .article-div {
