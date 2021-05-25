@@ -67,7 +67,7 @@ const Home = (props) => {
             return (
                   <div id={`home${i + 1}`} key={i}>
                     <div className="article-div">
-                      {!!imgUrl && <LazyLoadComponent><div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
+                      {!!imgUrl && <LazyLoadComponent placeholder={<div className="article-image"/>}><div className="article-image before" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
                       
                       <A
                         className="no-decoration"
@@ -76,7 +76,7 @@ const Home = (props) => {
                         <h2 className="no-decoration">{article.title}</h2>
                       </A>
 
-                      {!!imgUrl && <LazyLoadComponent><div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
+                      {!!imgUrl && <LazyLoadComponent placeholder={<div className="article-image"/>}><div className="article-image" style={{ backgroundImage: `url("${imgUrl}")` }}/></LazyLoadComponent>}
                       <div className="article-text-col">
                         <div className="article-text" dangerouslySetInnerHTML={{ __html: htmlClean(article.introtext) }}></div>
                       </div>
