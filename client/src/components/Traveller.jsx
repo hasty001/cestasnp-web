@@ -88,6 +88,23 @@ const Traveller = (props) => {
   }, [messagesData, orderFromOld]);
 
   useEffect(() => {
+    if (authData.userDetails && authData.userDetails.uid == travellerId &&
+      messagesData) {
+
+      const msgs = messagesData.filter(m => m.isComment).map(m => m);
+      sortByDate(msgs, a => a.date, false);
+
+      const lastComment = msgs.find(m => !authData.userDetails.lastViewed || m.date > authData.userDetails.lastViewed);
+
+      if (lastComment) {
+        fetchPostJsonWithToken(authData.user, '/api/traveller/view', { uid: travellerId, date: lastComment.date })
+        .then(details => authData.updateTravellerDetails(details))
+        .catch(err => console.error(err));
+      }
+    }
+  }, [messagesData, authData.userDetails]);
+
+  useEffect(() => {
     setOrderFromOld(window.location.search === Constants.FromOldQuery);
   }, [window.location.search]);
 

@@ -412,6 +412,33 @@ body {
   text-transform: none;
 }
 
+.navbar-nav li.new-comments>a,
+.navbar-nav .open .dropdown-menu>li.new-comments>a {
+  text-transform: none !important;
+  color: red !important;
+}
+
+.navbar-nav li.new-comments>a:focus,
+.navbar-nav li.new-comments>a:hover {
+  text-decoration: underline !important;
+}
+
+.navbar-toggle.collapsed.has-badge::after,
+li.has-badge::after {
+  content: "⬤";
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  color: red;
+  pointer-events: none;
+}
+
+li.has-badge::after {
+  bottom: 15px;
+  right: 15px;
+}
+
 .navbar-nav>li.line-divider>a,
 .navbar-nav .open .dropdown-menu>li.line-divider>a {
   pointer-events: none;
@@ -1616,6 +1643,7 @@ span.poi-text {
 
 #Article {
   margin-top: 10px;
+  min-height: 400px;
 }
 
 #Article h2 {

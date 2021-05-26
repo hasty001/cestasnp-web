@@ -229,6 +229,22 @@ router.post('/deleteComment', (req, res) => {
   checkToken(req, res, uid, () => db.deleteComment(id, uid, articleId));
 });
 
+router.post('/newComments', (req, res) => {
+  const { uid, detailsId, articleId, date } = req.body;
+
+  checkToken(req, res, uid, () => db.getTravellerComments(req.app.locals.db, articleId, detailsId, date));
+});
+
+router.post('/view', (req, res) => {
+  const {
+    uid,
+    date
+  } = req.body;
+
+  checkToken(req, res, uid, () =>
+    db.viewTraveller({ uid, date }));
+});
+
 router.post('/userCheck', (req, res) => {
   const { email, name, uid } = req.body;
 
