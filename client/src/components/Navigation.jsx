@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import NavRouterItem from './reusable/NavRouterItem'
 import logo from '../../public/img/logo.svg';
@@ -6,6 +6,9 @@ import { AuthContext } from './AuthContext';
 import { A } from './reusable/Navigate';
 import { LocalSettingsContext } from './LocalSettingsContext';
 import auth from '../helpers/firebase';
+import { fetchPostJsonWithToken } from '../helpers/fetchUtils';
+import * as Constants from './Constants';
+import { sortByDate } from '../helpers/helpers';
 
 const ROUTES = {
   domov: '/',
@@ -28,10 +31,40 @@ const ROUTES = {
 };
 
 const Navigation = () => {
+  const [newComments, setNewComments] = useState([]);
+
   const authData = useContext(AuthContext);
   const settingsData = useContext(LocalSettingsContext);
   const isTraveler = authData.travellerDetails &&
     Object.keys(authData.travellerDetails).length > 0;
+
+  const checkNewComments = () => {
+    fetchPostJsonWithToken(authData.user, '/api/traveller/newComments', {  
+      uid: authData.userDetails.uid,
+      detailsId: authData.travellerDetails._id, 
+      articleId: authData.travellerDetails.articleID, 
+      date: authData.travellerDetails.lastViewed || Constants.NewCommentsNotificationAfter
+    })
+    .then(data => {
+      sortByDate(data, a => a.date, true);  
+      setNewComments(data);
+    })
+    .catch(err => console.error(err));
+  }
+
+  useEffect(() => {
+    if (isTraveler) {
+      checkNewComments();
+      const interval = setInterval(checkNewComments, Constants.NewCommentsNotificationPeriod);
+
+      return () => clearInterval(interval);
+    } else {
+      setNewComments([]);
+    }
+  }, [isTraveler, authData.travellerDetails.lastViewed]);
+
+  const hasNewCommentsText = newComments && newComments.length > 0 ?
+    `nový komentár od ${newComments[0].name}` : "";
 
   return (
     <Navbar inverse collapseOnSelect>
@@ -60,7 +93,7 @@ const Navigation = () => {
             </div>
           </A>
         </Navbar.Brand>
-        <Navbar.Toggle title="Menu" />
+        <Navbar.Toggle title="Menu" className={hasNewCommentsText ? 'has-badge' : ''} />
         <NavRouterItem
           href={ROUTES.hladanie}
           eventKey={99}
@@ -87,6 +120,16 @@ const Navigation = () => {
               className="mobile account-name"
             >
               {authData.userDetails.email}
+            </NavRouterItem>)}
+
+            {!!authData.isAuth && !!hasNewCommentsText && (
+            <NavRouterItem
+              href={`/na/${authData.userDetails.uid}#${newComments[0]._id}`}
+              eventKey={100}
+              title={hasNewCommentsText}
+              className="mobile new-comments"
+            >
+              {hasNewCommentsText}
             </NavRouterItem>)}
 
           {!!authData.isAuth && !isTraveler && (
@@ -228,13 +271,23 @@ const Navigation = () => {
           </NavRouterItem>)}
 
           {!!authData.isAuth && (
-          <NavDropdown eventKey={17} title="Môj účet" id="basic-nav-dropdown" className="desktop">
+          <NavDropdown eventKey={17} title="Môj účet" id="basic-nav-dropdown" className={"desktop" + (hasNewCommentsText ? ' has-badge' : '')}>
             <NavRouterItem
               href="#"
               className="desktop account-name"
             >
               {authData.userDetails.email}
             </NavRouterItem>
+
+          {!!authData.isAuth && !!hasNewCommentsText && (
+            <NavRouterItem
+              href={`/na/${authData.userDetails.uid}#${newComments[0]._id}`}
+              eventKey={200}
+              title={hasNewCommentsText}
+              className="desktop new-comments"
+            >
+              {hasNewCommentsText}
+            </NavRouterItem>)}
 
           {!isTraveler && (
             <NavRouterItem

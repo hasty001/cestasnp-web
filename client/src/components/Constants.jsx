@@ -6,6 +6,9 @@ export const DateViewFormat = "D. M. YYYY";
 export const FromOldQuery = "?from-old";
 export const ArticlesPageSize = 8;
 
+export const NewCommentsNotificationAfter = "2021-05-20";
+export const NewCommentsNotificationPeriod = 5 * 60 * 1000; //in ms = 5min
+
 export const PoiCategoryOther = "ostatne";
 export const PoiCategoryGuidepost = "razcestnik";
 export const PoiCategoryArticle = "clanok";

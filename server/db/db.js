@@ -141,15 +141,15 @@ DB.prototype = {
     });
   },
 
-  getTravellerComments(db, articleId, travellerId) {
+  getTravellerComments(db, articleId, travellerId, after = null) {
     const sArticleId = sanitize(articleId);
     const sTravellerId = sanitize(travellerId);
    
     const getDocs = (sArticleId === 0 || sArticleId === '') ?
       this.findBy(db, _const.CommentsTable,
-        { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted] })
+        { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted, after ? { date: { $gt: after } } : {}] })
       : this.findBy(db, _const.ArticleCommentsTable,
-        { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted] });
+        { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted, after ? { date: { $gt: after } } : {}] });
 
     return getDocs.then((docs) => {
       const uids = this.getUids(docs, [d => d.uid]);
@@ -468,6 +468,13 @@ DB.prototype = {
     );
   },
 
+  viewTraveller({ uid, date }) {
+    return dbConnect(db =>
+      dbCollection(db, _const.DetailsTable)
+        .findOneAndUpdate({ user_id: sanitizeUserId(uid) }, { $set: { lastViewed: sanitize(date) } }, { returnOriginal: false }
+          )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
+  },
+
   updateTraveller({
       meno,
       text,
@@ -482,14 +489,14 @@ DB.prototype = {
     }) {
     return dbConnect(db =>
       dbCollection(db, _const.DetailsTable)
-        .findOneAndUpdate({ user_id: uid }, {
+        .findOneAndUpdate({ user_id: sanitizeUserId(uid) }, {
             $set: {
               meno: sanitize(meno), // nazov skupiny
               text: sanitize(text), // popis skupiny
               start_date: sanitize(start_date),
               end_date: sanitize(end_date),
               completed: sanitize(completed),
-              user_id: sanitize(uid),
+              user_id: sanitizeUserId(uid),
               start_miesto: sanitize(start_miesto),
               number: sanitize(number), // pocet ucastnikov
               email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
