@@ -46,7 +46,7 @@ class SimpleMasonry extends Component {
     //console.time("calcImages");
 
     var rowsMax = null;
-    var rowsMaxHeight = 0;
+    var rowsMaxHeight = -100000;
     for (var r = 1; r <= images.length; r++) {
       for (var layout = 0; layout < 2; layout++) {
         const itemsPerRowMax = Math.min(Math.ceil(images.length / r), r);
@@ -111,11 +111,11 @@ class SimpleMasonry extends Component {
 
         const cols = rows.map(r => r.length);
         cols.sort((a, b) => b - a);
-        const rowDiff = cols.length >= 2 ? cols[0] - cols[1] : 0;
+        const rowDiff = cols.length >= 2 ? cols[0] - cols[1] : images.length;
 
         const sumHeightWithFactor = targetHeight +
-          (targetHeight / 3) * factor - Math.abs(sumHeight - targetHeight) 
-          - rowDiff * 50;
+          (targetHeight / 3) * factor - Math.abs(sumHeight - targetHeight)
+          - rowDiff * 100;
         
         /*console.log(rows.map(r => r.length).join(","), 
           "Width", width, "SumHeight", sumHeight, "Factor", factor, "RowDiff", rowDiff, "Total", sumHeightWithFactor);*/
