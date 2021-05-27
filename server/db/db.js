@@ -161,9 +161,12 @@ DB.prototype = {
               const user = users.find(u => u.uid === d.uid);
               
               if (user) {
-                if (d.username)
-                  d.username = user.name;
-                d.name = user.name;
+                const n = user.cesta || user.name;
+                
+                if (d.username) {
+                  d.username = n;
+                }
+                d.name = n;
               }
             }
           });
