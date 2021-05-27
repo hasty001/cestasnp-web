@@ -60,7 +60,7 @@ const Itinerary = (props) => {
   return (
     <PageWithLoader pageId="Itinerary" loading={loading} error={error} pageTitle={`Itinerár${Constants.WebTitleSuffix}`} >
       <>
-        <div className="no-print">
+        <div className="no-print" data-nosnippet>
           <button className="snpBtn pois-map-link no-print" title="Na mape" onClick={() => navigate('/pred/pois')}><i className="fas fa-map"></i></button>
           <button className="snpBtn" onClick={showDialog} type="button">Nastavenie</button>
         </div>

@@ -512,7 +512,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
 
   return (
     <MapContext.Provider value={{ map }}>
-      <div ref={mapRef} id={id} className="ol-map" tabIndex="1">
+      <div ref={mapRef} id={id} className="ol-map" tabIndex="1" data-nosnippet>
         {!!showLayers && <div className="ol-control map-layer-switch">
           {!showLayersPanel && <button onMouseEnter={() => setShowLayersPanel(true)}><i className="fas fa-layer-group"/></button>}
           {showLayersPanel && <div onMouseLeave={() => setShowLayersPanel(false)}>

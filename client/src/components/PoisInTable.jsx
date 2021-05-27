@@ -116,8 +116,8 @@ const PoisInTable = (props) => {
   return (
     <PageWithLoader pageId="PoisInTable" loading={loading} error={error} pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`} >
       <>
-        <button className="snpBtn pois-map-itinerary-link no-print" title="V itineráry" onClick={() => navigate('/pred/itinerar')}><i className="fas fa-list-ol"></i></button>
-        <button className="snpBtn no-print" onClick={e => { e.preventDefault(); setShowSettings(true); }}>Nastavenie</button>
+        <button data-nosnippet className="snpBtn pois-map-itinerary-link no-print" title="V itineráry" onClick={() => navigate('/pred/itinerar')}><i className="fas fa-list-ol"></i></button>
+        <button data-nosnippet className="snpBtn no-print" onClick={e => { e.preventDefault(); setShowSettings(true); }}>Nastavenie</button>
 
         <Modal dialogClassName="pois-table-dalog" show={showSettings} onHide={() => setShowSettings(false)}>
           <Modal.Header closeButton>Nastavenie</Modal.Header>
