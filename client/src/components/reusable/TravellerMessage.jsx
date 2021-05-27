@@ -29,10 +29,10 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
       {success}
 
       <div className={`${className}-header`}> 
-        {message.isComment ? 
+        {message.isComment && (!travellerUserId || message.uid != travellerUserId) ? 
         <UserLabel className="traveller-comment-name" uid={message.uid || message.sql_user_id} 
           name={message.name} />
-        : <Link className="traveller-message-name" href={inTraveller ? `#${message._id}` : `/na/${message.user_id}#${message._id}`}>
+        : <Link className="traveller-message-name" href={inTraveller ? `#${message._id}` : `/na/${travellerUserId}#${message._id}`}>
              {travellerName}                          
           </Link>}
 
