@@ -324,9 +324,21 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
     }
   }
 
+  if (path == '/pred/pois' || path == '/pred/pois/') {
+    return resolve(`
+      <meta name="description" content="Mapa Cesty hrdinov SNP" />
+      <meta name="keywords" content="mapa,trasa,dôležité miesta,poi" />
+      <meta property="og:url" content="https://cestasnp.sk/pred/itinerar" />
+      <meta property="og:title" content="Dôležité miesta${WebSuffix}" />
+      <meta property="og:type" content="article" />
+      <meta property="og:description" content="Mapa Cesty hrdinov SNP"/>              
+      <meta property="og:image" content="${defImg}" />`);
+  }
+
   if (path.startsWith('/pred/itinerar')) {
     return resolve(`
       <meta name="description" content="Itinerár Cesty hrdinov SNP" />
+      <meta name="keywords" content="cesta,trasa,kilometráž,prevýšenie,klesanie,asfalt,stúpanie,čas,vzdialenosť,rázcestí" />
       <meta property="og:url" content="https://cestasnp.sk/pred/itinerar" />
       <meta property="og:title" content="Itinerár${WebSuffix}" />
       <meta property="og:type" content="article" />
