@@ -105,9 +105,9 @@ const ItineraryTable = (props) => {
   }
 
   return (
-    <div data-nosnippet>
+    <div>
       <table className="itinerary-table">
-      <thead>
+      <thead data-nosnippet>
         <tr>
           <th className="itinerary-value">Km od</th>
           <th className="itinerary-value">Km do</th>
@@ -130,7 +130,7 @@ const ItineraryTable = (props) => {
           <Fragment key={i}>
             <tr className="itinerary-row-guidepost">
               <td className="itinerary-value">{formatNumber(item.km, 1)}</td>
-              <td className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
+              <td data-nosnippet className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
               <td colSpan={props.noDetails ? 1 : 6}>
                 <A id={`razcestnik${item.id}`} href={`/pred/pois#poi=razcestnik${item.id}&lat=${item.lat}&lon=${item.lon}&zoom=13`}>
                   <b>{guidepostName}</b>
@@ -144,11 +144,11 @@ const ItineraryTable = (props) => {
                 <td colSpan={3}>{"\u00A0"}</td>
                 {!props.noDetails && (
                 <>
-                <td className="itinerary-value">{formatNumber(item.dist, 1)}</td>
-                <td className="itinerary-value">{formatNumber(item.asphalt, 1)}</td>
-                <td className="itinerary-value">{formatNumber(item.altUp)}</td>
-                <td className="itinerary-value">{formatNumber(item.altDown)}</td>
-                <td className="itinerary-value">{formatHours(item.time)}</td>
+                <td data-nosnippet className="itinerary-value">{formatNumber(item.dist, 1)}</td>
+                <td data-nosnippet className="itinerary-value">{formatNumber(item.asphalt, 1)}</td>
+                <td data-nosnippet className="itinerary-value">{formatNumber(item.altUp)}</td>
+                <td data-nosnippet className="itinerary-value">{formatNumber(item.altDown)}</td>
+                <td data-nosnippet className="itinerary-value">{formatHours(item.time)}</td>
                 </>)}
                 <td>{item.infoAfter}{insertAfter == item.id ? 
                   insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertAfter(item.id); setInsertNear(null); }}>vložiť tu</a></div> : "")}</td>
@@ -158,7 +158,7 @@ const ItineraryTable = (props) => {
         })}
       </tbody>
       {!props.noTotals && (
-      <tfoot>
+      <tfoot data-nosnippet>
         <tr>
           <td colSpan={3}></td>
           {!props.noDetails && (
@@ -172,7 +172,7 @@ const ItineraryTable = (props) => {
         </tr>
       </tfoot>)} 
       </table>
-      <p className="itinerary-attribution">Dáta: © Prispievatelia <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></p>
+      <p data-nosnippet className="itinerary-attribution">Dáta: © Prispievatelia <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></p>
     </div>
   )
 }
