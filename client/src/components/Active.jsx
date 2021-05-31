@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import format from 'date-fns/format';
-import { sortByDateAsc, dateToStr } from '../helpers/helpers';
+import { dateToStr, sortActiveTravellers, parseDate } from '../helpers/helpers';
 import * as Constants from './Constants';
 import { A, navigate } from './reusable/Navigate';
-import { fetchJson, fetchPostJson } from '../helpers/fetchUtils';
+import { fetchJson } from '../helpers/fetchUtils';
 import * as Texts from './Texts';
 import PageWithLoader from './reusable/PageWithLoader';
 import DivWithLoader from './reusable/DivWithLoader';
@@ -28,97 +27,41 @@ const colors = [
 const grey = '#b19494';
 
 const Active = (props) => {
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
   const [travellers, setTravellers] = useState([]);
+
+  const now = Date.now();
 
   const fetchData = () => {
     setLoading(true);
     setError('');
 
-    fetchJson('/api/traveller/activeTravellers')
-      .then(data => {
-        const activeTravellers = [];
-        const travellerIds = [];
-        const now = format(new Date(), 'YYYY-MM-DD');
-        data.forEach(traveller => {
-          const travellerData = {};
-          travellerData.meno = traveller.meno;
-          travellerData.text = traveller.text;
-          travellerData.userId = traveller.user_id;
-          travellerData.startMiesto = traveller.start_miesto;
-          travellerData.startDate = format(traveller.start_date, 'YYYY-MM-DD');
-          travellerData.endDate = traveller.end_date;
-          activeTravellers.push(travellerData);
-          travellerIds.push(traveller.user_id);
+    fetchJson('/api/traveller/activeTravellersWithLastMessage')
+      .then(data => {     
+        const activeTravellers = sortActiveTravellers(data, now);
+        
+        if (activeTravellers.length === 0) {
+          setError(Texts.NoTravellersError);
+        }
+
+        let colorIndex = 0;
+
+        activeTravellers.forEach(trvlr => {
+          trvlr.started = parseDate(trvlr.start_date) <= now;
+
+          trvlr.color = trvlr.started ? colors[colorIndex % colors.length] : grey;
+          colorIndex += trvlr.started ? 1 : 0;
         });
         
-        sortByDateAsc(activeTravellers, 'startDate');
-
-        if (activeTravellers.length === 0) {
-          setTravellers([]);
-          setError(Texts.NoTravellersError);
-          setLoading(false);
-        } else {
-          let colorCount = 0;
-          
-          activeTravellers.forEach(trvlr => {
-            trvlr.started = trvlr.startDate <= now;
-            trvlr.color = trvlr.started ? colors[colorCount % colors.length] : grey;
-            colorCount++;
-          });
-        }
-        return { activeTravellers, travellerIds };
-      })
-      .then(({ activeTravellers, travellerIds }) => {
-
-        if (travellerIds.length > 0) {
-          return fetchPostJson('/api/traveller/lastMessages', { travellerIds })
-            .then(messages => {
-              const ids = [];
-              const lastMessages = [];
-
-              messages.forEach(msg => {
-                if (ids.length === 0) {
-                  ids.push(msg.user_id);
-                  lastMessages.push(msg);
-                } else {
-                  let idCounter = 0;
-                  ids.forEach(id => {
-                    if (id === msg.user_id) {
-                      idCounter += 1;
-                    }
-                  });
-                  if (idCounter === 0) {
-                    ids.push(msg.user_id);
-                    lastMessages.push(msg);
-                  }
-                }
-              });
-
-              const activeTravellersWithMessage = activeTravellers.map(trvlr => {
-                lastMessages.forEach(msg => {
-                  if (msg.user_id === trvlr.userId) {
-                    // eslint-disable-next-line no-param-reassign
-                    trvlr.lastMessage = msg;
-                  }
-                });
-
-                return trvlr;
-              });
-
-              setTravellers(activeTravellersWithMessage);
-              setLoading(false);
-            });
-        }
+        setTravellers(activeTravellers);  
       })
       .catch(e => {
         console.error(e);
+
         setError(Texts.GenericError);
-        setLoading(false);
-      });
-  };
+      }).finally(() => setLoading(false));
+  }
 
   useEffect(() => { fetchData(); }, []);
 
@@ -132,7 +75,7 @@ const Active = (props) => {
       <DivWithLoader absolute className="active-travellers" 
         loading={loading} error={error}>
         {!loading && !error && !!travellers && travellers.map((traveller, i) => (
-          <A key={i} href={`/na/${traveller.userId}`}>
+          <A key={i} href={`/na/${traveller.user_id}`}>
             <div className={`active-traveller ${traveller.started ? 'started' : ''}`.trim()} style={{backgroundColor: traveller.color, borderColor: traveller.color}}>
               <div className="active-traveller-name">               
                 {traveller.started && <div className="active-traveller-marker">
@@ -141,7 +84,7 @@ const Active = (props) => {
                 </div>}
                 {' '}{traveller.meno} 
               </div>
-              {!traveller.started && <div className="active-traveller-start">vyráža {dateToStr(traveller.startDate, "kdoviekdy")}</div>}
+              {!traveller.started && <div className="active-traveller-start">vyráža {dateToStr(parseDate(traveller.start_date), "kdoviekdy")}</div>}
             </div>
           </A>
         ))}

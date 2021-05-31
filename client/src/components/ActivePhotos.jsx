@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import format from 'date-fns/format';
-import { dateToStr, dateTimeToStr } from '../helpers/helpers';
+import { getTravellersImages, sortActiveTravellers } from '../helpers/helpers';
 import { fetchJson } from '../helpers/fetchUtils';
 import { A, navigate } from './reusable/Navigate'
 import SimpleMasonry from './reusable/SimpleMasonry';
@@ -20,62 +20,25 @@ const ActivePhotos = (props) => {
     setError('');
 
     fetchJson('/api/traveller/activeTravellersWithLastMessage' + window.location.search)
-      .then(data => {
-        const activeTravellers = [];
-        const travellerIds = [];
-        data.forEach(traveller => {
-          const travellerData = {};
-          travellerData.meno = traveller.meno;
-          travellerData.text = traveller.text;
-          travellerData.userId = traveller.user_id;
-          travellerData.startMiesto = traveller.start_miesto;
-          travellerData.startDate = format(traveller.start_date, 'YYYY-MM-DD');
-          travellerData.endDate = traveller.end_date;
-          travellerData.lastMessage = traveller.lastMessage;
-          travellerData.finishedTracking = traveller.finishedTracking;
-          travellerData.lastImg = traveller.lastImg;
-          travellerData.lastImgMsgId = traveller.lastImgMsgId;
-
-          activeTravellers.push(travellerData);
-          travellerIds.push(traveller.user_id);
-        });
-
-        const getSortValue = t => (t.finishedTracking ? "11_" + t.startDate : ("0"
-         + (t.startDate <= now && t.lastMessage ? ("0_" + t.lastMessage.pub_date) : ("1_" + t.startDate))));
-
-         activeTravellers.sort((a, b) => getSortValue(a) > getSortValue(b));
+      .then(data => {     
+        const activeTravellers = sortActiveTravellers(data, now);
         
         if (activeTravellers.length === 0) {
           setError(Texts.NoTravellersError);
-          setLoading(false);
-        } else {  
-          setTravellers(activeTravellers);   
-          setLoading(false);     
         }
+        
+        setTravellers(activeTravellers);  
       })
       .catch(e => {
         console.error(e);
 
         setError(Texts.GenericError);
-        setLoading(false);
-      });
+      }).finally(() => setLoading(false));
   }
 
   useEffect(() => { fetchData(); }, []);
 
-  const images = travellers ? 
-    travellers.filter(t => t.lastImg).map(t => {
-      const url = `/na/${t.userId}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
-      const title = t.meno;
-
-      if (t.lastImg.eager && t.lastImg.eager.length > 0) {
-        return { url: url, title: title, src: t.lastImg.secure_url, eager: t.lastImg.eager, aspect: t.lastImg.height / t.lastImg.width };
-      } else {
-        return { url: url, title: title, src: t.lastImg.indexOf('res.cloudinary.com') === -1
-            ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${t.lastImg}`
-            : t.lastImg, aspect: 1}
-      }
-    }) : [];
+  const images = getTravellersImages(travellers);
 
   const settingsData = useContext(LocalSettingsContext);
 
@@ -88,7 +51,7 @@ const ActivePhotos = (props) => {
         onClick={() => { settingsData.setActiveLink(""); navigate('/na/ceste'); }}><i className="fas fa-map"></i></button>
 
       {!!images && images.length > 0 && 
-              (<SimpleMasonry images={images} targetHeight={1024} />)}
+              (<SimpleMasonry images={images} targetHeight={Math.max((window.innerHeight - 110) || 1024, 600)} />)}
     </PageWithLoader>);
 }
 

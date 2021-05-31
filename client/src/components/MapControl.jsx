@@ -358,7 +358,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
         mapMarkerSource.addFeature(new ol.Feature({
           kind: 'stop',
           data: t,
-          popupId: t.userId,
+          popupId: t.lastMessage._id,
           popup: `<p><b>${generateAnchor(`/na/${t.userId}`, '0', escapeHtml(t.meno))}</b></p>
             <p>${dateTimeToStr(t.lastMessage.pub_date)}</p>
             <p>${htmlSimpleSanitize(t.lastMessage.text)}</p>`,

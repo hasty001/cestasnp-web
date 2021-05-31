@@ -26,6 +26,8 @@ export const PoiMarkerIconProps = {
 export const WebTitle = "CestaSNP";
 export const WebTitleSuffix = " - CestaSNP";
 
+export const CloudinaryPath = 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/';
+
 export const ImageType = {
   LiveSledovanie: 0,
   DolezitaMiesta: 1,

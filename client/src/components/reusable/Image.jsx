@@ -12,13 +12,7 @@ const Image = (props) => {
   var imagePreview = null;
 
   if (props.value && props.value != "None") {
-    if (typeof props.value == "string") {  
-      image = fixImageUrl(props.value.indexOf('res.cloudinary.com') === -1 
-        ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${props.value}`
-        : props.value, 'f_auto');
-    } else {
-      image = fixImageUrl(props.value.secure_url, 'f_auto');
-    }
+    image = fixImageUrl(props.value, 'f_auto');
 
     imagePreview = props.small ? fixImageUrl(image, 'c_fill,f_auto,w_240,h_240') 
       : props.large ? fixImageUrl(image, 'c_limit,f_auto,w_800,h_800')
