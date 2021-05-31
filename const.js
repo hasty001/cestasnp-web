@@ -38,6 +38,8 @@ const FilterNoResult = { _id: null };
 const FilterPoiNotDeleted = { deleted: null };
 const FilterNotDeleted = { deleted: { $ne: true }};
 
+const ProjectionMessageWithImage = { lon: 1, lat: 1, text: 1, pub_date: 1, user_id: 1, 'img.secure_url' : 1, 'img.width' : 1, 'img.height' : 1 };
+
 const UsersTable = "users";
 const DetailsTable = "traveler_details";
 const ArticlesTable = "articles";
@@ -53,6 +55,7 @@ module.exports = {
   InterestingShowCount, InterestingPrevMonths, MinRating, CommentRating, ImageRating, TextRatingPerChar, 
   ArticlesRelatedByTagsCount, ArticlesFilterTagsAllowed, ArticlesFilterTagsNotAllowed,
   ArticlesFilterBy, FilterNoResult, FilterPoiNotDeleted, FilterNotDeleted, 
+  ProjectionMessageWithImage, 
   HomeArticlesCount, PageSize, NearPoisWarningDistance,
   NearMaxLatDistance, NearMaxLonDistance, NearMaxDistance,
   UsersTable, DetailsTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,

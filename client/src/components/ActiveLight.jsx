@@ -7,10 +7,8 @@ import * as Texts from './Texts';
 import PageWithLoader from './reusable/PageWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
 import ButtonReadMore from './reusable/ButtonReadMore';
-import { addDays } from 'date-fns';
 import TravellerItem from './reusable/TravellerItem';
-import { parseDate } from '../helpers/helpers';
-import { LazyLoadComponent } from 'react-lazy-load-image-component';
+import { getTravellersImages, parseDate, sortActiveTravellers } from '../helpers/helpers';
 
 const ActiveLight = (props) => {
   const [loading, setLoading] = useState(false);
@@ -25,16 +23,7 @@ const ActiveLight = (props) => {
 
     fetchJson('/api/traveller/activeTravellersWithLastMessage' + window.location.search)
       .then(data => {     
-        const activeTravellers = data;
-
-        const pad = t => ("00000000000000000000" + t).slice(-20);
-
-        const getSortValue = t => (t.finishedTracking ? "11_" + pad(parseDate(t.start_date).valueOf()) 
-          : ("0" + (parseDate(t.start_date) <= now && t.lastMessage ? 
-            ("0_" + pad(addDays(now, 1).valueOf() - parseDate(t.lastMessage.pub_date).valueOf())) 
-            : ("1_" + pad(parseDate(t.start_date).valueOf())))));
-
-        activeTravellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
+        const activeTravellers = sortActiveTravellers(data, now);
         
         if (activeTravellers.length === 0) {
           setError(Texts.NoTravellersError);
@@ -51,19 +40,7 @@ const ActiveLight = (props) => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const images = travellers ? 
-    travellers.filter(t => t.lastImg).map(t => {
-      const url = `/na/${t.user_id}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
-      const title = t.meno;
-
-      if (t.lastImg.eager && t.lastImg.eager.length > 0) {
-        return { url: url, title: title, src: t.lastImg.secure_url, eager: t.lastImg.eager, aspect: t.lastImg.height / t.lastImg.width };
-      } else {
-        return { url: url, title: title, src: t.lastImg.indexOf('res.cloudinary.com') === -1
-            ? `https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/${t.lastImg}`
-            : t.lastImg, aspect: 1}
-      }
-    }) : [];
+  const images = getTravellersImages(travellers);
 
   const hasActive = travellers ? 
     travellers.reduce((r, t) => r || !t.finishedTracking && parseDate(t.start_date) <= now, false) : false;
