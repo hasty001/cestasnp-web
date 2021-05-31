@@ -237,7 +237,7 @@ DB.prototype = {
         const listCommentsNew = this.findBy(db, _const.CommentsTable, 
           { $and: [{ 'travellerDetails.id': { $in: finishedIds } }, _const.FilterNotDeleted] }, { projection: { travellerDetails: 1 } });
         const listMessages = this.findBy(db, _const.MessagesTable, 
-          { $and: [{ user_id: { $in: finishedUserIds } }, _const.FilterNotDeleted] }, {}, { pub_date: 1 });
+          { $and: [{ user_id: { $in: finishedUserIds } }, _const.FilterNotDeleted] }, { projection: _const.ProjectionMessageWithImage }, { pub_date: 1 });
 
         return Promise.all([listCommentsOld, listCommentsNew, listMessages])
         .then(([oldComments, newComments, msgs]) => {
@@ -295,8 +295,8 @@ DB.prototype = {
         if (activeTravellersIds.length === 0) {
           return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
         } else {
-          return this.findBy(db, _const.MessagesTable, { $and: [{ user_id: { $in: activeTravellersIds } }, _const.FilterNotDeleted] },
-            {}, { pub_date: -1 })
+          return this.findBy(db, _const.MessagesTable, { $and: [{ user_id: { $in: activeTravellersIds } }, _const.FilterNotDeleted] }, 
+              { projection: _const.ProjectionMessageWithImage }, { pub_date: -1 })
             .then(lastMessages => {
               if (lastMessages) { 
                 lastMessages.map(msg => {

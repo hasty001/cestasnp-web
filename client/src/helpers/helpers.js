@@ -4,6 +4,7 @@ import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import DOMPurify from 'dompurify';
 import { navigate } from '../components/reusable/Navigate';
+import { addDays } from 'date-fns';
 
 const sortByDateDesc = (array, date = 'date') => {
   return array.sort((a, b) => {
@@ -138,8 +139,8 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
 const LinkRegEx = /(http[s]?:\/\/[^\s]+)/g;
 
 const styleLinks = (html) => {
-  if (!html) {
-    return html;
+  if (!html || (typeof html != "string")) {
+    return '';
   }
 
   if (html.indexOf("<") >= 0) {
@@ -232,7 +233,9 @@ const getArticleImage = (intro) => {
 }
 
 const fixImageUrl = (url, code) => {
-  return (url || '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
+  return ((url && url != 'None') ? (url.secure_url || (url.indexOf('res.cloudinary.com') === -1 ?
+      `${Constants.CloudinaryPath}${url}` : url)) 
+    : '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
     `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`);
 };
 
@@ -242,6 +245,29 @@ const getArticleCategoryText = (tag) => {
   return index >= 0 ? Constants.ArticleCategories[index].text : "";
 }
 
+const getTravellersImages = travellers => travellers ? 
+  travellers.filter(t => t.lastImg && t.lastImg != "None").map(t => {
+    const url = `/na/${t.user_id}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
+    const title = t.meno;
+
+    return { url: url, title: title, src: fixImageUrl(t.lastImg), 
+        aspect: (t.lastImg && t.lastImg.width && t.lastImg.height) ? (t.lastImg.height / t.lastImg.width) : 1 };
+  }) : [];
+
+const sortActiveTravellers = (travellers, now) => {
+  const pad = t => ("00000000000000000000" + t).slice(-20);
+
+  const getSortValue = t => (t.finishedTracking ? "11_" + pad(parseDate(t.start_date).valueOf()) 
+    : ("0" + (parseDate(t.start_date) <= now && t.lastMessage ? 
+      ("0_" + pad(addDays(now, 1).valueOf() - parseDate(t.lastMessage.pub_date).valueOf())) 
+      : ("1_" + pad(parseDate(t.start_date).valueOf())))));
+
+  travellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
+
+  return travellers;
+} 
+
 export { sortByDateDesc, sortByDateAsc, sortByDate, dateToStr, dateTimeToStr, parseDate,
   escapeHtml, htmlSanitize, htmlSimpleSanitize, htmlLineSimpleSanitize, htmlClean, htmlLineClean,
-  getArticleState, getArticleStateIcon, getArticleImage, fixImageUrl, getArticleCategoryText };
+  getArticleState, getArticleStateIcon, getArticleImage, fixImageUrl, getArticleCategoryText, 
+  getTravellersImages, sortActiveTravellers };

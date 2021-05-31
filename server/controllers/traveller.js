@@ -8,6 +8,7 @@ const { checkToken, sanitizeUserId } = require('../util/checkUtils');
 const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
 const { momentDate, momentDateTime, formatAsDate } = require('../util/momentUtils');
+const { differenceInDays } = require('date-fns');
 
 const db = new DB();
 const router = express.Router();
@@ -73,83 +74,43 @@ router.post('/updateFindBuddies',(req, res) => {
 
 router.get('/activeTravellersWithLastMessage', (req, res) => {
   promiseAsJson(() => 
-    db.getActiveTravellersWithLastMessage(req.app.locals.db, req.query.date, req.query.maxCount), res);
+    db.getActiveTravellersWithLastMessage(req.app.locals.db, req.query.date, req.query.maxCount).then(travellers => {
+      const now = momentDate();
+
+      const expired = travellers.filter(t => !t.finishedTracking).map(t => {
+        const startDate = momentDate(t.start_date);
+
+        var published = t.lastMessage && t.lastMessage.pub_date ? momentDate(t.lastMessage.pub_date) : null;
+
+        if (!published && differenceInDays(now, startDate) >= 3) {
+          // no message and started 3 or more days before now
+          return { user_id: t.user_id, completed: 0, pub_date: startDate };
+        }
+
+        if (published && startDate.valueOf() < now.valueOf() && differenceInDays(now, published) >= 3) {       
+          // started, last message older than 3 days
+          return { user_id: t.user_id, completed: differenceInDays(now, published) >= 14, pub_date: published };
+        }
+
+        return null;
+      }).filter(f => f);
+
+      if (expired.length > 0) {
+        const finishPromises = expired.map(({ user_id, completed, pub_date }) => {
+            return db.finishTracking(user_id, completed, pub_date);
+          }
+        );
+
+        return Promise.all(finishPromises)
+          .then(() => Promise.resolve(travellers))
+      } else {
+        return Promise.resolve(travellers);
+      }
+    }), res);
 });
 
 router.get('/activeTravellers', (req, res) => {
-  promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, { finishedTracking: false })
-    .then(activeTravellers => {
-      const trvlrsObject = {};
-
-      const trvlrPromises = activeTravellers.map(({ user_id, start_date }) => {
-        trvlrsObject[user_id] = {
-          start: start_date
-        };
-        
-        return db.getTravellerLastMessage(req.app.locals.db, user_id);
-      });
-
-      return Promise.all(trvlrPromises)
-        .then(msgs => {
-          const now = new Date();
-          // TODO - why filter ?
-          // This whole function ooks kind of fishy :)
-          // eslint-disable-next-line consistent-return
-          const expired = msgs.filter(msg => {
-            const startDate = new Date(trvlrsObject[msg.user_id].start);
-            let published = 'empty';
-            if (msg.pub_date && msg.pub_date !== 0) {
-              published = new Date(msg.pub_date);
-            }
-            if (
-              published === 'empty' &&
-              startDate.valueOf() < now.valueOf() &&
-              now.valueOf() - startDate.valueOf() >= 259200000
-            ) {
-              // TODO - spread and add new key
-              // eslint-disable-next-line no-param-reassign
-              msg.completed = 0;
-              // eslint-disable-next-line no-param-reassign
-              msg.pub_date = momentDate(startDate);
-              return msg;
-            }
-            if (
-              published !== 'empty' &&
-              startDate.valueOf() < now.valueOf() &&
-              now.valueOf() > published.valueOf() &&
-              now.valueOf() - published.valueOf() >= 259200000
-            ) {
-              if (published.valueOf() - startDate.valueOf() >= 864000000) {
-                // eslint-disable-next-line no-param-reassign
-                msg.completed = 1;
-                // eslint-disable-next-line no-param-reassign
-                msg.pub_date = momentDate(msg.pub_date);
-              } else {
-                // eslint-disable-next-line no-param-reassign
-                msg.completed = 0;
-                // eslint-disable-next-line no-param-reassign
-                msg.pub_date = momentDate(msg.pub_date);
-              }
-              return msg;
-            }
-          });
-
-          if (expired.length > 0) {
-            const finishPromises = expired.map(
-              ({ user_id, completed, pub_date }) => {
-                return db.finishTracking(user_id, completed, pub_date);
-              }
-            );
-
-            return Promise.all(finishPromises)
-              .then(() => {
-                return Promise.resolve(activeTravellers);
-              })
-          } else {
-            return Promise.resolve(activeTravellers);
-          }
-        });
-    }), res);
+  promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, { finishedTracking: false }), res);
 });
 
 router.post('/addComment', (req, res) => {
