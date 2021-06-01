@@ -1,3 +1,5 @@
+const _const = require('../../const');
+
 const escape = (html) => {
   return !html ? '' : String(html)
     .replace(/&/g, '&amp;')
@@ -16,9 +18,9 @@ const escapeImg = (img, def = "") => {
   if (img && typeof img == "string") {
     if (img != "None") {
       if (img.indexOf('res.cloudinary.com') === -1) {
-        return escape(`https://res.cloudinary.com/cestasnp-sk/image/upload/f_auto/v1520586674/img/sledovanie/${img}`);
+        return escape(`https://res.cloudinary.com/cestasnp-sk/image/upload/${_const.EscapeImgFormat}/v1520586674/img/sledovanie/${img}`);
       } else {
-        return escape(fixImageUrl(img, "f_auto"));
+        return escape(fixImageUrl(img, _const.EscapeImgFormat));
       }
     }
 
@@ -26,7 +28,7 @@ const escapeImg = (img, def = "") => {
   }
   
   if (img && img.secure_url) {
-    return escape(fixImageUrl(img.secure_url, "f_auto"));
+    return escape(fixImageUrl(img.secure_url, _const.EscapeImgFormat));
   }
 
   return def;  

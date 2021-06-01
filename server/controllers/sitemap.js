@@ -2,6 +2,7 @@ const express = require('express');
 const DB = require('../db/db');
 const { escape, escapeImg, escapeDate } = require('../util/escapeUtils');
 const _const = require('../../const');
+const { momentDate, momentDateTime } = require('../util/momentUtils');
 
 const db = new DB();
 
@@ -12,12 +13,23 @@ const getJourneys = (dbRef) =>
     .then(travellers => {
       var travellersIds = travellers.map(({user_id}) => user_id);
 
-      return db.findBy(dbRef, _const.MessagesTable).then(messages => {
+      travellers.forEach(t => {
+        t.modified = momentDateTime(t.start_date || t.lastUpdated);
+      });
+
+      return Promise.all([
+        db.findBy(dbRef, _const.MessagesTable, {}, { projection: { user_id: 1, pub_date: 1 } }, { pub_date: -1 }),
+        db.findBy(dbRef, _const.MessagesTable, { $and: [ { img : { $ne: null } }, { img : { $ne: "None" } }, { 'img.secure_url': null } ]}, { projection: { user_id: 1, img: 1 } }),
+        db.findBy(dbRef, _const.MessagesTable, { 'img.secure_url': { $ne: null } }, { projection: { user_id: 1, 'img.secure_url': 1 } })
+      ]).then(([messages, imagesOld, imagesNew]) => {
         messages.map(msg => {
           const i = travellersIds.indexOf(msg.user_id);
-          if (i >= 0 && (!travellers[i].modified || new Date(msg.pub_date) > travellers[i].modified))
-            travellers[i].modified = new Date(msg.pub_date);
+          if (i >= 0 && msg.pub_date && momentDateTime(msg.pub_date) > travellers[i].modified)
+            travellers[i].modified = momentDateTime(msg.pub_date);
+        });
           
+        imagesOld.concat(imagesNew).map(msg => {
+          const i = travellersIds.indexOf(msg.user_id);
           const image = escapeImg(msg.img);
 
           if (image && i >= 0) {
@@ -61,7 +73,7 @@ router.get('*', (req, res) => {
         journeys.map(p => 
         `  <url>
     <loc>https://cestasnp.sk/na/${p.user_id}</loc>
-    <lastmod>${escapeDate(p.modified || p.start_date)}</lastmod>
+    <lastmod>${escapeDate(p.modified)}</lastmod>
     <changefreq>${!p.finishedTracking ? 'daily' : 'yearly'}</changefreq>
     <priority>${!p.finishedTracking ? '1' : '0.8'}</priority>
     ${p.images ? p.images.map(img => `<image:image>
