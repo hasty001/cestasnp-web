@@ -9,7 +9,8 @@ const db = new DB();
 const router = express.Router();
 
 const getJourneys = (dbRef) =>
-  db.findBy(dbRef, _const.DetailsTable, {}, { start_date: -1 })
+  db.findBy(dbRef, _const.DetailsTable, {}, 
+    { projection: { user_id: 1, finishedTracking: 1, start_date: 1, lastUpdated: 1 } }, { start_date: -1 })
     .then(travellers => {
       var travellersIds = travellers.map(({user_id}) => user_id);
 
@@ -48,8 +49,10 @@ const getJourneys = (dbRef) =>
     });
 
 router.get('*', (req, res) => {
-  Promise.all([db.findBy(req.app.locals.db, _const.PoisTable, _const.FilterPoiNotDeleted, { created: -1 }), 
-    db.findBy(req.app.locals.db, _const.ArticlesTable, _const.ArticlesFilterBy, { created: -1 }), getJourneys(req.app.locals.db)])
+  Promise.all([
+    db.findBy(req.app.locals.db, _const.PoisTable, _const.FilterPoiNotDeleted, { projection: { modified: 1, created: 1, img_url: 1,  } }, { created: -1 }), 
+    db.findBy(req.app.locals.db, _const.ArticlesTable, _const.ArticlesFilterBy, { projection: { modified: 1, created: 1, sql_article_id: 1} }, { created: -1 }), 
+    getJourneys(req.app.locals.db)])
   .then(([pois, articles, journeys]) => {
       const urls = 
         [pois.map(p => {
@@ -58,7 +61,7 @@ router.get('*', (req, res) => {
     <loc>https://cestasnp.sk/pred/pois/${p._id}</loc>
     <lastmod>${escapeDate(p.modified || p.created)}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.4</priority>
     ${image ? `<image:image>
       <image:loc>${image}</image:loc>
     </image:image>` : ""}
@@ -75,7 +78,7 @@ router.get('*', (req, res) => {
     <loc>https://cestasnp.sk/na/${p.user_id}</loc>
     <lastmod>${escapeDate(p.modified)}</lastmod>
     <changefreq>${!p.finishedTracking ? 'daily' : 'yearly'}</changefreq>
-    <priority>${!p.finishedTracking ? '1' : '0.8'}</priority>
+    <priority>${!p.finishedTracking ? '1' : '0.4'}</priority>
     ${p.images ? p.images.map(img => `<image:image>
       <image:loc>${img}</image:loc>
     </image:image>`).join("\n") : ""}
