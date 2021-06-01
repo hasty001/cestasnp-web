@@ -290,22 +290,21 @@ DB.prototype = {
         if (activeTravellersIds.length === 0) {
           return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
         } else {
-          return this.findBy(db, _const.MessagesTable, { $and: [{ user_id: { $in: activeTravellersIds } }, _const.FilterNotDeleted] }, 
-              { projection: _const.ProjectionMessageWithImage }, { pub_date: -1 })
+          return Promise.all(activeTravellersIds.map(t =>
+              this.newestSorted(db, _const.MessagesTable, { pub_date: -1 }, { $and: [{ user_id: t }, _const.FilterNotDeleted] }, 
+                2, { projection: _const.ProjectionMessageWithImage })))
             .then(lastMessages => {
-              if (lastMessages) { 
-                lastMessages.map(msg => {
-                    var i = activeTravellersIds.indexOf(msg.user_id);
+              lastMessages.reduce((r, m) => r.concat(m), []).map(msg => {
+                  var i = activeTravellersIds.indexOf(msg.user_id);
 
-                    if (i >= 0 && !activeTravellers[i].lastMessage) {
-                      activeTravellers[i].lastMessage = msg;
-                    }
-                    if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
-                      activeTravellers[i].lastImg = msg.img;
-                      activeTravellers[i].lastImgMsgId = msg._id;
-                    }
-                  });
-              }
+                  if (i >= 0 && !activeTravellers[i].lastMessage) {
+                    activeTravellers[i].lastMessage = msg;
+                  }
+                  if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
+                    activeTravellers[i].lastImg = msg.img;
+                    activeTravellers[i].lastImgMsgId = msg._id;
+                  }
+                });
                 
               const now = formatAsDate(date || Date.now());
               if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < (maxCount || _const.InterestingShowCount)) {
