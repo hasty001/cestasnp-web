@@ -122,7 +122,7 @@ const PoiForm = (props) => {
   const addPoi = () => {
     if ((!name || name.trim().length === 0) 
       && (!text || text.trim().length === 0)) {
-      setErrorMsg('Vyplň meno alebo popis.');
+      setErrorMsg('Vyplň názov miesta alebo popis.');
       return;
     }
 
@@ -132,7 +132,7 @@ const PoiForm = (props) => {
     }
 
     if (props.edit && (!note || note.trim().length === 0)) {
-      setErrorMsg('Poznámka nemôže ostať prázdna.');
+      setErrorMsg('Poznámka k úprave nemôže ostať prázdna.');
       return;
     }
 
@@ -276,14 +276,14 @@ const PoiForm = (props) => {
       {category != "krcma_jedlo" && <FormCheckBox value={[food, setFood]} valueName="food" valueLabel="jedlo" itemClassName="form-checkbox" labelClassName="form-checkbox"/>}
       {category != "pramen" && <FormCheckBox value={[water, setWater]} valueName="water" valueLabel="voda" itemClassName="form-checkbox" labelClassName="form-checkbox"/>}
 
-      <FormText value={[name, setName]} valueName="name" valueLabel="Meno" itemClassName="form"/>
+      <FormText value={[name, setName]} valueName="name" valueLabel="Názov miesta" itemClassName="form"/>
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>
 
-      <FormImage value={[image, setImage]} imageAlt="nahrana fotka miesta" uid={props.uid} 
+      <FormImage value={[image, setImage]} imageAlt="nahraná fotka miesta" uid={props.uid} 
         imageId={imageId} type={Constants.ImageType.DolezitaMiesta}/>
 
       {!!props.edit && newPoi && addItineraryItems(newPoi, newPoi.guideposts)}
-      {!!props.edit && <FormText value={[note, setNote]} valueName="note" valueLabel="Poznámka" itemClassName="form"/>}
+      {!!props.edit && <FormText value={[note, setNote]} valueName="note" valueLabel="Poznámka k úprave" itemClassName="form"/>}
     
       {!!warningMsg && (
         <div className="warningMsg">
