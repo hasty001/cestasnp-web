@@ -12,7 +12,7 @@ const Image = (props) => {
   var imagePreview = null;
 
   if (props.value && props.value != "None") {
-    image = fixImageUrl(props.value, 'f_auto');
+    image = fixImageUrl(props.value);
 
     imagePreview = props.small ? fixImageUrl(image, 'c_fill,f_auto,w_240,h_240') 
       : props.large ? fixImageUrl(image, 'c_limit,f_auto,w_800,h_800')
@@ -20,7 +20,7 @@ const Image = (props) => {
   }
 
   return (
-    <LazyLoadComponent placeholder={image ? (<img
+    <LazyLoadComponent visibleByDefault={props.forceVisible} placeholder={image ? (<img
       className={`${props.itemClassName || 'image-preview'}`}
       width={props.small ? 240 : ""}
       height={props.small ? 240 : ""}
