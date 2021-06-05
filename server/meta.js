@@ -83,9 +83,9 @@ const getArticleMeta = (dbRef, articleId) =>
               <meta property="place:location:latitude" content="${escape(results[0].lat || lat())}">
               <meta property="place:location:longitude" content="${escape(results[0].lon || lon())}">`;
 
-            if (results[0].state > 0 && results[0].tags && 
+            if (results[0].state <= 0 || (results[0].tags && 
               _const.ArticlesFilterTagsAllowed.reduce((p, t) => p + (results[0].tags.indexOf(t) >= 0 ? 1 : 0), 0) == 0
-                && _const.ArticlesFilterTagsNotAllowed.reduce((p, t) => p + (results[0].tags.indexOf(t) >= 0 ? 1 : 0), 0) > 0) {
+                && _const.ArticlesFilterTagsNotAllowed.reduce((p, t) => p + (results[0].tags.indexOf(t) >= 0 ? 1 : 0), 0) > 0)) {
               meta += `
               <meta name="robots" content="noindex">`;
             }
