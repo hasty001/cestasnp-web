@@ -16,7 +16,7 @@ const FormMultiSelect = (props) => {
     <FormItem {...props} value={(value || []).map(v => getOptionLabel(v)).join(", ")} useEdit>
       <div className="multiselect-options">
         {props.children}
-        { !!props.options && props.options.map((option, i) => (
+        {!!props.options && props.options.map((option, i) => (
         <button key={i} 
           onClick={() => { 
             const index = value.indexOf(option.value);
@@ -29,9 +29,13 @@ const FormMultiSelect = (props) => {
             }
           
             setValue(newValue);}}
-          className={("multiselect-option " + props.itemClassName + (value.indexOf(option.value) >= 0 ? " checked" : "")).trim()}> 
+          className={("multiselect-option " + (props.itemClassName || '') + (value.indexOf(option.value) >= 0 ? " checked" : "")).trim()}> 
           {option.label}
-        </button>)) }
+        </button>))}
+
+        {!!props.options && <button onClick={() => setValue([])} className={("multiselect-option " + (props.itemClassName || '')).trim()}>
+            <i className="fas fa-times" />
+          </button>}
       </div>
     </FormItem>
   )
