@@ -106,6 +106,15 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
     }
   }
 
+  // set image format if not specified
+  if (node.tagName === "IMG" && node.hasAttribute('src')) {
+    const src = (node.getAttribute('src') || '').trim();
+
+      if (src && (src.startsWith(Constants.CloudinaryPathNoCodePrefix) || src.indexOf("/") < 0)) {
+        node.setAttribute('src', fixImageUrl(src, Constants.DefaultArticleImageFormat));
+      }
+  }
+
   // set image preview and divide image in row from other content
   if (node.tagName === "IMG" && node.hasAttribute('class') && node.hasAttribute('src')) {
     const cl = (node.getAttribute('class') || '').trim().split(' ');
@@ -233,7 +242,7 @@ const getArticleImage = (intro) => {
 }
 
 const fixImageUrl = (url, code) => {
-  return ((url && url != 'None') ? (url.secure_url || (url.indexOf('res.cloudinary.com') === -1 ?
+  return ((url && url != 'None') ? (url.secure_url || ((url.indexOf("/") < 0 && url.indexOf('res.cloudinary.com') === -1)?
       `${Constants.CloudinaryPath}${url}` : url)) 
     : '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
     `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`);
