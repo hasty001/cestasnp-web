@@ -154,7 +154,7 @@ const ArticleForm = (props) => {
 
   const supported = (code) => {
     return !code || 
-      (code.indexOf('<div') < 0 && code.indexOf('style=') < 0 && code.indexOf('<table') < 0);
+      (code.indexOf('<div') < 0 && code.indexOf('style=') < 0 && code.indexOf('<table') < 0 && code.length < 5000);
   }
 
   useEffect(() => {
@@ -170,8 +170,8 @@ const ArticleForm = (props) => {
       setTitle(p.title);
       setIntroHtml(supported(p.introtext));
       setTextHtml(supported(p.fulltext));
-      setIntro(p.introtext);
-      setText(p.fulltext);
+      setIntro(p.introtext || '');
+      setText(p.fulltext || '');
       setAuthor(p.author);
       setAuthorText(p.author_text);
       setChanged(false);
@@ -492,7 +492,7 @@ const ArticleForm = (props) => {
 
       <FormText value={[title, setTitle]} valueName="title" valueLabel="Názov" itemClassName="form"/>
 
-      <FormMultiSelect value={[tags, setTags]} valueName="tags" valueLabel="Zaradenie" 
+      <FormMultiSelect value={[tags, setTags]} valueName="tags" valueLabel="Zaradenie"
         options={ Constants.ArticleCategories.slice(1).map(cat => { return { value: cat.tag, label: cat.text }; }) } itemClassName="form">
       </FormMultiSelect>
 
