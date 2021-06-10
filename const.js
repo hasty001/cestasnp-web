@@ -44,6 +44,7 @@ const ProjectionMessageWithImage = { lon: 1, lat: 1, text: 1, pub_date: 1, user_
 
 const UsersTable = "users";
 const DetailsTable = "traveler_details";
+const FindBuddiesTable = "traveler_find_buddies";
 const ArticlesTable = "articles";
 const ArticlesHistoryTable = "articles_history";
 const PoisTable = "pois";
@@ -51,6 +52,7 @@ const PoisHistoryTable = "pois_history";
 const MessagesTable = "traveler_messages";
 const CommentsTable = "traveler_comments";
 const ArticleCommentsTable = "article_comments";
+const FindBuddiesCommentsTable = "find_buddies_comments";
 
 module.exports = {
   Minute, Hour, Day,
@@ -60,6 +62,6 @@ module.exports = {
   EscapeImgFormat, ProjectionMessageWithImage, 
   HomeArticlesCount, PageSize, NearPoisWarningDistance,
   NearMaxLatDistance, NearMaxLonDistance, NearMaxDistance,
-  UsersTable, DetailsTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,
-  MessagesTable, CommentsTable, ArticleCommentsTable
+  UsersTable, DetailsTable, FindBuddiesTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,
+  MessagesTable, CommentsTable, FindBuddiesCommentsTable, ArticleCommentsTable
 };

@@ -21,7 +21,7 @@ const FindBuddies = (props) => {
     }
 
     fetchPostJsonWithToken(authData.user, '/api/traveller/listFindBuddies', { uid: authData.userDetails.uid })
-      .then(data => setTravellers(data.map(t => Object.assign({ meno: t.name, user_id: t.uid }, t.findBuddies))))
+      .then(data => setTravellers(data.map(t => Object.assign({ meno: t.name, user_id: t.user_id }, t))))
       .catch(e => {
         console.error(e);
 
@@ -34,7 +34,7 @@ const FindBuddies = (props) => {
   return (
     <PageWithLoader pageId="FindBuddies" pageTitle={`Hľadám parťákov${Constants.WebTitleSuffix}`} 
       loading={loading} error={!!authData.authProviderMounted && !authData.isAuth ? 
-        (<div>Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet/hladampartakov">Prihlásiť sa</A></div>) : error} >
+        (<div>Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A></div>) : error} >
       <>
         {!!authData.isAuth &&
         <div className="travellers">
@@ -44,7 +44,7 @@ const FindBuddies = (props) => {
         </div>}
 
         <button className="snpBtn add" onClick={() => navigate("/ucet/hladampartakov")}>
-          {!authData.isAuth || !authData.userDetails.findBuddies || !authData.userDetails.findBuddies.enabled ? "Pridaj svoj inzerát" : "Uprav svoj inzerát"}
+          {!authData.isAuth || !authData.findBuddies || !authData.findBuddies.enabled ? "Pridaj svoj inzerát" : "Uprav svoj inzerát"}
         </button>
       </>
     </PageWithLoader>

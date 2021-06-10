@@ -755,10 +755,11 @@ li.red-button>a:active {
   min-width: calc(100vw - 100px);
   margin: 0 50px;
   overflow: hidden;
+  min-height: 600px;
 }
 
-.home-articles-and-box {
-  min-height: 800px;
+#Traveller .traveller {
+  min-height: 400px;
 }
 
 @media (min-width: 1600px) {
@@ -914,6 +915,10 @@ li.red-button>a:active {
   border-color: #58595b;
 }
 
+.find-buddies-msgs .traveller-comment {
+  margin-left: 0;
+}
+
 #Traveller .traveller-item {
   margin: 30px 0 15px 0;
 }
@@ -961,6 +966,7 @@ li.red-button>a:active {
   font-size: 16px;
   font-weight: 500;
   color: red;
+  margin-right: 15px;
 }
 
 .traveller-name:hover,
@@ -972,6 +978,11 @@ li.red-button>a:active {
   font-size: 16px;
   font-weight: 500;
   color: #58595b;
+  margin-right: 15px;
+}
+
+.traveller-item-email, .traveller-comment-email, .traveller-message-email, .traveller-email {
+  display: inline-block;
 }
 
 .traveller-item-email {
@@ -1755,7 +1766,6 @@ span.poi-text {
 
 #Article {
   margin-top: 10px;
-  min-height: 400px;
 }
 
 #Article h2 {
@@ -2224,7 +2234,7 @@ button#dropdown-basic-1 {
   max-height: 420px;
 }
 
-.na-ceste-traveller-sort {
+.na-ceste-traveller-sort, .find-buddies-sort {
   display: block;
   width: 100%;
 }
@@ -2288,7 +2298,7 @@ button#dropdown-basic-1 {
   padding: 5px;
 }
 
-.traveller-buttons-panel {
+.traveller-buttons-panel, .find-buddies-buttons-panel {
   z-index: 999;
   position: fixed;
   bottom: 0;
@@ -2297,20 +2307,16 @@ button#dropdown-basic-1 {
   pointer-events: none;
 }
 
-.traveller-buttons {
+.traveller-buttons, .find-buddies-buttons {
   margin: 0 auto; 
   width: fit-content;
   pointer-events: none;
 }
 
-.traveller-buttons > .snpBtn {
+.traveller-buttons > .snpBtn, .find-buddies-buttons > .snpBtn {
   margin-right: 15px;
   margin-bottom: 15px;
   pointer-events: auto;
-}
-
-#FindBuddies {
-  min-height: 100vh;
 }
 
 #FindBuddies button.add {
@@ -2320,6 +2326,10 @@ button#dropdown-basic-1 {
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
+}
+
+#FindBuddiesDetail .find-buddies-traveller {
+  min-height: 200px;
 }
 
 /***   TRAVELLER    ***/

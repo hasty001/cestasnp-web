@@ -37,23 +37,31 @@ const Navigation = () => {
   const settingsData = useContext(LocalSettingsContext);
   const isTraveler = authData.travellerDetails &&
     Object.keys(authData.travellerDetails).length > 0;
+  const isFindBuddies = authData.findBuddies && authData.findBuddies.enabled;
 
   const checkNewComments = () => {
     fetchPostJsonWithToken(authData.user, '/api/traveller/newComments', {  
       uid: authData.userDetails.uid,
-      detailsId: authData.travellerDetails._id, 
-      articleId: authData.travellerDetails.articleID, 
-      date: authData.travellerDetails.lastViewed || Constants.NewCommentsNotificationAfter
+      detailsId: authData.travellerDetails ? authData.travellerDetails._id : null, 
+      articleId: authData.travellerDetails ? authData.travellerDetails.articleID : 0, 
+      findBuddiesId: authData.findBuddies ? authData.findBuddies._id : null,
+
+      travellerDate: (authData.travellerDetails ? authData.travellerDetails.lastViewed : null) || Constants.NewCommentsNotificationAfter,
+      findBuddiesDate: (authData.findBuddies ? authData.findBuddies.lastViewed : null) || Constants.NewCommentsNotificationAfter
     })
     .then(data => {
-      sortByDate(data, a => a.date, true);  
+      if (data) {
+        sortByDate(data.traveller || [], a => a.date, true);  
+        sortByDate(data.findBuddies || [], a => a.date, true);  
+      }
+
       setNewComments(data);
     })
     .catch(err => console.error(err));
   }
 
   useEffect(() => {
-    if (isTraveler) {
+    if (isTraveler || isFindBuddies) {
       checkNewComments();
       const interval = setInterval(checkNewComments, Constants.NewCommentsNotificationPeriod);
 
@@ -61,10 +69,12 @@ const Navigation = () => {
     } else {
       setNewComments([]);
     }
-  }, [isTraveler, authData.travellerDetails.lastViewed]);
+  }, [isTraveler, isFindBuddies, authData.travellerDetails.lastViewed, authData.findBuddies.lastViewed]);
 
-  const hasNewCommentsText = newComments && newComments.length > 0 ?
-    `nový komentár od ${newComments[0].name}` : "";
+  const hasNewTravellerCommentsText =  newComments && newComments.traveller && newComments.traveller.length > 0 ?
+    `nový komentár cesty od ${newComments.traveller[0].name}` : "";
+  const hasNewFindBuddiesCommentsText =  newComments && newComments.findBuddies && newComments.findBuddies.length > 0 ?
+    `nová odpoveď na inzerát od ${newComments.findBuddies[0].name}` : "";
 
   return (
     <Navbar inverse collapseOnSelect>
@@ -93,7 +103,7 @@ const Navigation = () => {
             </div>
           </A>
         </Navbar.Brand>
-        <Navbar.Toggle title="Menu" className={hasNewCommentsText ? 'has-badge' : ''} />
+        <Navbar.Toggle title="Menu" className={hasNewCommentsText || hasNewFindBuddiesCommentsText ? 'has-badge' : ''} />
         <NavRouterItem
           href={ROUTES.hladanie}
           eventKey={99}
@@ -122,14 +132,24 @@ const Navigation = () => {
               {authData.userDetails.email}
             </NavRouterItem>)}
 
-            {!!authData.isAuth && !!hasNewCommentsText && (
+            {!!authData.isAuth && !!hasNewTravellerCommentsText && (
             <NavRouterItem
-              href={`/na/${authData.userDetails.uid}#${newComments[0]._id}`}
+              href={`/na/${authData.userDetails.uid}#${newComments.traveller[0]._id}`}
               eventKey={100}
-              title={hasNewCommentsText}
+              title={hasNewTravellerCommentsText}
               className="mobile new-comments"
             >
-              {hasNewCommentsText}
+              {hasNewTravellerCommentsText}
+            </NavRouterItem>)}
+
+            {!!authData.isAuth && !!hasNewFindBuddiesCommentsText && (
+            <NavRouterItem
+              href={`/pred/hladampartakov/${authData.userDetails.uid}#${newComments.findBuddies[0]._id}`}
+              eventKey={101}
+              title={hasNewFindBuddiesCommentsText}
+              className="mobile new-comments"
+            >
+              {hasNewFindBuddiesCommentsText}
             </NavRouterItem>)}
 
           {!!authData.isAuth && !isTraveler && (
@@ -271,7 +291,8 @@ const Navigation = () => {
           </NavRouterItem>)}
 
           {!!authData.isAuth && (
-          <NavDropdown eventKey={17} title="Môj účet" id="basic-nav-dropdown" className={"desktop" + (hasNewCommentsText ? ' has-badge' : '')}>
+          <NavDropdown eventKey={17} title="Môj účet" id="basic-nav-dropdown" 
+            className={"desktop" + ((hasNewTravellerCommentsText || hasNewFindBuddiesCommentsText) ? ' has-badge' : '')}>
             <NavRouterItem
               href="#"
               className="desktop account-name"
@@ -279,14 +300,24 @@ const Navigation = () => {
               {authData.userDetails.email}
             </NavRouterItem>
 
-          {!!authData.isAuth && !!hasNewCommentsText && (
+          {!!authData.isAuth && !!hasNewTravellerCommentsText && (
             <NavRouterItem
-              href={`/na/${authData.userDetails.uid}#${newComments[0]._id}`}
+              href={`/na/${authData.userDetails.uid}#${newComments.traveller[0]._id}`}
               eventKey={200}
-              title={hasNewCommentsText}
+              title={hasNewTravellerCommentsText}
               className="desktop new-comments"
             >
-              {hasNewCommentsText}
+              {hasNewTravellerCommentsText}
+            </NavRouterItem>)}
+
+            {!!authData.isAuth && !!hasNewFindBuddiesCommentsText && (
+            <NavRouterItem
+              href={`/pred/hladampartakov/${authData.userDetails.uid}#${newComments.findBuddies[0]._id}`}
+              eventKey={201}
+              title={hasNewFindBuddiesCommentsText}
+              className="desktop new-comments"
+            >
+              {hasNewFindBuddiesCommentsText}
             </NavRouterItem>)}
 
           {!isTraveler && (

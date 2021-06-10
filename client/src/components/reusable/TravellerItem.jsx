@@ -9,15 +9,13 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
     <div className="traveller-item" >
       <div className="traveller-item-header"> 
         <A className="traveller-name" href={
-          findBuddies ? `/pred/hladampartakov/${traveller.user_id}` 
-          : `/na/${traveller.user_id}${traveller.finishedTracking ? 
-            Constants.FromOldQuery : (traveller.lastMessage ? (`#${traveller.lastMessage._id}`) : "")}`}>
+          findBuddies ? `/pred/hladampartakov/${traveller.user_id}` : `/na/${traveller.user_id}${traveller.finishedTracking ? Constants.FromOldQuery : (traveller.lastMessage ? (`#${traveller.lastMessage._id}`) : "")}`}>
           {traveller.meno}                          
         </A>
 
         {!!traveller.email &&
           <div className="traveller-item-email"><a className="traveller-email" href={`mailto:${traveller.email}`}>
-            <i class="far fa-envelope"></i>{` `}
+            <i className="far fa-envelope"></i>{` `}
             {traveller.email}                          
           </a></div>}
 
@@ -34,7 +32,8 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
           {((parseDate(traveller.start_date) > now) || !traveller.lastMessage) && (
           <span>
             {traveller.start_miesto}{' '}
-            {!!findBuddies && <>±{' '}</>}
+            {!!traveller.end_miesto && <>{' - '}{traveller.end_miesto}{' '}</>}
+            {!!findBuddies && !!traveller.start_date && <>±{' '}</>}
             {dateToStr(traveller.start_date)}                           
           </span>)}  
 

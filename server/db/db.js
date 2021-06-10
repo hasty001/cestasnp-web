@@ -119,7 +119,7 @@ DB.prototype = {
     const sUids = uids ? uids.map(u => sanitizeUserId(u)) : null;
 
     const getUsers = this.findBy(db, _const.UsersTable, 
-      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
+      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1, email: 1 } });
 
     
     const getDetails = this.findBy(db, _const.DetailsTable,
@@ -141,17 +141,25 @@ DB.prototype = {
     });
   },
 
-  getTravellerComments(db, articleId, travellerId, after = null) {
+  getTravellerComments(db, articleId, travellerId, findBuddiesId = null, after = null, uid = null) {
     const sArticleId = sanitize(articleId);
     const sTravellerId = sanitize(travellerId);
+    const sFindBuddiesId = sanitize(findBuddiesId);
+    const filterAfter = after ? { date: { $gt: sanitize(after) } } : {};
    
-    const getDocs = (sArticleId === 0 || sArticleId === '') ?
-      this.findBy(db, _const.CommentsTable,
-        { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted, after ? { date: { $gt: after } } : {}] })
-      : this.findBy(db, _const.ArticleCommentsTable,
-        { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted, after ? { date: { $gt: after } } : {}] });
+    const getDocs = findBuddiesId ? 
+      Promise.all([
+        this.findBy(db, _const.FindBuddiesCommentsTable,
+          { $and: [ { findBuddiesId: sFindBuddiesId }, _const.FilterNotDeleted, filterAfter] }), 
+        this.findOne(db, _const.FindBuddiesTable, { _id: new ObjectId(findBuddiesId) })
+      ])
+      : (sArticleId === 0 || sArticleId === '') ?
+        Promise.all([this.findBy(db, _const.CommentsTable,
+          { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted, filterAfter] }), Promise.resolve({})])
+        : Promise.all([this.findBy(db, _const.ArticleCommentsTable,
+          { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted, filterAfter] }), Promise.resolve({})]);
 
-    return getDocs.then((docs) => {
+    return getDocs.then(([docs, detail]) => {
       const uids = this.getUids(docs, [d => d.uid]);
 
       return this.getUserNames(db, uids)
@@ -160,13 +168,26 @@ DB.prototype = {
             if (d.uid) {
               const user = users.find(u => u.uid === d.uid);
               
-              if (user) {
-                const n = user.cesta || user.name;
-                
-                if (d.username) {
-                  d.username = n;
+              if (user) {  
+                if (findBuddiesId) {
+                  const n = user.name;
+
+                  if (uid == d.uid || uid == detail.user_id) {
+                    d.email = user.email;
+                  }
+                  
+                  if (d.username) {
+                    d.username = n;
+                  }
+                  d.name = n;
+                } else {
+                  const n = user.cesta || user.name;
+
+                  if (d.username) {
+                    d.username = n;
+                  }
+                  d.name = n;
                 }
-                d.name = n;
               }
             }
           });
@@ -349,16 +370,23 @@ DB.prototype = {
         }));          
   },
 
-  addCommentNewTraveller(comment) {
+  addCommentNewTraveller(comment, findBuddies = false) {
     return dbConnect(db => {
-      if (securityCheck.checkCommentNewTraveller(comment)) {
+      if (securityCheck.checkCommentNewTraveller(comment, findBuddies)) {
         // save comment with new comment id
-        return dbCollection(db, _const.CommentsTable)
+        return dbCollection(db, findBuddies ? _const.FindBuddiesCommentsTable : _const.CommentsTable)
           .insertOne(comment)
           .then(commentRes => {
             comment._id = commentRes.insertedId;
 
-            return Promise.resolve(comment);
+            if (findBuddies) {
+              return this.findOne(db, _const.UsersTable, { uid: comment.uid }).then(user => {
+                comment.email = user.email;
+                return comment;
+              })
+            } else {
+              return Promise.resolve(comment);
+            }
           });
       } else {
         return Promise.reject('Malicious comment');
@@ -366,10 +394,10 @@ DB.prototype = {
     });
   },
 
-  deleteComment(id, uid, articleId) {
+  deleteComment(id, uid, articleId, findBuddiesId = null) {
     return dbConnect(db =>
-      dbCollection(db, _const.DetailsTable)
-        .findOne({ user_id : uid })
+      dbCollection(db, findBuddiesId ? _const.FindBuddiesTable : _const.DetailsTable)
+        .findOne({ _id: findBuddiesId ? new ObjectId(findBuddiesId) : { $ne: null }, user_id : uid })
         .then((details) =>
         {          
           const sDetails = { _id: (details && details._id && details._id.toString()) ? details._id.toString() : "-1", 
@@ -384,13 +412,17 @@ DB.prototype = {
           };
 
           const options = { returnOriginal: false };
-          const deleteComment = (articleId === 0 || articleId === '') ?
-            dbCollection(db, _const.CommentsTable)
-              .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { 'travellerDetails.id': sDetails._id }, { uid: uid } ] } ] },
-                update, options)
-            : dbCollection(db, _const.ArticleCommentsTable)
-              .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { article_sql_id: sDetails.articleID }, { uid: uid } ] } ] },
-                update, options);
+          const deleteComment = findBuddiesId ?
+            dbCollection(db, _const.FindBuddiesCommentsTable)
+            .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { findBuddiesId: sDetails._id }, { uid: uid } ] } ] },
+              update, options)
+            : (articleId === 0 || articleId === '') ?
+              dbCollection(db, _const.CommentsTable)
+                .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { 'travellerDetails.id': sDetails._id }, { uid: uid } ] } ] },
+                  update, options)
+              : dbCollection(db, _const.ArticleCommentsTable)
+                .findOneAndUpdate({ $and: [ { _id : new ObjectId(id) }, { $or: [ { article_sql_id: sDetails.articleID }, { uid: uid } ] } ] },
+                  update, options);
 
           return deleteComment.then(res => {
             if (res.value) {
@@ -470,6 +502,13 @@ DB.prototype = {
     );
   },
 
+  viewFindBuddies({ uid, date }) {
+    return dbConnect(db =>
+      dbCollection(db, _const.FindBuddiesTable)
+        .findOneAndUpdate({ user_id: sanitizeUserId(uid), deleted: { $ne: true } }, { $set: { lastViewed: sanitize(date) } }, { returnOriginal: false }
+          )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Inzerát nebola nájdená."));
+  },
+
   viewTraveller({ uid, date }) {
     return dbConnect(db =>
       dbCollection(db, _const.DetailsTable)
@@ -509,27 +548,92 @@ DB.prototype = {
         )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
   },
 
+  listFindBuddies(db) {
+    return this.findBy(db, _const.FindBuddiesTable, {
+      enabled: true,
+      deleted: { $ne: true },
+      start_date: { $gte: formatAsDate(new Date()) }
+    }, {}, { start_date: 1 }).then(buddies => {
+      return this.getUserNames(db, buddies.map(b => b.user_id))
+        .then(users => {
+          buddies.forEach(b => {
+            b.name = this.findUserName(b.user_id, users); 
+          });
+
+          return buddies;
+        })
+    });
+  },
+
+  getFindBuddies(db, user_id, owner) {
+    return Promise.all([
+      this.findOne(db, _const.FindBuddiesTable, {
+        enabled: owner ? { $in: [null, false, true] } : true,
+        deleted: { $ne: true },
+        user_id: user_id,
+      }, {}),
+      this.findOne(db, _const.UsersTable, { uid: user_id })])
+      .then(([buddy, user]) => {
+        if (buddy) {
+          buddy.name = user.name;
+          if (owner || buddy.showEmail) {
+            buddy.email = user.email;
+          }
+        }
+
+        return buddy;
+      });
+  },
+
   updateFindBuddies({
-    enabled,
+    enabled, showEmail, showComments,
     text,
     start_date,
     uid,
-    start_miesto
+    start_miesto, end_miesto
   }) {
+    const data = {
+      enabled: sanitize(enabled),
+      showEmail: sanitize(showEmail),
+      showComments: sanitize(showComments),
+      text: sanitize(text),
+      start_date: sanitize(start_date),
+      start_miesto: sanitize(start_miesto),
+      end_miesto: sanitize(end_miesto) 
+    };
+
   return dbConnect(db =>
-    dbCollection(db, _const.UsersTable)
-      .findOneAndUpdate({ uid: uid }, {
-          $set: {
-            findBuddies: {
-              enabled: sanitize(enabled),
-              text: sanitize(text),
-              start_date: sanitize(start_date),
-              start_miesto: sanitize(start_miesto),
-              lastUpdated: momentDateTime()
+    dbCollection(db, _const.FindBuddiesTable)
+      .findOne({ user_id: uid, deleted: { $ne: true } }).then(existing => {
+        if (existing) {
+          data.lastUpdated = momentDateTime();
+          return dbCollection(db, _const.FindBuddiesTable).findOneAndUpdate({ _id: existing._id }, {
+              $set: data
+            }, { returnOriginal: false })
+            .then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Inzerát nebol nájdený."));
+        } else {
+          data.created = momentDateTime();
+          data.user_id = uid;
+          return dbCollection(db, _const.FindBuddiesTable).insertOne(data)
+            .then(res => {
+              data._id = res.insertedId.toString();
+
+              return Promise.resolve(data);
+            });
+        }
+      })); 
+  },
+
+  deleteFindBuddies(uid) {
+    return dbConnect(db =>
+      dbCollection(db, _const.FindBuddiesTable)
+        .findOneAndUpdate({ user_id: uid, deleted: { $ne: true } }, {
+            $set: {
+              deleted: true,
+              del_date: momentDateTime()
             }
-          }
-        }, { returnOriginal: false }
-      )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Uživatel nebol nájdený."));
+          }, { returnOriginal: false }
+        )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Inzerát nebol nájdený."));
   },
 
   sendMessage(message) {

@@ -84,11 +84,12 @@ const CommentBox = (props) => {
     const data = {};
     data.comment = comment;
     data.name = !authData.isAuth ? name : 
-      (authData.travellerDetails && authData.travellerDetails.meno) ?
-      authData.travellerDetails.meno : authData.userDetails.name;
+        (authData.travellerDetails && authData.travellerDetails.meno && !props.findBuddiesId) ?
+          authData.travellerDetails.meno : authData.userDetails.name;
     data.articleId = props.articleID;
     data.travellerName = props.travellerName;
     data.travellerId = props.travellerId;
+    data.findBuddiesId = props.findBuddiesId;
     data['g-recaptcha-response'] = captcha;
     data.uid = authData.isAuth ? authData.userDetails.uid : null;
 
@@ -135,14 +136,14 @@ const CommentBox = (props) => {
     setCaptcha('');
   }
 
-  const { userData, articleID, visitorIp, 
+  const { userData, articleID, visitorIp, findBuddiesId,
     updateTravellerComments, travellerId, travellerName, ...modalProps } = props;
 
   return (
     <Modal id="CommentBox" {...modalProps} dialogClassName="comment-box">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-lg">
-          Tvoj komentár
+          {findBuddiesId ? 'Tvoja odpoved' : 'Tvoj komentár'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -153,16 +154,29 @@ const CommentBox = (props) => {
             Meno:            
             {!authData.isAuth ?
               <input value={name} onChange={updateName} className="nameInput"/>
-              : (<div>
-                    <UserLabel uid={authData.travellerDetails.user_id} 
-                      name={(authData.travellerDetails && authData.travellerDetails.meno) ?
-                        authData.travellerDetails.meno : authData.userDetails.name} />
-                </div>)
+              : (<>
+                <div>
+                  <UserLabel uid={authData.travellerDetails.user_id} 
+                    name={(authData.travellerDetails && authData.travellerDetails.meno && !findBuddiesId) ?
+                      authData.travellerDetails.meno : authData.userDetails.name} />
+                </div>
+                  {!!findBuddiesId && (
+                    <div>
+                      <br/>
+                      Autor inzerátu ťa bude môcť kontaktovať cez tvoj email{` `}
+                      <a className="traveller-email" href={`mailto:${authData.userDetails.email}`}>
+                        <i className="far fa-envelope"></i>{` `}
+                        {authData.userDetails.email}
+                      </a>
+                      {' '}(ostatní ho neuvidia)
+                    </div>
+                  )}
+                </>)
             }
           </label>
           {!!nameError && <p className="commentError">{nameError}</p>}
           <label className="commentLabel">
-            Komentár:
+            {findBuddiesId ? 'Odpoved:' : 'Komentár:'}
             <textarea value={comment} onChange={updateComment} className="commentInput"/>
           </label>
           {!!commentError && <p className="commentError">{commentError}</p>}
@@ -176,7 +190,7 @@ const CommentBox = (props) => {
         </>)}
       </Modal.Body>
       <Modal.Footer>
-        {!loading && <Button onClick={addComment}>Pridaj komentár</Button>}
+        {!loading && <Button onClick={addComment}>{findBuddiesId ? 'Pridaj odpoved' : 'Pridaj komentár'}</Button>}
       </Modal.Footer>
     </Modal>);
 }

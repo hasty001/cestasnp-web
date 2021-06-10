@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import differenceInDays from 'date-fns/difference_in_days';
 import { logDev } from '../../helpers/logDev';
 import { fetchPostJsonWithToken } from '../../helpers/fetchUtils';
@@ -8,41 +8,76 @@ import FormWithLoader from '../reusable/FormWithLoader';
 import FormText from '../reusable/FormText';
 import FormCheckBox from '../reusable/FormCheckBox';
 import FormTextArea from '../reusable/FormTextArea';
-import { useStateEx } from '../../helpers/reactUtils';
+import { useStateEx, useStateProp } from '../../helpers/reactUtils';
 import FormSelect from '../reusable/FormSelect';
 import PageWithLoader from '../reusable/PageWithLoader';
 import { format } from 'date-fns';
 import { parseDate } from '../../helpers/helpers';
 import { A } from '../reusable/Navigate';
+import ConfirmBox from '../reusable/ConfirmBox';
+import { clear } from 'memory-cache';
 
 const EditFindBuddies = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const clearMsg = () => {
     setError('');
     setSuccess('');
   }
 
-  const findBuddies = props.userData && props.userData.userDetails ? props.userData.userDetails.findBuddies : null;
+  const [findBuddies, setFindBuddies] = useState(props.userData && Object.keys(props.userData.findBuddies).length > 0 ? 
+    props.userData.findBuddies : null);
+
+  useEffect(
+    () => setFindBuddies(props.userData && Object.keys(props.userData.findBuddies).length > 0 ? 
+      props.userData.findBuddies : null), [props.userData.findBuddies]);
 
   const isDuklaDevin = findBuddies ? (findBuddies.start_miesto == 'Dukla' || 
     findBuddies.start_miesto == 'Devín') : false;
+  const isEndDuklaDevin = findBuddies ? (findBuddies.end_miesto == 'Dukla' || 
+    findBuddies.end_miesto == 'Devín') : false;
 
   const [enabled, setEnabled] = useStateEx(findBuddies ? findBuddies.enabled : false, clearMsg);
+  const [showEmail, setShowEmail] = useStateEx(findBuddies ? findBuddies.showEmail : false, clearMsg);
+  const [showComments, setShowComments] = useStateEx(findBuddies ? findBuddies.showComments : false, clearMsg);
   const [text, setText] = useStateEx(findBuddies ? findBuddies.text : '', clearMsg);
   const [start, setStart] = useStateEx(findBuddies && findBuddies.start_miesto ? 
     (isDuklaDevin ? findBuddies.start_miesto : 'oth') : 'Dukla', clearMsg);
   const [startOther, setStartOther] = useStateEx(findBuddies && !isDuklaDevin ? findBuddies.start_miesto : '', clearMsg);
+  
   const [startDate, setStartDate] = useStateEx(findBuddies ? findBuddies.start_date : '', clearMsg);
+  
+  const [end, setEnd] = useStateEx(findBuddies && findBuddies.end_miesto ? 
+    (isEndDuklaDevin ? findBuddies.end_miesto : 'oth') : 'Devín', clearMsg);
+  const [endOther, setEndOther] = useStateEx(findBuddies && !isEndDuklaDevin ? findBuddies.end_miesto : '', clearMsg);
+  
+  const clear = () => {
+    setEnabled(false);
+    setShowEmail(false);
+    setShowComments(false);
+    setText('');
+    setStart('Dukla');
+    setStartOther('');
+
+    setStartDate('');
+
+    setEnd('Devín');
+    setEndOther('');
+  }
 
   const save = () => {
     if (findBuddies && (
       enabled === findBuddies.enabled &&
+      showEmail === findBuddies.showEmail &&
+      showComments === findBuddies.showComments &&
       text === findBuddies.text &&
       (start === findBuddies.start_miesto ||
         startOther === findBuddies.start_miesto) &&
+      (end === findBuddies.end_miesto ||
+        endOther === findBuddies.end_miesto) &&
       startDate === findBuddies.start_date)
     ) {
       setError('Nič si nezmenil');
@@ -81,22 +116,54 @@ const EditFindBuddies = (props) => {
     const data = {
       enabled,
       text,
+      showEmail,
+      showComments,
       start_date: format(sStartDate, 'YYYY-MM-DD'),
       uid: props.userData.userDetails.uid,
       start_miesto: start === 'oth' ? startOther : start,
+      end_miesto: end === 'oth' ? endOther : end,
     };
 
     fetchPostJsonWithToken(props.userData.user, '/api/traveller/updateFindBuddies', data)
-    .then(userDetails => {
-      if (userDetails.error) {
-        throw userDetails.error;
+    .then(result => {
+      if (result.error) {
+        throw result.error;
       }
       
-      props.userData.updateUserDetails(userDetails);
-      setSuccess('Nastavenie hľadanie parťákov sme úspešne zmenili');
+      props.userData.updateFindBuddies(result);
+      setSuccess('Nastavenie tvojho inzerátu sme úspešne zmenili');
     })
     .catch(e => {
       console.error('FindBuddies error', e);
+
+      setError(Texts.GenericError);
+    })
+    .finally(() => setLoading(false));
+  }
+
+  const handleDelete = (confirmed) => {
+    setShowConfirmDelete(false);
+
+    if (!confirmed) {
+      return;
+    }
+
+    setLoading(true);
+    clearMsg();
+    
+    fetchPostJsonWithToken(props.userData.user, '/api/traveller/deleteFindBuddies', { uid: props.userData.userDetails.uid })
+    .then(result => {
+      if (result.error) {
+        throw result.error;
+      }
+      
+      props.userData.updateFindBuddies({});
+      setFindBuddies(null);
+      clear();
+      setSuccess('Tvoj inzerát sme úspešne zmazali');
+    })
+    .catch(e => {
+      console.error('FindBuddies delete error', e);
 
       setError(Texts.GenericError);
     })
@@ -109,12 +176,16 @@ const EditFindBuddies = (props) => {
         loading={loading} error={error} success={success}
         submitText={"Uložiť zmeny"} onSubmit={save} title={"Hľadám parťákov - môj inzerát"}
         description={(<p>
-          Tvoj inzerát bude zverejnený na stránke <A href="/pred/hladampartakov">Hľadám parťákov</A> len 
-          pre prihlásených užívateľov. 
-          Prípadní záujemcovia ťa budú môcť kontaktovať cez email, cez ktorý si zaregistrovaný.
-        </p>)}>
+          <A href={`/pred/hladampartakov/${props.userData.userDetails.uid}`}>Tvoj inzerát</A> bude zverejnený na stránke <A href="/pred/hladampartakov">Hľadám parťákov</A> len 
+          pre prihlásených užívateľov. Bude tam do dňa štartu vrátane alebo než ho skryješ či smažeš. 
+        </p>)}
+        buttons={!!findBuddies && (<button className="snpBtnWhite" 
+          onClick={() => setShowConfirmDelete(true)} type="button">Zmazať a vytvoriť nový</button>)}>
 
         <FormCheckBox itemClassName="form-checkbox" valueName="enabled" valueLabel="Zverejniť môj inzerát" value={[enabled, setEnabled]}/>
+        <FormCheckBox itemClassName="form-checkbox" valueName="showEmail" 
+          valueLabel={`Zverejniť v inzerátu môj email ${props.userData.userDetails.email}, cez ktorý ma budú môcť kontaktovať prípadní záujemcovia`} value={[showEmail, setShowEmail]}/>
+        <FormCheckBox itemClassName="form-checkbox" valueName="showComments" valueLabel="Povoliť prípadným záujemcom pridávať k inzerátu komentáre. Budeš je môcť kontaktovať cez ich email." value={[showComments, setShowComments]}/>
 
         <FormText valueName="startDate" valueLabel="Kedy približne plánuješ vyráziť?" value={[startDate, setStartDate]}
           inputAttrs={{ type: "date" }} itemClassName="form"/>
@@ -123,8 +194,22 @@ const EditFindBuddies = (props) => {
           options={[{ value: "Dukla", label: "Dukla" }, { value: "Devín", label: "Devín" },
             { value: "oth", label: "Inde" }]} 
           labelChildren={start === 'oth' && <FormText valueName="startOther" valueLabel="" value={[startOther, setStartOther]} inputAttrs={{ placeholder: "Kde?" }} itemClassName="form"/>}/>
+        
+        <FormSelect valueName="end" valueLabel="Kam chceš dôjsť?" value={[end, setEnd]} itemClassName="form"
+          options={[{ value: "Devín", label: "Devín" }, { value: "Dukla", label: "Dukla" },
+            { value: "oth", label: "Inam" }]} 
+          labelChildren={end === 'oth' && <FormText valueName="endOther" valueLabel="" value={[endOther, setEndOther]} inputAttrs={{ placeholder: "Kam?" }} itemClassName="form"/>}/>
 
         <FormTextArea valueName="text" valueLabel="Ďalšie informácie (tvoj plán, o tebe, kto sa môže pridať, ...)" value={[text, setText]} itemClassName="form"/>
+
+        <ConfirmBox
+            title="Zmazať inzerát"
+            text="Naozaj chcete zmazať tento inzerát, vrátane prípadných komentárov?"
+            confirmText="Zmazať"
+            show={showConfirmDelete}
+            onConfirm={() => handleDelete(true)}
+            onHide={() => handleDelete(false)}
+          />
       </FormWithLoader>
     </PageWithLoader>
   );

@@ -29,6 +29,7 @@ const FormWithLoader = (props) => {
           {props.submitText}
         </button>
       )}
+      {!!props.buttons && props.buttons}
     </DivWithLoader>
   )
 }
