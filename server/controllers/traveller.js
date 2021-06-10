@@ -58,7 +58,7 @@ router.get('/activeTravellersWithLastMessage', (req, res) => {
 
         if (published && startDate.valueOf() < now.valueOf() && differenceInDays(now, published) >= 3) {       
           // started, last message older than 3 days
-          return { user_id: t.user_id, completed: differenceInDays(now, published) >= 14, pub_date: published };
+          return { user_id: t.user_id, completed: differenceInDays(now, startDate) >= 14, pub_date: published };
         }
 
         return null;
