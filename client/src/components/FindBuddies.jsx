@@ -34,7 +34,7 @@ const FindBuddies = (props) => {
   return (
     <PageWithLoader pageId="FindBuddies" pageTitle={`Hľadám parťákov${Constants.WebTitleSuffix}`} 
       loading={loading} error={!!authData.authProviderMounted && !authData.isAuth ? 
-        (<div>Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet/hladampartakov">Prihlásiť sa</A></div>) : error} >
+        (<div>Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A></div>) : error} >
       <>
         {!!authData.isAuth &&
         <div className="travellers">

@@ -32,7 +32,7 @@ router.post('/lastMessages', (req, res) => {
 
 router.post('/comments', (req, res) => {
   if (req.body.findBuddiesId) {
-    checkToken(req, res, req.body.uid, () => db.getTravellerComments(req.app.locals.db, null, null, req.body.findBuddiesId));
+    checkToken(req, res, req.body.uid, () => db.getTravellerComments(req.app.locals.db, null, null, req.body.findBuddiesId, null, sanitizeUserId(req.body.uid)));
   } else {
     promiseAsJson(() => db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId), res);
   }
@@ -235,9 +235,13 @@ router.post('/deleteComment', (req, res) => {
 });
 
 router.post('/newComments', (req, res) => {
-  const { uid, detailsId, articleId, date } = req.body;
+  const { uid, detailsId, articleId, findBuddiesId, travellerDate, findBuddiesDate } = req.body;
 
-  checkToken(req, res, uid, () => db.getTravellerComments(req.app.locals.db, articleId, detailsId, null, date));
+  checkToken(req, res, uid, () => 
+    Promise.all([
+      articleId || detailsId ? db.getTravellerComments(req.app.locals.db, articleId, detailsId, null, travellerDate) : Promise.resolve([]),
+      findBuddiesId ? db.getTravellerComments(req.app.locals.db, articleId, detailsId, findBuddiesId, findBuddiesDate) : Promise.resolve([])
+    ]).then(([traveller, findBuddies]) => { return { traveller, findBuddies }; }));
 });
 
 router.post('/view', (req, res) => {
@@ -248,6 +252,16 @@ router.post('/view', (req, res) => {
 
   checkToken(req, res, uid, () =>
     db.viewTraveller({ uid, date }));
+});
+
+router.post('/viewFindBuddies', (req, res) => {
+  const {
+    uid,
+    date
+  } = req.body;
+
+  checkToken(req, res, uid, () =>
+    db.viewFindBuddies({ uid, date }));
 });
 
 router.post('/userCheck', (req, res) => {

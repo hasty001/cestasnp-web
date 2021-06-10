@@ -119,7 +119,7 @@ DB.prototype = {
     const sUids = uids ? uids.map(u => sanitizeUserId(u)) : null;
 
     const getUsers = this.findBy(db, _const.UsersTable, 
-      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1 } });
+      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1, email: 1 } });
 
     
     const getDetails = this.findBy(db, _const.DetailsTable,
@@ -141,21 +141,25 @@ DB.prototype = {
     });
   },
 
-  getTravellerComments(db, articleId, travellerId, findBuddiesId = null, after = null) {
+  getTravellerComments(db, articleId, travellerId, findBuddiesId = null, after = null, uid = null) {
     const sArticleId = sanitize(articleId);
     const sTravellerId = sanitize(travellerId);
     const sFindBuddiesId = sanitize(findBuddiesId);
     const filterAfter = after ? { date: { $gt: sanitize(after) } } : {};
    
-    const getDocs = findBuddiesId ? this.findBy(db, _const.FindBuddiesCommentsTable,
-      { $and: [ { findBuddiesId: sFindBuddiesId }, _const.FilterNotDeleted, filterAfter] })
+    const getDocs = findBuddiesId ? 
+      Promise.all([
+        this.findBy(db, _const.FindBuddiesCommentsTable,
+          { $and: [ { findBuddiesId: sFindBuddiesId }, _const.FilterNotDeleted, filterAfter] }), 
+        this.findOne(db, _const.FindBuddiesTable, { _id: new ObjectId(findBuddiesId) })
+      ])
       : (sArticleId === 0 || sArticleId === '') ?
-        this.findBy(db, _const.CommentsTable,
-          { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted, filterAfter] })
-        : this.findBy(db, _const.ArticleCommentsTable,
-          { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted, filterAfter] });
+        Promise.all([this.findBy(db, _const.CommentsTable,
+          { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted, filterAfter] }), Promise.resolve({})])
+        : Promise.all([this.findBy(db, _const.ArticleCommentsTable,
+          { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted, filterAfter] }), Promise.resolve({})]);
 
-    return getDocs.then((docs) => {
+    return getDocs.then(([docs, detail]) => {
       const uids = this.getUids(docs, [d => d.uid]);
 
       return this.getUserNames(db, uids)
@@ -164,13 +168,26 @@ DB.prototype = {
             if (d.uid) {
               const user = users.find(u => u.uid === d.uid);
               
-              if (user) {
-                const n = user.cesta || user.name;
-                
-                if (d.username) {
-                  d.username = n;
+              if (user) {  
+                if (findBuddiesId) {
+                  const n = user.name;
+
+                  if (uid == d.uid || uid == detail.user_id) {
+                    d.email = user.email;
+                  }
+                  
+                  if (d.username) {
+                    d.username = n;
+                  }
+                  d.name = n;
+                } else {
+                  const n = user.cesta || user.name;
+
+                  if (d.username) {
+                    d.username = n;
+                  }
+                  d.name = n;
                 }
-                d.name = n;
               }
             }
           });
@@ -362,7 +379,14 @@ DB.prototype = {
           .then(commentRes => {
             comment._id = commentRes.insertedId;
 
-            return Promise.resolve(comment);
+            if (findBuddies) {
+              return this.findOne(db, _const.UsersTable, { uid: comment.uid }).then(user => {
+                comment.email = user.email;
+                return comment;
+              })
+            } else {
+              return Promise.resolve(comment);
+            }
           });
       } else {
         return Promise.reject('Malicious comment');
@@ -476,6 +500,13 @@ DB.prototype = {
         .then(() => Promise.resolve(travellerRecord));
       }
     );
+  },
+
+  viewFindBuddies({ uid, date }) {
+    return dbConnect(db =>
+      dbCollection(db, _const.FindBuddiesTable)
+        .findOneAndUpdate({ user_id: sanitizeUserId(uid), deleted: { $ne: true } }, { $set: { lastViewed: sanitize(date) } }, { returnOriginal: false }
+          )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Inzerát nebola nájdená."));
   },
 
   viewTraveller({ uid, date }) {

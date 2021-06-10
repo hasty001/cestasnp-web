@@ -15,7 +15,7 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
 
         {!!traveller.email &&
           <div className="traveller-item-email"><a className="traveller-email" href={`mailto:${traveller.email}`}>
-            <i class="far fa-envelope"></i>{` `}
+            <i className="far fa-envelope"></i>{` `}
             {traveller.email}                          
           </a></div>}
 

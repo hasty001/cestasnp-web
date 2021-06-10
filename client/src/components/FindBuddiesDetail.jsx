@@ -83,6 +83,23 @@ const FindBuddiesDetail = (props) => {
     setMessages(msgs);
   }, [messagesData, orderFromOld]);
 
+  useEffect(() => {
+    if (authData.findBuddies && authData.findBuddies.user_id == travellerId &&
+      messagesData) {
+
+      const msgs = messagesData.filter(m => m.isComment).map(m => m);
+      sortByDate(msgs, a => a.date, false);
+
+      const lastComment = msgs.find(m => !authData.findBuddies.lastViewed || m.date > authData.findBuddies.lastViewed);
+
+      if (lastComment) {
+        fetchPostJsonWithToken(authData.user, '/api/traveller/viewFindBuddies', { uid: travellerId, date: lastComment.date })
+        .then(details => authData.updateFindBuddies(details))
+        .catch(err => console.error(err));
+      }
+    }
+  }, [messagesData, authData.findBuddies]);
+
   const handleDeleteCommentClick = (event) => {
     event.preventDefault();
 
@@ -156,21 +173,23 @@ const FindBuddiesDetail = (props) => {
     setMessagesData(msgs);
   }
 
+  const isAuth = !!authData.authProviderMounted && !!authData.isAuth
+
   return (
     <PageWithLoader pageId="FindBuddiesDetail" pageTitle={traveller ? (traveller.meno + Constants.WebTitleSuffix) : null}>
-      <DivWithLoader className="traveller" loading={loading} error={!!authData.authProviderMounted && !authData.isAuth ? 
-        (<div>Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet/hladampartakov">Prihlásiť sa</A></div>) : error}>
-        <TravellerItem traveller={traveller || {}} now={Date.now()} userData={authData} findBuddies />         
+      <DivWithLoader className="find-buddies-traveller" loading={loading} error={!!authData.authProviderMounted && !authData.isAuth ? 
+        (<div>Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A></div>) : error}>
+        {!!traveller && isAuth && <TravellerItem traveller={traveller} now={Date.now()} userData={authData} findBuddies />}       
 
-        {!!traveller && !!traveller.showComments && (
+        {!!traveller && isAuth && !!traveller.showComments && (
           <>
-            <div className="na-ceste-traveller-sort" data-nosnippet >
+            <div className="find-buddies-sort" data-nosnippet >
               Zoradiť: <a href="#" onClick={handleOrderClick}>{orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
             </div>
 
-            <div className="na-ceste-traveller-msgs">
+            <div className="find-buddies-msgs">
               {messages.map((message, i) => <TravellerMessage key={i} inTraveller 
-                travellerUserId={traveller ? traveller.user_id : ''}
+                travellerUserId={traveller ? traveller.user_id : ''} findBuddies
                 message={message} travellerName={traveller ? traveller.meno : ''}
                 userData={authData} deleteMessage={handleDeleteCommentClick}/>)}
 
@@ -194,13 +213,13 @@ const FindBuddiesDetail = (props) => {
         </>)}
       </DivWithLoader>
 
-      <div className="traveller-buttons-panel">
-        <div className="traveller-buttons">
-          {!!traveller && !!traveller.showComments && (<button
+      <div className="find-buddies-buttons-panel">
+        <div className="find-buddies-buttons">
+          {!!traveller && isAuth && !!traveller.showComments && (<button
             className="snpBtn"
             onClick={() => setShowCommentBox(true)}
           >
-            Komentuj
+            Odpovedz
           </button>)}
         </div>
       </div>

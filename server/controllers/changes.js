@@ -17,8 +17,9 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
   return Promise.all([db.getUserNames(dbRef, null), 
     s_uid ? db.findBy(dbRef, _const.UsersTable, { uid: s_uid }).then(u => u && u.length > 0 ? u[0] : null) : Promise.resolve(null),
-    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { user_id: 1, articleID: 1, sql_id: 1, meno: 1 }})])
-  .then(([users, user, details]) => {
+    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { user_id: 1, articleID: 1, sql_id: 1, meno: 1 }}),
+    db.findBy(dbRef, _const.FindBuddiesTable, {}, { projection: { user_id: 1 }})])
+  .then(([users, user, details, findBuddies]) => {
     const s_from = formatAsDate(from || new Date(0));
     const s_to = formatAsDate(addDays(to || startOfToday(), 1));
     const s_page = sanitize(page) || 0;
@@ -63,6 +64,18 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       const index = details.findIndex(u => u.user_id == item.user_id ||
         (item.travellerDetails && u._id.toString() == item.travellerDetails.id) || (item.article_sql_id && u.articleID == item.article_sql_id));
       return index >= 0 ? details[index].meno : "";
+    }
+
+    const getFindBuddiesUserId = (id) => {
+      const index = findBuddies.findIndex(u => 
+        id && u._id.toString() == id);
+      return index >= 0 ? findBuddies[index].user_id : "";
+    }
+
+    const getFindBuddiesUserName = (id) => {
+      const index = findBuddies.findIndex(u => 
+        id && u._id.toString() == id);
+      return index >= 0 ? getUserName(findBuddies[index].user_id) : "";
     }
 
     const getProp = (item, propName) => {
@@ -112,10 +125,16 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getUserDetailUrl = (item) => `/pred/hladampartakov/${item.user_id}`;
-    const promiseUserDetails = (!s_items || s_items.indexOf('buddies') >= 0) ? Promise.all([
+    const promiseFindBuddies = (!s_items || s_items.indexOf('buddies') >= 0) ? Promise.all([
       dbPromise(_const.FindBuddiesTable, null, ['user_id'], 'created', 'created', 'user_id', item => getUserName(item.user_id), '', getUserDetailUrl),
       dbPromise(_const.FindBuddiesTable, null, ['user_id'], 'modified', 'lastUpdated', 'user_id', item => getUserName(item.user_id), '', getUserDetailUrl),
       dbPromise(_const.FindBuddiesTable, null, ['user_id'], 'deleted', 'del_date', 'user_id', item => getUserName(item.user_id), '', getUserDetailUrl),
+    ]).then(d => concat(d)) : Promise.resolve([]);
+
+    const getFindBuddiesCommentUrl = (item) => `/pred/hladampartakov/${getFindBuddiesUserId(item.findBuddiesId)}#${item._id}`;
+    const promiseFindBuddiesComments = (!s_items || s_items.indexOf('answers') >= 0) ? Promise.all([
+      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'created', 'date', 'uid', item =>getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
+      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'deleted', 'del_date', 'del_by', item => getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
     const getMessageUrl = (item) => `/na/${item.user_id}#${item._id}`;
@@ -143,7 +162,8 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       }
     }
 
-    return Promise.all([promisePois, promiseArtcles, promiseDetails, promiseUserDetails, promiseMessages, promiseComments]).then(results => {
+    return Promise.all([promisePois, promiseArtcles, promiseDetails, promiseFindBuddies, promiseFindBuddiesComments, 
+      promiseMessages, promiseComments]).then(results => {
       const items = concat(results);
       const count = items.length;
 

@@ -5,7 +5,8 @@ import Image from './Image';
 import { A } from './Navigate';
 import UserLabel from './UserLabel';
 
-const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inTraveller, travellerUserId }) => {
+const TravellerMessage = ({ message, travellerName, userData, deleteMessage, 
+  inTraveller, travellerUserId, findBuddies }) => {
 
   const error = <>{!!message.error && (<p className="errorMsg">{message.error}</p>)}</>;
   const success = <>{!!message.success && (<p className="successMsg">{message.success}</p>)}</>;
@@ -36,11 +37,20 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
              {travellerName}                          
           </Link>}
 
+        {!!message.email &&
+          <div className={message.isComment ? "traveller-comment-email" : "traveller-message-email"}>
+            <a className="traveller-email" href={`mailto:${message.email}`}>
+              <i className="far fa-envelope"></i>{` `}
+              {message.email}                          
+            </a>
+          </div>}
+
         {message.isComment ?
           <span className="traveller-comment-actions">
             {(!!userData.isAuth
               && (message.uid == userData.userDetails.uid 
-                || (message.travellerDetails && message.travellerDetails.id == userData.travellerDetails._id))) && 
+                || (message.travellerDetails && message.travellerDetails.id == userData.travellerDetails._id) ||
+                   (message.findBuddiesId && message.findBuddiesId == userData.findBuddies._id))) && 
               (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-comment-delete" title="zmazať komentár"><i className="fas fa-trash-alt"/></a>)}
             <CopyToClipboard text={`${window.location.host}/na/${travellerUserId}#${message._id}`}>
               <a href={`#${message._id}`} className="traveller-comment-link" title="kopírovať odkaz na komentár"><i className="fas fa-link"/></a>
