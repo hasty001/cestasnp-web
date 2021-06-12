@@ -346,7 +346,8 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
       <meta property="og:image" content="${defImg}" />`);
   }
 
-  if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
+  if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light')
+    || path.startsWith('/na/ceste/textovo') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
     const userId = sanitizeUserId(url.substr(4));
 
     if (userId) {

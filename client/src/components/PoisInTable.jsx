@@ -114,7 +114,8 @@ const PoisInTable = (props) => {
     }}>{props.children}{` `}{!!sort && (sort.by == props.col) && (sort.asc ? "▲" : "▼")}</a>;
 
   return (
-    <PageWithLoader pageId="PoisInTable" loading={loading} error={error} pageTitle={`Dôležité miesta${Constants.WebTitleSuffix}`} >
+    <PageWithLoader pageId="PoisInTable" loading={loading} error={error} 
+      pageTitle={`Dôležité miesta v tabulke${Constants.WebTitleSuffix}`} title="Dôležité miesta v tabulke">
       <>
         <button data-nosnippet className="snpBtn pois-map-itinerary-link no-print" title="V itineráry" onClick={() => navigate('/pred/itinerar')}><i className="fas fa-list-ol"></i></button>
         <button data-nosnippet className="snpBtn no-print" onClick={e => { e.preventDefault(); setShowSettings(true); }}>Nastavenie</button>

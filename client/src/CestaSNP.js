@@ -120,6 +120,7 @@ class CestaSNP extends Component {
               <Route exact path="/pred/hladampartakov/:traveller" render={(props) => (<FindBuddiesDetail {...props} />)} />
               <Route exact path="/na/ceste" component={Active} />
               <Route exact path="/na/ceste/light" component={ActiveLight} />
+              <Route exact path="/na/ceste/textovo" component={ActiveLight} />
               <Route exact path="/na/ceste/fotky" component={ActivePhotos} />
               <Route exact path="/na/archive" component={Archive} />
               <Route path="/na/:traveller" render={(props) => (<Traveller {...props} />)}/>
