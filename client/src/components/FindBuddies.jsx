@@ -38,7 +38,7 @@ const FindBuddies = (props) => {
       <>
         {!!authData.isAuth &&
         <div className="travellers">
-          {travellers.length == 0 && 
+          {travellers.length == 0 && !authData.authProviderMounted &&
             <div>Momentálne parťákov nikto nehľadá. {` `}<A href="/ucet/hladampartakov">Pridaj svoj inzerát.</A></div>}
           {travellers.map((traveller, i) => <TravellerItem traveller={traveller} key={i} now={now} findBuddies/>)}
         </div>}

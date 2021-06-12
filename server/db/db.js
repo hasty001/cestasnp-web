@@ -115,11 +115,11 @@ DB.prototype = {
   /**
    * Returns list of users with name or journey name for specified uids.
    */
-  getUserNames(db, uids) {
+  getUserNames(db, uids, email = false) {
     const sUids = uids ? uids.map(u => sanitizeUserId(u)) : null;
 
     const getUsers = this.findBy(db, _const.UsersTable, 
-      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1, email: 1 } });
+      sUids ? { $or: [ { uid : { $in: sUids } }, { sql_user_id : { $in: sUids } } ] } : {}, { projection: { uid: 1, sql_user_id: 1, name: 1, email: email ? 1 : null } });
 
     
     const getDetails = this.findBy(db, _const.DetailsTable,
@@ -162,7 +162,7 @@ DB.prototype = {
     return getDocs.then(([docs, detail]) => {
       const uids = this.getUids(docs, [d => d.uid]);
 
-      return this.getUserNames(db, uids)
+      return this.getUserNames(db, uids, true)
         .then(users => {
           docs.forEach(d => {
             if (d.uid) {
