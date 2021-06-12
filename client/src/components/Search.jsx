@@ -16,11 +16,14 @@ const Search = () => {
       () => {
         setSearch(<div className="gcse-search" data-linktarget="_self" data-enablehistory={true}></div>);
         setLoading(false);
+
+        setTimeout(() => { try { document.getElementsByName("search")[0].focus() } catch {} }, 50);
       });
   }, []);
 
   return (
-    <PageWithLoader pageId="Search" pageTitle={`Hľadanie${Constants.WebTitleSuffix}`} loading={loading}>
+    <PageWithLoader pageId="Search" pageTitle={`Hľadanie${Constants.WebTitleSuffix}`} 
+      title="Hľadanie" loading={loading}>
       <div>{search}</div>
     </PageWithLoader>
   );

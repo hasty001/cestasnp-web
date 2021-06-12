@@ -128,7 +128,7 @@ const Active = (props) => {
     <PageWithLoader pageId="NaCesteActive" pageTitle={`LIVE sledovanie${Constants.WebTitleSuffix}`} >
       <MapControl id="na-ceste-map-active" travellers={travellers} canScroll/>
       <button className="snpBtn active-kind-link no-print" title="Textovo" 
-        onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/light'); }}><i className="fas fa-align-justify"></i></button>
+        onClick={() => { settingsData.setActiveLink("light"); navigate('/na/ceste/textovo'); }}><i className="fas fa-align-justify"></i></button>
       <DivWithLoader absolute className="active-travellers" 
         loading={loading} error={error}>
         {!loading && !error && !!travellers && travellers.map((traveller, i) => (

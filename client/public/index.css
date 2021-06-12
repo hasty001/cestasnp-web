@@ -651,7 +651,7 @@ li.red-button>a:active {
 /***     HOME       ***/
 
 #Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller, #PoiDetail,
-#Search {
+#Search, #Itinerary, #PoisInTable, #NaCesteActiveLight {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -723,7 +723,7 @@ li.red-button>a:active {
 }
 
 .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
-.PoiDetail, #Search {
+.PoiDetail, #Search, #Itinerary, #PoisInTable, #NaCesteActiveLight {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -736,7 +736,7 @@ li.red-button>a:active {
 
 @media (min-width: 1600px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, .traveller,
-  .PoiDetail, #Search {
+  .PoiDetail, #Search, #Itinerary, #PoisInTable, #NaCesteActiveLight {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -1035,7 +1035,7 @@ li.red-button>a:active {
 
 @media(max-width: 670px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive,
-  .traveller, .PoiDetail, #Search {
+  .traveller, .PoiDetail, #Search, #Itinerary, #PoisInTable, #NaCesteActiveLight {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -1053,9 +1053,11 @@ li.red-button>a:active {
 }
 
 .active-travellers-box #NaCesteActiveLight { 
-  width: 100%; 
-  padding: 0px; 
-  margin: 0;
+  width: 100% !important; 
+  padding: 0px !important; 
+  margin: 0 !important;
+  max-width: none;
+  min-width: 0;
 }
 
 #Home .article-div, #Articles .article-div {
@@ -1071,7 +1073,8 @@ li.red-button>a:active {
   }
 }
 
-#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2, .PoiDetail h2 {
+#Home .article-div h2, #Articles h2, #Article h2, .public-DraftEditor-content h2, .PoiDetail h2,
+#NaCesteActiveLight h2, #Search h2, #Itinerary h2, #PoisInTable h2 {
   margin-top: 0px;
   margin-bottom: 30px;
   font-size: 25px;
@@ -1396,7 +1399,8 @@ button.ol-zoom-out {
 /**********************/
 /**KONTAKT + Cookies **/
 
-#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive, #Search {
+#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive, #Search,
+#PoisInTable, #Itinerary, #NaCesteActiveLight {
   margin-top: 40px;
 }
 
@@ -1409,6 +1413,14 @@ button.ol-zoom-out {
 /***     SEARCH     ***/
 #Search {
   min-height: 300px;
+}
+
+.gsc-adBlock {
+  display: none !important;
+}
+
+.gsc-control-cse {
+  padding: 0 !important;
 }
 
 .gsc-search-button {
@@ -1567,7 +1579,8 @@ span.poi-text {
 }
 
 .pois-map-itinerary-link,
-.pois-map-link {
+.pois-map-link,
+.active-photo-link {
   margin: 5px 10px 5px 0 !important;
 }
 
@@ -1657,16 +1670,7 @@ span.poi-text {
 /**********************/
 /***    ITINERARY   ***/
 
-#Itinerary, #PoisInTable {
-  width: 80%;
-  margin: 15px auto;
-} @media (max-width: 767px) {
-#Itinerary, #PoisInTable {
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-}
-} @media print {
+@media print {
   #Itinerary, #PoisInTable {
       width: 100%;
       margin: 0;
@@ -2119,7 +2123,6 @@ button#dropdown-basic-1 {
   top: 3px;
 }
 
-#NaCesteActiveLight,
 #NaCesteFotky {
   font-size: 15px;
   font-weight: 300;
@@ -2127,7 +2130,6 @@ button#dropdown-basic-1 {
   width: 80%;
   margin: 15px auto;
 } @media (max-width: 767px) {
-#NaCesteActiveLight,
 #NaCesteFotky {
     width: 100%;
     margin: 0;

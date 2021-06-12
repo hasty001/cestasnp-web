@@ -183,8 +183,17 @@ const Navigation = () => {
           </NavRouterItem>
 
           <NavRouterItem
-            href={settingsData.activeLink.href}
+            href={ROUTES.itinerary}
             eventKey={13}
+            title="Itinerár"
+            className="mobile"
+          >
+            Itinerár
+          </NavRouterItem>
+
+          <NavRouterItem
+            href={settingsData.activeLink.href}
+            eventKey={14}
             title="LIVE sledovanie"
           >
             LIVE sledovanie
