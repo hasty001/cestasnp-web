@@ -205,6 +205,12 @@ textarea.html {
   height: calc(100vh - 113px) !important;
 }
 
+.loader {
+  display: 'block';
+  width: 40px;
+  margin: 50px auto;
+}
+
 /***     GENERAL    ***/
 /**********************/
 /***     HEADER     ***/

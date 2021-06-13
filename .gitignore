@@ -13,3 +13,7 @@ article.json
 server/data/snp.json
 client/build/main.css
 client/build/main.css.map
+client/build/book.css
+client/build/book.js
+client/build/book.js.map
+client/build/bundle.css
