@@ -12,6 +12,7 @@ const Book = (props) => {
   const [error, setError] = useState('');
 
   const [traveller, setTraveller] = useState();
+  const [intro, setIntro] = useState([]);
   const [pages, setPages] = useState([]);
   const [opacity, setOpacity] = useState(0);
 
@@ -24,7 +25,10 @@ const Book = (props) => {
   const maxLinesWithImage = 10;
   const maxLinesWithImagePortrait = 6;
 
-  const splitPages = (text, firstMaxLines, maxLines) => {
+  const maxLinesLengthIntro = 22;
+  const maxLinesIntro = 10;
+
+  const splitPages = (text, firstMaxLines, maxLines, maxLineLength) => {
     const result = [];
     var lines = [];
 
@@ -88,16 +92,26 @@ const Book = (props) => {
       };
 
       return Promise.all([
+        data[0],
         fetchJson(`/api/traveller/messages/${travellerId}`), 
         fetchPostJson('/api/traveller/comments', commentData)]);
     })
-    .then(([msgData, comments]) => {
+    .then(([data, msgData, comments]) => {
       const msgs = msgData.map(m => m).concat(comments.map(c => Object.assign({ isComment: true }, c)));
 
       sortMessages(msgs, true); 
       setOpacity(0);
 
+      const newIntro = [];
       const newPages = [];
+
+      const introSplits = splitPages(htmlClean(data.text), maxLinesIntro, maxLinesIntro, maxLinesLengthIntro);
+
+      introSplits.forEach((s, i) => {
+        const page = <div className="intro" dangerouslySetInnerHTML={{ __html: s }}/>
+
+        newIntro.push(page);
+      });
 
       var i = 0;
       while (i < msgs.length) {
@@ -118,8 +132,10 @@ const Book = (props) => {
             + "\n" + htmlClean(msg.text || msg.comment) + "\n\n";
           i++;
         } while (i < msgs.length && msgs[i].isComment);
-
-        const splits = splitPages(text, img ? (portrait ? maxLinesWithImagePortrait : maxLinesWithImage) : maxLines, maxLines);
+        
+        const splits = splitPages(text, 
+          img ? (portrait ? maxLinesWithImagePortrait : maxLinesWithImage) : maxLines, maxLines,
+          maxLineLength);
 
         splits.forEach((s, i) => {
           const page = <div className="content" dangerouslySetInnerHTML={{ __html: (i == 0 ? img : "") + s }}/>
@@ -128,6 +144,7 @@ const Book = (props) => {
         });
       }
   
+      setIntro(newIntro);
       setPages(newPages);
 
       setTimeout(() => setOpacity(1), 1000);
@@ -175,10 +192,8 @@ const Book = (props) => {
           </div>
           <div className="book-page cover-back" data-density="hard"/>
 
-          <div className="book-page page">
-            <div className="intro"
-                dangerouslySetInnerHTML={{ __html: htmlSimpleSanitize(traveller ? traveller.text : "") }} />
-          </div>
+          {intro.map((p, i) => <div key={i} className="book-page page">{p}</div>)}
+
           <div className="book-page page"/>
 
           {pages.map((p, i) => <div key={i} className="my-page page">{p}</div>)}
