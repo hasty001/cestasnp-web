@@ -13,7 +13,7 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
           {traveller.meno}                          
         </A>
 
-        {!!traveller.email &&
+        {!!traveller.email && typeof traveller.email == 'string' && traveller.email.indexOf('@') > 0 &&
           <div className="traveller-item-email"><a className="traveller-email" href={`mailto:${traveller.email}`}>
             <i className="far fa-envelope"></i>{` `}
             {traveller.email}                          
