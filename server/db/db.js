@@ -9,6 +9,7 @@ const { format, differenceInDays } = require('date-fns');
 const _const = require('../../const');
 const { sanitizeUserId } = require('../util/checkUtils');
 const { momentDateTime, formatAsDate } = require('../util/momentUtils');
+const itinerary = require('../data/guideposts.json');
 
 const securityCheck = new Validation();
 
@@ -962,12 +963,14 @@ DB.prototype = {
         poi.history = history || [];
 
         poi.history.forEach(h => {
-          if (h.itinerary && (h.itinerary.near || h.itinerary.after)) {
+          if (h.itinerary && (h.itinerary.near || h.itinerary.after) 
+            && itinerary.findIndex(g => g.id == (h.itinerary.near || h.itinerary.after)) >= 0) {
             h.guideposts = getNearGuideposts(h.itinerary.near || h.itinerary.after, h.coordinates).guideposts;
           }
         });
 
-        if (poi.itinerary && (poi.itinerary.near || poi.itinerary.after)) {
+        if (poi.itinerary && (poi.itinerary.near || poi.itinerary.after)
+          && itinerary.findIndex(g => g.id == (poi.itinerary.near || poi.itinerary.after)) >= 0) {
           poi.guideposts = getNearGuideposts(poi.itinerary.near || poi.itinerary.after, poi.coordinates).guideposts;
         } else {
           poi.guideposts = findNearestGuideposts(findNearestPoint(poi.coordinates).coordinates).guideposts;
