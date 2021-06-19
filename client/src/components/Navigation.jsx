@@ -18,6 +18,7 @@ const ROUTES = {
   itinerary: '/pred/itinerar',
   naCeste: '/na/ceste',
   archiv: '/na/archive',
+  hladanie: '/hladanie',
   kontakt: '/kontakt',
   mojaCesta: '/ucet',
   poslatSpravu: '/ucet/poslatspravu',
@@ -90,7 +91,15 @@ const Navigation = () => {
             </div>
           </A>
         </Navbar.Brand>
-        <Navbar.Toggle className={hasNewCommentsText ? 'has-badge' : ''}/>
+        <Navbar.Toggle title="Menu" className={hasNewCommentsText ? 'has-badge' : ''} />
+        <NavRouterItem
+          href={ROUTES.hladanie}
+          eventKey={99}
+          title="Hľadanie"
+          className="navbar-search"
+        >
+          <i className="fas fa-search"></i>
+        </NavRouterItem>
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav pullRight className={!authData.isAuth ? "not-auth" : "auth"}>
@@ -217,8 +226,17 @@ const Navigation = () => {
           </NavRouterItem>
 
           <NavRouterItem
-            href={settingsData.activeLink.href}
+            href={ROUTES.itinerary}
             eventKey={13}
+            title="Itinerár"
+            className="mobile"
+          >
+            Itinerár
+          </NavRouterItem>
+
+          <NavRouterItem
+            href={settingsData.activeLink.href}
+            eventKey={14}
             title="LIVE sledovanie"
           >
             LIVE sledovanie
@@ -327,6 +345,15 @@ const Navigation = () => {
               Odhlásiť             
             </NavRouterItem>
           </NavDropdown>)}
+
+          <NavRouterItem
+              href={ROUTES.hladanie}
+              eventKey={30}
+              title="Hľadanie"
+              className="desktop"
+            >
+              <i className="fas fa-search"></i>
+          </NavRouterItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -54,15 +54,16 @@ const ActiveLight = (props) => {
 
   return (
     <PageWithLoader pageId="NaCesteActiveLight" className={loading ? "loading" : ""}
-      pageTitle={props.box ? null : `LIVE sledovanie${Constants.WebTitleSuffix}`}
-      loading={loading} error={error}>
+      pageTitle={props.box ? null : `LIVE sledovanie textovo${Constants.WebTitleSuffix}`}
+      loading={loading} error={error}
+      title={props.box ? null : "LIVE sledovanie textovo"}>
 
       {!!props.box && (
         <A href={settingsData.activeLink.href} className="no-decoration">
           <h3 className="no-decoration">LIVE sledovanie {active >= 5 && <span className="active-count">({active} aktívnych)</span>}</h3>
         </A>)}
 
-      {!props.box && <button className="snpBtn active-kind-link no-print" title="Fotky"
+      {!props.box && <button className="snpBtn active-photo-link no-print" title="Fotky"
         onClick={() => { settingsData.setActiveLink("fotky"); navigate('/na/ceste/fotky'); }}><i className="far fa-images"></i></button>}
           
       {!!travellers && travellers.length > 0 && (
@@ -79,7 +80,7 @@ const ActiveLight = (props) => {
             {travellers.map((traveller, i) => <TravellerItem key={i} traveller={traveller} now={now}/>)}
               {!!props.box && <div className="footer"/>}
               <div className="active-travellers-items-more">
-                <ButtonReadMore href="/na/ceste/light" text="všetky správy"/>
+                <ButtonReadMore href="/na/ceste/textovo" text="všetky správy"/>
               </div>
             </div>
 
