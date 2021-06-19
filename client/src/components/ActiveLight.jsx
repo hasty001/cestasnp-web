@@ -8,6 +8,7 @@ import PageWithLoader from './reusable/PageWithLoader';
 import { LocalSettingsContext } from './LocalSettingsContext';
 import ButtonReadMore from './reusable/ButtonReadMore';
 import TravellerItem from './reusable/TravellerItem';
+import { A } from './reusable/Navigate';
 import { getTravellersImages, parseDate, sortActiveTravellers } from '../helpers/helpers';
 
 const ActiveLight = (props) => {
@@ -42,8 +43,9 @@ const ActiveLight = (props) => {
 
   const images = getTravellersImages(travellers);
 
-  const hasActive = travellers ? 
-    travellers.reduce((r, t) => r || !t.finishedTracking && parseDate(t.start_date) <= now, false) : false;
+  const active = travellers ? 
+    travellers.reduce((r, t) => r + (!t.finishedTracking && parseDate(t.start_date) <= now ? 1 : 0) , 0) : 0;
+  const hasActive = active > 0;
 
   const hasPlanning =  travellers ? 
     travellers.reduce((r, t) => r || !t.finishedTracking && parseDate(t.start_date) > now, false) : false;
@@ -55,6 +57,11 @@ const ActiveLight = (props) => {
       pageTitle={props.box ? null : `LIVE sledovanie textovo${Constants.WebTitleSuffix}`}
       loading={loading} error={error}
       title={props.box ? null : "LIVE sledovanie textovo"}>
+
+      {!!props.box && (
+        <A href={settingsData.activeLink.href} className="no-decoration">
+          <h3 className="no-decoration">LIVE sledovanie {active >= 5 && <span className="active-count">({active} aktívnych)</span>}</h3>
+        </A>)}
 
       {!props.box && <button className="snpBtn active-photo-link no-print" title="Fotky"
         onClick={() => { settingsData.setActiveLink("fotky"); navigate('/na/ceste/fotky'); }}><i className="far fa-images"></i></button>}

@@ -40,14 +40,7 @@ const Home = (props) => {
         <A href="/pred/articles/article/60">Cesta hrdinov SNP je 770 km dlhá pešia trasa na Slovensku a zážitok na celý život. <strong>Čítaj viac</strong>.</A>
       </div>}
       <div className="home-articles-and-box">
-        <div className="active-travellers-box">            
-          <A
-            href={settingsData.activeLink.href}
-            className="no-decoration"
-          >
-            <h3 className="no-decoration">LIVE sledovanie</h3>
-          </A>     
-          
+        <div className="active-travellers-box">               
           <ActiveLight box />
         </div>
 

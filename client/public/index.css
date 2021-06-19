@@ -893,6 +893,13 @@ li.red-button>a:active {
   text-transform: uppercase;
 }
 
+.active-travellers-box h3 > span.active-count {
+  display: inline-block;
+  text-transform: none;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
 .active-travellers-info {
   margin: 15px 0;
 }
