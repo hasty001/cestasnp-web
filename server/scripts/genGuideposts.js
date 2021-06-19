@@ -53,8 +53,8 @@ relation.members.filter(m => m.type === 'way').forEach(w => {
           }
         } else {
           console.warn("Invalid way: " + way.id + " last node: " + lastNodeId);
-          console.log(nodes.map(n => n.id).join(' - '));
-          console.log(osmPath.map(n => n.id).join(' - '));          
+          console.log("Nodes: ", nodes.map(n => n.id).join(' - '));
+          console.log("Way end: ", osmPath.map(n => n.id).slice(-3).join(' - '));          
         }
       }
       
@@ -95,7 +95,7 @@ if (g2 >= 0) {
 const guideposts = osmGuideposts.map((g, index) => {
   const data = osm.elements.find(e => e.type === 'node' && e.id === g.ref);
 
-  if (data) {
+  if (data && data.tags && data.tags.name) {
     var minD = 1000000;
     var min = -1;
     osmPath.forEach((c, i) => {
@@ -122,16 +122,6 @@ const guideposts = osmGuideposts.map((g, index) => {
       g.ele = data.tags && data.tags.ele ? data.tags.ele : null;
       g.lat = data.lat;
       g.lon = data.lon;
-      
-      if (g.name === 429772590) {
-        g.name = "Kubrá";
-        g.ele = 220;
-      }
-
-      if (g.name === 471312526) {
-        g.name = "Drietoma";
-        g.ele = 240;
-      } 
 
       if (typeof g.name != 'string') {
         console.warn("Guidepost without name: " + g.name);
@@ -156,12 +146,15 @@ const guideposts = osmGuideposts.map((g, index) => {
       console.warn("Nearest node not found for: " + data.tags ? data.tags.name : data.id);
     }
   }
-});
+
+  return null;
+}).filter(g => g);
 
 guideposts[0].main = true;
+guideposts[0].name = "Dukliansky priesmyk, štátna hranica";
 guideposts[guideposts.length - 1].main = true;
 
-guideposts.filter(g => g.ref === 4353143070 || g.ref === 31562241
+guideposts.filter(g => g.ref === 4353143070 || g.ref === 8845838790
   || g.ref === 32461688 || g.ref === 4467331941 || g.ref === 308445592).forEach(g => { g.main = true; });
 
 console.timeEnd("guideposts");
@@ -208,7 +201,7 @@ guideposts.forEach(g => {
   g.altUp = altUp * altCoefficient;
   g.altDown = altDown * altCoefficient;
 
-  g.time = g.dist / 4 + time; 
+  g.time = Math.max(0, g.dist / 4 + time); 
 });
 
 guideposts.forEach(g => {
