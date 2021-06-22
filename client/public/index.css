@@ -1114,7 +1114,6 @@ li.red-button>a:active {
   margin: 0 !important;
   max-width: none;
   min-width: 0;
-  min-height: 500px; 
 }
 
 .active-travellers-box #NaCesteActiveLight.loading { 

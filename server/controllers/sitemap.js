@@ -9,7 +9,7 @@ const db = new DB();
 const router = express.Router();
 
 const getJourneys = (dbRef) =>
-  db.findBy(dbRef, _const.DetailsTable, {}, 
+  db.findBy(dbRef, _const.DetailsTable, { cancelled: { $ne: true } }, 
     { projection: { user_id: 1, finishedTracking: 1, start_date: 1, lastUpdated: 1 } }, { start_date: -1 })
     .then(travellers => {
       var travellersIds = travellers.map(({user_id}) => user_id);

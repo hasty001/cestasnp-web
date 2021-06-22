@@ -35,6 +35,14 @@ const TravellerAccount = (props) => {
   const [startDate, setStartDate] = useStateEx(props.edit ? props.userData.travellerDetails.start_date : '', clearMsg);
   const [count, setCount] = useStateEx(props.edit ? (props.userData.travellerDetails.number || '0').toString() : '', clearMsg);
 
+  const getState = () => props.edit ? (props.userData.travellerDetails.cancelled ? 'cancelled' 
+    : (props.userData.travellerDetails.finishedTracking ? 'finished' : 'ok')) : 'ok';
+
+  // for edit only
+  const [state, setState] = useStateEx(getState(), clearMsg);
+  const [endDate, setEndDate] = useStateEx(props.edit ? props.userData.travellerDetails.end_date : '', clearMsg);
+  const [completed, setCompleted] = useStateEx(props.edit ? (props.userData.travellerDetails.completed ? '1' : '') : '', clearMsg);
+
   const createTraveller = () => {
     if (props.edit) {
       if (
@@ -43,7 +51,10 @@ const TravellerAccount = (props) => {
         (start === props.userData.travellerDetails.start_miesto ||
          startOther === props.userData.travellerDetails.start_miesto) &&
         count == props.userData.travellerDetails.number &&
-        startDate === props.userData.travellerDetails.start_date
+        startDate === props.userData.travellerDetails.start_date &&
+        state === getState() &&
+        endDate === props.userData.travellerDetails.end_date &&
+        !!completed == !!props.userData.travellerDetails.completed
       ) {
         setError('Nič si nezmenil');
         return;
@@ -84,11 +95,26 @@ const TravellerAccount = (props) => {
 
     const sStartDate = parseDate(startDate);
     logDev(sStartDate);
-    if (differenceInDays(sStartDate, new Date()) < -5) {
+    if (format(sStartDate, 'YYYY-MM-DD') != props.userData.travellerDetails.start_date
+      && differenceInDays(sStartDate, new Date()) < -5) {
       logDev(differenceInDays(sStartDate, new Date()));
       
-      setError('Začiatok cesty je viac než 5 dni v minulosti. Vyber iný dátum!');
+      setError('Začiatok cesty je viac než 5 dni v minulosti. Vyber iný dátum alebo ho nemeň!');
       return;
+    }
+
+    var sEndDate = '';
+    if (props.edit && state == "finished") {
+      if (!endDate || endDate.trim().length === 0) {
+        setError('Zabudol si na dátum ukončenia cesty!');
+        return;
+      }
+
+      sEndDate = parseDate(endDate);
+      if (differenceInDays(sEndDate, sStartDate) < 0) {
+        setError('Koniec cesty je skôr ako jej začiatok. Vyber iný dátum!');
+        return;
+      }
     }
 
     setLoading(true);
@@ -101,10 +127,12 @@ const TravellerAccount = (props) => {
       uid: props.userData.userDetails.uid,
       start_miesto: start === 'oth' ? startOther : start,
       number: parseInt(count),
-      end_date: '',
-      completed: '',
+      end_date: sEndDate ? format(sEndDate, 'YYYY-MM-DD') : (props.userData.travellerDetails.end_date || ''),
+      completed: !!completed,
       email: 0,
-      finishedTracking: false
+      finishedTracking: state == "finished" || state == "cancelled",
+      cancelled: state == "cancelled",
+      finishedManual: state == "finished" || state == "cancelled"
     };
 
     fetchPostJsonWithToken(props.userData.user, 
@@ -168,6 +196,22 @@ const TravellerAccount = (props) => {
 
         <FormText valueName="startDate" valueLabel="Kedy vyrážaš/te?" value={[startDate, setStartDate]}
           inputAttrs={{ type: "date" }} />
+
+        {!!props.edit && (
+        <>
+          <br/>
+          <FormSelect valueName="state" valueLabel="Aký je stav tvojej cesty?" value={[state, setState]}
+            options={[{ value: "ok", label: "plánovaná/aktivná" }, { value: "finished", label: "dokončená" },
+              { value: "cancelled", label: "zrušená" }]} 
+            labelChildren={state === 'finished' && (
+            <>
+              <FormText valueName="endDate" valueLabel="Kedy si cestu dokončil?" value={[endDate, setEndDate]}
+                inputAttrs={{ type: "date" }} />
+
+              <FormSelect valueName="completed" valueLabel="Koľko cesty si ušiel?" value={[completed, setCompleted]}
+                options={[{ value: "1", label: "celú" }, { value: "", label: "časť" }]} />
+            </>)}/>
+        </>)}
 
         {!props.edit && (
         <p>

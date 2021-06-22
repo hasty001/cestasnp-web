@@ -14,7 +14,7 @@ const Image = (props) => {
   if (props.value && props.value != "None") {
     image = fixImageUrl(props.value);
 
-    imagePreview = props.small ? fixImageUrl(image, 'c_fill,f_auto,w_240,h_240') 
+    imagePreview = props.small ? fixImageUrl(image, 'c_fill,f_auto,g_auto,w_240,h_240') 
       : props.large ? fixImageUrl(image, 'c_limit,f_auto,w_800,h_800')
         : fixImageUrl(image, 'c_limit,f_auto,w_400,h_400');
   }

@@ -246,7 +246,7 @@ DB.prototype = {
     const start = formatAsDate(new Date(date || Date.now()) - _const.InterestingPrevMonths * 31 * _const.Day);
               
     return this.findBy(db, _const.DetailsTable, { 
-      $and: [{ finishedTracking: true}, 
+      $and: [{ finishedTracking: true }, { cancelled: { $ne: true } },
         { $or: [{start_date: { $lte: now }}, {end_date: { $lte: now }}]},
         { $or: [{start_date: { $gte: start }}, {end_date: { $gte: start }}]}] })
       .then(finished => {
@@ -310,7 +310,7 @@ DB.prototype = {
   },
 
   getActiveTravellersWithLastMessage(db, date, maxCount) {
-    return this.findBy(db, _const.DetailsTable, { finishedTracking: false })
+    return this.findBy(db, _const.DetailsTable, { finishedTracking: false, cancelled: { $ne: true } })
       .then(activeTravellers => {
         var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
           
@@ -443,7 +443,8 @@ DB.prototype = {
             $set: {
               finishedTracking: true,
               end_date: endDate,
-              completed
+              completed,
+              finishedManual: false
             }
           }));
   },
@@ -527,7 +528,9 @@ DB.prototype = {
       number,
       completed,
       email,
-      finishedTracking
+      finishedTracking,
+      cancelled,
+      finishedManual
     }) {
     return dbConnect(db =>
       dbCollection(db, _const.DetailsTable)
@@ -543,6 +546,8 @@ DB.prototype = {
               number: sanitize(number), // pocet ucastnikov
               email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
               finishedTracking: sanitize(finishedTracking),
+              cancelled: sanitize(cancelled),
+              finishedManual: sanitize(finishedManual),
               lastUpdated: momentDateTime()
             }
           }, { returnOriginal: false }
@@ -648,14 +653,17 @@ DB.prototype = {
           message._id = msgRes.insertedId;
 
           return dbCollection(db, _const.DetailsTable)
-            .findOneAndUpdate({ user_id: message.user_id }, {
+            .findOneAndUpdate({ user_id: message.user_id, finishedManual: { $ne: true } }, {
                 $set: {
                   finishedTracking: false,
                   end_date: ''
                 }
               })
-            .then(() => {
-              console.log(`${message.user_id} reactivated`);
+            .then(res => {
+              if (res.value) {
+                console.log(`${message.user_id} reactivated`);
+              }
+              
               return Promise.resolve(message);
             });
         });
