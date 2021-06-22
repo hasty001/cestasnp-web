@@ -36,6 +36,7 @@ router.post('/comments', (req, res) => {
 
 router.get('/finishedTravellers', (req, res) => {
   promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, {
+    cancelled: { $ne: true },
     finishedTracking: true,
     end_date: { $ne: '' }
   }, {}, { end_date: -1 }), res);
@@ -46,18 +47,18 @@ router.get('/activeTravellersWithLastMessage', (req, res) => {
     db.getActiveTravellersWithLastMessage(req.app.locals.db, req.query.date, req.query.maxCount).then(travellers => {
       const now = momentDate();
 
-      const expired = travellers.filter(t => !t.finishedTracking).map(t => {
+      const expired = travellers.filter(t => !t.finishedTracking && !t.finishedManual).map(t => {
         const startDate = momentDate(t.start_date);
 
         var published = t.lastMessage && t.lastMessage.pub_date ? momentDate(t.lastMessage.pub_date) : null;
 
-        if (!published && differenceInDays(now, startDate) >= 3) {
-          // no message and started 3 or more days before now
+        if (!published && differenceInDays(now, startDate) >= 7) {
+          // no message and started 7 or more days before now
           return { user_id: t.user_id, completed: 0, pub_date: startDate };
         }
 
-        if (published && startDate.valueOf() < now.valueOf() && differenceInDays(now, published) >= 3) {       
-          // started, last message older than 3 days
+        if (published && startDate.valueOf() < now.valueOf() && differenceInDays(now, published) >= 7) {       
+          // started, last message older than 7 days
           return { user_id: t.user_id, completed: differenceInDays(now, startDate) >= 14, pub_date: published };
         }
 
@@ -79,7 +80,7 @@ router.get('/activeTravellersWithLastMessage', (req, res) => {
 });
 
 router.get('/activeTravellers', (req, res) => {
-  promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, { finishedTracking: false }), res);
+  promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, { cancelled: { $ne: true }, finishedTracking: false }), res);
 });
 
 router.post('/addComment', (req, res) => {
@@ -243,7 +244,9 @@ router.post('/updateTraveller', (req, res) => {
     end_date,
     completed,
     email,
-    finishedTracking
+    finishedTracking,
+    cancelled,
+    finishedManual
   } = req.body;
 
   checkToken(req, res, uid, () =>
@@ -257,8 +260,10 @@ router.post('/updateTraveller', (req, res) => {
       end_date,
       completed,
       email,
-      finishedTracking
-    }), () => meno && text && start_date);
+      finishedTracking,
+      cancelled,
+      finishedManual
+    }), () => meno && text && start_date && (!finishedTracking || cancelled || end_date));
 });
 
 router.post('/sendMessage', (req, res) => {
