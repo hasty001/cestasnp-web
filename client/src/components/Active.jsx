@@ -75,7 +75,7 @@ const Active = (props) => {
       <DivWithLoader absolute className="active-travellers" 
         loading={loading} error={error}>
         {!loading && !error && !!travellers && travellers.map((traveller, i) => (
-          <A key={i} href={`/na/${traveller.user_id}`}>
+          <A key={i} href={`/na/${traveller.url_name || traveller.user_id}`}>
             <div className={`active-traveller ${traveller.started ? 'started' : ''}`.trim()} style={{backgroundColor: traveller.color, borderColor: traveller.color}}>
               <div className="active-traveller-name">               
                 {traveller.started && <div className="active-traveller-marker">

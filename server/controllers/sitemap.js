@@ -10,7 +10,7 @@ const router = express.Router();
 
 const getJourneys = (dbRef) =>
   db.findBy(dbRef, _const.DetailsTable, {}, 
-    { projection: { user_id: 1, finishedTracking: 1, start_date: 1, lastUpdated: 1 } }, { start_date: -1 })
+    { projection: { user_id: 1, finishedTracking: 1, start_date: 1, lastUpdated: 1, url_name: 1 } }, { start_date: -1 })
     .then(travellers => {
       var travellersIds = travellers.map(({user_id}) => user_id);
 
@@ -75,7 +75,7 @@ router.get('*', (req, res) => {
   </url>`).join('\n'),
         journeys.map(p => 
         `  <url>
-    <loc>https://cestasnp.sk/na/${p.user_id}</loc>
+    <loc>https://cestasnp.sk/na/${p.url_name || p.user_id}</loc>
     <lastmod>${escapeDate(p.modified)}</lastmod>
     <changefreq>${!p.finishedTracking ? 'daily' : 'yearly'}</changefreq>
     <priority>${!p.finishedTracking ? '1' : '0.4'}</priority>

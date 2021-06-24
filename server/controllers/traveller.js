@@ -34,6 +34,10 @@ router.post('/comments', (req, res) => {
   promiseAsJson(() => db.getTravellerComments(req.app.locals.db, req.body.articleId, req.body.travellerId), res);
 });
 
+router.get('/getUrlNames', (req, res) => {
+  promiseAsJson(() => db.getUrlNames(), res);
+});
+
 router.get('/finishedTravellers', (req, res) => {
   promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, {
     finishedTracking: true,
