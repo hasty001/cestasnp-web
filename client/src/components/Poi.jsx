@@ -21,6 +21,7 @@ import MapControl from './MapControl';
 const Poi = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [poi, setPoi] = useState(null);
   const [historyPoi, setHistoryPoi] = useState(null);
   const [deleteBox, setDeleteBox] = useState(false);
@@ -50,6 +51,7 @@ const Poi = (props) => {
   const fetchData = () => {
     setLoading(true);
     setError('');
+    setNotFound('');
 
     fetchJson('/api/pois/' + props.match.params.poi)
       .then(value => {
@@ -59,7 +61,11 @@ const Poi = (props) => {
       })
       .catch(e => {
         setLoading(false);
-        setError(Texts.GenericError);
+        if (e.errorCode == "NotFound") {
+          setNotFound(e.error);
+        } else {
+          setError(Texts.GenericError);
+        }
 
         console.error("Poi loading error: ", e);
       });
@@ -89,7 +95,7 @@ const Poi = (props) => {
   const caption = poi ? (historyPoi || poi).name || findPoiCategory((historyPoi || poi).category).label : "";
 
   return (
-    <PageWithLoader pageId="PoiDetail">
+    <PageWithLoader pageId="PoiDetail" notFound={notFound}>
       {!!poi && <MapControl id="poi-map" showDeleted pois={[historyPoi || poi]} view={{ lat: (historyPoi || poi).coordinates[1], lon: (historyPoi || poi).coordinates[0], zoom: 13 }}/>}
       <DivWithLoader className="PoiDetail" loading={loading} error={error}>
       {!!poi && (

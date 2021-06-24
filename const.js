@@ -52,6 +52,8 @@ const MessagesTable = "traveler_messages";
 const CommentsTable = "traveler_comments";
 const ArticleCommentsTable = "article_comments";
 
+const DetailNamesTable = "traveler_detail_names";
+
 module.exports = {
   Minute, Hour, Day,
   InterestingShowCount, InterestingPrevMonths, MinRating, CommentRating, ImageRating, TextRatingPerChar, 
@@ -61,5 +63,6 @@ module.exports = {
   HomeArticlesCount, PageSize, NearPoisWarningDistance,
   NearMaxLatDistance, NearMaxLonDistance, NearMaxDistance,
   UsersTable, DetailsTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,
-  MessagesTable, CommentsTable, ArticleCommentsTable
+  MessagesTable, CommentsTable, ArticleCommentsTable,
+  DetailNamesTable
 };

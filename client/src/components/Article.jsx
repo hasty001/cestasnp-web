@@ -15,6 +15,7 @@ import MapControl from './MapControl';
 const Article = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [article, setArticle] = useState(null);
   const [preview, setPreview] = useState(null);
 
@@ -52,6 +53,7 @@ const Article = (props) => {
   const fetchData = () => {
     setLoading(true);
     setError('');
+    setNotFound('');
 
     fetchJson(`/api/articles/article/${props.match.params.articleId}`)
       .then(value => {
@@ -67,7 +69,11 @@ const Article = (props) => {
       })
       .catch(e => {
         setLoading(false);
-        setError('Článok sme nenašli :(');
+        if (e.errorCode == "NotFound") {
+          setNotFound(e.error);
+        } else {
+          setError(Texts.GenericError);
+        }
 
         console.error("Article loading error: ", e);
       });
@@ -96,7 +102,7 @@ const Article = (props) => {
   };
 
   return (
-    <PageWithLoader pageId="Article" loading={loading} error={error}>
+    <PageWithLoader pageId="Article" loading={loading} error={error} notFound={notFound}>
       {!!article && (
         <>
           <DocumentTitle title={`${article.title}${Constants.WebTitleSuffix}`} />

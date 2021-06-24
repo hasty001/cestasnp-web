@@ -359,7 +359,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
           kind: 'stop',
           data: t,
           popupId: t.lastMessage._id,
-          popup: `<p><b>${generateAnchor(`/na/${t.user_id}#${t.lastMessage._id}`, '0', escapeHtml(t.meno))}</b></p>
+          popup: `<p><b>${generateAnchor(`/na/${t.url_name || t.user_id}#${t.lastMessage._id}`, '0', escapeHtml(t.meno))}</b></p>
             <p>${dateTimeToStr(t.lastMessage.pub_date)}</p>
             <p>${htmlSimpleSanitize(t.lastMessage.text)}</p>`,
           geometry: new Point(fromLonLat([t.lastMessage.lon, t.lastMessage.lat]))

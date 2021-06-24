@@ -82,7 +82,7 @@ const Message = (props) => {
 
   return (
     <FormWithLoader formId="MessageForm" title="Poslať správu" submitText="Poslať správu"
-      description={(<p>Správa bude pridaná do LIVE sledovanie z <A href={`/na/${props.userData.userDetails.uid}`}>tvojej cesty</A>.</p>)}
+      description={(<p>Správa bude pridaná do LIVE sledovanie z <A href={`/na/${props.userData.travellerDetails.url_name || props.userData.userDetails.uid}`}>tvojej cesty</A>.</p>)}
       onSubmit={sendMessage} loading={loading} error={errorMsg} success={successMsg} errorFirst={errorMsgFirst}>
       
       <FormLatLon value={[gps, setGps]} edit={[gpsEdit, setGpsEdit]} onError={setErrorMsgFirst}/>

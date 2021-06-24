@@ -46,4 +46,29 @@ const escapeDate = (date) => {
   }
 }
 
-module.exports = { escape, escapeImg, escapeDate };
+const fix = (s, m) => {
+  if (!s || !m) {
+    return s;
+  }
+
+  var result = s;
+  while (result.indexOf(m + m) >= 0) {
+    result = result.replace(m + m, m);
+  }
+
+  if (result.startsWith(m)) {
+    result = result.slice(m.length);
+  }
+
+  if (result.endsWith(m)) {
+    result = result.slice(0, -m.length);
+  }
+
+  return result;
+}
+
+const toUrlName = (s) => {
+  return fix(s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/&/g, 'a').toLowerCase().replace(/[^a-z0-9]/g, "-"), '-');
+}
+
+module.exports = { escape, escapeImg, escapeDate, toUrlName };

@@ -755,6 +755,7 @@ li.red-button>a:active {
   min-width: calc(100vw - 100px);
   margin: 0 50px;
   overflow: hidden;
+  min-height: 600px;
 }
 
 .home-articles-and-box {
