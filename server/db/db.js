@@ -1171,7 +1171,7 @@ DB.prototype = {
     ])
       .then(([details, names]) => {
         const url_names = details.concat(names).filter(d => d.url_name).map(d => d.url_name)
-          .concat(details.map(d => d.user_id));
+          .concat(details.map(d => d.user_id)).concat(['archive', 'ceste', 'dennik']);
         
         return [details, url_names];
       });
