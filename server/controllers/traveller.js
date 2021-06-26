@@ -38,6 +38,10 @@ router.post('/comments', (req, res) => {
   }
 });
 
+router.get('/getUrlNames', (req, res) => {
+  promiseAsJson(() => db.getUrlNames(), res);
+});
+
 router.get('/finishedTravellers', (req, res) => {
   promiseAsJson(() => db.findBy(req.app.locals.db, _const.DetailsTable, {
     cancelled: { $ne: true },

@@ -164,7 +164,7 @@ const TravellerAccount = (props) => {
         <>
           <h2>Moja cesta</h2>
           <p>
-            Tu si môžeš upraviť detaily <A href={`/na/${props.userData.userDetails.uid}`}>tvojej cesty</A>:
+            Tu si môžeš upraviť detaily <A href={`/na/${props.userData.travellerDetails.url_name || props.userData.userDetails.uid}`}>tvojej cesty</A>:
           </p>
         </>)
         : (

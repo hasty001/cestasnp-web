@@ -51,7 +51,7 @@ const Traveller = (props) => {
       };
 
       return Promise.all([
-        fetchJson(`/api/traveller/messages/${travellerId}`), 
+        fetchJson(`/api/traveller/messages/${data[0].user_id}`), 
         fetchPostJson('/api/traveller/comments', commentData)]);
     })
     .then(([msgData, comments]) => {
@@ -88,7 +88,7 @@ const Traveller = (props) => {
   }, [messagesData, orderFromOld]);
 
   useEffect(() => {
-    if (authData.userDetails && authData.userDetails.uid == travellerId &&
+    if (authData.userDetails && traveller && authData.userDetails.uid == traveller.user_id &&
       messagesData) {
 
       const msgs = messagesData.filter(m => m.isComment).map(m => m);
@@ -97,12 +97,12 @@ const Traveller = (props) => {
       const lastComment = msgs.find(m => !authData.userDetails.lastViewed || m.date > authData.userDetails.lastViewed);
 
       if (lastComment) {
-        fetchPostJsonWithToken(authData.user, '/api/traveller/view', { uid: travellerId, date: lastComment.date })
+        fetchPostJsonWithToken(authData.user, '/api/traveller/view', { uid: traveller.user_id, date: lastComment.date })
         .then(details => authData.updateTravellerDetails(details))
         .catch(err => console.error(err));
       }
     }
-  }, [messagesData, authData.userDetails]);
+  }, [messagesData, authData.userDetails, traveller]);
 
   useEffect(() => {
     setOrderFromOld(window.location.search === Constants.FromOldQuery);
@@ -212,6 +212,7 @@ const Traveller = (props) => {
         <div className="na-ceste-traveller-msgs">
           {messages.map((message, i) => <TravellerMessage key={i} inTraveller 
             travellerUserId={traveller ? traveller.user_id : ''}
+            travellerUrlName={traveller ? (traveller.url_name || traveller.user_id) : ''}
             message={message} travellerName={traveller ? traveller.meno : ''}
             userData={authData} deleteMessage={message.isComment ? 
               handleDeleteCommentClick : handleDeleteMessageClick}/>)}
@@ -247,7 +248,7 @@ const Traveller = (props) => {
 
       <div className="traveller-buttons-panel">
         <div className="traveller-buttons">
-          {!!authData.userDetails && authData.userDetails.uid == travellerId && 
+          {!!authData.userDetails && !!traveller && authData.userDetails.uid == traveller.user_id && 
             <button
               className="snpBtn no-print"
               onClick={() => navigate("/ucet/poslatspravu")}

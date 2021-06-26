@@ -93,7 +93,7 @@ const Book = (props) => {
 
       return Promise.all([
         data[0],
-        fetchJson(`/api/traveller/messages/${travellerId}`), 
+        fetchJson(`/api/traveller/messages/${data[0].user_id}`), 
         fetchPostJson('/api/traveller/comments', commentData)]);
     })
     .then(([data, msgData, comments]) => {

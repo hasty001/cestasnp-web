@@ -17,7 +17,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
   return Promise.all([db.getUserNames(dbRef, null), 
     s_uid ? db.findBy(dbRef, _const.UsersTable, { uid: s_uid }).then(u => u && u.length > 0 ? u[0] : null) : Promise.resolve(null),
-    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { user_id: 1, articleID: 1, sql_id: 1, meno: 1 }}),
+    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { user_id: 1, articleID: 1, sql_id: 1, meno: 1, url_name: 1 }}),
     db.findBy(dbRef, _const.FindBuddiesTable, {}, { projection: { user_id: 1 }})])
   .then(([users, user, details, findBuddies]) => {
     const s_from = formatAsDate(from || new Date(0));
@@ -54,14 +54,14 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       return index >= 0 ? users[index].name : "";
     }
 
-    const getDetailUserId = (item) => {
-      const index = details.findIndex(u => 
+    const getDetailUrlName = (item, isMsg = false) => {
+      const index = details.findIndex(u => (isMsg && u.user_id == item.user_id) || 
         (item.travellerDetails && u._id.toString() == item.travellerDetails.id) || (item.article_sql_id && u.articleID == item.article_sql_id));
-      return index >= 0 ? details[index].user_id : "";
+      return index >= 0 ? (details[index].url_name || details[index].user_id) : "";
     }
 
-    const getDetailName = (item) => {
-      const index = details.findIndex(u => u.user_id == item.user_id ||
+    const getDetailName = (item, isMsg = false) => {
+      const index = details.findIndex(u => (isMsg && u.user_id == item.user_id) ||
         (item.travellerDetails && u._id.toString() == item.travellerDetails.id) || (item.article_sql_id && u.articleID == item.article_sql_id));
       return index >= 0 ? details[index].meno : "";
     }
@@ -118,7 +118,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       dbPromise(_const.ArticlesHistoryTable, myArticles, ['created_by', 'author'], 'modified', 'modified', 'modified_by', item => item['title'], 'note', getArticleUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
-    const getDetailUrl = (item) => `/na/${item.user_id}`;
+    const getDetailUrl = (item) => `/na/${item.url_name || item.user_id}`;
     const promiseDetails = (!s_items || s_items.indexOf('details') >= 0) ? Promise.all([
       dbPromise(_const.DetailsTable, null, ['user_id'], 'created', 'created', 'user_id', item => item['meno'], '', getDetailUrl),
       dbPromise(_const.DetailsTable, null, ['user_id'], 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
@@ -133,17 +133,17 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
     const getFindBuddiesCommentUrl = (item) => `/pred/hladampartakov/${getFindBuddiesUserId(item.findBuddiesId)}#${item._id}`;
     const promiseFindBuddiesComments = (!s_items || s_items.indexOf('answers') >= 0) ? Promise.all([
-      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'created', 'date', 'uid', item =>getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
+      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'created', 'date', 'uid', item => getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
       dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'deleted', 'del_date', 'del_by', item => getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
-    const getMessageUrl = (item) => `/na/${item.user_id}#${item._id}`;
+    const getMessageUrl = (item) => `/na/${getDetailUrlName(item, true)}#${item._id}`;
     const promiseMessages = (!s_items || s_items.indexOf('messages') >= 0) ? Promise.all([
-      dbPromise(_const.MessagesTable, null, ['user_id'], 'created', 'pub_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
-      dbPromise(_const.MessagesTable, null, ['user_id'], 'deleted', 'del_date', 'user_id', item => getDetailName(item), '', getMessageUrl),
+      dbPromise(_const.MessagesTable, null, ['user_id'], 'created', 'pub_date', 'user_id', item => getDetailName(item, true), '', getMessageUrl),
+      dbPromise(_const.MessagesTable, null, ['user_id'], 'deleted', 'del_date', 'user_id', item => getDetailName(item, true), '', getMessageUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
-    const getCommentUrl = (item) => `/na/${getDetailUserId(item)}#${item._id}`;
+    const getCommentUrl = (item) => `/na/${getDetailUrlName(item)}#${item._id}`;
     const promiseComments = (!s_items || s_items.indexOf('comments') >= 0) ? Promise.all([
       dbPromise(_const.CommentsTable, null, ['uid'], 'created', 'date', 'uid', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),
       dbPromise(_const.CommentsTable, null, ['uid'], 'deleted', 'del_date', 'del_by', item => item.travellerDetails.name, '', getCommentUrl, item => item.name),

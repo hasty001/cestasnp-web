@@ -134,7 +134,7 @@ const Navigation = () => {
 
             {!!authData.isAuth && !!hasNewTravellerCommentsText && (
             <NavRouterItem
-              href={`/na/${authData.userDetails.uid}#${newComments.traveller[0]._id}`}
+              href={`/na/${authData.travellerDetails.url_name || authData.userDetails.uid}#${newComments.traveller[0]._id}`}
               eventKey={100}
               title={hasNewTravellerCommentsText}
               className="mobile new-comments"
@@ -311,7 +311,7 @@ const Navigation = () => {
 
           {!!authData.isAuth && !!hasNewTravellerCommentsText && (
             <NavRouterItem
-              href={`/na/${authData.userDetails.uid}#${newComments.traveller[0]._id}`}
+              href={`/na/${authData.travellerDetails.url_name || authData.userDetails.uid}#${newComments.traveller[0]._id}`}
               eventKey={200}
               title={hasNewTravellerCommentsText}
               className="desktop new-comments"
