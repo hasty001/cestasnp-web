@@ -2,6 +2,10 @@ const fetchJson = (url) =>
   fetch(url).then(res => res.json())
   .then(res => { 
     if (res && res.error) {
+      if (res.errorCode) {
+        throw res;
+      }
+
       throw res.error;
     }
     return res;
@@ -17,6 +21,10 @@ const fetchPostJson = (url, data) =>
   }).then(res => res.json())
   .then(res => { 
     if (res && res.error) {
+      if (res.errorCode) {
+        throw res;
+      }
+
       throw res.error;
     }
     return res;
@@ -36,6 +44,10 @@ const fetchPostJsonWithToken = (user, url, data) =>
       .then(res => res.json()))
       .then(res => { 
         if (res && res.error) {
+          if (res.errorCode) {
+            throw res;
+          }
+          
           throw res.error;
         }
         return res;

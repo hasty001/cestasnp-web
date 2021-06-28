@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import Search from '../Search';
+import PageWithLoader from './PageWithLoader';
 
-const NotFound = () => {
+const NotFound = ({ text }) => {
+
+  const fix = (url) => {
+    return url.replaceAll("/", " ").replaceAll("-", " ").trim();
+  }
+
+  useEffect(() => {
+    window.location.hash = "gsc.q=" + fix(window.location.pathname);
+  }, []);
+
   return (
-    <div style={{ width: '400px', margin: '20px auto' }}>
-      <h2>404</h2>
-      <p>Článok sme nenašli :(</p>
-    </div>
+    <PageWithLoader pageId="Search" title={404}>
+      <p>{text || "Článok sme nenašli :(."} Zkus hľadanie:</p>
+      <Search noPage/>
+    </PageWithLoader>
   );
 };
 

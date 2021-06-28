@@ -17,6 +17,7 @@ import MapControl from './MapControl';
 const Traveller = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [notFound, setNotFound] = useState('');
 
   const [traveller, setTraveller] = useState();
   const [messagesData, setMessagesData] = useState([]);
@@ -36,11 +37,12 @@ const Traveller = (props) => {
   const fetchData = () => {
     setLoading(true);
     setError('');
+    setNotFound('');
 
     fetchJson(`/api/traveller/details/${travellerId}`)
     .then((data) => {
       if (data.length == 0) {
-        setError("Momentálne nie je na ceste ani cestu neplánuje.");
+        setNotFound("Momentálne nie je na ceste ani cestu neplánuje.");
         return [[], []];
       }
 
@@ -195,7 +197,8 @@ const Traveller = (props) => {
   }
 
   return (
-    <PageWithLoader pageId="Traveller" pageTitle={traveller ? (traveller.meno + Constants.WebTitleSuffix) : null}>
+    <PageWithLoader pageId="Traveller" pageTitle={traveller ? (traveller.meno + Constants.WebTitleSuffix) : null}
+      notFound={notFound}>
       <MapControl
         id="na-ceste-map-traveller"
         start={traveller ? traveller.start_miesto : null}
