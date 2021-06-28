@@ -14,6 +14,12 @@ const { toUrlName } = require('../util/escapeUtils');
 
 const securityCheck = new Validation();
 
+const ErrorNoTravel = () => Promise.reject({ errorCode: "NotFound", error: "Cesta nebola nájdená." });
+const ErrorNoArticle = () => Promise.reject({ errorCode: "NotFound", error: "Článok nebol nájdený." });
+const ErrorNoPoi = () => Promise.reject({ errorCode: "NotFound", error: "Dôležité miesto nebolo nájdené." });
+const ErrorNoComment = () => Promise.reject({ errorCode: "NotFound", error: "Komentár nebol nájdený." });
+const ErrorNoMessage = () => Promise.reject({ errorCode: "NotFound", error: "Správa nebola nájdená." });
+
 // eslint-disable-next-line func-names
 const DB = function() {
   this.url = process.env.MONGODB_ATLAS_URI;
@@ -409,7 +415,7 @@ DB.prototype = {
             if (res.value) {
               return Promise.resolve(res.value);
             } else {
-              return Promise.reject('Komentár nebol nájdený.');
+              return ErrorNoComment();
             }
           });
         }));
@@ -490,10 +496,8 @@ DB.prototype = {
     return dbConnect(db =>
       dbCollection(db, _const.DetailsTable)
         .findOneAndUpdate({ user_id: sanitizeUserId(uid) }, { $set: { lastViewed: sanitize(date) } }, { returnOriginal: false }
-          )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
+          )).then(res => res.value ? Promise.resolve(res.value) : ErrorNoTravel());
   },
-
-  ErrorNoTravel() { return Promise.reject("Cesta nebola nájdená.") },
 
   updateTraveller({
       meno,
@@ -545,7 +549,7 @@ DB.prototype = {
               }, { returnOriginal: false }
             ));
           })
-        }).then(res => res.value ? Promise.resolve(res.value) : this.ErrorNoTravel());
+        }).then(res => res.value ? Promise.resolve(res.value) : ErrorNoTravel());
   },
 
   sendMessage(message) {
@@ -584,7 +588,7 @@ DB.prototype = {
           if (res.value) {
             return Promise.resolve(res.value);
           } else {
-            return Promise.reject('Správa nebola nájdená.');
+            return ErrorNoMessage();
           }
         }));
   },
@@ -637,7 +641,7 @@ DB.prototype = {
         .findOne({ _id: new ObjectId(id) })
         .then(current => {
           if (!current) {
-            return Promise.reject('Dôležité miesto nebolo nájdené.');
+            return ErrorNoPoi();
           }
           delete current._id;
           current.poiId = id;
@@ -656,7 +660,7 @@ DB.prototype = {
                   if (res.value) {
                     return this.fillPoiInfo(db, res.value._id, res.value);
                   } else {
-                    return Promise.reject('Dôležité miesto nebolo nájdené.');
+                    return ErrorNoPoi();
                   }
                 });
             });
@@ -725,7 +729,7 @@ DB.prototype = {
             if (res.value) {
               return this.fillPoiInfo(db, res.value._id, res.value);
             } else {
-              return Promise.reject('Dôležité miesto nebolo nájdené.');
+              return ErrorNoPoi();
             }
         })));
   },
@@ -738,13 +742,13 @@ DB.prototype = {
       dbCollection(db, _const.PoisTable)
       .findOne({ _id: new ObjectId(sId) }).then(poi => {
         if (!poi) {
-          return Promise.reject('Dôležité miesto nebolo nájdené.');            
+          return ErrorNoPoi();            
         }
 
         return dbCollection(db, _const.UsersTable)
         .findOne({ uid: sUid }).then(userDetails => {
           if (!userDetails) {
-            return Promise.reject('Neexistujúci užívateľ.');
+            return ErrorNoUser();
           }
 
           const isMy = 
@@ -777,7 +781,7 @@ DB.prototype = {
             if (res.value) {
               return Promise.resolve(res.value);
             } else {
-              return Promise.reject('Neexistujúci užívateľ.');
+              return ErrorNoUser();
             }
           });
         });
@@ -853,7 +857,7 @@ DB.prototype = {
       this.findBy(db, _const.PoisHistoryTable, { poiId: poiId.toString() } ,[], { modified: -1 }),
     ]).then(([poi, history]) => {
       if (!poi) {
-        return Promise.reject('Dôležité miesto nebolo nájdené.');
+        return ErrorNoPoi();
       }
 
       const uids = this.getUids([poi].concat(history || []), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
@@ -895,6 +899,10 @@ DB.prototype = {
   getPoi(db, poiId) { 
     const sPoiId = sanitize(poiId);
 
+    if (!ObjectId.isValid(sPoiId)) {
+      return ErrorNoPoi();
+    }
+
     return this.fillPoiInfo(db, sPoiId, 
       dbCollection(db, _const.PoisTable).findOne({ _id: new ObjectId(sPoiId) }));
   },
@@ -907,13 +915,13 @@ DB.prototype = {
       dbCollection(db, _const.ArticlesTable).findOne({ sql_article_id: sId })
       .then(article => {
         if (!article) {
-          return Promise.reject('Článok nebol nájdený.');            
+          return ErrorNoArticle();            
         }
 
         return dbCollection(db, _const.UsersTable).findOne({ uid: sUid })
         .then(userDetails => {
           if (!userDetails) {
-            return Promise.reject('Neexistujúci užívateľ.');
+            return ErrorNoUser();
           }
 
           const isMy = 
@@ -946,7 +954,7 @@ DB.prototype = {
             if (res.value) {
               return Promise.resolve(res.value);
             } else {
-              return Promise.reject('Neexistujúci užívateľ.');
+              return ErrorNoUser();
             }
           });
         });
@@ -977,7 +985,7 @@ DB.prototype = {
       this.findBy(db, _const.ArticlesHistoryTable, { sql_article_id: sql_article_id }, {}, { modified: -1 }),
     ]).then(([article, history]) => {
       if (!article) {
-        return Promise.reject('Článok nebol nájdený.');
+        return ErrorNoArticle();
       }
 
       const uids = this.getUids([article].concat(history || []), [p => p.created_by, 
@@ -1101,7 +1109,7 @@ DB.prototype = {
         return dbCollection(db,_const.ArticlesTable)
           .findOne({ sql_article_id: s_id }).then(current => {
             if (!current) {
-              return Promise.reject('Článok nebol nájdený.');
+              return ErrorNoArticle();
             }
             
             if (!forReview) {
@@ -1127,7 +1135,7 @@ DB.prototype = {
                     if (res.value) {
                       return this.fillArticleInfo(db, res.value.sql_article_id, res.value);
                     } else {
-                      return Promise.reject('Článok nebol nájdený.');
+                      return ErrorNoArticle();
                     }
                   });
               });

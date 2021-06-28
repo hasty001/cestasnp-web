@@ -1,10 +1,13 @@
 import React from 'react';
 import DocumentTitle from 'react-document-title';
 import Loader from './Loader';
+import NotFound from './NotFound';
 
 const PageWithLoader = (props) => {
   
-  return (
+  return props.notFound ? 
+    <NotFound text={props.notFound}/> 
+    : (
     <div id={props.pageId} className={props.className || ''} >
       {!!props.pageTitle && <DocumentTitle title={props.pageTitle} />}
       {!!props.loading && !props.error && <Loader />}

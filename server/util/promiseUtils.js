@@ -10,7 +10,7 @@ const promiseAsJson = (promise, res) => {
   .catch(error => {
     console.error(error);
 
-    res.status(500).json({ error: error.toString() });
+    res.status(500).json(error && error.error ? error : { error: error.toString() });
   });
 }
 
