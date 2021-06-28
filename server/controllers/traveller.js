@@ -92,14 +92,22 @@ router.get('/activeTravellersWithLastMessage', (req, res) => {
 
         var published = t.lastMessage && t.lastMessage.pub_date ? momentDate(t.lastMessage.pub_date) : null;
 
+        if (t.lastUpdated && (!published || published.valueOf() < momentDate(t.lastUpdated).valueOf())) {
+          published =  momentDate(t.lastUpdated);
+        }
+
+        if (published && published.valueOf() < startDate.valueOf()) {
+          published = null;
+        }
+
         if (!published && differenceInDays(now, startDate) >= 7) {
-          // no message and started 7 or more days before now
+          // no message or change and started 7 or more days before now
           return { user_id: t.user_id, completed: 0, pub_date: startDate };
         }
 
         if (published && startDate.valueOf() < now.valueOf() && differenceInDays(now, published) >= 7) {       
-          // started, last message older than 7 days
-          return { user_id: t.user_id, completed: differenceInDays(now, startDate) >= 14, pub_date: published };
+          // started, last message or change older than 7 days
+          return { user_id: t.user_id, completed: differenceInDays(published, startDate) >= 14, pub_date: published };
         }
 
         return null;
