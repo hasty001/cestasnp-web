@@ -222,7 +222,7 @@ const getPoiMeta = (dbRef, poiId) =>
 const getTravelerMeta = (dbRef, urlName) => 
   db.getTravellerDetails(dbRef, urlName)
     .then(results => {
-      if (results && results.length > 0) {
+      if (results && results.length > 0 && !results[0].cancelled) {
         const userId = results[0].user_id;
         const desc = escape(results[0].text);
         const url_name = results[0].url_name || results[0].user_id;
