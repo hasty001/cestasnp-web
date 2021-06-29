@@ -215,12 +215,12 @@ DB.prototype = {
         }});
   },
 
-  getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount) {
+  getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount, skipUserIds = []) {
     const now = formatAsDate(date || Date.now());
     const start = formatAsDate(new Date(date || Date.now()) - _const.InterestingPrevMonths * 31 * _const.Day);
               
     return this.findBy(db, _const.DetailsTable, { 
-      $and: [{ finishedTracking: true}, 
+      $and: [{ finishedTracking: true }, { cancelled: { $ne: true } }, { user_id: { $nin: skipUserIds } },
         { $or: [{start_date: { $lte: now }}, {end_date: { $lte: now }}]},
         { $or: [{start_date: { $gte: start }}, {end_date: { $gte: start }}]}] })
       .then(finished => {
@@ -284,7 +284,12 @@ DB.prototype = {
   },
 
   getActiveTravellersWithLastMessage(db, date, maxCount) {
-    return this.findBy(db, _const.DetailsTable, { finishedTracking: false })
+    const now = formatAsDate(date || Date.now());
+    const recent = formatAsDate(moment(date || Date.now()).add({ days: -2 }));
+
+    return this.findBy(db, _const.DetailsTable, 
+      { $or: [{ finishedTracking: false }, { finishedTracking: true, end_date: { $gt: recent } }], 
+        cancelled: { $ne: true } })
       .then(activeTravellers => {
         var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
           
@@ -307,11 +312,10 @@ DB.prototype = {
                   }
                 });
                 
-              const now = formatAsDate(date || Date.now());
               if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < (maxCount || _const.InterestingShowCount)) {
                 // no active only few planning, add some interesting
 
-                return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length)
+                return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length, activeTravellersIds)
                   .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
               }
 
@@ -406,7 +410,8 @@ DB.prototype = {
             $set: {
               finishedTracking: true,
               end_date: endDate,
-              completed
+              completed,
+              finishedManual: false
             }
           }));
   },
@@ -483,7 +488,9 @@ DB.prototype = {
       number,
       completed,
       email,
-      finishedTracking
+      finishedTracking,
+      cancelled,
+      finishedManual
     }) {
     return dbConnect(db =>
       dbCollection(db, _const.DetailsTable)
@@ -499,6 +506,8 @@ DB.prototype = {
               number: sanitize(number), // pocet ucastnikov
               email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
               finishedTracking: sanitize(finishedTracking),
+              cancelled: sanitize(cancelled),
+              finishedManual: sanitize(finishedManual),
               lastUpdated: momentDateTime()
             }
           }, { returnOriginal: false }
@@ -516,14 +525,17 @@ DB.prototype = {
           message._id = msgRes.insertedId;
 
           return dbCollection(db, _const.DetailsTable)
-            .findOneAndUpdate({ user_id: message.user_id }, {
+            .findOneAndUpdate({ user_id: message.user_id, finishedManual: { $ne: true } }, {
                 $set: {
                   finishedTracking: false,
                   end_date: ''
                 }
               })
-            .then(() => {
-              console.log(`${message.user_id} reactivated`);
+            .then(res => {
+              if (res.value) {
+                console.log(`${message.user_id} reactivated`);
+              }
+              
               return Promise.resolve(message);
             });
         });
