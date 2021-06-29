@@ -20,7 +20,7 @@ const getPublisher = () =>
                     "@type": "PostalAddress",
                     "addressLocality": "Banská Bystrica, Slovakia",
                     "postalCode": "974 01",
-                    "streetAddress": "Gaštanová 4"
+                    "streetAddress": "Gaštanová 6464/4"
                   },
                   "logo": {
                     "@type": "ImageObject",
