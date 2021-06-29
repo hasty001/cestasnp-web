@@ -223,7 +223,7 @@ const getTravelerMeta = (dbRef, userId) =>
   db
     .findBy(dbRef, _const.DetailsTable, { user_id: userId })
     .then(results => {
-      if (results && results.length > 0) {
+      if (results && results.length > 0 && !results[0].cancelled) {
         const desc = escape(results[0].text);
         
         return db

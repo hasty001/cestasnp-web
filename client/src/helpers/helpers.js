@@ -4,7 +4,7 @@ import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import DOMPurify from 'dompurify';
 import { navigate } from '../components/reusable/Navigate';
-import { addDays } from 'date-fns';
+import { addDays, differenceInDays } from 'date-fns';
 
 const sortByDateDesc = (array, date = 'date') => {
   return array.sort((a, b) => {
@@ -266,10 +266,13 @@ const getTravellersImages = travellers => travellers ?
 const sortActiveTravellers = (travellers, now) => {
   const pad = t => ("00000000000000000000" + t).slice(-20);
 
-  const getSortValue = t => (t.finishedTracking ? "11_" + pad(parseDate(t.start_date).valueOf()) 
+  const getSortValue = t => ((t.finishedTracking && differenceInDays(now, parseDate(t.end_date)) >= 2) ? 
+    ("11_" + pad(parseDate(t.start_date).valueOf())) 
     : ("0" + (parseDate(t.start_date) <= now && t.lastMessage ? 
       ("0_" + pad(addDays(now, 1).valueOf() - parseDate(t.lastMessage.pub_date).valueOf())) 
       : ("1_" + pad(parseDate(t.start_date).valueOf())))));
+
+  console.log(travellers.map(t => { return { sort: getSortValue(t), meno: t.meno, start: t.start_date, end: t.end_date, last: (t.lastMessage || {}).pub_date }; }));
 
   travellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
 

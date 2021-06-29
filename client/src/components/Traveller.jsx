@@ -39,7 +39,7 @@ const Traveller = (props) => {
 
     fetchJson(`/api/traveller/details/${travellerId}`)
     .then((data) => {
-      if (data.length == 0) {
+      if (data.length == 0 || data[0].cancelled) {
         setError("Momentálne nie je na ceste ani cestu neplánuje.");
         return [[], []];
       }

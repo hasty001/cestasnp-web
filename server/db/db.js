@@ -215,12 +215,12 @@ DB.prototype = {
         }});
   },
 
-  getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount) {
+  getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount, skipUserIds = []) {
     const now = formatAsDate(date || Date.now());
     const start = formatAsDate(new Date(date || Date.now()) - _const.InterestingPrevMonths * 31 * _const.Day);
               
     return this.findBy(db, _const.DetailsTable, { 
-      $and: [{ finishedTracking: true }, { cancelled: { $ne: true } },
+      $and: [{ finishedTracking: true }, { cancelled: { $ne: true } }, { user_id: { $nin: skipUserIds } },
         { $or: [{start_date: { $lte: now }}, {end_date: { $lte: now }}]},
         { $or: [{start_date: { $gte: start }}, {end_date: { $gte: start }}]}] })
       .then(finished => {
@@ -284,7 +284,12 @@ DB.prototype = {
   },
 
   getActiveTravellersWithLastMessage(db, date, maxCount) {
-    return this.findBy(db, _const.DetailsTable, { finishedTracking: false, cancelled: { $ne: true } })
+    const now = formatAsDate(date || Date.now());
+    const recent = formatAsDate(moment(date || Date.now()).add({ days: -2 }));
+
+    return this.findBy(db, _const.DetailsTable, 
+      { $or: [{ finishedTracking: false }, { finishedTracking: true, end_date: { $gt: recent } }], 
+        cancelled: { $ne: true } })
       .then(activeTravellers => {
         var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
           
@@ -307,11 +312,10 @@ DB.prototype = {
                   }
                 });
                 
-              const now = formatAsDate(date || Date.now());
               if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < (maxCount || _const.InterestingShowCount)) {
                 // no active only few planning, add some interesting
 
-                return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length)
+                return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length, activeTravellersIds)
                   .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
               }
 

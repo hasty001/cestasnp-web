@@ -19,12 +19,11 @@ const TravellerItem = ({ traveller, now, userData }) => {
         </span>)}
 
         <span className="traveller-date">              
-          {(!traveller.finishedTracking && !!traveller.lastMessage && (parseDate(traveller.start_date) <= now)) &&  (
+          {(!traveller.finishedTracking && !!traveller.lastMessage && (parseDate(traveller.start_date) <= now)) ? (
           <span>
             {dateTimeToStr(traveller.lastMessage.pub_date)}
-          </span>)} 
-
-          {((parseDate(traveller.start_date) > now) || !traveller.lastMessage) && (
+          </span>
+          ) : (
           <span>
             {traveller.start_miesto}{' '}
             {dateToStr(traveller.start_date)}                           
