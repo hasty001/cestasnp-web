@@ -5,7 +5,7 @@ import PageWithLoader from './reusable/PageWithLoader';
 
 const cx = process.env.SEARCH || '117643e9e51a56509';
 
-const Search = (noPage, query) => {
+const Search = ({noPage}) => {
   const [search, setSearch] = useState(null);
   const [loading, setLoading] = useState(false);
   
@@ -22,7 +22,7 @@ const Search = (noPage, query) => {
   }, []);
 
   return (
-    <PageWithLoader pageId={"Search" + noPage ? "NoPage" : ""} pageTitle={!noPage ? `Hľadanie${Constants.WebTitleSuffix}` : ''} 
+    <PageWithLoader pageId={"Search" + (noPage ? "NoPage" : "")} pageTitle={!noPage ? `Hľadanie${Constants.WebTitleSuffix}` : ''} 
       title={!noPage ? "Hľadanie" : ""} loading={loading}>
       <div>{search}</div>
     </PageWithLoader>
