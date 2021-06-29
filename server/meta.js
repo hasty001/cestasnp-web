@@ -219,12 +219,13 @@ const getPoiMeta = (dbRef, poiId) =>
       return Promise.reject(404);
   });
 
-const getTravelerMeta = (dbRef, userId) => 
-  db
-    .findBy(dbRef, _const.DetailsTable, { user_id: userId })
+const getTravelerMeta = (dbRef, urlName) => 
+  db.getTravellerDetails(dbRef, urlName)
     .then(results => {
       if (results && results.length > 0 && !results[0].cancelled) {
+        const userId = results[0].user_id;
         const desc = escape(results[0].text);
+        const url_name = results[0].url_name || results[0].user_id;
         
         return db
           .findBy(dbRef, _const.UsersTable, { $or: [{ sql_user_id: userId || -1 }, { uid: userId || -1 }] })
@@ -234,7 +235,7 @@ const getTravelerMeta = (dbRef, userId) =>
           .then(msg => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
             const title = escape(results[0].meno + WebSuffix);
-            const url = `https://cestasnp.sk/na/${escape(userId)}`;
+            const url = `https://cestasnp.sk/na/${escape(url_name)}`;
             const created = escapeDate(results[0].created);
             const published = escapeDate(results[0].start_date);
             const modified = msg && msg.length > 0 ? escapeDate(msg[0].pub_date) : '';
@@ -348,7 +349,7 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
 
   if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') 
       || path.startsWith('/na/ceste/textovo') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
-    const userId = sanitizeUserId(url.substr(4));
+    const userId = sanitize(url.substr(4));
 
     if (userId) {
       return resolve(getTravelerMeta(db, userId));

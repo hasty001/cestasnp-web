@@ -10,8 +10,15 @@ const _const = require('../../const');
 const { sanitizeUserId } = require('../util/checkUtils');
 const { momentDateTime, formatAsDate } = require('../util/momentUtils');
 const itinerary = require('../data/guideposts.json');
+const { toUrlName } = require('../util/escapeUtils');
 
 const securityCheck = new Validation();
+
+const ErrorNoTravel = () => Promise.reject({ errorCode: "NotFound", error: "Cesta nebola nájdená." });
+const ErrorNoArticle = () => Promise.reject({ errorCode: "NotFound", error: "Článok nebol nájdený." });
+const ErrorNoPoi = () => Promise.reject({ errorCode: "NotFound", error: "Dôležité miesto nebolo nájdené." });
+const ErrorNoComment = () => Promise.reject({ errorCode: "NotFound", error: "Komentár nebol nájdený." });
+const ErrorNoMessage = () => Promise.reject({ errorCode: "NotFound", error: "Správa nebola nájdená." });
 
 // eslint-disable-next-line func-names
 const DB = function() {
@@ -81,7 +88,23 @@ DB.prototype = {
 
   // traveller related
   getTravellerDetails(db, travellerId) {
-    return this.findBy(db, _const.DetailsTable, { user_id: sanitizeUserId(travellerId) });
+    return Promise.all([
+      this.findBy(db, _const.DetailsTable, 
+        { $or: [{ user_id: sanitizeUserId(travellerId) }, 
+          { url_name: sanitize(travellerId && travellerId.toLowerCase ? travellerId.toLowerCase() : travellerId) }]}),
+      this.findBy(db, _const.DetailNamesTable, { url_name: sanitize(travellerId && travellerId.toLowerCase ? travellerId.toLowerCase() : travellerId) })  
+    ])
+    .then(([details, names]) => {
+       if (details && details.length > 0) {
+         return details;
+       }
+
+       if (names && names.length > 0) {
+         return this.findBy(db, _const.DetailsTable, { _id: new ObjectId(names[0].id) });
+       }
+
+       return [];
+      });
   },
 
   getTravellerArticle(db, travellerId) {
@@ -396,7 +419,7 @@ DB.prototype = {
             if (res.value) {
               return Promise.resolve(res.value);
             } else {
-              return Promise.reject('Komentár nebol nájdený.');
+              return ErrorNoComment();
             }
           });
         }));
@@ -447,35 +470,38 @@ DB.prototype = {
 
   createTraveller({ meno, text, start_date, uid, start_miesto, number, email }) {
     return dbConnect(db => {
-      const travellerRecord = {
-        sql_id: '',
-        meno: sanitize(meno), // nazov skupiny
-        text: sanitize(text), // popis skupiny
-        start_date: sanitize(start_date),
-        end_date: '',
-        completed: '',
-        user_id: sanitize(uid),
-        start_miesto: sanitize(start_miesto),
-        number: sanitize(number), // pocet ucastnikov
-        email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
-        articleID: 0,
-        finishedTracking: false,
-        created: momentDateTime(),
-        lastUpdated: momentDateTime()
-      };
-
-      return dbCollection(db, _const.DetailsTable)
-        .insertOne(travellerRecord)
-        .then(() => Promise.resolve(travellerRecord));
-      }
-    );
+      return this.getDetailsNames(db)
+      .then(([t, names]) => {
+        const travellerRecord = {
+          sql_id: '',
+          meno: sanitize(meno), // nazov skupiny
+          url_name: sanitize(this.getUniqueDetailsName(meno, start_date, names)),
+          text: sanitize(text), // popis skupiny
+          start_date: sanitize(start_date),
+          end_date: '',
+          completed: '',
+          user_id: sanitize(uid),
+          start_miesto: sanitize(start_miesto),
+          number: sanitize(number), // pocet ucastnikov
+          email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
+          articleID: 0,
+          finishedTracking: false,
+          created: momentDateTime(),
+          lastUpdated: momentDateTime()
+        };
+  
+        return dbCollection(db, _const.DetailsTable)
+          .insertOne(travellerRecord)
+          .then(() => Promise.resolve(travellerRecord));
+      });
+    });
   },
 
   viewTraveller({ uid, date }) {
     return dbConnect(db =>
       dbCollection(db, _const.DetailsTable)
         .findOneAndUpdate({ user_id: sanitizeUserId(uid) }, { $set: { lastViewed: sanitize(date) } }, { returnOriginal: false }
-          )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
+          )).then(res => res.value ? Promise.resolve(res.value) : ErrorNoTravel());
   },
 
   updateTraveller({
@@ -492,26 +518,47 @@ DB.prototype = {
       cancelled,
       finishedManual
     }) {
-    return dbConnect(db =>
-      dbCollection(db, _const.DetailsTable)
-        .findOneAndUpdate({ user_id: sanitizeUserId(uid) }, {
-            $set: {
-              meno: sanitize(meno), // nazov skupiny
-              text: sanitize(text), // popis skupiny
-              start_date: sanitize(start_date),
-              end_date: sanitize(end_date),
-              completed: sanitize(completed),
-              user_id: sanitizeUserId(uid),
-              start_miesto: sanitize(start_miesto),
-              number: sanitize(number), // pocet ucastnikov
-              email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
-              finishedTracking: sanitize(finishedTracking),
-              cancelled: sanitize(cancelled),
-              finishedManual: sanitize(finishedManual),
-              lastUpdated: momentDateTime()
-            }
-          }, { returnOriginal: false }
-        )).then(res => res.value ? Promise.resolve(res.value) : Promise.reject("Cesta nebola nájdená."));
+    return dbConnect(db => {
+      return dbCollection(db, _const.DetailsTable).findOne({ user_id: sanitizeUserId(uid) })
+        .then(detail => detail ? Promise.all([detail, this.getDetailsNames(db, detail._id.toString())]) : ErrorNoTravel)
+        .then(([detail, [t, names]]) => {
+          const url_name = sanitize(this.getUniqueDetailsName(meno, start_date, names));
+
+          var insertName = () => Promise.resolve(true);
+          if (url_name != detail.url_name && detail.url_name) {
+            // add previous url name to history
+            insertName = () => dbCollection(db, _const.DetailNamesTable).findOne({ url_name: detail.url_name })
+              .then(name => {
+                if (name) {
+                  return Promise.resolve(true);
+                }
+
+                return dbCollection(db, _const.DetailNamesTable).insertOne({ url_name: detail.url_name, id: detail._id.toString() })
+              });
+          }
+
+          return insertName().then(() => dbCollection(db, _const.DetailsTable)
+            .findOneAndUpdate({ user_id: sanitizeUserId(uid) }, {
+                $set: {
+                  meno: sanitize(meno), // nazov skupiny
+                  url_name: url_name,
+                  text: sanitize(text), // popis skupiny
+                  start_date: sanitize(start_date),
+                  end_date: sanitize(end_date),
+                  completed: sanitize(completed),
+                  user_id: sanitizeUserId(uid),
+                  start_miesto: sanitize(start_miesto),
+                  number: sanitize(number), // pocet ucastnikov
+                  email: sanitize(email), // 0 / 1 moznost kontaktovat po skonceni s dotaznikom
+                  finishedTracking: sanitize(finishedTracking),
+                  cancelled: sanitize(cancelled),
+                  finishedManual: sanitize(finishedManual),
+                  lastUpdated: momentDateTime()
+                }
+              }, { returnOriginal: false }
+            ));
+          })
+        }).then(res => res.value ? Promise.resolve(res.value) : ErrorNoTravel());
   },
 
   sendMessage(message) {
@@ -553,7 +600,7 @@ DB.prototype = {
           if (res.value) {
             return Promise.resolve(res.value);
           } else {
-            return Promise.reject('Správa nebola nájdená.');
+            return ErrorNoMessage();
           }
         }));
   },
@@ -606,7 +653,7 @@ DB.prototype = {
         .findOne({ _id: new ObjectId(id) })
         .then(current => {
           if (!current) {
-            return Promise.reject('Dôležité miesto nebolo nájdené.');
+            return ErrorNoPoi();
           }
           delete current._id;
           current.poiId = id;
@@ -625,7 +672,7 @@ DB.prototype = {
                   if (res.value) {
                     return this.fillPoiInfo(db, res.value._id, res.value);
                   } else {
-                    return Promise.reject('Dôležité miesto nebolo nájdené.');
+                    return ErrorNoPoi();
                   }
                 });
             });
@@ -694,7 +741,7 @@ DB.prototype = {
             if (res.value) {
               return this.fillPoiInfo(db, res.value._id, res.value);
             } else {
-              return Promise.reject('Dôležité miesto nebolo nájdené.');
+              return ErrorNoPoi();
             }
         })));
   },
@@ -707,13 +754,13 @@ DB.prototype = {
       dbCollection(db, _const.PoisTable)
       .findOne({ _id: new ObjectId(sId) }).then(poi => {
         if (!poi) {
-          return Promise.reject('Dôležité miesto nebolo nájdené.');            
+          return ErrorNoPoi();            
         }
 
         return dbCollection(db, _const.UsersTable)
         .findOne({ uid: sUid }).then(userDetails => {
           if (!userDetails) {
-            return Promise.reject('Neexistujúci užívateľ.');
+            return ErrorNoUser();
           }
 
           const isMy = 
@@ -746,7 +793,7 @@ DB.prototype = {
             if (res.value) {
               return Promise.resolve(res.value);
             } else {
-              return Promise.reject('Neexistujúci užívateľ.');
+              return ErrorNoUser();
             }
           });
         });
@@ -822,7 +869,7 @@ DB.prototype = {
       this.findBy(db, _const.PoisHistoryTable, { poiId: poiId.toString() } ,[], { modified: -1 }),
     ]).then(([poi, history]) => {
       if (!poi) {
-        return Promise.reject('Dôležité miesto nebolo nájdené.');
+        return ErrorNoPoi();
       }
 
       const uids = this.getUids([poi].concat(history || []), [p => p.user_id, p => p.modified_by, p => p.deleted_by]);
@@ -864,6 +911,10 @@ DB.prototype = {
   getPoi(db, poiId) { 
     const sPoiId = sanitize(poiId);
 
+    if (!ObjectId.isValid(sPoiId)) {
+      return ErrorNoPoi();
+    }
+
     return this.fillPoiInfo(db, sPoiId, 
       dbCollection(db, _const.PoisTable).findOne({ _id: new ObjectId(sPoiId) }));
   },
@@ -876,13 +927,13 @@ DB.prototype = {
       dbCollection(db, _const.ArticlesTable).findOne({ sql_article_id: sId })
       .then(article => {
         if (!article) {
-          return Promise.reject('Článok nebol nájdený.');            
+          return ErrorNoArticle();            
         }
 
         return dbCollection(db, _const.UsersTable).findOne({ uid: sUid })
         .then(userDetails => {
           if (!userDetails) {
-            return Promise.reject('Neexistujúci užívateľ.');
+            return ErrorNoUser();
           }
 
           const isMy = 
@@ -915,7 +966,7 @@ DB.prototype = {
             if (res.value) {
               return Promise.resolve(res.value);
             } else {
-              return Promise.reject('Neexistujúci užívateľ.');
+              return ErrorNoUser();
             }
           });
         });
@@ -946,7 +997,7 @@ DB.prototype = {
       this.findBy(db, _const.ArticlesHistoryTable, { sql_article_id: sql_article_id }, {}, { modified: -1 }),
     ]).then(([article, history]) => {
       if (!article) {
-        return Promise.reject('Článok nebol nájdený.');
+        return ErrorNoArticle();
       }
 
       const uids = this.getUids([article].concat(history || []), [p => p.created_by, 
@@ -1070,7 +1121,7 @@ DB.prototype = {
         return dbCollection(db,_const.ArticlesTable)
           .findOne({ sql_article_id: s_id }).then(current => {
             if (!current) {
-              return Promise.reject('Článok nebol nájdený.');
+              return ErrorNoArticle();
             }
             
             if (!forReview) {
@@ -1096,13 +1147,71 @@ DB.prototype = {
                     if (res.value) {
                       return this.fillArticleInfo(db, res.value.sql_article_id, res.value);
                     } else {
-                      return Promise.reject('Článok nebol nájdený.');
+                      return ErrorNoArticle();
                     }
                   });
               });
           });
         });
     });
+  },
+
+  getUniqueDetailsName(name, date, list) {
+    var url_name = toUrlName(name);
+
+    if (list.indexOf(url_name) < 0) {
+      return url_name;
+    }
+
+    if (date) {
+      const d = moment(date);
+
+      url_name = toUrlName(name + "-" + d.year());
+
+      if (list.indexOf(url_name) < 0) {
+        return url_name;
+      }
+    }
+
+    var i = 0;
+    const base = url_name;
+    do {
+      i++;
+      url_name = toUrlName(base + "-" + i.toString());
+    } while (list.indexOf(url_name) >= 0);
+
+    return url_name;
+  },
+
+  getDetailsNames(db, skipId = 0) {
+    return Promise.all([
+      this.findBy(db, _const.DetailsTable, { _id: { $ne: new ObjectId(skipId) }},
+        { projection: { meno: 1, start_date: 1, url_name: 1, user_id: 1 }}, { created: 1, start_date: 1 }),
+      this.findBy(db, _const.DetailNamesTable, { id: { $ne: skipId }}) 
+    ])
+      .then(([details, names]) => {
+        const url_names = details.concat(names).filter(d => d.url_name).map(d => d.url_name)
+          .concat(details.map(d => d.user_id)).concat(['archive', 'ceste', 'dennik']);
+        
+        return [details, url_names];
+      });
+  },
+
+  getUrlNames() {
+    return dbConnect(db => getNames(db)
+      .then(([details, url_names]) => {
+        const new_names = details.filter(d => !d.url_name).map(d => {
+          const url_name = this.getUniqueDetailsName(d.meno, d.start_date, url_names);
+
+          url_names.push(url_name);
+
+          return { id: d._id, url_name };
+        });
+
+        return Promise.all(
+          new_names.map(n => dbCollection(db, _const.DetailsTable).findOneAndUpdate({ _id: n.id }, { $set: { url_name: n.url_name } } )))
+          .then(() => { return { url_names , new_names } });
+      }));
   },
 };
 

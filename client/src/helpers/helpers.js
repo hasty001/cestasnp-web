@@ -256,7 +256,7 @@ const getArticleCategoryText = (tag) => {
 
 const getTravellersImages = travellers => travellers ? 
   travellers.filter(t => t.lastImg && t.lastImg != "None").map(t => {
-    const url = `/na/${t.user_id}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
+    const url = `/na/${t.url_name || t.user_id}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
     const title = t.meno;
 
     return { url: url, title: title, src: fixImageUrl(t.lastImg), 

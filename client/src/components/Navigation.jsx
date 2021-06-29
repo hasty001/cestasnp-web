@@ -122,7 +122,7 @@ const Navigation = () => {
 
             {!!authData.isAuth && !!hasNewCommentsText && (
             <NavRouterItem
-              href={`/na/${authData.userDetails.uid}#${newComments[0]._id}`}
+              href={`/na/${authData.travellerDetails.url_name || authData.userDetails.uid}#${newComments[0]._id}`}
               eventKey={100}
               title={hasNewCommentsText}
               className="mobile new-comments"
@@ -270,7 +270,7 @@ const Navigation = () => {
 
           {!!authData.isAuth && !!hasNewCommentsText && (
             <NavRouterItem
-              href={`/na/${authData.userDetails.uid}#${newComments[0]._id}`}
+              href={`/na/${authData.travellerDetails.url_name || authData.userDetails.uid}#${newComments[0]._id}`}
               eventKey={200}
               title={hasNewCommentsText}
               className="desktop new-comments"
