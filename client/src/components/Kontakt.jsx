@@ -14,7 +14,8 @@ const Kontakt = () => {
       <p>
         <b>Občianske združenie CestaSNP.sk</b>
       </p>
-      <p>Gaštanová 4</p>
+      <p>IČO: 51192039</p>
+      <p>Gaštanová 6464/4</p>
       <p>974 01 Banská Bystrica</p>
       <br />
       <p>
