@@ -34,12 +34,12 @@ const FindBuddies = (props) => {
   return (
     <PageWithLoader pageId="FindBuddies" pageTitle={`Hľadám parťákov${Constants.WebTitleSuffix}`} 
       loading={loading} error={!!authData.authProviderMounted && !authData.isAuth ? 
-        (<div className="logged-only">Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A></div>) : error} >
+        (<div className="logged-only">Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A>.</div>) : error} >
       <>
         {!!authData.isAuth &&
         <div className="travellers">
-          {travellers.length == 0 && !authData.authProviderMounted &&
-            <div className="no-find-buddies">Momentálne parťákov nikto nehľadá. {` `}<A href="/ucet/hladampartakov">Pridaj svoj inzerát.</A></div>}
+          {travellers.length == 0 && !!authData.authProviderMounted &&
+            <div className="no-find-buddies">Momentálne parťákov nikto nehľadá. {` `}<A href="/ucet/hladampartakov">Pridaj svoj inzerát</A>.</div>}
           {travellers.map((traveller, i) => <TravellerItem traveller={traveller} key={i} now={now} findBuddies/>)}
         </div>}
 

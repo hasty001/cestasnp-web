@@ -2348,6 +2348,7 @@ button#dropdown-basic-1 {
 
 .logged-only, .no-find-buddies {
   text-align: center;
+  width: 100%;
 }
 
 /***   TRAVELLER    ***/
