@@ -272,7 +272,7 @@ const sortActiveTravellers = (travellers, now) => {
       ("0_" + pad(addDays(now, 1).valueOf() - parseDate(t.lastMessage.pub_date).valueOf())) 
       : ("1_" + pad(parseDate(t.start_date).valueOf())))));
 
-  console.log(travellers.map(t => { return { sort: getSortValue(t), meno: t.meno, start: t.start_date, end: t.end_date, last: (t.lastMessage || {}).pub_date }; }));
+  //console.log(travellers.map(t => { return { sort: getSortValue(t), meno: t.meno, start: t.start_date, end: t.end_date, last: (t.lastMessage || {}).pub_date }; }));
 
   travellers.sort((a, b) => getSortValue(a).localeCompare(getSortValue(b)));
 
