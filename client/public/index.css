@@ -297,7 +297,7 @@ html, body, #root {
   display: none;
 }
 
-@media (max-width: 1270px) {
+@media (max-width: 1270px ) {
   .logo-mobile {
     margin-left: 15px;
     height: 35px;
@@ -684,7 +684,7 @@ li.red-button>a:active {
 /***     HOME       ***/
 
 #Home, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller, #PoiDetail,
-#Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search, #NaCesteActiveLight {
+#Search, #Itinerary, #PoisInTable, #NaCesteActiveLight, #FindBuddies, #FindBuddiesDetail {
   margin: 0;
   font-size: 15px;
   font-weight: 300;
@@ -756,7 +756,7 @@ li.red-button>a:active {
 }
 
 .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller .traveller,
-.PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search, #NaCesteActiveLight {
+.PoiDetail, #Search, #Itinerary, #PoisInTable, #NaCesteActiveLight, #FindBuddies, #FindBuddiesDetail {
   max-width: calc(100vw - 100px);
   min-width: calc(100vw - 100px);
   margin: 0 50px;
@@ -770,7 +770,7 @@ li.red-button>a:active {
 
 @media (min-width: 1600px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive, #Traveller .traveller,
-  .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search, #NaCesteActiveLight {
+  .PoiDetail, #Search, #Itinerary, #PoisInTable, #NaCesteActiveLight, #FindBuddies, #FindBuddiesDetail {
     max-width: 1500px;
     min-width: 1500px;
     margin: 0 auto;
@@ -998,10 +998,6 @@ li.red-button>a:active {
   display: inline-block;
 }
 
-.traveller-item-email {
-  display: inline-block;
-}
-
 .traveller-date {
   display: table-cell;
   float: right;
@@ -1091,7 +1087,8 @@ li.red-button>a:active {
 
 @media(max-width: 670px) {
   .home-articles-and-box, #Kontakt, #Cookies, #Articles, #Article, #Changes, #NaCesteArchive,
-  #Traveller .traveller, .PoiDetail, #Itinerary, #PoisInTable, #FindBuddies, #FindBuddiesDetail, #Search, #NaCesteActiveLight {
+  #Traveller .traveller, .PoiDetail, #Search, #Itinerary, #PoisInTable, #NaCesteActiveLight, #FindBuddies,
+  #FindBuddiesDetail {
     min-width: 85vw;
     max-width: 85vw;
     margin-left: auto;
@@ -1459,8 +1456,9 @@ button.ol-zoom-out {
 /**********************/
 /**KONTAKT + Cookies **/
 
-#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive, #Itinerary, #PoisInTable, #FindBuddies,
-#FindBuddiesDetail, #Search, #NaCesteActiveLight {
+#Kontakt, #Cookies, #Articles, #Changes, #NaCesteArchive, #Search,
+#PoisInTable, #Itinerary, #NaCesteActiveLight, #FindBuddies,
+#FindBuddiesDetail {
   margin-top: 40px;
 }
 
@@ -2354,6 +2352,11 @@ button#dropdown-basic-1 {
   min-height: 200px;
 }
 
+.logged-only, .no-find-buddies {
+  text-align: center;
+  width: 100%;
+}
+
 /***   TRAVELLER    ***/
 /**********************/
 /***   COMMENTBOX   ***/
@@ -2551,6 +2554,8 @@ button#dropdown-basic-1 {
 #EditFindBuddies label {
   display: block;
   width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .edit-poi-box button.close {
@@ -2572,7 +2577,7 @@ button#dropdown-basic-1 {
 #EditFindBuddies input.form-checkbox {
   height: 16px;
   width: 16px;
-  margin: 5px 5px 15px 5px;
+  margin: 5px;
 }
 
 .accountWrap span {
@@ -2648,7 +2653,7 @@ button#dropdown-basic-1 {
   width: 100%;
   border: 1px solid lightgray;
   height: 36px;
-  min-width: 240px;
+  min-width: 160px;
   margin: 5px 0;
   padding-left: 10px;
 }
@@ -2659,7 +2664,7 @@ button#dropdown-basic-1 {
   border: solid 1px lightgray;
   width: 20%;
   min-width: 200px;
-  margin: 5px 0;
+  margin: 5px 0 5px 10px;
 }
 
 .fanAccountWrap textarea, #AddPoi textarea.form, .edit-poi-box textarea.form, #AddArticle textarea.form,
@@ -2747,7 +2752,8 @@ button#dropdown-basic-1 {
   .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form, .itinerary-dialog select.form, #AddArticle select.form,
   #EditFindBuddies select.form {
     display: block;
-    min-width: 200px;
+    min-width: 160px;
+    margin: 5px 0;
   }
 
   .fanAccountWrap h2, #AddPoi h2, .edit-poi-box h2, #AddArticle h2, #EditFindBuddies h2 {

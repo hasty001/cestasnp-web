@@ -56,8 +56,9 @@ const SiteFooter = (props) => {
           <p>
             Občianske združenie<br/>
             CestaSNP.sk<br/>
+            IČO: 51192039<br/>
             <br/>
-            Gaštanová 4<br/>
+            Gaštanová 6464/4<br/>
             974 01 Banská Bystrica<br/>
             <br/>
             info@cestasnp.sk

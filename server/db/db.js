@@ -1330,7 +1330,7 @@ DB.prototype = {
   },
 
   getUrlNames() {
-    return dbConnect(db => getNames(db)
+    return dbConnect(db => this.getDetailsNames(db)
       .then(([details, url_names]) => {
         const new_names = details.filter(d => !d.url_name).map(d => {
           const url_name = this.getUniqueDetailsName(d.meno, d.start_date, url_names);

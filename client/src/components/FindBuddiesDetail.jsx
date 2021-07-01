@@ -11,6 +11,7 @@ import CommentBox from './reusable/CommentBox';
 import ConfirmBox from './reusable/ConfirmBox';
 import { sortByDate } from '../helpers/helpers';
 import TravellerMessage from './reusable/TravellerMessage';
+import FindBuddiesWarning from './reusable/FindBuddiesWarning';
 
 const FindBuddiesDetail = (props) => {
   const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ const FindBuddiesDetail = (props) => {
     setLoading(true);
     setError('');
 
-    fetchPostJsonWithToken(authData.user, `/api/traveller/findBuddies/${travellerId}`, { uid: authData.userDetails.uid})
+    fetchPostJsonWithToken(authData.user, `/api/traveller/findBuddies/${travellerId}`, { uid: authData.userDetails.uid })
     .then((data) => {
       if (!data || !data.user_id) {
         setError("Momentálne partákov nehľadá.");
@@ -52,7 +53,7 @@ const FindBuddiesDetail = (props) => {
         { uid: authData.userDetails.uid, findBuddiesId: data._id });
     })
     .then(comments => {
-      const msgs = comments.map(c => Object.assign({ isComment: true }, c));
+      const msgs = (comments || []).map(c => Object.assign({ isComment: true }, c));
       setMessagesData(msgs);
     })
     .catch(err => {
@@ -178,11 +179,14 @@ const FindBuddiesDetail = (props) => {
   return (
     <PageWithLoader pageId="FindBuddiesDetail" pageTitle={traveller ? (traveller.meno + Constants.WebTitleSuffix) : null}>
       <DivWithLoader className="find-buddies-traveller" loading={loading} error={!!authData.authProviderMounted && !authData.isAuth ? 
-        (<div>Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A></div>) : error}>
+        (<div className="logged-only">Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A>.</div>) : error}>
         {!!traveller && isAuth && <TravellerItem traveller={traveller} now={Date.now()} userData={authData} findBuddies />}       
 
         {!!traveller && isAuth && !!traveller.showComments && (
           <>
+          
+            <FindBuddiesWarning/>
+            <br/>
             <div className="find-buddies-sort" data-nosnippet >
               Zoradiť: <a href="#" onClick={handleOrderClick}>{orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
             </div>

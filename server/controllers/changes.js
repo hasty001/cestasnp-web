@@ -133,7 +133,7 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
     const getFindBuddiesCommentUrl = (item) => `/pred/hladampartakov/${getFindBuddiesUserId(item.findBuddiesId)}#${item._id}`;
     const promiseFindBuddiesComments = (!s_items || s_items.indexOf('answers') >= 0) ? Promise.all([
-      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'created', 'date', 'uid', item => getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
+      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'created', 'date', 'uid', item =>getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
       dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'deleted', 'del_date', 'del_by', item => getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
     ]).then(d => concat(d)) : Promise.resolve([]);
 

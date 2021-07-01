@@ -9,10 +9,9 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
     <div className="traveller-item" >
       <div className="traveller-item-header"> 
         <A className="traveller-name" 
-          href={findBuddies ? 
-            `/pred/hladampartakov/${traveller.user_id}` 
+          href={findBuddies ? `/pred/hladampartakov/${traveller.user_id}` 
             : `/na/${traveller.url_name || traveller.user_id}${traveller.finishedTracking ? 
-              Constants.FromOldQuery : (traveller.lastMessage ? (`#${traveller.lastMessage._id}`) : "")}`}>
+            Constants.FromOldQuery : (traveller.lastMessage ? (`#${traveller.lastMessage._id}`) : "")}`}>
           {traveller.meno}                          
         </A>
 

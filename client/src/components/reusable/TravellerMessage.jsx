@@ -51,9 +51,9 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
               && (message.uid == userData.userDetails.uid 
                 || (message.travellerDetails && message.travellerDetails.id == userData.travellerDetails._id) ||
                    (message.findBuddiesId && message.findBuddiesId == userData.findBuddies._id))) && 
-              (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-comment-delete" title="zmazať komentár"><i className="fas fa-trash-alt"/></a>)}
+              (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-comment-delete" title={`zmazať ${findBuddies ? "odpoveď" : "komentár"}`}><i className="fas fa-trash-alt"/></a>)}
             <CopyToClipboard text={`${window.location.host}/na/${travellerUrlName}#${message._id}`}>
-              <a href={`#${message._id}`} className="traveller-comment-link" title="kopírovať odkaz na komentár"><i className="fas fa-link"/></a>
+              <a href={`#${message._id}`} className="traveller-comment-link" title={`kopírovať odkaz na ${findBuddies ? "odpoveď" : "komentár"}`}><i className="fas fa-link"/></a>
             </CopyToClipboard>
           </span>
           :

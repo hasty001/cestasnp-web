@@ -31,6 +31,8 @@ import EditArticle from './components/Account/EditArticle';
 import FindBuddies from './components/FindBuddies';
 import FindBuddiesDetail from './components/FindBuddiesDetail';
 import Search from './components/Search';
+import FindBuddies from './components/FindBuddies';
+import FindBuddiesDetail from './components/FindBuddiesDetail';
 
 LogRocket.init('2szgtb/cestasnp-web');
 

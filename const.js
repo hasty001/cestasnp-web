@@ -64,6 +64,7 @@ module.exports = {
   EscapeImgFormat, ProjectionMessageWithImage, 
   HomeArticlesCount, PageSize, NearPoisWarningDistance,
   NearMaxLatDistance, NearMaxLonDistance, NearMaxDistance,
-  UsersTable, DetailsTable, FindBuddiesTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,
-  MessagesTable, CommentsTable, FindBuddiesCommentsTable, ArticleCommentsTable, DetailNamesTable
+  UsersTable, DetailsTable, ArticlesTable, ArticlesHistoryTable, PoisTable, PoisHistoryTable,
+  MessagesTable, CommentsTable, ArticleCommentsTable,
+  DetailNamesTable, FindBuddiesTable, FindBuddiesCommentsTable
 };

@@ -103,7 +103,7 @@ const Navigation = () => {
             </div>
           </A>
         </Navbar.Brand>
-        <Navbar.Toggle title="Menu" className={hasNewTravellerCommentsText || hasNewFindBuddiesCommentsText ? 'has-badge' : ''} />
+        <Navbar.Toggle title="Menu" className={(hasNewTravellerCommentsText || hasNewFindBuddiesCommentsText) ? 'has-badge' : ''} />
         <NavRouterItem
           href={ROUTES.hladanie}
           eventKey={99}

@@ -16,6 +16,7 @@ import { parseDate } from '../../helpers/helpers';
 import { A } from '../reusable/Navigate';
 import ConfirmBox from '../reusable/ConfirmBox';
 import { clear } from 'memory-cache';
+import FindBuddiesWarning from '../reusable/FindBuddiesWarning';
 
 const EditFindBuddies = (props) => {
   const [loading, setLoading] = useState(false);
@@ -40,9 +41,9 @@ const EditFindBuddies = (props) => {
   const isEndDuklaDevin = findBuddies ? (findBuddies.end_miesto == 'Dukla' || 
     findBuddies.end_miesto == 'Devín') : false;
 
-  const [enabled, setEnabled] = useStateEx(findBuddies ? findBuddies.enabled : false, clearMsg);
+  const [enabled, setEnabled] = useStateEx(findBuddies ? findBuddies.enabled : true, clearMsg);
   const [showEmail, setShowEmail] = useStateEx(findBuddies ? findBuddies.showEmail : false, clearMsg);
-  const [showComments, setShowComments] = useStateEx(findBuddies ? findBuddies.showComments : false, clearMsg);
+  const [showComments, setShowComments] = useStateEx(findBuddies ? findBuddies.showComments : true, clearMsg);
   const [text, setText] = useStateEx(findBuddies ? findBuddies.text : '', clearMsg);
   const [start, setStart] = useStateEx(findBuddies && findBuddies.start_miesto ? 
     (isDuklaDevin ? findBuddies.start_miesto : 'oth') : 'Dukla', clearMsg);
@@ -55,9 +56,9 @@ const EditFindBuddies = (props) => {
   const [endOther, setEndOther] = useStateEx(findBuddies && !isEndDuklaDevin ? findBuddies.end_miesto : '', clearMsg);
   
   const clear = () => {
-    setEnabled(false);
+    setEnabled(true);
     setShowEmail(false);
-    setShowComments(false);
+    setShowComments(true);
     setText('');
     setStart('Dukla');
     setStartOther('');
@@ -182,10 +183,14 @@ const EditFindBuddies = (props) => {
         buttons={!!findBuddies && (<button className="snpBtnWhite" 
           onClick={() => setShowConfirmDelete(true)} type="button">Zmazať a vytvoriť nový</button>)}>
 
-        <FormCheckBox itemClassName="form-checkbox" valueName="enabled" valueLabel="Zverejniť môj inzerát" value={[enabled, setEnabled]}/>
+        <FindBuddiesWarning/>
+
+        <br/>
+        <FormCheckBox itemClassName="form-checkbox" valueName="enabled" valueLabel="Zverejniť môj inzerát." value={[enabled, setEnabled]}/>
+        <FormCheckBox itemClassName="form-checkbox" valueName="showComments" valueLabel="Povoliť záujemcom pridávať komentáre. Zobrazí sa ti jeho/jej email pre ďalšie kontaktovanie." value={[showComments, setShowComments]}/>
         <FormCheckBox itemClassName="form-checkbox" valueName="showEmail" 
-          valueLabel={`Zverejniť v inzerátu môj email ${props.userData.userDetails.email}, cez ktorý ma budú môcť kontaktovať prípadní záujemcovia`} value={[showEmail, setShowEmail]}/>
-        <FormCheckBox itemClassName="form-checkbox" valueName="showComments" valueLabel="Povoliť prípadným záujemcom pridávať k inzerátu komentáre. Budeš je môcť kontaktovať cez ich email." value={[showComments, setShowComments]}/>
+          valueLabel={<span>(Neodporúčame) Zverejniť v inzeráte môj email <a href={`mailto:${props.userData.userDetails.email}`}>{props.userData.userDetails.email}</a>, cez ktorý ma budú môcť kontaktovať záujemcovia.</span>} value={[showEmail, setShowEmail]}/>
+        <br/>
 
         <FormText valueName="startDate" valueLabel="Kedy približne plánuješ vyráziť?" value={[startDate, setStartDate]}
           inputAttrs={{ type: "date" }} itemClassName="form"/>
@@ -200,6 +205,7 @@ const EditFindBuddies = (props) => {
             { value: "oth", label: "Inam" }]} 
           labelChildren={end === 'oth' && <FormText valueName="endOther" valueLabel="" value={[endOther, setEndOther]} inputAttrs={{ placeholder: "Kam?" }} itemClassName="form"/>}/>
 
+        <br/>
         <FormTextArea valueName="text" valueLabel="Ďalšie informácie (tvoj plán, o tebe, kto sa môže pridať, ...)" value={[text, setText]} itemClassName="form"/>
 
         <ConfirmBox
