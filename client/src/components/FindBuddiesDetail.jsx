@@ -179,7 +179,7 @@ const FindBuddiesDetail = (props) => {
   return (
     <PageWithLoader pageId="FindBuddiesDetail" pageTitle={traveller ? (traveller.meno + Constants.WebTitleSuffix) : null}>
       <DivWithLoader className="find-buddies-traveller" loading={loading} error={!!authData.authProviderMounted && !authData.isAuth ? 
-        (<div className="logged-only">Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A></div>) : error}>
+        (<div className="logged-only">Hladanie parťákov môže využiť len prihlásený užívateľ. <A href="/ucet">Prihlásiť sa</A>.</div>) : error}>
         {!!traveller && isAuth && <TravellerItem traveller={traveller} now={Date.now()} userData={authData} findBuddies />}       
 
         {!!traveller && isAuth && !!traveller.showComments && (
