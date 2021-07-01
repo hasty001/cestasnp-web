@@ -28,8 +28,6 @@ import ActivePhotos from './components/ActivePhotos';
 import { LocalSettingsProvider } from './components/LocalSettingsContext';
 import ArticleHistory from './components/ArticleHistory';
 import EditArticle from './components/Account/EditArticle';
-import FindBuddies from './components/FindBuddies';
-import FindBuddiesDetail from './components/FindBuddiesDetail';
 import Search from './components/Search';
 import FindBuddies from './components/FindBuddies';
 import FindBuddiesDetail from './components/FindBuddiesDetail';
