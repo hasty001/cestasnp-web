@@ -29,6 +29,8 @@ import { LocalSettingsProvider } from './components/LocalSettingsContext';
 import ArticleHistory from './components/ArticleHistory';
 import EditArticle from './components/Account/EditArticle';
 import Search from './components/Search';
+import FindBuddies from './components/FindBuddies';
+import FindBuddiesDetail from './components/FindBuddiesDetail';
 
 LogRocket.init('2szgtb/cestasnp-web');
 
@@ -114,6 +116,8 @@ class CestaSNP extends Component {
               <Route path="/pred/pois/:poi" component={Poi} />
               <Route exact path="/pred/pois" component={Pois} />
               <Route exact path="/pred/itinerar" component={Itinerary} />
+              <Route exact path="/pred/hladampartakov" component={FindBuddies} />
+              <Route exact path="/pred/hladampartakov/:traveller" render={(props) => (<FindBuddiesDetail {...props} />)} />
               <Route exact path="/na/ceste" component={Active} />
               <Route exact path="/na/ceste/light" component={ActiveLight} />
               <Route exact path="/na/ceste/textovo" component={ActiveLight} />
@@ -127,6 +131,7 @@ class CestaSNP extends Component {
               <Route exact path="/ucet/poslatspravu" render={(props) => (<Account {...props} sendMessage/>)}/>
               <Route exact path="/ucet/pridatpoi" render={(props) => (<Account {...props} addPoi />)} />
               <Route exact path="/ucet/pridatclanok" render={(props) => (<Account {...props} addArticle />)} />
+              <Route exact path="/ucet/hladampartakov" render={(props) => (<Account {...props} findBuddies />)} />
               <Route exact path="/ucet/pois" render={(props) => (<Account {...props} pois />)} />
               <Route exact path="/ucet/zmeny" render={(props) => (<Account {...props} changes />)} />
               <Route path="*" component={NotFound} />

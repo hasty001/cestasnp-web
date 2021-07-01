@@ -38,15 +38,17 @@ Validation.prototype = {
     return false;
   },
 
-  checkCommentNewTraveller(comment) {
+  checkCommentNewTraveller(comment, findBuddies = false) {
     if (
       typeof comment.date === 'string' &&
       typeof comment.lang === 'string' &&
       typeof comment.comment === 'string' &&
       typeof comment.name === 'string' &&
       typeof comment.ip === 'string' &&
+      ((!findBuddies &&
       typeof comment.travellerDetails.id === 'string' &&
-      typeof comment.travellerDetails.name === 'string'
+      typeof comment.travellerDetails.name === 'string') || 
+      (findBuddies && typeof comment.findBuddiesId === 'string'))
     ) {
       return true;
     }

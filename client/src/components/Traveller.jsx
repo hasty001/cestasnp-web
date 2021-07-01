@@ -125,12 +125,13 @@ const Traveller = (props) => {
   }
 
   const handleDelete = (comment, confirmed) => {
+    if (comment) {
+      setShowConfirmDeleteComment(false);
+    } else {
+      setShowConfirmDeleteMessage(false);
+    }
+
     if (!confirmed) {
-      if (comment) {
-        setShowConfirmDeleteComment(false);
-      } else {
-        setShowConfirmDeleteMessage(false);
-      }
       return;
     }
 
@@ -165,12 +166,6 @@ const Traveller = (props) => {
         });
       
       setMessagesData(updatedMessages);
-      
-      if (comment) {
-        setShowConfirmDeleteComment(false);
-      } else {
-        setShowConfirmDeleteMessage(false);
-      }
     });
   }
 

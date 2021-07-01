@@ -17,8 +17,9 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
 
   return Promise.all([db.getUserNames(dbRef, null), 
     s_uid ? db.findBy(dbRef, _const.UsersTable, { uid: s_uid }).then(u => u && u.length > 0 ? u[0] : null) : Promise.resolve(null),
-    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { user_id: 1, articleID: 1, sql_id: 1, meno: 1, url_name: 1 }})])
-  .then(([users, user, details]) => {
+    db.findBy(dbRef, _const.DetailsTable, {}, { projection: { user_id: 1, articleID: 1, sql_id: 1, meno: 1, url_name: 1 }}),
+    db.findBy(dbRef, _const.FindBuddiesTable, {}, { projection: { user_id: 1 }})])
+  .then(([users, user, details, findBuddies]) => {
     const s_from = formatAsDate(from || new Date(0));
     const s_to = formatAsDate(addDays(to || startOfToday(), 1));
     const s_page = sanitize(page) || 0;
@@ -65,14 +66,35 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       return index >= 0 ? details[index].meno : "";
     }
 
+    const getFindBuddiesUserId = (id) => {
+      const index = findBuddies.findIndex(u => 
+        id && u._id.toString() == id);
+      return index >= 0 ? findBuddies[index].user_id : "";
+    }
+
+    const getFindBuddiesUserName = (id) => {
+      const index = findBuddies.findIndex(u => 
+        id && u._id.toString() == id);
+      return index >= 0 ? getUserName(findBuddies[index].user_id) : "";
+    }
+
+    const getProp = (item, propName) => {
+      if (propName && propName.indexOf('.') > 0) {
+        const parts = propName.split('.', 2);
+        return (item[parts[0]] || {})[parts[1]] 
+      } else {
+        return item[propName];
+      }
+    } 
+
     const ignoreProps = {'text': 0, 'itinerary': 0, 'img_url': 0,
       'introtext': 0, 'fulltext': 0, 'attribs': 0, 'metakey': 0, 'metadesc': 0,
       'comment': 0, 'img': 0};
 
     const dbPromise = (table, myItems, authorProps, change, changedProp, userProp, 
-        getName = () => {}, noteProp = '', getUrl = () => {}, getItemUserName = () => {}) => db.findBy(dbRef, table, 
-      { $or: [ check(changedProp, myItems, authorProps, userProp) ] }, { projection: ignoreProps }).then(data => data.map(item => {
-        return { table, change, date: item[changedProp], user: item[userProp] || item[userProp + "_user_sql_id"], 
+        getName = () => {}, noteProp = '', getUrl = () => {}, getItemUserName = () => {}, proj = null) => db.findBy(dbRef, table, 
+      { $or: [ check(changedProp, myItems, authorProps, userProp) ] }, { projection: proj || ignoreProps }).then(data => data.map(item => {
+        return { table, change, date: getProp(item, changedProp), user: item[userProp] || item[userProp + "_user_sql_id"], 
           userName: getUserName(item[userProp] || item[userProp + "_user_sql_id"]) || getItemUserName(item), 
           note: noteProp ? item[noteProp] : null, name: getName(item), url: getUrl(item), item };
       }));
@@ -102,6 +124,19 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       dbPromise(_const.DetailsTable, null, ['user_id'], 'modified', 'lastUpdated', 'user_id', item => item['meno'], '', getDetailUrl),
     ]).then(d => concat(d)) : Promise.resolve([]);
 
+    const getUserDetailUrl = (item) => `/pred/hladampartakov/${item.user_id}`;
+    const promiseFindBuddies = (!s_items || s_items.indexOf('buddies') >= 0) ? Promise.all([
+      dbPromise(_const.FindBuddiesTable, null, ['user_id'], 'created', 'created', 'user_id', item => getUserName(item.user_id), '', getUserDetailUrl),
+      dbPromise(_const.FindBuddiesTable, null, ['user_id'], 'modified', 'lastUpdated', 'user_id', item => getUserName(item.user_id), '', getUserDetailUrl),
+      dbPromise(_const.FindBuddiesTable, null, ['user_id'], 'deleted', 'del_date', 'user_id', item => getUserName(item.user_id), '', getUserDetailUrl),
+    ]).then(d => concat(d)) : Promise.resolve([]);
+
+    const getFindBuddiesCommentUrl = (item) => `/pred/hladampartakov/${getFindBuddiesUserId(item.findBuddiesId)}#${item._id}`;
+    const promiseFindBuddiesComments = (!s_items || s_items.indexOf('answers') >= 0) ? Promise.all([
+      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'created', 'date', 'uid', item =>getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
+      dbPromise(_const.FindBuddiesCommentsTable, null, ['uid'], 'deleted', 'del_date', 'del_by', item => getFindBuddiesUserName(item.findBuddiesId), '', getFindBuddiesCommentUrl, item => item.name),
+    ]).then(d => concat(d)) : Promise.resolve([]);
+
     const getMessageUrl = (item) => `/na/${getDetailUrlName(item, true)}#${item._id}`;
     const promiseMessages = (!s_items || s_items.indexOf('messages') >= 0) ? Promise.all([
       dbPromise(_const.MessagesTable, null, ['user_id'], 'created', 'pub_date', 'user_id', item => getDetailName(item, true), '', getMessageUrl),
@@ -127,7 +162,8 @@ const getChanges = (dbRef, uid, from, to, my, items, sort, page, count) => {
       }
     }
 
-    return Promise.all([promisePois, promiseArtcles, promiseDetails, promiseMessages, promiseComments]).then(results => {
+    return Promise.all([promisePois, promiseArtcles, promiseDetails, promiseFindBuddies, promiseFindBuddiesComments, 
+      promiseMessages, promiseComments]).then(results => {
       const items = concat(results);
       const count = items.length;
 
@@ -153,6 +189,8 @@ const getTableAsText = (table) => {
     case _const.CommentsTable:
     case _const.ArticleCommentsTable:
       return "Komentár";
+    case _const.UsersTable:
+      return "Hľadanie parťákov";  
     default:
       return table;
   }

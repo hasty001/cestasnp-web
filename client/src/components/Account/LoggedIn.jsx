@@ -8,6 +8,7 @@ import TravellerAccount from './TravellerAccount';
 import AddArticle from './AddArticle';
 import Changes from './Changes';
 import SendMessage from './SendMessage';
+import EditFindBuddies from './EditFindBuddies';
 
 const LoggedIn = (props) => {
 
@@ -23,11 +24,12 @@ const LoggedIn = (props) => {
         <AddArticle /> : (props.addPoi ? 
         <AddPoi />
         : (props.changes ? <Changes /> 
-          : (props.userData.travellerDetails &&
-            Object.keys(props.userData.travellerDetails).length > 0 ? (
-              props.sendMessage ? <SendMessage userData={props.userData} /> : <TravellerAccount userData={props.userData} edit />
-            ) : (props.pois ? <></> : <TravellerAccount userData={props.userData} />
-      ))))}
+          : (props.findBuddies && props.userData ? <EditFindBuddies userData={props.userData} /> 
+            : (props.userData.travellerDetails &&
+              Object.keys(props.userData.travellerDetails).length > 0 ? (
+                props.sendMessage ? <SendMessage userData={props.userData} /> : <TravellerAccount userData={props.userData} edit />
+              ) : (props.pois ? <></> : <TravellerAccount userData={props.userData} />
+      )))))}
     </>
   );
 }
