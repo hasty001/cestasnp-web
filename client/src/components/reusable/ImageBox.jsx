@@ -15,7 +15,7 @@ const ImageBox = ({ url, show, onHide }) => {
     dialogClassName="travellerPhotoModal"
   >
     <Modal.Body onClick={onHide}>
-      <img src={fixImageUrl(url, `c_limit,w_${maxSize},h_${maxSize},f_auto`)} width="100%" />
+      <img src={fixImageUrl(url, `c_limit,w_${maxSize},h_${maxSize},f_auto`, `tr=w-${maxSize},h-${maxSize},c-at_max`)} width="100%" />
     </Modal.Body>
   </Modal>
 );}

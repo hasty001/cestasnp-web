@@ -87,6 +87,7 @@ app.use('/api/articles', require('./server/controllers/articles'));
 app.use('/api/traveller', require('./server/controllers/traveller'));
 
 app.use('/api/cloudinary', require('./server/controllers/cloudinary'));
+app.use('/api/imagekit', require('./server/controllers/imagekit'));
 
 app.use('/api/changes', require('./server/controllers/changes'));
 

@@ -20,8 +20,8 @@ const getJourneys = (dbRef) =>
 
       return Promise.all([
         db.findBy(dbRef, _const.MessagesTable, {}, { projection: { user_id: 1, pub_date: 1 } }, { pub_date: -1 }),
-        db.findBy(dbRef, _const.MessagesTable, { $and: [ { img : { $ne: null } }, { img : { $ne: "None" } }, { 'img.secure_url': null } ]}, { projection: { user_id: 1, img: 1 } }),
-        db.findBy(dbRef, _const.MessagesTable, { 'img.secure_url': { $ne: null } }, { projection: { user_id: 1, 'img.secure_url': 1 } })
+        db.findBy(dbRef, _const.MessagesTable, { $and: [ { img : { $ne: null } }, { img : { $ne: "None" } }, { 'img.secure_url': null }, { 'img.url': null } ]}, { projection: { user_id: 1, img: 1 } }),
+        db.findBy(dbRef, _const.MessagesTable, { $or: [ {'img.secure_url': { $ne: null } }, {'img.url': { $ne: null } } ] }, { projection: { user_id: 1, 'img.secure_url': 1, 'img.url': 1 } })
       ]).then(([messages, imagesOld, imagesNew]) => {
         messages.map(msg => {
           const i = travellersIds.indexOf(msg.user_id);

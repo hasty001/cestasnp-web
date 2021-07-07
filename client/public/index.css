@@ -250,6 +250,15 @@ html, body, #root {
   padding: 0 !important;
 } 
 
+.uppy-Dashboard--modal .uppy-Dashboard-inner {
+  top: 80px;
+}
+@media only screen and (min-width: 820px) {
+  .uppy-Dashboard--modal .uppy-Dashboard-inner {
+    transform: translate(-50%, 0);
+  }
+}
+
 .modal-dialog {
   margin: 0 auto;
 }
@@ -260,6 +269,9 @@ html, body, #root {
   }
   .modal {
     margin-top: 70px;
+  }
+  .uppy-Dashboard--modal .uppy-Dashboard-inner {
+    top: 70px;
   }
   .can-maximize.maximized {
     margin-top: 70px;

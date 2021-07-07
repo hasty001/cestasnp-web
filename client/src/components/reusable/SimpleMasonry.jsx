@@ -149,10 +149,10 @@ class SimpleMasonry extends Component {
             return value > 800 ? 
               fixImageUrl(img.src, 'f_auto')
               : value > 400 ?
-                fixImageUrl(img.src, 'c_limit,f_auto,w_800,h_800')
+                fixImageUrl(img.src, 'c_limit,f_auto,w_800,h_800', 'tr=w-800,h-800,c-at_max')
                 : value > 240 ?
-                fixImageUrl(img.src, 'c_limit,f_auto,w_400,h_400')
-                : fixImageUrl(img.src, 'c_limit,f_auto,w_240,h_240');
+                fixImageUrl(img.src, 'c_limit,f_auto,w_400,h_400', 'tr=w-400,h-400,c-at_max')
+                : fixImageUrl(img.src, 'c_limit,f_auto,w_240,h_240', 'tr=w-240,h-240,c-at_max');
           };
 
           return (<Fragment key={r}>
