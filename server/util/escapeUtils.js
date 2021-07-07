@@ -9,9 +9,24 @@ const escape = (html) => {
     .replace(/>/g, '&gt;');
 }
 
-const fixImageUrl = (url, code) => {
-  return (url || '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
-    `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`);
+const replaceQuery = (url, match, newQuery) => {
+  if (!url || !url.startsWith(match)) {
+    return url;
+  }
+
+  const index = url.indexOf("?");
+
+  if (index >= 0) {
+    return url.slice(0, index) + (newQuery ? ("?" + newQuery) : "");
+  } else {
+    return url + (newQuery ? ("?" + newQuery) : "");
+  }
+};
+
+const fixImageUrl = (url, code, codeImageKit) => {
+  return replaceQuery((url || '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
+      `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`)
+    , 'https://ik.imagekit.io/cestasnp/', codeImageKit || '');;
 };
 
 const escapeImg = (img, def = "") => {
@@ -20,15 +35,15 @@ const escapeImg = (img, def = "") => {
       if (img.indexOf('res.cloudinary.com') === -1) {
         return escape(`https://res.cloudinary.com/cestasnp-sk/image/upload/${_const.EscapeImgFormat}/v1520586674/img/sledovanie/${img}`);
       } else {
-        return escape(fixImageUrl(img, _const.EscapeImgFormat));
+        return escape(fixImageUrl(img, _const.EscapeImgFormat, _const.EscapeImageKitFormat));
       }
     }
 
     return def;
   }
   
-  if (img && img.secure_url) {
-    return escape(fixImageUrl(img.secure_url, _const.EscapeImgFormat));
+  if (img && (img.secure_url || img.url)) {
+    return escape(fixImageUrl(img.secure_url || img.url, _const.EscapeImgFormat, _const.EscapeImageKitFormat));
   }
 
   return def;  

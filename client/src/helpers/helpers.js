@@ -111,7 +111,7 @@ DOMPurify.addHook('afterSanitizeAttributes', function (node) {
     const src = (node.getAttribute('src') || '').trim();
 
       if (src && (src.startsWith(Constants.CloudinaryPathNoCodePrefix) || src.indexOf("/") < 0)) {
-        node.setAttribute('src', fixImageUrl(src, Constants.DefaultArticleImageFormat));
+        node.setAttribute('src', fixImageUrl(src, Constants.DefaultArticleImageFormat, Constants.DefaultArticleImageKitFormat));
       }
   }
 
@@ -238,18 +238,33 @@ const getArticleImage = (intro) => {
   const res = intro && intro.match(/["'](https:\/\/res\.cloudinary\.com\/.*?)["']/);
   const url = res && res.length > 1 ? res[1] : '';
 
-  return fixImageUrl(url, 'c_fill,f_auto,g_auto,w_240,h_240');
+  return fixImageUrl(url, 'c_fill,f_auto,g_auto,w_240,h_240', 'tr=w-240,h-240,fo-auto');
 }
 
-const fixImageUrl = (url, code) => {
-  return ((url && url != 'None') ? 
+const replaceQuery = (url, match, newQuery) => {
+  if (!url || !url.startsWith(match)) {
+    return url;
+  }
+
+  const index = url.indexOf("?");
+
+  if (index >= 0) {
+    return url.slice(0, index) + (newQuery ? ("?" + newQuery) : "");
+  } else {
+    return url + (newQuery ? ("?" + newQuery) : "");
+  }
+};
+
+const fixImageUrl = (url, code, codeImageKit) => {
+  return replaceQuery(((url && url != 'None') ? 
     (url.secure_url || url.url || 
       (typeof url === "string" ? 
         ((url.indexOf("/") < 0 && url.indexOf('res.cloudinary.com') === -1) ?
           `${Constants.CloudinaryPath}${url}` : url)
         : '')) 
     : '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
-    `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`);
+    `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`)
+    , 'https://ik.imagekit.io/cestasnp/', codeImageKit || '');
 };
 
 const getArticleCategoryText = (tag) => {

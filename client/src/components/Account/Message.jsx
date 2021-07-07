@@ -90,7 +90,7 @@ const Message = (props) => {
       <FormTextArea value={[message, setMessage]} valueName="message" valueLabel="Text" />
       
       <FormImage value={[image, setImage]} imageAlt="nahrana fotka z cesty" uid={props.userData.userDetails.uid} 
-        type={Constants.ImageType.LiveSledovanie} imageId={imageId}/>
+        type={Constants.ImageType.LiveSledovanie} imageId={imageId} imagekit/>
     </FormWithLoader>
   );
 }
