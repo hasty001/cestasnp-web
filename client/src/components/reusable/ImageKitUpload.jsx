@@ -4,6 +4,7 @@ import Loader from './Loader';
 import Uppy from '@uppy/core';
 import '@uppy/core/dist/style.css';
 import '@uppy/dashboard/dist/style.css';
+import '@uppy/webcam/dist/style.css';
 import Dashboard from '@uppy/dashboard';
 import Webcam from '@uppy/webcam';
 import skLocale from '@uppy/locales/lib/sk_SK';
@@ -68,7 +69,7 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
           authenticationEndpoint: `/api/imagekit/sign`,
           publicKey: "public_imKvVOuHUpOzrBfP+Inl1QagK/Y="
       })
-      .use(Webcam, { target: Dashboard })
+      .use(Webcam, { target: Dashboard, modes: ['picture'] })
       .use(UppyResizePlugin, { maxSize: 1600, maxFileSize: 2 * 1024 * 1024 });
 
       uppy.on('complete', result => {
