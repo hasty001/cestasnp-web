@@ -379,7 +379,7 @@ const ArticleForm = (props) => {
   const addImage = (image) => {
     const newImages = imagesAdded.map(i => i);
     newImages.push({ 
-      html: `<img class="left" src="${image.secure_url}" />`, src: image.secure_url, added: true });
+      html: `<img class="left" src="${image.secure_url || image.url}" />`, src: image.secure_url || image.url, added: true });
 
     setImagesAdded(newImages);
     setImageId(Date.now());

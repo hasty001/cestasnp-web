@@ -29,6 +29,7 @@ export const WebTitleSuffix = " - CestaSNP";
 export const CloudinaryPath = 'https://res.cloudinary.com/cestasnp-sk/image/upload/v1520586674/img/sledovanie/';
 export const CloudinaryPathNoCodePrefix = 'https://res.cloudinary.com/cestasnp-sk/image/upload/v';
 export const DefaultArticleImageFormat = 'c_limit,w_800,h_800,f_auto';
+export const DefaultArticleImageKitFormat = 'tr-w-800,h-800,c-at_max';
 
 export const ImageType = {
   LiveSledovanie: 0,
