@@ -10,6 +10,7 @@ import ImageEditor from '@uppy/image-editor';
 import skLocale from '@uppy/locales/lib/sk_SK';
 import ImageKitUppyPlugin from "../../utils/imagekit-uppy-plugin.esm";
 import UppyResizePlugin from './UppyResizePlugin';
+import { isMobile } from "react-device-detect";
 
 const getFolder = (type) => {
   switch (type) {
@@ -40,6 +41,11 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
   const [loading, setLoading] = useState();
   const [error, setError] = useState();
 
+  if (isMobile) {
+    skLocale.strings.dropPasteFiles = 'Použi %{browse}';
+    skLocale.strings.browse = 'fotoaparát alebo fotku z galérie.';
+  }
+
   useEffect(() => {
 
     const uppy = Uppy({ 
@@ -57,16 +63,17 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
         tags: getTags(type)
       } })
       .use(Dashboard, {
-          inline: false,
-          trigger: '#upload_widget',
-          showProgressDetails: true,
-          closeAfterFinish: true,
-          animateOpenClose: false,
+        inline: false,
+        trigger: '#upload_widget',
+        showProgressDetails: true,
+        closeAfterFinish: true,
+        animateOpenClose: false,
+        fileManagerSelectionType: 'files'
       })
       .use(ImageKitUppyPlugin, {
-          id: 'cestasnp',
-          authenticationEndpoint: `/api/imagekit/sign`,
-          publicKey: "public_imKvVOuHUpOzrBfP+Inl1QagK/Y="
+        id: 'cestasnp',
+        authenticationEndpoint: `/api/imagekit/sign`,
+        publicKey: "public_imKvVOuHUpOzrBfP+Inl1QagK/Y="
       })
       .use(ImageEditor, {
         id: 'ImageEditor',
