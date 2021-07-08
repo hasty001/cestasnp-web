@@ -29,6 +29,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@uppy/dashboard": "^1.20.2",
+    "@uppy/image-editor": "^0.3.0",
     "@uppy/locales": "^1.21.0",
     "@uppy/webcam": "^1.8.12",
     "body-parser": "^1.18.3",

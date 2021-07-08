@@ -4,9 +4,9 @@ import Loader from './Loader';
 import Uppy from '@uppy/core';
 import '@uppy/core/dist/style.css';
 import '@uppy/dashboard/dist/style.css';
-import '@uppy/webcam/dist/style.css';
+import '@uppy/image-editor/dist/style.css';
 import Dashboard from '@uppy/dashboard';
-import Webcam from '@uppy/webcam';
+import ImageEditor from '@uppy/image-editor';
 import skLocale from '@uppy/locales/lib/sk_SK';
 import ImageKitUppyPlugin from "../../utils/imagekit-uppy-plugin.esm";
 import UppyResizePlugin from './UppyResizePlugin';
@@ -44,7 +44,6 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
 
     const uppy = Uppy({ 
       debug: false,
-      autoProceed: true,
       locale: skLocale,
       allowMultipleUploads: false,
       restrictions: {
@@ -69,7 +68,35 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
           authenticationEndpoint: `/api/imagekit/sign`,
           publicKey: "public_imKvVOuHUpOzrBfP+Inl1QagK/Y="
       })
-      .use(Webcam, { target: Dashboard, modes: ['picture'] })
+      .use(ImageEditor, {
+        id: 'ImageEditor',
+        quality: 0.8,
+        target: Dashboard,
+        cropperOptions: {
+          viewMode: 0,
+          background: false,
+          responsive: false,
+          dragMode: 'none',
+          modal: false,
+          guides: false,
+          center: false,
+          highlight: false,
+          autoCrop: false,
+          movable: false,
+          zoomable: false,
+        },
+        actions: {
+          revert: true,
+          rotate: true,
+          granularRotate: false,
+          flip: true,
+          zoomIn: false,
+          zoomOut: false,
+          cropSquare: false,
+          cropWidescreen: false,
+          cropWidescreenVertical: false
+        }
+      })
       .use(UppyResizePlugin, { maxSize: 1600, maxFileSize: 2 * 1024 * 1024 });
 
       uppy.on('complete', result => {
