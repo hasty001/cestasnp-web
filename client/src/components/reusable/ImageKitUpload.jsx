@@ -11,6 +11,7 @@ import skLocale from '@uppy/locales/lib/sk_SK';
 import ImageKitUppyPlugin from "../../utils/imagekit-uppy-plugin.esm";
 import UppyResizePlugin from './UppyResizePlugin';
 import { isMobile } from "react-device-detect";
+import { logDev } from '../../helpers/logDev';
 
 const getFolder = (type) => {
   switch (type) {
@@ -66,7 +67,7 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
         inline: false,
         trigger: '#upload_widget',
         showProgressDetails: true,
-        closeAfterFinish: true,
+        closeAfterFinish: false,
         animateOpenClose: false,
         fileManagerSelectionType: 'files'
       })
@@ -109,8 +110,9 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
       uppy.on('complete', result => {
         if (result.successful && result.successful.length == 1) {
           updateImageDetails(result.successful[0].response.body);
-          uppy.reset();
+          
           uppy.getPlugin('Dashboard').closeModal();
+          uppy.reset();
         } else {
           updateImageDetails('');
         }
@@ -119,7 +121,9 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
       uppy.on('file-added', (file) => {
         file.name = `${uid}_${Date.now()}.${file.extension}`;
         file.meta.name = file.name;
-      })
+      });
+
+      return () => uppy.close();
   }, [uid, imageId]);
 
   return (
