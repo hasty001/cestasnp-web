@@ -174,19 +174,19 @@ DB.prototype = {
     const getDocs = findBuddiesId ? 
       Promise.all([
         this.findBy(db, _const.FindBuddiesCommentsTable,
-          { $and: [ { findBuddiesId: sFindBuddiesId }, _const.FilterNotDeleted, filterAfter] }), 
+          { $and: [ { findBuddiesId: sFindBuddiesId }, _const.FilterNotDeleted, filterAfter] }, { projection: _const.ProjectionCommentSecure }), 
         this.findOne(db, _const.FindBuddiesTable, { _id: new ObjectId(findBuddiesId) })
       ])
       : (sArticleId === 0 || sArticleId === '') ?
         Promise.all([this.findBy(db, _const.CommentsTable,
-          { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted, filterAfter] }), Promise.resolve({})])
+          { $and: [ { 'travellerDetails.id': sTravellerId }, _const.FilterNotDeleted, filterAfter] }, { projection: _const.ProjectionCommentSecure }), Promise.resolve({})])
         : Promise.all([this.findBy(db, _const.ArticleCommentsTable,
-          { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted, filterAfter] }), Promise.resolve({})]);
+          { $and: [ { article_sql_id: sArticleId }, _const.FilterNotDeleted, filterAfter] }, { projection: _const.ProjectionCommentSecure }), Promise.resolve({})]);
 
     return getDocs.then(([docs, detail]) => {
       const uids = this.getUids(docs, [d => d.uid]);
 
-      return this.getUserNames(db, uids, true)
+      return this.getUserNames(db, uids, !!findBuddiesId)
         .then(users => {
           docs.forEach(d => {
             if (d.uid) {
@@ -196,7 +196,7 @@ DB.prototype = {
                 if (findBuddiesId) {
                   const n = user.name;
 
-                  if (uid == d.uid || uid == detail.user_id) {
+                  if (uid && (uid == d.uid || uid == detail.user_id)) {
                     d.email = user.email;
                   }
                   
