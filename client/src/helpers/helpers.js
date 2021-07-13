@@ -242,8 +242,12 @@ const getArticleImage = (intro) => {
 }
 
 const fixImageUrl = (url, code) => {
-  return ((url && url != 'None') ? (url.secure_url || ((url.indexOf("/") < 0 && url.indexOf('res.cloudinary.com') === -1)?
-      `${Constants.CloudinaryPath}${url}` : url)) 
+  return ((url && url != 'None') ? 
+    (url.secure_url || url.url || 
+      (typeof url === "string" ? 
+        ((url.indexOf("/") < 0 && url.indexOf('res.cloudinary.com') === -1) ?
+          `${Constants.CloudinaryPath}${url}` : url)
+        : '')) 
     : '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
     `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`);
 };
