@@ -258,11 +258,14 @@ const replaceQuery = (url, match, newQuery) => {
 };
 
 const fixImageUrl = (url, code, codeImageKit) => {
-  return replaceQuery(((url && url != 'None') ? (url.secure_url || url.url || ((url.indexOf("/") < 0 && url.indexOf('res.cloudinary.com') === -1)?
-      `${Constants.CloudinaryPath}${url}` : url)) 
-    : '')
-    .replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
-      `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`)
+  return replaceQuery(((url && url != 'None') ? 
+    (url.secure_url || url.url || 
+      (typeof url === "string" ? 
+        ((url.indexOf("/") < 0 && url.indexOf('res.cloudinary.com') === -1) ?
+          `${Constants.CloudinaryPath}${url}` : url)
+        : '')) 
+    : '').replace(/https:\/\/res\.cloudinary\.com\/cestasnp-sk\/image\/upload(\/[^/]+?)?\/v/, 
+    `https://res.cloudinary.com/cestasnp-sk/image/upload${code ? ("/" + code) : ""}/v`)
     , 'https://ik.imagekit.io/cestasnp/', codeImageKit || '');
 };
 

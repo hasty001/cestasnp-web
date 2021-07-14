@@ -485,6 +485,11 @@ li.has-badge::after {
   border-color: black;
 }
 
+.navbar-nav>li.menu-bold>a, 
+.dropdown-menu>li.menu-bold>a {
+  font-weight: 500;
+}
+
 .navbar-nav>li>a {
   padding-bottom: 28px;
   border-bottom: 2px solid transparent;
