@@ -32,7 +32,9 @@ import Search from './components/Search';
 import FindBuddies from './components/FindBuddies';
 import FindBuddiesDetail from './components/FindBuddiesDetail';
 
-LogRocket.init('2szgtb/cestasnp-web');
+if (process.env.NODE_ENV == 'production' && Math.floor(Math.random() * 25) == 0) {
+  LogRocket.init('2szgtb/cestasnp-web');
+}
 
 const CestaSNP = props => {
   const [fillContent, setFillContent] = useState(false);
