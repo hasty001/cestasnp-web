@@ -157,7 +157,7 @@ const Navigation = () => {
               href={ROUTES.mojaCesta}
               eventKey={1}
               title="Založiť LIVE Sledovanie"
-              className="mobile"
+              className="menu-bold mobile"
             >
               Založiť LIVE Sledovanie
             </NavRouterItem>)}
@@ -176,10 +176,10 @@ const Navigation = () => {
             <NavRouterItem
               href={ROUTES.poslatSpravu}
               eventKey={2}
-              title="Poslať správu"
-              className="mobile"
+              title="Poslať správu z cesty"
+              className="menu-bold mobile"
             >
-              Poslať správu
+              Poslať správu z cesty
             </NavRouterItem>)}
 
           {!!authData.isAuth && (
@@ -190,6 +190,13 @@ const Navigation = () => {
               className="mobile"
             >
               Pridať dôležité miesto             
+            </NavRouterItem>)}
+
+          {!!authData.isAuth && isTraveler && (
+            <NavRouterItem
+              href="#"
+              className="line-divider mobile"
+            >           
             </NavRouterItem>)}
 
           {!!authData.isAuth && (
@@ -334,7 +341,7 @@ const Navigation = () => {
               href={ROUTES.mojaCesta}
               eventKey={20}
               title="Založiť LIVE Sledovanie"
-              className="desktop"
+              className="menu-bold desktop"
             >
               Založiť LIVE Sledovanie
             </NavRouterItem>)}
@@ -354,7 +361,7 @@ const Navigation = () => {
               href={ROUTES.poslatSpravu}
               eventKey={21}
               title="Poslať správu z cesty"
-              className="desktop"
+              className="menu-bold desktop"
             >
               Poslať správu z cesty
             </NavRouterItem>)}          
@@ -367,6 +374,13 @@ const Navigation = () => {
             >
               Pridať dôležité miesto             
             </NavRouterItem>
+
+          {!!authData.isAuth && isTraveler && (
+            <NavRouterItem
+              href="#"
+              className="line-divider desktop"
+            >           
+            </NavRouterItem>)}
 
             <NavRouterItem
               href={ROUTES.pridatClanok}
