@@ -86,7 +86,7 @@ const FormTextArea = (props) => {
   const insertImage = (img) => {
     setImageId(null);
       
-    const pastedBlock = stateFromHTML(`<img class="left" src="${img.secure_url}" />`, optionsFromHTML).getBlockMap();
+    const pastedBlock = stateFromHTML(`<img class="left" src="${img.secure_url || img.url}" />`, optionsFromHTML).getBlockMap();
 
     const start = savedSelection.getStartOffset();
     const newContent = Modifier.replaceWithFragment(editorState.getCurrentContent(), 
