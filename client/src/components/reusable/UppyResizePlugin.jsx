@@ -1,5 +1,4 @@
 import { Plugin } from '@uppy/core';
-import piexif from 'piexifjs';
 import { logDev } from '../../helpers/logDev';
 
 class UppyResizePlugin extends Plugin {
@@ -39,23 +38,6 @@ class UppyResizePlugin extends Plugin {
         } else {
           return checkAndResolve(blob);
         }
-
-        const getExif = (blob) => new Promise((resolve, reject) => {
-          try {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-              try {
-                const exif = piexif.load(reader.result);
-                resolve(exif);
-              } catch {
-                resolve(null);
-              }
-            };
-            reader.readAsDataURL(blob);
-          } catch {
-            resolve(null);
-          }
-        });
 
         const doResize = (blob) => new Promise((resolve, reject) => {
           try {              
@@ -108,31 +90,8 @@ class UppyResizePlugin extends Plugin {
           if(img.height <= this.maxSize && img.width <= this.maxSize) {
             checkAndResolve(blob);
           } else {
-            Promise.all([getExif(blob), doResize(blob)])
-            .then(([exif, result]) => {
-              if (!exif) {
-                return checkAndResolve(result);
-              }
-
-              const reader = new FileReader();
-              reader.onload = function(event) {
-                try {
-                  const b = piexif.insert(piexif.dump(exif), reader.result);
-
-                  const bytes = new Uint8Array(b.length);
-                  for (var i = 0; i < b.length; i++) {
-                    bytes[i] = b.charCodeAt(i);
-                  }
-
-                  logDev(result);
-                  checkAndResolve(new Blob([bytes], { type: result.type }));
-                } catch {
-                  checkAndResolve(result);
-                }
-              };
-              reader.readAsBinaryString(result);
-
-            }).catch(err => checkAndResolve(blob));
+            doResize(blob)
+            .then(result => checkAndResolve(result));
           }
         };
       });
