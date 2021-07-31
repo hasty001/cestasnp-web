@@ -280,7 +280,7 @@ const PoiForm = (props) => {
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>
 
       <FormImage value={[image, setImage]} imageAlt="nahraná fotka miesta" uid={props.uid} 
-        imageId={imageId} type={Constants.ImageType.DolezitaMiesta}/>
+        imageId={imageId} type={Constants.ImageType.DolezitaMiesta} imagekit/>
 
       {!!props.edit && newPoi && addItineraryItems(newPoi, newPoi.guideposts)}
       {!!props.edit && <FormText value={[note, setNote]} valueName="note" valueLabel="Poznámka k úprave" itemClassName="form"/>}

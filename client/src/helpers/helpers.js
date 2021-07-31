@@ -235,7 +235,8 @@ const getArticleStateIcon = (state) => {
 }
 
 const getArticleImage = (intro) => {
-  const res = intro && intro.match(/["'](https:\/\/res\.cloudinary\.com\/.*?)["']/);
+  const res = intro && (intro.match(/["'](https:\/\/res\.cloudinary\.com\/.*?)["']/)
+    || intro.match(/["'](https:\/\/ik\.imagekit\.io\/cestasnp\/.*?)["']/));
   const url = res && res.length > 1 ? res[1] : '';
 
   return fixImageUrl(url, 'c_fill,f_auto,g_auto,w_240,h_240', 'tr=w-240,h-240,fo-auto');

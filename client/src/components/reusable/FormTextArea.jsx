@@ -7,7 +7,7 @@ import { stateFromHTML } from 'draft-js-import-html';
 import { stateToHTML } from 'draft-js-export-html';
 import { findImageEntities, findLinkEntities, Image, Link, optionsFromHTML, optionsToHTML } from './Decorators';
 import LinkBox from './LinkBox';
-import CloudinaryWidget from './CloudinaryWidget';
+import ImageKitUpload from './ImageKitUpload';
 import * as Constants from '../Constants';
 import {getDefaultKeyBinding, KeyBindingUtil} from 'draft-js';
 const {hasCommandModifier} = KeyBindingUtil;
@@ -242,7 +242,7 @@ const FormTextArea = (props) => {
            onDelete={() => setLink(null)}
            onHide={() => setLink(null, true)}
            />
-        <CloudinaryWidget show={!!imageId} uid={props.uid} imageId={imageId} 
+        <ImageKitUpload show={!!imageId} uid={props.uid} imageId={imageId} 
             updateImageDetails={i => insertImage(i)} type={Constants.ImageType.Clanky} />
          <div className="editor-toolbar">
            <button title="Tučne" className={inlineHas("BOLD")} onMouseDown={e => { e.preventDefault(); toggleInline("BOLD"); }}><strong>B</strong></button>
