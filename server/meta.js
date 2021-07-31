@@ -52,7 +52,9 @@ const getArticleMeta = (dbRef, articleId) =>
 
             const imgRegEx = 
               () => {
-                const res = results[0].introtext && results[0].introtext.match(/["'](https:\/\/res.cloudinary.com\/.*?)["']/);
+                const res = results[0].introtext && 
+                  (results[0].introtext.match(/["'](https:\/\/res\.cloudinary\.com\/.*?)["']/)
+                    || results[0].introtext.match(/["'](https:\/\/ik\.imagekit\.io\/cestasnp\/.*?)["']/));
                 return res && res.length > 1 ? res[1] : null;
               };
 

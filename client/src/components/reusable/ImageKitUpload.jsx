@@ -39,6 +39,8 @@ const getTags = (type) => {
 }
 
 const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }) => {
+  const [widget, setWidget] = useState();
+  const [showing, setShowing] = useState();
   const [loading, setLoading] = useState();
   const [error, setError] = useState();
 
@@ -111,7 +113,9 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
         if (result.successful && result.successful.length == 1) {
           updateImageDetails(result.successful[0].response.body);
           
-          uppy.getPlugin('Dashboard').closeModal();
+          if (uppy.getPlugin('Dashboard')) {
+            uppy.getPlugin('Dashboard').closeModal();
+          }
           uppy.reset();
         } else {
           updateImageDetails('');
@@ -123,8 +127,24 @@ const ImageKitUpload = ({ uid, imageId, updateImageDetails, btnTxt, type, show }
         file.meta.name = file.name;
       });
 
+      setWidget(uppy);
+
       return () => uppy.close();
   }, [uid, imageId]);
+
+  useEffect(() => {
+    if (widget && widget.getPlugin('Dashboard')) {
+      if (!show) {
+        widget.getPlugin('Dashboard').closeModal();
+        widget.reset();
+      } else {
+        if (show && showing != imageId) {
+          setShowing(imageId);
+          widget.getPlugin('Dashboard').openModal();
+        }
+      }
+    }
+  }, [widget, show, imageId]);
 
   return (
     <>

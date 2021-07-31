@@ -8,15 +8,13 @@ import FormLatLon from '../reusable/FormLatLon';
 import FormText from '../reusable/FormText';
 import FormSelect from '../reusable/FormSelect';
 import FormTextArea from '../reusable/FormTextArea';
-import FormImage from '../reusable/FormImage';
 import { useStateEx, useStateWithSessionStorage } from '../../helpers/reactUtils';
-import FormCheckBox from '../reusable/FormCheckBox';
 import FormMultiSelect from '../reusable/FormMultiSelect';
 import ArticlePreviewBox from '../reusable/ArticlePreviewBox';
 import { A } from '../reusable/Navigate';
 import ArticleDiffBox from '../reusable/ArticleDiffBox';
 import FormItem from '../reusable/FormItem';
-import CloudinaryWidget from '../reusable/CloudinaryWidget';
+import ImageKitUpload from '../reusable/ImageKitUpload';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import CanMaximize from '../reusable/CanMaximize';
 import { Prompt } from 'react-router';
@@ -527,9 +525,10 @@ const ArticleForm = (props) => {
                 <button className={imageHas(image, 'preview')} title="S náhľadom" onClick={() => imageToggleClass(image, 'preview')}><i className="fas fa-external-link-alt" /></button>
               </span>
 
-              {image.html.replace('https://res.cloudinary.com/cestasnp-sk/image/upload', '...')}
+              {image.html.replace('https://res.cloudinary.com/cestasnp-sk/image/upload', '...')
+                .replace('https://ik.imagekit.io/cestasnp', '...')}
             </div>))}
-          <CloudinaryWidget uid={props.uid} imageId={imageId} 
+          <ImageKitUpload uid={props.uid} imageId={imageId} 
             updateImageDetails={i => addImage(i)} 
             btnTxt="Pridať" type={Constants.ImageType.Clanky} />
         </>
