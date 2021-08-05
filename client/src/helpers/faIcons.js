@@ -5,7 +5,7 @@ import { faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExterna
   faStar as fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
   faListOl, faCompress, faLayerGroup, faSearch, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faImages, faCopy, faWindowRestore, faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faFacebookF, faInstagram, faPatreon } from '@fortawesome/free-brands-svg-icons';
 
 const faPristresek = {
   prefix: 'fac',
@@ -37,7 +37,7 @@ const faIconsRegister = () => {
 
   library.add(faStar, faImages, faCopy, faWindowRestore, faEnvelope);
 
-  library.add(faFacebookF, faInstagram);
+  library.add(faFacebookF, faInstagram, faPatreon);
   
   library.add(faPristresek, faPosed, faAnjel);
 
