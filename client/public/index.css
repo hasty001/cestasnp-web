@@ -1287,13 +1287,17 @@ li.red-button>a:active {
 }
 
 .site-footer a.facebook,
-.site-footer a.instagram {
+.site-footer a.instagram, 
+.site-footer a.patreon {
   display: inline;
   border-radius: 8px;
   background-color: #58595B;
   color: #fff;
-  padding: 6px 5px 2px 13px;
   margin: 12px;
+}
+
+.site-footer a.facebook {
+  padding: 6px 5px 3px 13px;
   font-size: 20px;
 }
 
@@ -1302,7 +1306,15 @@ li.red-button>a:active {
   font-size: 24px;
 }
 
-.site-footer a.facebook:hover, .site-footer a.instagram:hover {
+.site-footer a.patreon {
+  padding: 6px 6px 5px;
+  font-size: 18px;
+  top: -2px;
+  position: relative;
+}
+
+.site-footer a.facebook:hover, .site-footer a.instagram:hover,
+.site-footer a.patreon:hover {
   background-color: red;
   color: #fff !important;
  }
