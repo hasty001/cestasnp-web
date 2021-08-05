@@ -49,6 +49,7 @@ const SiteFooter = (props) => {
           <h3>
             <a className="facebook" title="Facebook CestaSNP.sk" href="https://www.facebook.com/cestasnp.sk" target="_blank"><i className="fab fa-facebook-f"/></a>
             <a className="instagram" title="Instagram CestaSNP.sk" href="https://www.instagram.com/cestasnp.sk/" target="_blank"><i className="fab fa-instagram"/></a>
+            <a className="patreon" title="Podpor nás cez Patreon" href="https://www.patreon.com/cestasnp" target="_blank"><i className="fab fa-patreon"/></a>
           </h3>
         </div>
         <div className="col3">
