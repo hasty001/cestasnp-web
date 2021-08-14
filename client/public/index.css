@@ -244,6 +244,10 @@ html, body, #root {
   padding: 0 !important;
 } 
 
+.uppy-Root {
+  z-index: 2000;
+}
+
 .uppy-Dashboard--modal .uppy-Dashboard-inner {
   top: 80px;
 }
