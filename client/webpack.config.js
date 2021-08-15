@@ -21,13 +21,13 @@ module.exports = {
       cacheGroups: {
         react: {
           priority: 10,
-          test: /[\\/]node_modules[\\/](core-js|whatwg-fetch|promise-polyfill|react|firebase)/,
+          test: /[\\/]node_modules[\\/](?!react-pageflip)(core-js|whatwg-fetch|promise-polyfill|react|firebase)/,
           name: 'react',
           enforce: true,
           chunks: 'all'
         },
         shared: {
-          test: /[\\/]node_modules[\\/]/,
+          test: /[\\/]node_modules[\\/](?!react-pageflip)(?!page-flip)/,
           name: 'shared',
           enforce: true,
           chunks: 'all'
