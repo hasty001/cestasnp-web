@@ -17,3 +17,10 @@ client/build/book.css
 client/build/book.js
 client/build/book.js.map
 client/build/bundle.css
+client/build/shared.js
+client/build/shared.js.map
+client/build/react.js
+client/build/react.js.map
+client/build/runtime.js
+client/build/runtime.js.map
+client/build/shared.css
