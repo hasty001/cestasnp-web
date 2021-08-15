@@ -6,11 +6,34 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   mode: 'development',
-  entry: ['./src/index.js', "./public/index.css"],
+  entry: { 
+    bundle: ['./src/index.js', "./public/index.css"], 
+  },
   output: {
     path: path.resolve('./build'),
-    filename: 'bundle.js'
+    filename: '[name].js',
+    chunkFilename: '[name].js'
   },
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        react: {
+          priority: 10,
+          test: /[\\/]node_modules[\\/](core-js|whatwg-fetch|promise-polyfill|react|firebase)/,
+          name: 'react',
+          enforce: true,
+          chunks: 'all'
+        },
+        shared: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'shared',
+          enforce: true,
+          chunks: 'all'
+        }
+      }
+    }
+ },
   devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.html', '.css']
