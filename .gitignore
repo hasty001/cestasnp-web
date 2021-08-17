@@ -11,5 +11,11 @@ article-fulltext.html
 article-introtext.html
 article.json
 server/data/snp.json
-client/build/main.css
-client/build/main.css.map
+client/build/*.css
+client/build/*.css.gz
+client/build/*.css.br
+client/build/*.css.map
+client/build/*.js
+client/build/*.js.gz
+client/build/*.js.br
+client/build/*.js.map
