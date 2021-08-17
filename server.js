@@ -8,6 +8,7 @@ const DB = require('./server/db/db');
 const compression = require('compression');
 const replaceAll = require('string.prototype.replaceall');
 const _const = require('./const');
+var expressStaticGzip = require("express-static-gzip");
 
 const app = express();
 const http = require('http').Server(app);
@@ -64,7 +65,11 @@ app.use(compression({
   threshold: 1024
 }));
 
-app.use(express.static(root));
+app.use(expressStaticGzip(root, {
+  enableBrotli: true,
+  orderPreference: ['br']
+}));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
