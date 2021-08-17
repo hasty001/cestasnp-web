@@ -6,6 +6,7 @@ const { getMeta } = require('./server/meta');
 const { MongoClient } = require('mongodb');
 const compression = require('compression');
 const replaceAll = require('string.prototype.replaceall');
+var expressStaticGzip = require("express-static-gzip");
 
 const app = express();
 const http = require('http').Server(app);
@@ -62,7 +63,11 @@ app.use(compression({
   threshold: 1024
 }));
 
-app.use(express.static(root));
+app.use(expressStaticGzip(root, {
+  enableBrotli: true,
+  orderPreference: ['br']
+}));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
