@@ -29,7 +29,7 @@ const Articles = (props) => {
     setLoading(true);
     setError('');
 
-    fetchJson(filter ? `/api/articles/category/${filter}` : '/api/articles/')
+    fetchJson(filter ? `/api/articles/category/${filter}` : '/api/articles')
     .then(count => {
       setPages(Math.ceil(count / Constants.ArticlesPageSize));
     })
