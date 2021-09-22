@@ -16,7 +16,7 @@ import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
 import * as Constants from './Constants';
 import { faMapMarkerAlt, faMapMarker } from '@fortawesome/free-solid-svg-icons';
-import { useStateProp, useStateWithLocalStorage } from "../helpers/reactUtils";
+import { useStateProp, useStateWithLocalStorage, useStateResize } from "../helpers/reactUtils";
 import { findPoiCategory, PoiCategories } from "./PoiCategories";
 import { generateAnchor } from "./reusable/Navigate";
 import { dateTimeToStr, escapeHtml, htmlSimpleSanitize } from "../helpers/helpers";
@@ -123,7 +123,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
   const [viewProp, setViewProp] = useStateProp(view);
   const [popupContent, setPopupContent] = useState('');
   const [popupFeature, setPopupFeature] = useState(null);
-  const [canFullScreen, setCanFullScreen] = useState(() => window.innerWidth <= Constants.MaxFullscreenPopupWidth);
+  const [canFullScreen, setCanFullScreen] = useStateResize(() => window.innerWidth <= Constants.MaxFullscreenPopupWidth);
   const [moving, setMoving] = useState(false);
   const [showLayersPanel, setShowLayersPanel] = useState(false);
   const [mapLayersHide, setMapLayersHide] = useStateWithLocalStorage("MapLayersHide", []);
@@ -472,20 +472,6 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
       }
 
   }, [markers, map, mapMarkerSource]);
-
-  useEffect(() => {
-    function handleResize() {
-      const newValue = window.innerWidth <= Constants.MaxFullscreenPopupWidth; 
-      if (canFullScreen != newValue) {
-        setCanFullScreen(newValue);
-      }
-    };
-
-    window.removeEventListener('resize', handleResize);
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, [canFullScreen]);
 
   const changeLayer = (layer) => {
     const hidden = (!!mapLayersHide && mapLayersHide.indexOf(layer) >= 0);

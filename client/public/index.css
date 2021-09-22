@@ -1778,6 +1778,17 @@ span.poi-text {
   padding: 2px 4px;
 }
 
+@media (max-width: 600px) {
+  .itinerary-table td, 
+  .itinerary-table th,
+  .pois-table td,
+  .pois-table th,
+  .changes-table td,
+  .changes-table th {
+    padding: 2px 2px;
+  }
+}
+
 .itinerary-value {
   text-align: right;
 }
