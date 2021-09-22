@@ -31,6 +31,29 @@ const useStateEx = (initial = undefined, callback = undefined) => {
 }
 
 /**
+ * Use state, which can change on resize.
+ */
+const useStateResize = (getValue = undefined) => {
+  const [value, setValue] = useState(getValue());
+
+  useEffect(() => {
+    function handleResize() {
+      const newValue = getValue(); 
+      if (value != newValue) {
+        setValue(newValue);
+      }
+    };
+  
+    window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
+  
+    return () => window.removeEventListener('resize', handleResize);
+  }, [value]);
+
+  return [value, setValue];
+}
+
+/**
  * Log changed props to console.
  */
 const useTraceUpdate = (props) => {
@@ -99,4 +122,5 @@ const useStateWithSessionStorage = (key, defValue = null, callback = null) => {
 };
 
 
-export { useStateProp, useStateEx, useStateWithLocalStorage, useStateWithSessionStorage, useTraceUpdate }
+export { useStateProp, useStateEx, useStateWithLocalStorage, useStateWithSessionStorage, useTraceUpdate, 
+  useStateResize }

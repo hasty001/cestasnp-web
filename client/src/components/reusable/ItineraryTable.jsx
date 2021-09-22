@@ -104,6 +104,11 @@ const ItineraryTable = (props) => {
     return `${hours}:${minutes.length == 2 ? minutes : '0' + minutes}`;
   }
 
+  const getInsertNear = (item) => insertNear == item.id ? 
+    insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertNear(item.id); setInsertAfter(null); }}>vložiť tu</a></div> : "");
+  const getInsertAfter = (item) => insertAfter == item.id ? 
+    insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertAfter(item.id); setInsertNear(null); }}>vložiť tu</a></div> : "");
+
   return (
     <div>
       <table className="itinerary-table">
@@ -111,16 +116,17 @@ const ItineraryTable = (props) => {
         <tr>
           <th className="itinerary-value">Km od</th>
           <th className="itinerary-value">Km do</th>
-          <th>Razcestie</th>
+          <th>{props.compact ? "" : "Razcestie"}</th>
           {!props.noDetails && (
           <>
-          <th className="itinerary-value">Vzdialenosť (km)</th>
-          <th className="itinerary-value">Asfalt (km)</th>
-          <th className="itinerary-value">Stúpanie (m)</th>
-          <th className="itinerary-value">Klesanie (m)</th>
+          <th className="itinerary-value">{props.compact ? "Vzd. (km)" : "Vzdialenosť (km)"}</th>
+          <th className="itinerary-value">{props.compact ? "Asf. (km)" : "Asfalt (km)"}</th>
+          <th className="itinerary-value">{props.compact ? "St. (m)" : "Stúpanie (m)"}</th>
+          <th className="itinerary-value">{props.compact ? "Kl. (m)" : "Klesanie (m)"}</th>
           <th className="itinerary-value">Čas (h)</th>
           </>)}
-          <th>Poznámky</th>
+          {!props.compact &&
+          <th>Poznámky</th>}
         </tr>
       </thead>
       <tbody>
@@ -136,23 +142,27 @@ const ItineraryTable = (props) => {
                   <b>{guidepostName}</b>
                 </A>
               </td>
-              <td>{item.info}{insertNear == item.id ? 
-                insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertNear(item.id); setInsertAfter(null); }}>vložiť tu</a></div> : "")}</td>
+              {!props.compact && <td>{item.info}{getInsertNear(item)}</td>}
             </tr>
+            {!!props.compact && (!!item.info || !!getInsertNear(item)) && 
+              <tr className="itinerary-row-guidepost"><td colSpan="8">{item.info}{getInsertNear(item)}</td></tr>}
             {i < items.length - 1 ? (
-              <tr>
-                <td colSpan={3}>{"\u00A0"}</td>
-                {!props.noDetails && (
-                <>
-                <td data-nosnippet className="itinerary-value">{formatNumber(item.dist, 1)}</td>
-                <td data-nosnippet className="itinerary-value">{formatNumber(item.asphalt, 1)}</td>
-                <td data-nosnippet className="itinerary-value">{formatNumber(item.altUp)}</td>
-                <td data-nosnippet className="itinerary-value">{formatNumber(item.altDown)}</td>
-                <td data-nosnippet className="itinerary-value">{formatHours(item.time)}</td>
-                </>)}
-                <td>{item.infoAfter}{insertAfter == item.id ? 
-                  insertInfo : (props.select ? <div><a href="#" onClick={e => { e.preventDefault(); setInsertAfter(item.id); setInsertNear(null); }}>vložiť tu</a></div> : "")}</td>
-              </tr>
+              <>
+                <tr>
+                  <td colSpan={3}>{"\u00A0"}</td>
+                  {!props.noDetails && (
+                  <>
+                  <td data-nosnippet className="itinerary-value">{formatNumber(item.dist, 1)}</td>
+                  <td data-nosnippet className="itinerary-value">{formatNumber(item.asphalt, 1)}</td>
+                  <td data-nosnippet className="itinerary-value">{formatNumber(item.altUp)}</td>
+                  <td data-nosnippet className="itinerary-value">{formatNumber(item.altDown)}</td>
+                  <td data-nosnippet className="itinerary-value">{formatHours(item.time)}</td>
+                  </>)}
+                  {!props.compact && <td>{item.infoAfter}{getInsertAfter(item)}</td>}
+                </tr>
+                {!!props.compact && (!!item.infoAfter || !!getInsertAfter(item)) && 
+                  <tr><td colSpan="8">{item.infoAfter}{getInsertAfter(item)}</td></tr>}
+              </>
             ) : null}
           </Fragment>);
         })}
