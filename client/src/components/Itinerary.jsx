@@ -7,6 +7,7 @@ import PageWithLoader from './reusable/PageWithLoader';
 import * as Texts from './Texts';
 import * as Constants from './Constants';
 import { navigate } from './reusable/Navigate';
+import { useStateResize } from '../helpers/reactUtils';
 
 const Itinerary = (props) => {
 
@@ -16,6 +17,7 @@ const Itinerary = (props) => {
   const [dialogStartEnd, setDialogStartEnd] = useState(null);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [itinerary, setItinerary] = useState([]);
+  const [compact, setCompact] = useStateResize(() => window.innerWidth <= Constants.ItineraryCompactMaxWidth);
 
   const fetchData = () => fetchJson('/api/itinerary')
     .then(data => {
@@ -93,7 +95,7 @@ const Itinerary = (props) => {
           </Modal.Footer>
         </Modal>
 
-        <ItineraryTable itinerary={itinerary} start={startEnd ? startEnd[0] : null} end={startEnd ? startEnd[1] : null}/>
+        <ItineraryTable compact={compact} itinerary={itinerary} start={startEnd ? startEnd[0] : null} end={startEnd ? startEnd[1] : null}/>
       </>
     </PageWithLoader>
   );
