@@ -13,6 +13,15 @@
   text-decoration-line: line-through;
 }
 
+.inline-elem {
+  display: inline !important;
+  margin-right: 15px;
+}
+
+.pad-left {
+  margin-left: 15px;
+}
+
 img {
   max-width: 100% !important;
 }
@@ -2219,6 +2228,17 @@ button#dropdown-basic-1 {
   top: 3px;
 }
 
+.active-traveller-marker .marker-symbol {
+  position: absolute;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  left: 0px;
+  top: 4px;
+  width: 100%;
+}
+
 #NaCesteFotky {
   font-size: 15px;
   font-weight: 300;
@@ -2693,7 +2713,16 @@ button#dropdown-basic-1 {
   height: 36px;
   min-width: 160px;
   margin: 5px 0;
-  padding-left: 10px;
+  padding-left: 5px;
+}
+
+input.short {
+  width: 120px !important;
+  min-width: unset !important;
+}
+
+input.short.inline-elem {
+  margin: 5px 0 5px 10px;
 }
 
 .fanAccountWrap select, #AddPoi select.form, .edit-poi-box select.form,

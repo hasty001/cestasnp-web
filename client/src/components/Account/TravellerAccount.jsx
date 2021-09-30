@@ -28,6 +28,8 @@ const TravellerAccount = (props) => {
     props.userData.travellerDetails.start_miesto == 'Devín';
 
   const [name, setName] = useStateEx(props.edit ? props.userData.travellerDetails.meno : '', clearMsg);
+  const [color, setColor] = useStateEx(props.edit ? props.userData.travellerDetails.color : '', clearMsg);
+  const [symbol, setSymbol] = useStateEx(props.edit ? props.userData.travellerDetails.symbol : '', clearMsg);
   const [text, setText] = useStateEx(props.edit ? props.userData.travellerDetails.text : '', clearMsg);
   const [start, setStart] = useStateEx(props.edit ?
     (isDuklaDevin ? props.userData.travellerDetails.start_miesto : 'oth') : 'Dukla', clearMsg);
@@ -47,6 +49,8 @@ const TravellerAccount = (props) => {
     if (props.edit) {
       if (
         name === props.userData.travellerDetails.meno &&
+        color === props.userData.travellerDetails.color &&
+        symbol === props.userData.travellerDetails.symbol &&
         text === props.userData.travellerDetails.text &&
         (start === props.userData.travellerDetails.start_miesto ||
          startOther === props.userData.travellerDetails.start_miesto) &&
@@ -122,6 +126,8 @@ const TravellerAccount = (props) => {
 
     const data = {
       meno: name,
+      color: color,
+      symbol: symbol,
       text: text,
       start_date: format(sStartDate, 'YYYY-MM-DD'),
       uid: props.userData.userDetails.uid,
@@ -185,6 +191,35 @@ const TravellerAccount = (props) => {
 
         <FormTextArea valueName="text" valueLabel="O tvojej skupine alebo putovaní" value={[text, setText]}
           inputAttrs={{ placeholder: "(min. 32 znakov)" }} />
+
+        <FormSelect
+          valueName="color" valueLabel={<>Špendlík v Live sledovaní
+            <span key={color}>
+              <div className="active-traveller-marker" title="vzor ukazovatela">
+                <i className="fas fa-map-marker marker-image" style={{ color: color || "red", width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} ></i>
+                <span className="marker-symbol">{symbol || "⬤"}</span>
+              </div>
+            </span></>} value={[color, setColor]}
+          options={[
+            { value: '', label: ''},
+            { value: 'rgb(255,0,0)', label: 'červený'},
+            { value: 'rgb(0,0,0)', label: 'černý'},
+            { value: 'rgb(21,63,202)', label: 'modrý'},
+            { value: 'rgb(120,7,237)', label: 'fialový'},
+            { value: 'rgb(164,83,17)', label: 'hnedý'},
+            { value: 'rgb(255,156,0)', label: 'oranžový'},
+            { value: 'rgb(213,9,237)', label: 'svetlo fialový'},
+            { value: 'rgb(234,52,175)', label: 'růžový'},
+            { value: 'rgb(48,255,0)', label: 'svetlo zelený'},
+            { value: 'rgb(146,51,51)', label: 'tmavo hnedý'},
+            { value: 'rgb(21,140,203)', label: 'svetlo modrý'},
+            { value: 'rgb(255,228,1)', label: 'žltý'},
+            { value: 'rgb(200,20,20)', label: 'tmavo červený'},
+            { value: 'rgb(30,200,30)', label: 'zelený'},
+            ]} />
+
+        <FormText className="pad-left" valueName="symbol" valueLabel="Symbol" value={[symbol, setSymbol]}
+          itemClassName="short inline-elem" inputAttrs={{ maxLength: "2", placeholder: "(max. 2 znaky)" }} />
 
         <FormSelect valueName="start" valueLabel="Kde štartuješ/te?" value={[start, setStart]}
           options={[{ value: "Dukla", label: "Dukla" }, { value: "Devín", label: "Devín" },

@@ -42,40 +42,40 @@ const svg = (iconDefinition, color) => encodeURIComponent(`<svg width="${iconDef
   + `<path d="${iconDefinition.icon[4]}" fill="${color}" stroke="none" />`
   + '</svg>');
 
-const shadowInnerStyle = new Style({
-  image: new Icon({
-    opacity: 0.6,
-    src: 'data:image/svg+xml,' + svg(faMapMarkerAlt, 'white'),
-    scale: Constants.PoiMarkerSize / 512.0 * 0.8,
-    anchor: [0.5, 1],
-    imgSize: [faMapMarkerAlt.icon[0], faMapMarkerAlt.icon[1]]
-  })
-});
-
 const shadowOuterStyle = new Style({
   image: new Icon({
     opacity: 0.6,
-    src: 'data:image/svg+xml,' + svg(faMapMarkerAlt, 'white'),
+    src: 'data:image/svg+xml,' + svg(faMapMarker, 'white'),
     scale: Constants.PoiMarkerSize / 512.0 * 1.08,
     anchor: [0.5, 1],
-    imgSize: [faMapMarkerAlt.icon[0], faMapMarkerAlt.icon[1]]
+    imgSize: [faMapMarker.icon[0], faMapMarker.icon[1]]
   })
 });
 
-const getMarkerStyle = (color, zIndex, withShadow = false) => {
+const getMarkerStyle = (color, zIndex, withShadow = false, symbol = null) => {
 
-  const markerStyle = color => new Style({
-    image: new Icon({
-      opacity: 1,
-      src: 'data:image/svg+xml,' + svg(faMapMarkerAlt, color),
-      scale: Constants.PoiMarkerSize / 512.0,
-      anchor: [0.5, 1],
-      imgSize: [faMapMarkerAlt.icon[0], faMapMarkerAlt.icon[1]],
-    }),
-    zIndex
-  });
+  const symbolColor = color == "white" ? "red" : "white";
 
-  return withShadow ? [shadowInnerStyle, shadowOuterStyle, markerStyle(color)] : markerStyle(color);
+  const markerStyle = color => 
+    new Style({
+      image: new Icon({
+        opacity: 1,
+        src: 'data:image/svg+xml,' + svg(faMapMarker, color),
+        scale: Constants.PoiMarkerSize / 512.0,
+        anchor: [0.5, 1],
+        imgSize: [faMapMarker.icon[0], faMapMarker.icon[1]],
+      }),
+      text: new Text({
+        opacity: 1,
+        font: '500 15px Ubuntu,sans-serif',
+        text: symbol || "⬤",
+        offsetY: -20,
+        fill: new Fill({ color: symbolColor }),
+      }),
+      zIndex
+    });
+
+  return withShadow ? [shadowOuterStyle, markerStyle(color)] : markerStyle(color);
 }
 
 const getPoiMarkerStyle = (iconDefinition, color, zIndex) => {
@@ -204,7 +204,8 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
         feature.get('kind') == 'circle' ? blueStyle : 
         feature.get('kind') == 'marker' ? (feature.get('selected') ? whiteMarkerStyle : blueMarkerStyle) :
         feature.get('kind') == 'stop' ? getMarkerStyle(feature.get('selected') ? 'white' : 
-          (feature.get('data') ? (feature.get('data').color || 'red') : 'red'), feature.get('selected') ? 1000 : 30, true)
+          (feature.get('data') ? (feature.get('data').color || 'red') : 'red'), feature.get('selected') ? 1000 : 30, true,
+          feature.get('data') ? feature.get('data').symbol : null)
           : (feature.get('selected') ? poiStyleSelected : poiStyle)[feature.get('category') || Constants.PoiCategoryOther](feature, resolution)});
 
     let popupOverlay = new ol.Overlay({

@@ -5,7 +5,7 @@ const FormItem = (props) => {
   const [edit, setEdit] = useStateProp(props.edit, false);
   
   return (
-    <label htmlFor={props.valueName} lang="sk" >
+    <label htmlFor={props.valueName} lang="sk" className={props.className || ''} >
       <span onClick={() => setEdit(!edit)} >
         {props.valueLabel} {!!props.useEdit && <i className="fas fa-edit" />}
       </span>

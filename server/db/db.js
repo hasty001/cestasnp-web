@@ -505,13 +505,15 @@ DB.prototype = {
       });
   },
 
-  createTraveller({ meno, text, start_date, uid, start_miesto, number, email }) {
+  createTraveller({ meno, color, symbol, text, start_date, uid, start_miesto, number, email }) {
     return dbConnect(db => {
       return this.getDetailsNames(db)
       .then(([t, names]) => {
         const travellerRecord = {
           sql_id: '',
           meno: sanitize(meno), // nazov skupiny
+          color: sanitize(color), // barva pinu
+          symbol: sanitize(symbol), // symbol na pinu
           url_name: sanitize(this.getUniqueDetailsName(meno, start_date, names)),
           text: sanitize(text), // popis skupiny
           start_date: sanitize(start_date),
@@ -550,6 +552,8 @@ DB.prototype = {
 
   updateTraveller({
       meno,
+      color, 
+      symbol,
       text,
       start_date,
       uid,
@@ -585,6 +589,8 @@ DB.prototype = {
             .findOneAndUpdate({ user_id: sanitizeUserId(uid) }, {
                 $set: {
                   meno: sanitize(meno), // nazov skupiny
+                  color: sanitize(color), // barva pinu
+                  symbol: sanitize(symbol), // symbol na pinu
                   url_name: url_name,
                   text: sanitize(text), // popis skupiny
                   start_date: sanitize(start_date),
