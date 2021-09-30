@@ -53,11 +53,13 @@ const Traveller = (props) => {
       };
 
       return Promise.all([
+        data[0],
         fetchJson(`/api/traveller/messages/${data[0].user_id}`), 
         fetchPostJson('/api/traveller/comments', commentData)]);
     })
-    .then(([msgData, comments]) => {
-      const msgs = msgData.map(m => m).concat(comments.map(c => Object.assign({ isComment: true }, c)));
+    .then(([details, msgData, comments]) => {
+      const msgs = msgData.map(m => Object.assign({ color: details.color, symbol: details.symbol}, m))
+        .concat(comments.map(c => Object.assign({ isComment: true }, c)));
       setMessagesData(msgs);
     })
     .catch(err => {

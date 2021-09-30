@@ -299,15 +299,17 @@ router.post('/userCheck', (req, res) => {
 });
 
 router.post('/setupTraveller', (req, res) => {
-  const { meno, text, start_date, uid, start_miesto, number, email } = req.body;
+  const { meno, color, symbol, text, start_date, uid, start_miesto, number, email } = req.body;
 
-  checkToken(req, res, uid, () => db.createTraveller({ meno, text, start_date, uid, start_miesto, number, email }),
+  checkToken(req, res, uid, () => db.createTraveller({ meno, color, symbol, text, start_date, uid, start_miesto, number, email }),
     () => meno && text && start_date);
 });
 
 router.post('/updateTraveller', (req, res) => {
   const {
     meno,
+    color, 
+    symbol, 
     text,
     start_date,
     uid,
@@ -324,6 +326,8 @@ router.post('/updateTraveller', (req, res) => {
   checkToken(req, res, uid, () =>
     db.updateTraveller({
       meno,
+      color,
+      symbol, 
       text,
       start_date,
       uid,
