@@ -50,7 +50,7 @@ const Active = (props) => {
         activeTravellers.forEach(trvlr => {
           trvlr.started = parseDate(trvlr.start_date) <= now;
 
-          trvlr.color = trvlr.started ? colors[colorIndex % colors.length] : grey;
+          trvlr.color = trvlr.started ? (trvlr.color || colors[colorIndex % colors.length]) : grey;
           colorIndex += trvlr.started ? 1 : 0;
         });
         
@@ -78,9 +78,10 @@ const Active = (props) => {
           <A key={i} href={`/na/${traveller.url_name || traveller.user_id}`}>
             <div className={`active-traveller ${traveller.started ? 'started' : ''}`.trim()} style={{backgroundColor: traveller.color, borderColor: traveller.color}}>
               <div className="active-traveller-name">               
-                {traveller.started && <div className="active-traveller-marker">
+                {traveller.started && <div className="active-traveller-marker" title="vzor ukazovatela">
                   <i className="fas fa-map-marker marker-border" style={{ width: `${Constants.PoiMarkerSize + 6}px`, height: `${Constants.PoiMarkerSize + 6}px` }}></i>
-                  <i className="fas fa-map-marker-alt marker-image" style={{ color: traveller.color, width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} title="vzor ukazovatela"></i>
+                  <i className="fas fa-map-marker marker-image" style={{ color: traveller.color, width: `${Constants.PoiMarkerSize}px`, height: `${Constants.PoiMarkerSize}px` }} ></i>
+                  <span className="marker-symbol">{traveller.symbol || "⬤"}</span>
                 </div>}
                 {' '}{traveller.meno} 
               </div>
