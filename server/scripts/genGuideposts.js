@@ -80,18 +80,6 @@ const geoPath = dukla_devin.features[0].geometry.coordinates;
 var lastG = null;
 const osmGuideposts = relation.members.filter(m => m.role === 'guidepost');
 
-const g1 = osmGuideposts.findIndex(g => g.ref === 750494708);
-if (g1 >= 0) {
-  osmGuideposts.splice(g1 + 1, 0, { ref: -1 });
-  osm.elements.push({ id: -1, tags: { name: "Bardejov", ele: 271 }, type: 'node', lat: 49.295323, lon: 21.279836 });
-}
-
-const g2 = osmGuideposts.findIndex(g => g.ref === 718381766);
-if (g2 >= 0) {
-  osmGuideposts.splice(g2 + 1, 0, { ref: -2 });
-  osm.elements.push({ id: -2, tags: { name: "Hervartov", ele: 472 }, type: 'node', lat: 49.246364, lon: 21.200227 });
-}
-
 const guideposts = osmGuideposts.map((g, index) => {
   const data = osm.elements.find(e => e.type === 'node' && e.id === g.ref);
 
