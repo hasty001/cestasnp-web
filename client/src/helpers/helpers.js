@@ -276,13 +276,15 @@ const getArticleCategoryText = (tag) => {
   return index >= 0 ? Constants.ArticleCategories[index].text : "";
 }
 
-const getTravellersImages = travellers => travellers ? 
+const getTravellersImages = (travellers, now) => travellers ? 
   travellers.filter(t => t.lastImg && t.lastImg != "None").slice(0, Constants.MaxActivePhotos).map(t => {
     const url = `/na/${t.url_name || t.user_id}${t.finishedTracking ? Constants.FromOldQuery : ''}#${t.lastImgMsgId}`;
     const title = t.meno;
 
-    return { url: url, title: title, src: fixImageUrl(t.lastImg), 
-        aspect: (t.lastImg && t.lastImg.width && t.lastImg.height) ? (t.lastImg.height / t.lastImg.width) : 1 };
+    return { 
+      url: url, title: title, src: fixImageUrl(t.lastImg), 
+      style: (t.lastImgDate && differenceInDays(now, parseDate(t.lastImgDate)) >= 7) ? "old" : "",
+      aspect: (t.lastImg && t.lastImg.width && t.lastImg.height) ? (t.lastImg.height / t.lastImg.width) : 1 };
   }) : [];
 
 const sortActiveTravellers = (travellers, now) => {

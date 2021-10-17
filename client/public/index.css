@@ -2968,6 +2968,10 @@ div.wpcc-container a.wpcc-btn:focus {
   transition: 0.4s;
 }
 
+.simple-masonry-image.old {
+  filter: sepia(75%);
+}
+
 .simple-masonry-image:hover {
   filter: brightness(50%);
 }
