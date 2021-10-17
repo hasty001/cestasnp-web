@@ -156,7 +156,8 @@ const PoisInTable = (props) => {
           </thead>
           <tbody>
             {!!poisSorted && poisSorted.filter(poi => poi._id && (!poi.deleted || showDeleted) 
-              && (isEmpty(filter) || !filter[poi.category] || (poi.food && !filter[Constants.PoiCategoryFood]) || poi.water && !filter[Constants.PoiCategoryWater])).map(poi => 
+              && (isEmpty(filter) || !filter[poi.category] || (poi.food && !filter[Constants.PoiCategoryFood]) || (poi.water && !filter[Constants.PoiCategoryWater])
+              || (poi.uncertain && !filter[Constants.PoiCategoryUncertain]))).map(poi => 
               <PoiItem key={poi._id} value={poi} tableRow showLastChange={showDetails} showCreated={showDetails} showItinerary={showDetails} showImage={showDetails} />)}
           </tbody>
         </table>

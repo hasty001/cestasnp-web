@@ -9,6 +9,7 @@ const PoiIcon = (props) => {
       <i className={findPoiCategory(props.value.category).icon} title={findPoiCategory(props.value.category).label}/>
       {!!props.value.food && <span><i className={findPoiCategory(Constants.PoiCategoryFood).icon} title={findPoiCategory(Constants.PoiCategoryFood).label}/></span>}
       {!!props.value.water && <span><i className={findPoiCategory(Constants.PoiCategoryWater).icon} title={findPoiCategory(Constants.PoiCategoryWater).label}/></span>}
+      {!!props.value.uncertain && <span><i className={findPoiCategory(Constants.PoiCategoryUncertain).icon} title={findPoiCategory(Constants.PoiCategoryUncertain).label}/></span>}
     </>
   )
 }

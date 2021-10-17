@@ -15,12 +15,13 @@ import { ScaleLine, Attribution, defaults as defaultControls } from 'ol/control'
 import devinDukla from '../geojson/devin_dukla.json';
 import razcestnik from '../../public/img/razcestnik.png';
 import * as Constants from './Constants';
-import { faMapMarkerAlt, faMapMarker } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faMapMarker, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { useStateProp, useStateWithLocalStorage, useStateResize } from "../helpers/reactUtils";
 import { findPoiCategory, PoiCategories } from "./PoiCategories";
 import { generateAnchor } from "./reusable/Navigate";
 import { dateTimeToStr, escapeHtml, htmlSimpleSanitize } from "../helpers/helpers";
 import { Modal } from "react-bootstrap";
+import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 
 const FreeMapTiles = new TileLayer({
   title: 'turistika + cyklo + bežky',
@@ -75,10 +76,10 @@ const getMarkerStyle = (color, zIndex, withShadow = false, symbol = null) => {
       zIndex
     });
 
-  return withShadow ? [shadowOuterStyle, markerStyle(color)] : markerStyle(color);
+  return [withShadow ? shadowOuterStyle : null, markerStyle(color)].filter(s => s);
 }
 
-const getPoiMarkerStyle = (iconDefinition, color, zIndex) => {
+const getPoiMarkerStyle = (iconDefinition, uncertain, color, zIndex) => {
 
   const markerStyle = new Style({
     image: new Icon({
@@ -102,7 +103,25 @@ const getPoiMarkerStyle = (iconDefinition, color, zIndex) => {
     zIndex
   });
 
-  return [markerStyle, markerIconStyle(iconDefinition)];
+  const badge = new Style({ 
+    image: new CircleStyle({
+      radius: 7,
+      fill: new Fill({ color }),
+      displacement: [8, 14],
+    }), zIndex });
+
+  const uncertainIconDefintion = faQuestion;
+  const badgeIcon = new Style({ 
+    image: new Icon({
+      opacity: 1,
+      src: 'data:image/svg+xml,' + svg(uncertainIconDefintion, 'white'),
+      scale: Constants.PoiMarkerSize / Math.max(uncertainIconDefintion.icon[0], uncertainIconDefintion.icon[1]) / 3.5,
+      imgSize: [uncertainIconDefintion.icon[0], uncertainIconDefintion.icon[1]],
+      anchor: [-0.7, 2],
+    }), zIndex });
+
+  return [markerStyle, markerIconStyle(iconDefinition), 
+    uncertain ? badge : null,  uncertain ? badgeIcon : null].filter(s => s);
 }
 
 const clear = (layer, kind) => {
@@ -162,10 +181,14 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
     const poiStyle = {};
     const poiStyleSelected = {};
     PoiCategories.filter(c => c.value != Constants.PoiCategoryGuidepost).forEach((category, i) => { 
-      let p = getPoiMarkerStyle(category.iconDefinition, 'black', 30 + i * 10);
-      let ps = getPoiMarkerStyle(category.iconDefinition, 'red', 1000);
+      let p = getPoiMarkerStyle(category.iconDefinition, false, 'black', 30 + i * 10);
+      let pu = getPoiMarkerStyle(category.iconDefinition, true, 'black', 30 + i * 10);
+      let ps = getPoiMarkerStyle(category.iconDefinition, false, 'red', 1000);
+      let psu = getPoiMarkerStyle(category.iconDefinition, true, 'red', 1000);
       poiStyle[category.value] = () => p; 
+      poiStyle[category.value + '_uncertain'] = () => pu; 
       poiStyleSelected[category.value] = () => ps;
+      poiStyleSelected[category.value + '_uncertain'] = () => psu;
     });
 
     const guidepostStyle = new Style({
@@ -206,7 +229,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
         feature.get('kind') == 'stop' ? getMarkerStyle(feature.get('selected') ? 'white' : 
           (feature.get('data') ? (feature.get('data').color || 'red') : 'red'), feature.get('selected') ? 1000 : 30, true,
           feature.get('data') ? feature.get('data').symbol : null)
-          : (feature.get('selected') ? poiStyleSelected : poiStyle)[feature.get('category') || Constants.PoiCategoryOther](feature, resolution)});
+          : (feature.get('selected') ? poiStyleSelected : poiStyle)[(feature.get('category') || Constants.PoiCategoryOther) + (feature.get('data').uncertain ? "_uncertain" : "")](feature, resolution)});
 
     let popupOverlay = new ol.Overlay({
       element: popupRef.current,
@@ -386,6 +409,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
 
       const food = findPoiCategory(Constants.PoiCategoryFood);
       const water = findPoiCategory(Constants.PoiCategoryWater);
+      const uncertain = findPoiCategory(Constants.PoiCategoryUncertain);
 
       pois.filter(p => (!p.deleted || showDeleted)).forEach(p => {
         const categories = [p.category];
@@ -406,13 +430,13 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
             popupId: p._id || p.id,
             data: p,
             popup:`<h4>${generateAnchor(p.url || `/pred/pois/${p._id}`, '',
-              `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
+              `<i class="${poiCategory.icon}"></i>${p.food ? `<i class="${food.icon}"></i>` : ''}${p.water ? `<i class="${water.icon}"></i>` : ''}${p.uncertain ? `<i class="${uncertain.icon}"></i>` : ''} ${escapeHtml(p.name) || poiCategory.label}`)}</h4>
               <p>GPS: ${p.coordinates[1]}, ${p.coordinates[0]}</p>
               <p>${htmlSimpleSanitize(p.text)}</p>`,
             geometry: new Point(fromLonLat(p.coordinates))
           });
 
-          f.setStyle((!showLayers || !mapLayersHide || mapLayersHide.indexOf(category) < 0) ? null : hiddenStyle);
+          f.setStyle((!showLayers || !mapLayersHide || (mapLayersHide.indexOf(category) < 0 && (!p.uncertain || mapLayersHide.indexOf(Constants.PoiCategoryUncertain) < 0))) ? null : hiddenStyle);
 
           features.push(f);
         });
@@ -482,14 +506,17 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
     } else {
       setMapLayersHide((mapLayersHide || []).concat([layer]));
     }
-
-    if (mapMarkerSource) {
-      mapMarkerSource.getFeatures().forEach(f => {
-        if (f.get('category') == layer) {
-          f.setStyle(hidden ? null : hiddenStyle);
-        }});
-    }
   }
+
+  useEffect(() => {
+    if (!mapLayersHide || !mapMarkerSource) {
+      return;
+    }
+
+    mapMarkerSource.getFeatures().forEach(f => {
+      f.setStyle((mapLayersHide.indexOf(f.get('category')) < 0 && (!f.get('data').uncertain || mapLayersHide.indexOf(Constants.PoiCategoryUncertain) < 0)) ? null : hiddenStyle);
+    });
+  }, [mapMarkerSource, mapLayersHide]);
 
   const closePopup = () => {
     setPopupContent('');
