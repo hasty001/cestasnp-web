@@ -4,7 +4,7 @@ import { faLink, faCompass, faInfoCircle, faTrashAlt, faEdit, faTimes, faExterna
   faBed, faHome, faUtensils, faShoppingBasket, faPlus, faAsterisk, faAlignJustify, faMap, 
   faStar as fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
   faListOl, faCompress, faLayerGroup, faSearch, faUserFriends } from '@fortawesome/free-solid-svg-icons';
-import { faStar, faImages, faCopy, faWindowRestore, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faStar, faImages, faCopy, faWindowRestore, faEnvelope, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram, faPatreon } from '@fortawesome/free-brands-svg-icons';
 
 const faPristresek = {
@@ -35,7 +35,7 @@ const faIconsRegister = () => {
     fasStar, faEyeSlash, faClipboardCheck, faAlignLeft, faAlignCenter, faAlignRight,
     faListOl, faCompress, faLayerGroup, faSearch, faUserFriends);
 
-  library.add(faStar, faImages, faCopy, faWindowRestore, faEnvelope);
+  library.add(faStar, faImages, faCopy, faWindowRestore, faEnvelope, faQuestionCircle);
 
   library.add(faFacebookF, faInstagram, faPatreon);
   

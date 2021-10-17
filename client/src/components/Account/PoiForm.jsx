@@ -49,6 +49,7 @@ const PoiForm = (props) => {
   const [imageId, setImageId] = useState(Date.now());
   const [water, setWater] = useStateWithSessionStorage(getKey('water'), '', clearMsg);
   const [food, setFood] = useStateWithSessionStorage(getKey('food'), '', clearMsg);
+  const [uncertain, setUncertain] = useStateWithSessionStorage(getKey('uncertain'), '', clearMsg);
 
   const [itineraryNear, setItineraryNear] = useStateWithSessionStorage(getKey('near'), null);
   const [itineraryAfter, setItineraryAfter] = useStateWithSessionStorage(getKey('after'), null);
@@ -105,6 +106,7 @@ const PoiForm = (props) => {
       setImageId(Date.now());
       setWater(p.water);
       setFood(p.food);
+      setUncertain(p.uncertain);
       setItineraryNear(p.itinerary ? p.itinerary.near : null);
       setItineraryAfter(p.itinerary ? p.itinerary.after : null);
       setItineraryInfo(p.itinerary ? p.itinerary.info : '');
@@ -115,9 +117,9 @@ const PoiForm = (props) => {
 
   useEffect(() => {
     if (props.poi && props.edit) {
-      setNewPoi({ _id: props.poi._id, category, name, text, water, food, guideposts: props.poi.guideposts });
+      setNewPoi({ _id: props.poi._id, category, name, text, water, food, uncertain, guideposts: props.poi.guideposts });
     }
-  }, [props.poi, props.edit, category, name, text, water, food]);
+  }, [props.poi, props.edit, category, name, text, water, food, uncertain]);
 
   const addPoi = () => {
     if ((!name || name.trim().length === 0) 
@@ -177,6 +179,7 @@ const PoiForm = (props) => {
     if (category != "pramen" && water == "1") {
       data.water = true;
     }
+    data.uncertain = !!uncertain;
     data.confirmed = confirmed;
     data.itineraryNear = itineraryNear;
     data.itineraryAfter = itineraryAfter;
@@ -275,6 +278,7 @@ const PoiForm = (props) => {
       
       {category != "krcma_jedlo" && <FormCheckBox value={[food, setFood]} valueName="food" valueLabel="jedlo" itemClassName="form-checkbox" labelClassName="form-checkbox"/>}
       {category != "pramen" && <FormCheckBox value={[water, setWater]} valueName="water" valueLabel="voda" itemClassName="form-checkbox" labelClassName="form-checkbox"/>}
+      <FormCheckBox value={[uncertain, setUncertain]} valueName="uncertain" valueLabel="neisté" itemClassName="form-checkbox" labelClassName="form-checkbox"/>
 
       <FormText value={[name, setName]} valueName="name" valueLabel="Názov miesta" itemClassName="form"/>
       <FormTextArea value={[text, setText]} valueName="text" valueLabel="Popis" itemClassName="form"/>

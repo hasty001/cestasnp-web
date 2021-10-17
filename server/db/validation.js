@@ -91,6 +91,7 @@ Validation.prototype = {
       img_url,
       food,
       water,
+      uncertain,
       created,
       itineraryNear,
       itineraryAfter,
@@ -110,7 +111,8 @@ Validation.prototype = {
       user_id: sanitizeUserId(user_id),
       img_url: sanitize(img_url),
       food: sanitize(food),
-      water: sanitize(water),
+      water: sanitize(water), 
+      uncertain: sanitize(uncertain), 
       itinerary: (itineraryNear || itineraryAfter || itineraryInfo) ?
         { near: sanitize(itineraryNear), after: sanitize(itineraryAfter), info: sanitize(itineraryInfo) }
         : null,

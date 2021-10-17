@@ -152,7 +152,7 @@ const getPoiMeta = (dbRef, poiId) =>
             const url = `https://cestasnp.sk/pred/pois/${escape(poiId)}`;
 
             const desc = escape(results[0].text);
-            const tags = [results[0].category, results[0].water ? "voda" : null, results[0].food ? "jedlo" : null].filter(s => s);
+            const tags = [results[0].category, results[0].water ? "voda" : null, results[0].food ? "jedlo" : null, results[0].uncertain ? "neisté" : null].filter(s => s);
 
             var meta = `
               <meta name="description" content="${desc}" />

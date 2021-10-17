@@ -15,6 +15,7 @@ export const PoiCategoryGuidepost = "razcestnik";
 export const PoiCategoryArticle = "clanok";
 export const PoiCategoryWater = "pramen";
 export const PoiCategoryFood = "krcma_jedlo";
+export const PoiCategoryUncertain = "neiste";
 export const NearByMarkersDistance = 10; // in map pixels
 export const MaxFullscreenPopupWidth = 600;
 export const ItineraryCompactMaxWidth = 900;
