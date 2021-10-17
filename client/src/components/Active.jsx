@@ -39,7 +39,7 @@ const Active = (props) => {
 
     fetchJson('/api/traveller/activeTravellersWithLastMessage')
       .then(data => {     
-        const activeTravellers = sortActiveTravellers(data, now);
+        const activeTravellers = sortActiveTravellers(data.filter(t => !t.finishedTracking || t.recent), now);
         
         if (activeTravellers.length === 0) {
           setError(Texts.NoTravellersError);

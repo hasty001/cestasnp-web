@@ -38,7 +38,7 @@ const ActivePhotos = (props) => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const images = getTravellersImages(travellers);
+  const images = getTravellersImages(travellers, now);
 
   const settingsData = useContext(LocalSettingsContext);
 
