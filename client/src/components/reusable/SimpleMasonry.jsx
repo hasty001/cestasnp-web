@@ -161,11 +161,11 @@ class SimpleMasonry extends Component {
 
               return (
                 <LazyLoadComponent key={i} placeholder={<div
-                  className={`simple-masonry-item${innerRow ? ' inner' : ''}`} style={{ hwidth: item.width, height: item.height, maxHeight: this.state.targetHeight }}/>}>
+                  className={`simple-masonry-item${innerRow ? ' inner' : ''}`} style={{ width: item.width, height: item.height, maxHeight: this.state.targetHeight }}/>}>
                   <div className={`simple-masonry-item${innerRow ? ' inner' : ''}`} 
                     style={{ width: item.width, height: item.height, maxHeight: this.state.targetHeight }}>
                     <A href={img.url} title={item.width < 100 ? img.title : ""} >
-                      <div className="simple-masonry-image" style={{ backgroundImage: "url(" + getImage(img, item.width, item.height) + ")"}}/>
+                      <div className={("simple-masonry-image " + (img.style || "")).trim()} style={{ backgroundImage: "url(" + getImage(img, item.width, item.height) + ")"}}/>
                       {item.width >= 100 && (<div className="simple-masonry-image-title"  style={{ maxWidth: item.width }}>
                         {item.height >= 100 ? img.title : ""}<span><i className="fas fa-external-link-alt"/></span></div>)}
                     </A>

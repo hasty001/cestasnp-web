@@ -314,6 +314,7 @@ DB.prototype = {
               if (hasImg && !found.lastImg && m.pub_date >= start) {
                 found.lastImg = m.img;
                 found.lastImgMsgId = m._id;
+                found.lastImgDate = m.pub_date;
               }
             }
           });
@@ -341,6 +342,9 @@ DB.prototype = {
         cancelled: { $ne: true } })
       .then(activeTravellers => {
         var activeTravellersIds = activeTravellers.map(({user_id}) => user_id);
+        activeTravellers.forEach(t => {
+          t.recent = t.finishedTracking;
+        });
           
         if (activeTravellersIds.length === 0) {
           return this.getInterestingFinishedTravellers(db, date, maxCount || _const.InterestingShowCount);          
@@ -358,13 +362,16 @@ DB.prototype = {
                   if (msg.img && msg.img != 'None' && i >= 0 && !activeTravellers[i].lastImg) {
                     activeTravellers[i].lastImg = msg.img;
                     activeTravellers[i].lastImgMsgId = msg._id;
+                    activeTravellers[i].lastImgDate = msg.pub_date;
                   }
                 });
-                
-              if (!activeTravellers.find(t => t.start_date <= now) && activeTravellers.length < (maxCount || _const.InterestingShowCount)) {
-                // no active only few planning, add some interesting
 
-                return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - activeTravellers.length, activeTravellersIds)
+              const withImageCount = activeTravellers.reduce((c, m) => c + (m.lastImg ? 1 : 0), 0);
+              
+              if (withImageCount < (maxCount || _const.InterestingShowCount)) {
+                // only few active and planning => add some interesting
+
+                return this.getInterestingFinishedTravellers(db, date, (maxCount || _const.InterestingShowCount) - withImageCount, activeTravellersIds)
                   .then(travellers => Promise.resolve(activeTravellers.concat(travellers)));
               }
 

@@ -41,7 +41,7 @@ const ActiveLight = (props) => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const images = getTravellersImages(travellers);
+  const images = getTravellersImages(travellers, now);
 
   const active = travellers ? 
     travellers.reduce((r, t) => r + (!t.finishedTracking && parseDate(t.start_date) <= now ? 1 : 0) , 0) : 0;
