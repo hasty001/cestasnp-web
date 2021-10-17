@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 router.get('/map', (req, res) => {
   promiseAsJson(() => Promise.all([
     db.findBy(req.app.locals.db, _const.PoisTable, _const.FilterPoiNotDeleted, 
-      { projection: { category: 1, food: 1, water: 1, coordinates: 1, name: 1, text: 1 } }),
+      { projection: { category: 1, food: 1, water: 1, uncertain: 1, coordinates: 1, name: 1, text: 1 } }),
     db.findBy(req.app.locals.db, _const.ArticlesTable, { $and: [_const.ArticlesFilterBy, { lat: { $ne: null } }, { lon: { $ne: null } }] },
       { projection: { fulltext: 0 } })])
     .then(([results, articles]) => {
@@ -63,6 +63,7 @@ router.post('/update', (req, res) => {
     img_url,
     food,
     water,
+    uncertain,
     itineraryNear,
     itineraryAfter,
     itineraryInfo,
@@ -81,6 +82,7 @@ router.post('/update', (req, res) => {
       img_url,
       food,
       water,
+      uncertain,
       itineraryNear,
       itineraryAfter,
       itineraryInfo,
@@ -99,6 +101,7 @@ router.post('/add', (req, res) => {
     img_url,
     food,
     water,
+    uncertain,
     confirmed,
     itineraryNear,
     itineraryAfter,
@@ -116,6 +119,7 @@ router.post('/add', (req, res) => {
       img_url,
       food,
       water,
+      uncertain,
       itineraryNear,
       itineraryAfter,
       itineraryInfo
@@ -139,7 +143,8 @@ router.post('/add', (req, res) => {
           user_id,
           img_url,
           food,
-          water
+          water,
+          uncertain
         } };
 
       if (nearPois.length > 0) {
