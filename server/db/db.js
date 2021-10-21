@@ -11,6 +11,7 @@ const { sanitizeUserId } = require('../util/checkUtils');
 const { momentDateTime, formatAsDate } = require('../util/momentUtils');
 const itinerary = require('../data/guideposts.json');
 const { toUrlName } = require('../util/escapeUtils');
+const cache = require('memory-cache');
 
 const securityCheck = new Validation();
 
@@ -267,6 +268,13 @@ DB.prototype = {
   getInterestingFinishedTravellers(db, date, maxCount = _const.InterestingShowCount, skipUserIds = []) {
     const now = formatAsDate(date || Date.now());
     const start = formatAsDate(new Date(date || Date.now()) - _const.InterestingPrevMonths * 31 * _const.Day);
+
+    const cacheKey = [now, start, maxCount].concat(skipUserIds).join("_");
+    const cached = cache.get(cacheKey);
+
+    if (cached) {
+      return Promise.resolve(cached);
+    }
               
     return this.findBy(db, _const.DetailsTable, { 
       $and: [{ finishedTracking: true }, { cancelled: { $ne: true } }, { user_id: { $nin: skipUserIds } },
@@ -327,8 +335,12 @@ DB.prototype = {
           // sort by start date asc
           best.sort((a, b) => a.start_date > b.start_date ? 1 : (a.start_date == b.start_date ? 0 : -1));
         
+          const result = best.slice(0, maxCount);
+
+          cache.put(cacheKey, result, 24 * 60 * 60 * 1000);
+
           // take first three
-          return Promise.resolve(best.slice(0, maxCount));
+          return Promise.resolve(result);
         });
       });
   },
