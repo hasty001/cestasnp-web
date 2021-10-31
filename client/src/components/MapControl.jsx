@@ -436,7 +436,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
             geometry: new Point(fromLonLat(p.coordinates))
           });
 
-          f.setStyle((!showLayers || !mapLayersHide || (mapLayersHide.indexOf(category) < 0 && (!p.uncertain || mapLayersHide.indexOf(Constants.PoiCategoryUncertain) < 0))) ? null : hiddenStyle);
+          f.setStyle((showLayers && mapLayersHide && (mapLayersHide.indexOf(category) >= 0 || (p.uncertain && mapLayersHide.indexOf(Constants.PoiCategoryUncertain) >= 0))) ? hiddenStyle : null);
 
           features.push(f);
         });
@@ -514,7 +514,8 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
     }
 
     mapMarkerSource.getFeatures().forEach(f => {
-      f.setStyle((mapLayersHide.indexOf(f.get('category')) < 0 && (!f.get('data').uncertain || mapLayersHide.indexOf(Constants.PoiCategoryUncertain) < 0)) ? null : hiddenStyle);
+      f.setStyle(
+        (mapLayersHide.indexOf(f.get('category')) >= 0 || (f.get('data') && f.get('data').uncertain && mapLayersHide.indexOf(Constants.PoiCategoryUncertain) >= 0)) ? hiddenStyle : null);
     });
   }, [mapMarkerSource, mapLayersHide]);
 
