@@ -70,7 +70,7 @@
     "react-router": "^4.2.2",
     "request": "^2.88.2",
     "string.prototype.replaceall": "^1.0.4",
-    "validator": "^13.0.0",
+    "validator": "^13.7.0",
     "wgs84-util": "^3.0.0"
   },
   "devDependencies": {
