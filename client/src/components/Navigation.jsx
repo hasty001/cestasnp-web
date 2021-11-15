@@ -69,7 +69,7 @@ const Navigation = () => {
     } else {
       setNewComments([]);
     }
-  }, [isTraveler, isFindBuddies, authData.travellerDetails.lastViewed, authData.findBuddies.lastViewed]);
+  }, [isTraveler, isFindBuddies, authData.travellerDetails?.lastViewed, authData.findBuddies?.lastViewed]);
 
   const hasNewTravellerCommentsText =  newComments && newComments.traveller && newComments.traveller.length > 0 ?
     `nový komentár cesty od ${newComments.traveller[0].name}` : "";
