@@ -2,6 +2,7 @@ import React from 'react';
 
 import auth from '../../helpers/firebase';
 import ForgottenPassword from './ForgottenPassword';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 class Login extends React.Component {
   constructor(props) {
@@ -28,8 +29,7 @@ class Login extends React.Component {
 
   handleLogin() {
     const { email, password } = this.state;
-    auth
-      .signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then(({ user }) => {
         if (!user.emailVerified) {
           this.setState({

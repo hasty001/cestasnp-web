@@ -1,7 +1,7 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
-firebase.initializeApp({
+const app = initializeApp({
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: `${process.env.FIREBASE_PROJECT_ID}.firebaseapp.com`,
   databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`,
@@ -10,6 +10,6 @@ firebase.initializeApp({
   messagingSenderId: process.env.FIREBASE_MESSAGING_ID
 });
 
-const auth = firebase.auth();
+const auth = getAuth(app);
 
 export default auth;
