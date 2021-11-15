@@ -3,6 +3,7 @@ import React from 'react';
 import VerificationSent from './VerificationSent';
 
 import auth from '../../helpers/firebase';
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 
 class Register extends React.Component {
   constructor(props) {
@@ -43,15 +44,14 @@ class Register extends React.Component {
       return;
     }
 
-    auth
-      .createUserWithEmailAndPassword(email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         const user = auth.currentUser;
         auth.languageCode = 'sk';
-        user.updateProfile({
+        updateProfile(user, {
           displayName: name
         });
-        user.sendEmailVerification();
+        sendEmailVerification(user);
         auth.signOut();
         this.setState({
           verificationSent: 1

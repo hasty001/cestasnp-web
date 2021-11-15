@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Modal } from 'react-bootstrap';
 import auth from '../../helpers/firebase';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 class ForgottenPassword extends React.Component {
   constructor(props) {
@@ -31,8 +32,7 @@ class ForgottenPassword extends React.Component {
       return;
     }
 
-    auth
-      .sendPasswordResetEmail(this.state.email)
+    sendPasswordResetEmail(auth, this.state.email)
       .then(() => {
         this.setState({
           error: '',
