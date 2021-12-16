@@ -32,7 +32,7 @@ const fixImageUrl = (url, code, codeImageKit) => {
 const escapeImg = (img, def = "") => {
   if (img && typeof img == "string") {
     if (img != "None") {
-      if (img.indexOf('res.cloudinary.com') === -1) {
+      if (img.indexOf("/") < 0 && img.indexOf('res.cloudinary.com') === -1) {
         return escape(`https://res.cloudinary.com/cestasnp-sk/image/upload/${_const.EscapeImgFormat}/v1520586674/img/sledovanie/${img}`);
       } else {
         return escape(fixImageUrl(img, _const.EscapeImgFormat, _const.EscapeImageKitFormat));
