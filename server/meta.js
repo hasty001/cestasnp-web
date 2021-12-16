@@ -36,7 +36,7 @@ const getArticleMeta = (dbRef, articleId) =>
     .then(results => {
       if (results && results.length > 0) {
         const getDesc = () => {
-          const t = (results[0].introtext || '').replaceAll('<p>', "\n").replaceAll(/<[^>]+>/g, '').replaceAll('  ', ' ').trim();
+          const t = (results[0].introtext || '').replaceAll('<p>', "\n").replaceAll('&nbsp;', " ").replaceAll(/<[^>]+>/g, '').replaceAll('  ', ' ').trim();
           const i = t.indexOf(".", 55);
           return i > 0 ? t.slice(0, i + 1) : t;
         };
