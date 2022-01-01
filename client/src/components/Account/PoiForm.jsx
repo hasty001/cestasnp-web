@@ -263,8 +263,6 @@ const PoiForm = (props) => {
           ktoré spolu vytvoríme budú pútnici vedieť kde je na Ceste voda či útulňa a teda kde môžu doplniť energiu.
         </p>
 
-        <p>A pozor taktiež prvým štyrom, ktorí pridajú 7 bodov pošleme <a target="_blank" href="https://www.martinus.sk/?uItem=732609&z=RM0I28&utm_source=z%3DRM0I28&utm_medium=url&utm_campaign=partner">knihu Moje Cesta hrdinů SNP</a> od Václava Kerbera.
-        Knihu je možné zakúpiť aj v bežných kníhkupectvách ako <a target="_blank" href="https://www.martinus.sk/?uItem=732609&z=RM0I28&utm_source=z%3DRM0I28&utm_medium=url&utm_campaign=partner">martinus.sk</a> a iné.</p>
       </>
       )}>
 
