@@ -51,7 +51,7 @@
     "lodash.throttle": "^4.1.1",
     "logrocket": "^1.0.7",
     "memory-cache": "^0.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.28",
     "mongo-sanitize": "^1.1.0",
     "mongodb": "^3.5.5",
