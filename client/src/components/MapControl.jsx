@@ -31,7 +31,7 @@ const FreeMapTiles = new TileLayer({
   minZoom: 1,
   source: new OSM({
     attributions:  'Mapa © <a href="https://www.freemap.sk" target="_blank">Freemap</a> Slovakia, dáta © prispievatelia <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a>',
-    url: 'https://tile.freemap.sk/X/{z}/{x}/{y}.jpeg',
+    url: 'https://outdoor.tiles.freemap.sk/{z}/{x}/{y}',
     crossOrigin: null
   }),
   zIndex: 0
