@@ -12,7 +12,7 @@ import { OSM, Vector as VectorSource } from 'ol/source';
 import Point from 'ol/geom/Point';
 import Circle from 'ol/geom/Circle';
 import { ScaleLine, Attribution, defaults as defaultControls } from 'ol/control';
-import devinDukla from '../geojson/devin_dukla.json';
+import snp from '../geojson/snp.json';
 import razcestnik from '../../public/img/razcestnik.png';
 import * as Constants from './Constants';
 import { faMapMarkerAlt, faMapMarker, faQuestion } from '@fortawesome/free-solid-svg-icons';
@@ -163,7 +163,7 @@ const MapControl = ({ id, children, view, travellers, stops, pois, markers, canS
   useEffect(() => {
 
     const routeSource = new VectorSource({
-      features: new GeoJSON().readFeatures(devinDukla, { featureProjection: 'EPSG:3857' }),
+      features: new GeoJSON().readFeatures(snp, { featureProjection: 'EPSG:3857' }),
     });
     
     const routeLineStyle = new Style({
