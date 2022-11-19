@@ -1,5 +1,6 @@
+const fs = require('fs');
 const WGS84Util = require('wgs84-util');
-const dukla_devin = require('../../client/src/geojson/dukla_devin.json');
+const snp = require('../data/snp_ele.json');
 const itinerary = require('../data/guideposts.json');
 
 /**
@@ -40,7 +41,7 @@ const findNearestPoint = (coordinates) => {
   var min = null;
   var minIndex = null;
 
-  const path = dukla_devin.features[0].geometry.coordinates;
+  const path = snp.features[0].geometry.coordinates;
 
   path.forEach((c, i) => {
     const distance = WGS84Util.distanceBetween({ coordinates }, { coordinates: c });
@@ -173,4 +174,33 @@ const sortNear = (obj, list, maxDistance) => {
   list.sort((a, b) => a.distance - b.distance);
 }
 
-module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts, sortNear };
+const saveGpx = (filename, data) => {
+  var buffer = `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" 
+	version="1.1" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+	<metadata>
+		<bounds maxlat="49.41740" maxlon="21.69634" minlat="49.41740" minlon="21.69634"></bounds>
+	</metadata>
+	<trk>
+		<name>Cesta hrdinov SNP</name>
+		<trkseg>`;
+
+  data.forEach(d => buffer += `
+<trkpt lat="${d.lat}" lon="${d.lon}" />`);
+
+  buffer += `
+    </trkseg>
+	</trk>
+</gpx>`;
+
+  fs.writeFile(filename, buffer, (err) => { 
+    if (err) 
+      console.log(err); 
+    else { 
+      console.log("gpx generated."); 
+    }});
+}
+
+module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts, sortNear, saveGpx };
