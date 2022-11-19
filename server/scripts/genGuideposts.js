@@ -229,6 +229,8 @@ fs.writeFile("./server/data/guideposts.json",
     altDown: Math.round(g.altDown),
     time: Math.round(g.time * 60) / 60,
     asphalt: Math.round(g.asphalt * 1000) / 1000,
+    pathIndex: g.geoIndex,
+    pathIndexEnd: g.geoIndexEnd
   }})), (err) => { 
     if (err) 
       console.log(err); 

@@ -2,6 +2,7 @@ const fs = require('fs');
 const WGS84Util = require('wgs84-util');
 const snp = require('../data/snp_ele.json');
 const itinerary = require('../data/guideposts.json');
+const { escape } = require('./escapeUtils');
 
 /**
  * Returns nearest POIs to passed point.
@@ -174,33 +175,63 @@ const sortNear = (obj, list, maxDistance) => {
   list.sort((a, b) => a.distance - b.distance);
 }
 
-const saveGpx = (filename, data) => {
+const categories = [
+  { value: "razcestnik", label: "rázcestník" },
+  { value: "clanok", label: "článok" },
+  { value: "neiste", label: "neisté" },
+  { value: "ostatne", label: "ostatné" },
+  { value: "pramen", label: "voda" },
+  { value: "posed", label: "posed" },
+  { value: "pristresok", label: "prístrešok" },
+  { value: "krcma_jedlo", label: "jedlo" },
+  { value: "potraviny", label: "potraviny" },
+  { value: "utulna", label: "útulňa" },
+  { value: "chata", label: "ubytovanie" },
+  { value: "anjel", label: "Anjel na Ceste" },
+];
+
+const getCategoryLabel = (category) => {
+  const i = categories.findIndex(p => p.value == category);
+
+  return i >= 0 ? categories[i].label : PoiCategories[3].label;
+}
+
+const saveGpx = (filename, data, points = []) => {
   var buffer = `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <gpx xmlns="http://www.topografix.com/GPX/1/1" 
 	version="1.1" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
-	<metadata>
-		<bounds maxlat="49.41740" maxlon="21.69634" minlat="49.41740" minlon="21.69634"></bounds>
-	</metadata>
+	xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">`
+
+  if (points) {
+    points.forEach(p => buffer += `
+<wpt lat="${Array.isArray(p.coordinates) ? p.coordinates[1] : p.lat}" lon="${Array.isArray(p.coordinates) ? p.coordinates[0] : p.lon}"><name>${escape(p.name)} - ${escape(getCategoryLabel(p.category))}</name><type>${escape(p.category)}</type></wpt>`);
+  }
+
+  buffer += `
 	<trk>
 		<name>Cesta hrdinov SNP</name>
 		<trkseg>`;
 
   data.forEach(d => buffer += `
-<trkpt lat="${d.lat}" lon="${d.lon}" />`);
+<trkpt lat="${Array.isArray(d) ? d[1] : d.lat}" lon="${Array.isArray(d) ? d[0] : d.lon}" />`);
 
   buffer += `
     </trkseg>
 	</trk>
 </gpx>`;
 
-  fs.writeFile(filename, buffer, (err) => { 
-    if (err) 
-      console.log(err); 
-    else { 
-      console.log("gpx generated."); 
-    }});
+  if (!filename) {
+    return buffer
+  }
+  else {
+    fs.writeFile(filename, buffer, (err) => { 
+      if (err) 
+        console.log(err); 
+      else { 
+        console.log("gpx generated."); 
+      }});
+  }
 }
 
 module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts, sortNear, saveGpx };

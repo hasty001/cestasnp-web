@@ -1678,6 +1678,10 @@ span.poi-text {
   margin: 5px 10px 5px 0 !important;
 }
 
+.pois-settings {
+  margin-right: 10px;
+}
+
 .pois-map-watch-gps {
   position: absolute;
   left: 75px;
