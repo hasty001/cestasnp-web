@@ -21,7 +21,7 @@ const PoiCategories = [
 const findPoiCategory = (category) => {
   const i = PoiCategories.findIndex(p => p.value == category);
 
-  return i >= 0 ? PoiCategories[i] : PoiCategories[PoiCategories.length - 1];
+  return i >= 0 ? PoiCategories[i] : PoiCategories[3];
 }
 
 export { PoiCategories, findPoiCategory };

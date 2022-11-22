@@ -1,14 +1,16 @@
 const WGS84Util = require('wgs84-util');
 const fs = require('fs');
 
-const dukla_devin = require('../../client/src/geojson/dukla_devin.json');
+const snp = require('../data/snp_ele.json');
 const osm = require('../data/snp.json');
+const { saveGpx } = require('../util/gpsUtils');
 
-const altCoefficient = 1.125;
+const altCoefficient = 1.0;
 const distCoefficient = 1.05;
 
 const relation = osm.elements.find(e => e.type === 'relation' && e.id === 7700604);
 
+const ignoreWays = [315949251, 1084429114]
 var surfaces = [];
 var lastNodeId = 0;
 var ways = 0;
@@ -18,7 +20,7 @@ relation.members.filter(m => m.type === 'way').forEach(w => {
     const way = osm.elements.find(e => e.type === 'way' && e.id === w.ref);
     const nodes = way.nodes.map(n => osm.elements.find(e => e.type === 'node' && e.id === n));
     
-    if (nodes && nodes.length > 1) {
+    if (nodes && nodes.length > 1 && !ignoreWays.includes(w.ref)) {
 
       const asphalt = way.tags && 
         (way.tags.surface === "asphalt" || (way.tags.surface && way.tags.surface.startsWith("concrete")) || way.tags.surface === "paved"
@@ -70,17 +72,18 @@ relation.members.filter(m => m.type === 'way').forEach(w => {
 });
 console.timeEnd("way");
 
+saveGpx("./server/data/snp_raw.gpx", osmPath.reverse());
+
 //console.log(surfaces.sort().join("\n"));
 
 console.log("ways: " + ways + " nodes: " + osmPath.length);
 
 console.time("guideposts");
 
-const geoPath = dukla_devin.features[0].geometry.coordinates;
-var lastG = null;
+const geoPath = snp.features[0].geometry.coordinates;
 const osmGuideposts = relation.members.filter(m => m.role === 'guidepost');
 
-const guideposts = osmGuideposts.map((g, index) => {
+const guideposts = osmGuideposts.map(g => {
   const data = osm.elements.find(e => e.type === 'node' && e.id === g.ref);
 
   if (data && data.tags && data.tags.name) {
@@ -117,17 +120,6 @@ const guideposts = osmGuideposts.map((g, index) => {
       g.osmIndex = min;
       g.geoIndex = minG;
 
-      if (lastG) {
-        lastG.osmIndexEnd = min;
-        lastG.geoIndexEnd = minG;
-
-        if (index == osmGuideposts.length - 1) {
-          g.osmIndexEnd = osmPath.length - 1;
-          g.geoIndexEnd = geoPath.length - 1;
-        }
-      }
-
-      lastG = g;
       return g;
     }
     else {
@@ -137,6 +129,23 @@ const guideposts = osmGuideposts.map((g, index) => {
 
   return null;
 }).filter(g => g);
+
+guideposts.sort((a, b) => a.osmIndex - b.osmIndex);
+
+var lastG = null;
+guideposts.forEach((g, index) => {
+  if (lastG) {
+    lastG.osmIndexEnd = g.osmIndex;
+    lastG.geoIndexEnd = g.geoIndex;
+  }
+
+  if (index == osmGuideposts.length - 1) {
+    g.osmIndexEnd = osmPath.length - 1;
+    g.geoIndexEnd = geoPath.length - 1;
+  }
+
+  lastG = g;
+});
 
 guideposts[0].main = true;
 guideposts[0].name = "Dukliansky priesmyk, štátna hranica";
@@ -150,6 +159,9 @@ console.timeEnd("guideposts");
 console.log("guideposts " + guideposts.length);
 
 var total = 0;
+var totalUp = 0;
+var totalDown = 0;
+var totalTime = 0;
 guideposts.forEach(g => {
 
   var dist = 0;
@@ -189,12 +201,18 @@ guideposts.forEach(g => {
   g.altUp = altUp * altCoefficient;
   g.altDown = altDown * altCoefficient;
 
-  g.time = Math.max(0, g.dist / 4 + time); 
+  g.time = Math.max(0, g.dist / 4 + time);
+
+  totalUp += g.altUp;
+  totalDown += g.altDown;
+  totalTime += g.time;
 });
 
 guideposts.forEach(g => {
   g.kmTo = total - g.km;
 });
+
+console.log("Total", total, "Up", totalUp, "Down", totalDown, "Time", totalTime);
 
 fs.writeFile("./server/data/guideposts.json", 
   JSON.stringify(guideposts.map(g => { return {
@@ -211,6 +229,8 @@ fs.writeFile("./server/data/guideposts.json",
     altDown: Math.round(g.altDown),
     time: Math.round(g.time * 60) / 60,
     asphalt: Math.round(g.asphalt * 1000) / 1000,
+    pathIndex: g.geoIndex,
+    pathIndexEnd: g.geoIndexEnd
   }})), (err) => { 
     if (err) 
       console.log(err); 

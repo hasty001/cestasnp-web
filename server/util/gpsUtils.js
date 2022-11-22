@@ -1,6 +1,8 @@
+const fs = require('fs');
 const WGS84Util = require('wgs84-util');
-const dukla_devin = require('../../client/src/geojson/dukla_devin.json');
+const snp = require('../data/snp_ele.json');
 const itinerary = require('../data/guideposts.json');
+const { escape } = require('./escapeUtils');
 
 /**
  * Returns nearest POIs to passed point.
@@ -40,7 +42,7 @@ const findNearestPoint = (coordinates) => {
   var min = null;
   var minIndex = null;
 
-  const path = dukla_devin.features[0].geometry.coordinates;
+  const path = snp.features[0].geometry.coordinates;
 
   path.forEach((c, i) => {
     const distance = WGS84Util.distanceBetween({ coordinates }, { coordinates: c });
@@ -173,4 +175,63 @@ const sortNear = (obj, list, maxDistance) => {
   list.sort((a, b) => a.distance - b.distance);
 }
 
-module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts, sortNear };
+const categories = [
+  { value: "razcestnik", label: "rázcestník" },
+  { value: "clanok", label: "článok" },
+  { value: "neiste", label: "neisté" },
+  { value: "ostatne", label: "ostatné" },
+  { value: "pramen", label: "voda" },
+  { value: "posed", label: "posed" },
+  { value: "pristresok", label: "prístrešok" },
+  { value: "krcma_jedlo", label: "jedlo" },
+  { value: "potraviny", label: "potraviny" },
+  { value: "utulna", label: "útulňa" },
+  { value: "chata", label: "ubytovanie" },
+  { value: "anjel", label: "Anjel na Ceste" },
+];
+
+const getCategoryLabel = (category) => {
+  const i = categories.findIndex(p => p.value == category);
+
+  return i >= 0 ? categories[i].label : PoiCategories[3].label;
+}
+
+const saveGpx = (filename, data, points = []) => {
+  var buffer = `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" 
+	version="1.1" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">`
+
+  if (points) {
+    points.forEach(p => buffer += `
+<wpt lat="${Array.isArray(p.coordinates) ? p.coordinates[1] : p.lat}" lon="${Array.isArray(p.coordinates) ? p.coordinates[0] : p.lon}"><name>${escape(p.name)} - ${escape(getCategoryLabel(p.category))}</name><type>${escape(p.category)}</type></wpt>`);
+  }
+
+  buffer += `
+	<trk>
+		<name>Cesta hrdinov SNP</name>
+		<trkseg>`;
+
+  data.forEach(d => buffer += `
+<trkpt lat="${Array.isArray(d) ? d[1] : d.lat}" lon="${Array.isArray(d) ? d[0] : d.lon}" />`);
+
+  buffer += `
+    </trkseg>
+	</trk>
+</gpx>`;
+
+  if (!filename) {
+    return buffer
+  }
+  else {
+    fs.writeFile(filename, buffer, (err) => { 
+      if (err) 
+        console.log(err); 
+      else { 
+        console.log("gpx generated."); 
+      }});
+  }
+}
+
+module.exports = { findNearPois, findNearestPoint, findNearestGuideposts, getNearGuideposts, sortNear, saveGpx };

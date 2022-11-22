@@ -64,8 +64,11 @@ const Itinerary = (props) => {
       pageTitle={`Itinerár${Constants.WebTitleSuffix}`} title={"Itinerár"} >
       <>
         <div className="no-print" data-nosnippet>
-          <button className="snpBtn pois-map-link no-print" title="Na mape" onClick={() => navigate('/pred/pois')}><i className="fas fa-map"></i></button>
-          <button className="snpBtn" onClick={showDialog} type="button">Nastavenie</button>
+          <button className="snpBtn pois-map-link" title="Na mape" onClick={() => navigate('/pred/pois')}><i className="fas fa-map"></i></button>
+          <button className="snpBtn pois-settings" onClick={showDialog} type="button">Nastavenie</button>
+          <a href={`/api/itinerary/gpx?start=${startEnd ? startEnd[0] : ""}&end=${startEnd ? startEnd[1] : ""}`} download="snp.gpx" target='_blank'>
+            <button className="snpBtn" type="button">Stiahnuť gpx</button>
+          </a>
         </div>
         
         <Modal show={dialogVisible}
