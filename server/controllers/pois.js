@@ -5,13 +5,79 @@ const { findNearPois, findNearestPoint, findNearestGuideposts } = require('../ut
 const itinerary = require('../data/guideposts.json');
 const { promiseAsJson } = require('../util/promiseUtils');
 const _const = require('../../const');
+const { from } = require('form-data');
+const { CleanPlugin } = require('webpack');
+const { cleanup } = require('../util/arrayUtils');
+const compare_sk = require("locale-compare")("sk");
 
 const db = new DB();
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  promiseAsJson(() => db.getPois(req.app.locals.db), res);
+  promiseAsJson(() => db.getPois(req.app.locals.db).then((pois) => {
+    const detail = (req.query.detail == undefined) || parseInt(req.query.detail);
+    const from = parseInt(req.query.from);
+    const limit = parseInt(req.query.count);
+
+    const deleted = (req.query.deleted == undefined) || parseInt(req.query.deleted);
+    const ignore = (req.query.ignore || "").split(",")
+
+    const by = req.query.by;
+    const asc = (req.query.asc == undefined) || parseInt(req.query.asc);
+
+    pois = pois.filter(poi => poi._id && (!poi.deleted || deleted) 
+      && ((ignore.length == 0) || !ignore.includes(poi.category) || (poi.food && !ignore.includes('krcma_jedlo')) || (poi.water && !ignore.includes('pramen'))))
+
+    const strCompare = (f, a, b) => f * compare_sk(a || '', b || '');
+
+    pois.sort((a, b) => {
+      const f = (asc ? 1 : -1);
+      switch (by) {
+        case "created":
+          return f * (parseDate(a.created) - parseDate(b.created));
+        case "lastModified":
+          return f * (parseDate(a.deleted || a.modified || 0) - parseDate(b.deleted || b.modified || 0));
+        case "lastModified_action":
+          return f * ((a.deleted ? 2 : (a.modified ? 1 : 0)) - (b.deleted ? 2 : (b.modified ? 1 : 0)));
+        case "lastModified_by_name":
+          return strCompare(f, a.deleted_by_name || a.modified_by_name, b.deleted_by_name || b.modified_by_name);
+        case "name":
+        case "text":
+        case "created_by_name":
+          return strCompare(f, a[by], b[by]);
+        case "img":
+          return f * (((a.img_url && a.img_url != "None") ? 1 : 0) - 
+            ((b.img_url && b.img_url != "None") ? 1 : 0));     
+        case "itinerary":
+          return f * ((a.itinerary ? (a.itinerary.near || a.itinerary.after ? 1 : 0) : 0) - 
+            (b.itinerary ? (b.itinerary.near || b.itinerary.after ? 1 : 0) : 0));
+      
+        default:
+          return strCompare(-1, a._id, b._id);
+      }
+    });
+
+    const count = pois.length;
+    if (from >= 0 && limit > 0) {
+      pois = pois.slice(from, from + limit);
+    }
+
+    var clean = ['accuracy', 'coordinates', 'historyId', 'modified_note'];
+    if (!detail) {
+      clean = clean.concat(['created', 'created_by_name', 'user_id', 'img_url', 'itinerary', 'modified',
+        'modified_by', 'modified_by_name',
+        'deleted_by', 'deleted_by_name']);
+    }
+
+    if (from >= 0 && limit > 0) {
+      cleanup(pois, clean);
+
+      return { count: count, items: pois};
+    } else {
+      return pois;
+    }
+  }), res);
 });
 
 

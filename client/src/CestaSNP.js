@@ -85,7 +85,7 @@ const CestaSNP = props => {
         <div className="app-header" data-nosnippet>
           <Navigation />
         </div>
-        <div className="app-body" ref={appBodyRef}>
+        <div className="app-body" id="app-body" ref={appBodyRef}>
           <div className={fillContent ? "content-fill" : "content-wrap"}>
             <Switch>
               <Route exact path="/" component={Home} />

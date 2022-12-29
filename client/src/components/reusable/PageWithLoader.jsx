@@ -18,8 +18,9 @@ const PageWithLoader = (props) => {
         </>
       )}
       {!!props.error && (typeof props.error != "string" ? props.error : (
-        <p style={{ marginTop: '10px' }}>
+        <p style={{ marginTop: '10px' }} data-nosnippet>
           {props.error}
+          {!!props.retry && (<><br/><a href="#" onClick={props.retry}>Opakovať</a></>)}
         </p>))}
     </div>
   )
