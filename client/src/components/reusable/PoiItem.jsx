@@ -15,7 +15,8 @@ const PoiItem = (props) => {
   const space = props.tableRow ? null : ` `;
 
   return (
-    <ItemElement key={props.value._id || props.value.id} className="poi-item">
+    <ItemElement key={props.value._id || props.value.id} className="poi-item" 
+      style={{visibility: props.hidden ? "hidden" : "visible"}} >
       {!!props.value.errorMsg && <div className="errorMsg">{props.value.errorMsg}</div>}
       {!!props.value.successMsg && <div className="successMsg">{props.value.successMsg}</div>}
 

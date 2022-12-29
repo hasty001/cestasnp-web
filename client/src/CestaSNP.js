@@ -93,7 +93,7 @@ class CestaSNP extends Component {
         <div className="app-header" data-nosnippet>
           <Navigation />
         </div>
-        <div className="app-body" ref={this.appBodyRef}>
+        <div className="app-body" id="app-body" ref={this.appBodyRef}>
           <div className={this.state.fillContent ? "content-fill" : "content-wrap"}>
             <Switch>
               <Route exact path="/" component={Home} />

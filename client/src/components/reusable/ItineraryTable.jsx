@@ -3,6 +3,7 @@ import { useStateProp } from '../../helpers/reactUtils';
 import PoiIcon from './PoiIcon';
 import { A } from './Navigate';
 import { escapeHtml, htmlLineClean } from '../../helpers/helpers';
+import PageWithLoader from './PageWithLoader';
 
 const ItineraryTable = (props) => {
 
@@ -20,7 +21,7 @@ const ItineraryTable = (props) => {
     if (startIndex < 0) startIndex = 0;
     if (endIndex < 0) endIndex = props.itinerary.length - 1;
 
-    const reverse = startIndex > endIndex;
+    var reverse = startIndex > endIndex;
     if (reverse) {
       const t = startIndex;
       startIndex = endIndex;
@@ -30,11 +31,11 @@ const ItineraryTable = (props) => {
     const getPoiInfo = (poi, index, reverse, info = null) => {
       const getInfo = () => (info || (poi.itinerary &&  poi.itinerary.info)) ? 
         escapeHtml(((info || poi.itinerary.info)
-          .replaceAll("[pred]", reverse ? "za" : "pred")
-          .replaceAll("[za]", reverse ? "pred" : "za")
-          .replaceAll("[vľavo]", reverse ? "vpravo" : "vľavo")
-          .replaceAll("[vpravo]", reverse ? "vľavo" : "vpravo")) 
-          .replaceAll(/\[(.+?)\|(.+?)\]/gms, reverse ? "$2" : "$1"))
+          .replaceAll("[pred]", (props.reverse || reverse) ? "za" : "pred")
+          .replaceAll("[za]", (props.reverse || reverse) ? "pred" : "za")
+          .replaceAll("[vľavo]", (props.reverse || reverse) ? "vpravo" : "vľavo")
+          .replaceAll("[vpravo]", (props.reverse || reverse) ? "vľavo" : "vpravo")) 
+          .replaceAll(/\[(.+?)\|(.+?)\]/gms, (props.reverse || reverse) ? "$2" : "$1"))
         : [escapeHtml(poi.name), htmlLineClean(poi.text)].filter(s => s && s.trim().length > 0).join(" - ");
 
       return (
@@ -130,11 +131,12 @@ const ItineraryTable = (props) => {
         </tr>
       </thead>
       <tbody>
+        {(props.loading || !!props.error) && <tr><td colSpan={10}><PageWithLoader loading={props.loading} error={props.error} retry={props.fetchData}/></td></tr>}
         {!!itinerary && itinerary.map((item, i, items) => {
           const guidepostName = item.name + (item.ele ? (` ${formatNumber(item.ele)}\u00A0m`): "");
           return (
           <Fragment key={i}>
-            <tr className="itinerary-row-guidepost">
+            <tr className="itinerary-row-guidepost" style={{visibility: (props.loading ? "hidden" : "visible")}}>
               <td className="itinerary-value">{formatNumber(item.km, 1)}</td>
               <td data-nosnippet className="itinerary-value">{formatNumber(item.kmTo, 1)}</td>
               <td colSpan={props.noDetails ? 1 : 6}>
@@ -145,10 +147,10 @@ const ItineraryTable = (props) => {
               {!props.compact && <td>{item.info}{getInsertNear(item)}</td>}
             </tr>
             {!!props.compact && (!!item.info || !!getInsertNear(item)) && 
-              <tr className="itinerary-row-guidepost"><td colSpan="8">{item.info}{getInsertNear(item)}</td></tr>}
+              <tr className="itinerary-row-guidepost"  style={{visibility: (props.loading ? "hidden" : "visible")}}><td colSpan="8">{item.info}{getInsertNear(item)}</td></tr>}
             {i < items.length - 1 ? (
               <>
-                <tr>
+                <tr  style={{visibility: (props.loading ? "hidden" : "visible")}}>
                   <td colSpan={3}>{"\u00A0"}</td>
                   {!props.noDetails && (
                   <>
@@ -166,18 +168,19 @@ const ItineraryTable = (props) => {
             ) : null}
           </Fragment>);
         })}
+        {(props.loadingMore || !!props.errorMore) && <tr><td colSpan={10}><PageWithLoader loading={props.loadingMore} error={props.errorMore} retry={props.loadMore}/></td></tr>}
       </tbody>
       {!props.noTotals && (
       <tfoot data-nosnippet>
-        <tr>
+        <tr  style={{visibility: (props.loading ? "hidden" : "visible")}}>
           <td colSpan={3}></td>
           {!props.noDetails && (
           <>
-          <td className="itinerary-value"><b>{formatNumber(itinerary ? itinerary.reduce((r, t) => r + t.dist, 0) : 0, 1)}</b></td>
-          <td className="itinerary-value"><b>{formatNumber(itinerary ? itinerary.reduce((r, t) => r + t.asphalt, 0) : 0, 1)}</b></td>
-          <td className="itinerary-value"><b>{formatNumber(itinerary ? itinerary.reduce((r, t) => r + t.altUp, 0) : 0)}</b></td>
-          <td className="itinerary-value"><b>{formatNumber(itinerary ? itinerary.reduce((r, t) => r + t.altDown, 0) : 0)}</b></td>
-          <td className="itinerary-value"><b>{formatHours(itinerary ? itinerary.reduce((r, t) => r + t.time, 0) : 0)}</b></td>
+          <td className="itinerary-value"><b>{formatNumber(props.sum?.dist || (itinerary ? itinerary.reduce((r, t) => r + t.dist, 0) : 0), 1)}</b></td>
+          <td className="itinerary-value"><b>{formatNumber(props.sum?.asphalt || (itinerary ? itinerary.reduce((r, t) => r + t.asphalt, 0) : 0), 1)}</b></td>
+          <td className="itinerary-value"><b>{formatNumber(props.sum?.altUp || (itinerary ? itinerary.reduce((r, t) => r + t.altUp, 0) : 0))}</b></td>
+          <td className="itinerary-value"><b>{formatNumber(props.sum?.altDown || (itinerary ? itinerary.reduce((r, t) => r + t.altDown, 0) : 0))}</b></td>
+          <td className="itinerary-value"><b>{formatHours(props.sum?.time || (itinerary ? itinerary.reduce((r, t) => r + t.time, 0) : 0))}</b></td>
           </>)}
         </tr>
       </tfoot>)} 

@@ -8,41 +8,113 @@ import * as Texts from './Texts';
 import * as Constants from './Constants';
 import { navigate } from './reusable/Navigate';
 import { useStateResize } from '../helpers/reactUtils';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const Itinerary = (props) => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [errorMore, setErrorMore] = useState(false);
+  const [scrollThreshold, setScrollThreshold] = useState('100px');
   const [startEnd, setStartEnd] = useState(null);
+  const [dataStartEnd, setDataStartEnd] = useState(null);
   const [dialogStartEnd, setDialogStartEnd] = useState(null);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [itinerary, setItinerary] = useState([]);
+  const [sum, setSum] = useState({});
+  const [count, setCount] = useState(0);
+  
+  const [reverse, setReverse] = useState(false);
+  const [mainGuideposts, setMainGudeposts] = useState([]);
   const [compact, setCompact] = useStateResize(() => window.innerWidth <= Constants.ItineraryCompactMaxWidth);
 
-  const fetchData = () => fetchJson('/api/itinerary')
+  const url = (from, count) => `/api/itinerary?start=${startEnd ? startEnd[0] : 0}&end=${startEnd ? startEnd[1] : -1}&from=${from}&count=${count}`;
+
+  const fetchData = (limit = 30) => {
+
+    if (dataStartEnd && JSON.stringify(dataStartEnd) == JSON.stringify(startEnd)) {
+      return Promise.resolve();
+    }
+
+    setLoading(true);
+    setError('');
+    setLoadingMore(false);
+    setErrorMore('');
+
+    return fetchJson(url(0, limit))
     .then(data => {
-      setStartEnd(startEnd || (data.length > 0 ? [data[0].id, data[data.length - 1].id] : null));
-      setItinerary(data);
+      setDataStartEnd([data.start, data.end]);
+      setStartEnd(startEnd || (data.mainGuideposts.length > 0 ? [data.mainGuideposts[0].id, data.mainGuideposts[data.mainGuideposts.length - 1].id] : null));
+      setItinerary(data.items);
+      setSum(data.sum);
+      setCount(data.count);
+      setReverse(data.reverse);
+      setMainGudeposts(data.mainGuideposts);
       setLoading(false);
     })
     .catch(e => {
-      console.error(e);
-
       setLoading(false);
       setError(Texts.GenericError);
-    });
+
+      console.error("Itinerary loading error: " + e);
+    })
+  };
+
+  const loadMore = (limit = 30) => {
+    if ((itinerary || []).length >= count) {
+      return;
+    }
+
+    setLoadingMore(true);
+    setErrorMore('');
+
+    fetchJson(url((itinerary || []).length, limit))
+      .then(data => {
+        setLoadingMore(false);
+        setDataStartEnd([data.start, data.end]);
+        setItinerary((itinerary || []).concat(data.items));
+        setSum(data.sum);
+        setCount(data.count);
+        setReverse(data.reverse);
+        setMainGudeposts(data.mainGuideposts);
+      })
+      .catch(e => {
+        setLoadingMore(false);
+        setErrorMore(Texts.GenericError);
+        
+        console.error("Itinerary loading more error: " + e);
+      });
+  }
+
+  const updateScrollThreshold = (event) => {
+    const v = document.getElementsByClassName("site-footer")[0].offsetHeight + 
+    document.getElementsByClassName("app-body")[0].offsetHeight;
+    if (v) {
+      setScrollThreshold(`${v + 100}px`);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateScrollThreshold);
+    updateScrollThreshold();
+
+    return () => window.removeEventListener("resize", updateScrollThreshold);
+  })
+
+  const hasHash = () => window.location.hash && window.location.hash != "#";
 
   useEffect(() => { 
-    fetchData()
+    fetchData(hasHash() ? 100000 : 30)
       .then(() => { 
-        if (window.location.hash && window.location.hash != "#") {
+        if (hasHash()) {
           const elem = window.document.getElementById(window.location.hash.replace('#', ''));
           if (elem) {
             elem.scrollIntoView();
           }
         };
       });
-  }, []);
+  }, [startEnd]);
 
   const showDialog = (e) => {
     e.preventDefault();
@@ -60,7 +132,7 @@ const Itinerary = (props) => {
   }
 
   return (
-    <PageWithLoader pageId="Itinerary" loading={loading} error={error} 
+    <PageWithLoader pageId="Itinerary" 
       pageTitle={`Itinerár${Constants.WebTitleSuffix}`} title={"Itinerár"} >
       <>
         <div className="no-print" data-nosnippet>
@@ -82,13 +154,13 @@ const Itinerary = (props) => {
           <Modal.Body>
             <FormSelect value={[dialogStartEnd ? dialogStartEnd[0] : null, (value) => setDialogStartEnd([parseInt(value), dialogStartEnd[1]])]}
               valueLabel="Začiatok:" valueName="start" itemClassName="form" 
-              options={itinerary ? itinerary.filter(item => item.main).map(item => { 
+              options={mainGuideposts ? mainGuideposts.map(item => { 
                 return { value: item.id, label: item.name + (item.ele ? (` ${item.ele} m`) : '') }; }) : null}>
             </FormSelect>
 
             <FormSelect value={[dialogStartEnd ? dialogStartEnd[1] : null, (value) => setDialogStartEnd([dialogStartEnd[0], parseInt(value)])]}
               valueLabel="Koniec:" valueName="end" itemClassName="form" 
-              options={itinerary ? itinerary.filter(item => item.main).map(item => { 
+              options={mainGuideposts ? mainGuideposts.map(item => { 
                 return { value: item.id, label: item.name + (item.ele ? (` ${item.ele} m`) : '') }; }) : null}>
             </FormSelect>
           </Modal.Body>
@@ -98,7 +170,15 @@ const Itinerary = (props) => {
           </Modal.Footer>
         </Modal>
 
-        <ItineraryTable compact={compact} itinerary={itinerary} start={startEnd ? startEnd[0] : null} end={startEnd ? startEnd[1] : null}/>
+        <InfiniteScroll hasMore={itinerary && itinerary.length < count} next={loadMore}
+          dataLength={itinerary ? itinerary.length : 0} scrollThreshold={scrollThreshold} scrollableTarget="app-body">
+          <ItineraryTable compact={compact} itinerary={itinerary}
+            sum={sum} reverse={reverse} fullKm
+            loading={loading} loadingMore={loadingMore}
+            error={error} errorMore={errorMore}
+            fetchData={fetchData} loadMore={loadMore}
+            />
+        </InfiniteScroll>
       </>
     </PageWithLoader>
   );
