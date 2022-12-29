@@ -54,7 +54,7 @@ router.get('/', (req, res) => {
             (b.itinerary ? (b.itinerary.near || b.itinerary.after ? 1 : 0) : 0));
       
         default:
-          return strCompare(-1, a._id, b._id);
+          return strCompare(-1, a._id.toString(), b._id.toString());
       }
     });
 
