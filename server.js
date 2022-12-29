@@ -65,10 +65,14 @@ app.use(compression({
   threshold: 1024
 }));
 
-app.use(expressStaticGzip(root, {
-  enableBrotli: true,
-  orderPreference: ['br']
-}));
+if (process.env.NODE_ENV !== 'production') {
+  app.use(express.static(root));
+} else {
+  app.use(expressStaticGzip(root, {
+    enableBrotli: true,
+    orderPreference: ['br']
+  }));
+}
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
