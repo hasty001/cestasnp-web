@@ -13,6 +13,7 @@ import TravellerMessage from './reusable/TravellerMessage';
 import { sortByDate } from '../helpers/helpers';
 import { A, navigate } from './reusable/Navigate';
 import MapControl from './MapControl';
+import DockPanel from './reusable/DockPanel';
 
 const Traveller = (props) => {
   const [loading, setLoading] = useState(true);
@@ -251,7 +252,7 @@ const Traveller = (props) => {
         </div>
       </DivWithLoader>
 
-      <div className="traveller-buttons-panel">
+      <DockPanel className="traveller-buttons-panel">
         <div className="traveller-buttons">
           {!!authData.userDetails && !!traveller && authData.userDetails.uid == traveller.user_id && 
             <button
@@ -268,7 +269,7 @@ const Traveller = (props) => {
             Komentuj
           </button>
         </div>
-      </div>
+      </DockPanel>
     </PageWithLoader>
   );
 }
