@@ -12,6 +12,7 @@ import ConfirmBox from './reusable/ConfirmBox';
 import { sortByDate } from '../helpers/helpers';
 import TravellerMessage from './reusable/TravellerMessage';
 import FindBuddiesWarning from './reusable/FindBuddiesWarning';
+import DockPanel from './reusable/DockPanel';
 
 const FindBuddiesDetail = (props) => {
   const [loading, setLoading] = useState(true);
@@ -217,7 +218,7 @@ const FindBuddiesDetail = (props) => {
         </>)}
       </DivWithLoader>
 
-      <div className="find-buddies-buttons-panel">
+      <DockPanel className="find-buddies-buttons-panel">
         <div className="find-buddies-buttons">
           {!!traveller && isAuth && !!traveller.showComments && (<button
             className="snpBtn"
@@ -226,7 +227,7 @@ const FindBuddiesDetail = (props) => {
             Odpovedz
           </button>)}
         </div>
-      </div>
+      </DockPanel>
     </PageWithLoader>
   );
 }

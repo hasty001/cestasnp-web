@@ -2389,6 +2389,12 @@ button#dropdown-basic-1 {
   pointer-events: none;
 }
 
+.traveller-buttons-panel.docked, .find-buddies-buttons-panel.docked {
+  z-index: auto;
+  position: relative;
+  bottom: auto;
+}
+
 .traveller-buttons, .find-buddies-buttons {
   margin: 0 auto; 
   width: fit-content;
@@ -2401,15 +2407,6 @@ button#dropdown-basic-1 {
   pointer-events: auto;
 }
 
-#FindBuddies button.add {
-  margin: 15px 0; 
-  z-index: 999;
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 0);
-}
-
 #FindBuddiesDetail .find-buddies-traveller {
   min-height: 200px;
 }
@@ -2417,6 +2414,7 @@ button#dropdown-basic-1 {
 .logged-only, .no-find-buddies {
   text-align: center;
   width: 100%;
+  margin-bottom: 30px;
 }
 
 /***   TRAVELLER    ***/
