@@ -14,14 +14,23 @@ const isNormalClickEvent = (event) =>
  */
 const navigate = (value) => {
   if (typeof value === "string") {
-    history.push(value);
+    if (value.startsWith("https://") || value.startsWith("http://")) {
+      window.location = value;
+    } else {
+      history.push(value);
+    }
   } else {
     const event = value;
 
     if (isNormalClickEvent(event)) {
+      const href = event.currentTarget.getAttribute("href")
+      if (href.startsWith("https://") || href.startsWith("http://")) {
+        return;
+      }
+
       event.preventDefault();
 
-      history.push(event.currentTarget.getAttribute("href"));
+      history.push(href);
     }
   }
 }
