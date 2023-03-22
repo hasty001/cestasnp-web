@@ -253,7 +253,7 @@ const Navigation = () => {
             eventKey={11}
             title="Články"
           >
-            Pred cestou
+            Články
           </NavRouterItem>
 
           <NavRouterItem
@@ -297,17 +297,25 @@ const Navigation = () => {
             Archív
           </NavRouterItem>
 
+          <NavRouterItem
+            href="https://historia.cestasnp.sk"
+            eventKey={16}
+            title="História"
+          >
+            História
+          </NavRouterItem>
+
           {!authData.isAuth && (
           <NavRouterItem
             href={ROUTES.ucetPois}
-            eventKey={16}
+            eventKey={17}
             className="red-button desktop"
           >
             Prihlásiť sa             
           </NavRouterItem>)}
 
           {!!authData.isAuth && (
-          <NavDropdown eventKey={17} title="Môj účet" id="basic-nav-dropdown" 
+          <NavDropdown eventKey={18} title="Môj účet" id="basic-nav-dropdown" 
             className={"desktop" + ((hasNewTravellerCommentsText || hasNewFindBuddiesCommentsText) ? ' has-badge' : '')}>
             <NavRouterItem
               href="#"

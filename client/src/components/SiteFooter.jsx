@@ -44,6 +44,7 @@ const SiteFooter = (props) => {
           <A className="footer-link" href="/pred/hladampartakov">Hľadám parťákov</A>
           <A className="footer-link" href={settingsData.activeLink.href}>LIVE sledovanie</A>
           <A className="footer-link" href="/na/archive">Archív</A>
+          <a className="footer-link" href="https://historia.cestasnp.sk">História</a>
           <A className="footer-link" href="/pred/articles/article/379">Zoznam darcov</A>
 
           <h3>
