@@ -11,7 +11,7 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
         <A className="traveller-name" 
           href={findBuddies ? `/pred/hladampartakov/${traveller.user_id}` 
             : `/na/${traveller.url_name || traveller.user_id}${traveller.finishedTracking ? 
-            Constants.FromOldQuery : (traveller.lastMessage ? (`#${traveller.lastMessage._id}`) : "")}`}>
+            Constants.FromOldQuery : (traveller.lastMessage ? (`/${traveller.lastMessage._id}`) : "")}`}>
           {traveller.meno}                          
         </A>
 

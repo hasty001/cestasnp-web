@@ -111,13 +111,14 @@ const CestaSNP = props => {
               <Route exact path="/pred/pois" component={Pois} />
               <Route exact path="/pred/itinerar" component={Itinerary} />
               <Route exact path="/pred/hladampartakov" component={FindBuddies} />
-              <Route exact path="/pred/hladampartakov/:traveller" render={(props) => (<FindBuddiesDetail {...props} />)} />
+              <Route exact path="/pred/hladampartakov/:traveller/:msg?" render={(props) => (<FindBuddiesDetail {...props} />)} />
               <Route exact path="/na/ceste" component={Active} />
               <Route exact path="/na/ceste/light" component={ActiveLight} />
               <Route exact path="/na/ceste/textovo" component={ActiveLight} />
               <Route exact path="/na/ceste/fotky" component={ActivePhotos} />
               <Route exact path="/na/archive" component={Archive} />
-              <Route path="/na/:traveller" render={(props) => (<Traveller {...props} />)}/>
+              <Route path="/na/:traveller/:msg?" render={(props) => (<Traveller {...props} />)}/>
+              
               <Route exact path="/kontakt" component={Kontakt} />
               <Route exact path="/hladanie" component={Search} />
               <Route exact path="/cookies" component={Cookies} />

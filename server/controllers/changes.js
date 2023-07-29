@@ -185,7 +185,7 @@ const getTableAsText = (table) => {
     case _const.DetailsTable:
       return "Cesta";
     case _const.MessagesTable:
-      return "Zpráva";
+      return "Správa";
     case _const.CommentsTable:
     case _const.ArticleCommentsTable:
       return "Komentár";

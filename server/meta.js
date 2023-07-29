@@ -3,7 +3,6 @@ const sanitize = require('mongo-sanitize');
 const { ObjectId } = require('mongodb');
 const { escape, escapeImg, escapeDate } = require('./util/escapeUtils');
 const _const = require('../const');
-const { sanitizeUserId } = require('./util/checkUtils');
 
 const db = new DB();
 
@@ -221,35 +220,44 @@ const getPoiMeta = (dbRef, poiId) =>
       return Promise.reject(404);
   });
 
-const getTravelerMeta = (dbRef, urlName) => 
+const getTravelerMeta = (dbRef, urlName, msgId) => 
   db.getTravellerDetails(dbRef, urlName)
     .then(results => {
       if (results && results.length > 0 && !results[0].cancelled) {
         const userId = results[0].user_id;
-        const desc = escape(results[0].text);
+        var desc = escape(results[0].text);
         const url_name = results[0].url_name || results[0].user_id;
+
+        const message = msgId ? { _id: new ObjectId(msgId) } : {};
         
         return db
           .findBy(dbRef, _const.UsersTable, { $or: [{ sql_user_id: userId || -1 }, { uid: userId || -1 }] })
           .then(user =>   
           db
-          .newestSorted(dbRef, _const.MessagesTable, { pub_date: -1 }, { $and: [{ user_id: userId }, _const.FilterNotDeleted] })
+          .newestSorted(dbRef, _const.MessagesTable, { pub_date: -1 }, { $and: [{ user_id: userId }, _const.FilterNotDeleted, message] })
           .then(msg => {  
             const author = user && user.length > 0 ? escape(user[0].name) : '';
             const title = escape(results[0].meno + WebSuffix);
-            const url = `https://cestasnp.sk/na/${escape(url_name)}`;
-            const created = escapeDate(results[0].created);
-            const published = escapeDate(results[0].start_date);
+            const canonicalUrl = `https://cestasnp.sk/na/${escape(url_name)}`;
+            const url = `https://cestasnp.sk/na/${escape(url_name)}${msgId ? ("/" + msgId) : ""}`;
+            var created = escapeDate(results[0].created);
+            var published = escapeDate(results[0].start_date);
             const modified = msg && msg.length > 0 ? escapeDate(msg[0].pub_date) : '';
             const lat = msg && msg.length > 0 ? escape(msg[0].lat) : '';
             const lon = msg && msg.length > 0 ? escape(msg[0].lon) : '';
+
+            if (msgId && msg && msg.length > 0) {
+              created = modified;
+              published = modified;
+              desc = escape(msg[0].text);
+            }
 
             const img = escapeImg(msg && msg.length > 0 && msg[0].img ? msg[0].img : '', defImg);
 
             const finished = results[0].finishedTracking && results[0].end_date;
 
             var meta = `
-              <link rel="canonical" href="${url}" />
+              <link rel="canonical" href="${canonicalUrl}" />
               <meta name="description" content="${desc}" />
               <meta name="author" content="${author}">
               <meta name="keywords" content="cesta,putovanie,správy,live,sledovanie" />
@@ -349,12 +357,22 @@ const getMeta = (db, url) => new Promise((resolve, reject) => {
       <meta property="og:image" content="${defImg}" />`);
   }
 
-  if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light')
-    || path.startsWith('/na/ceste/textovo') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
-      const userId = path.startsWith('/na/dennik/') ? sanitize(url.substr(11)) : sanitize(url.substr(4));
+ 
+  if (path.startsWith('/na/') && !(path.startsWith('/na/ceste') || path.startsWith('/na/ceste/light') 
+      || path.startsWith('/na/ceste/textovo') || path.startsWith('/na/ceste/fotky') || path.startsWith('/na/archive'))) {
+    
+    var p = path.startsWith('/na/dennik/') ? url.substr(11) : url.substr(4);
+    var msgId = '';
+
+    i = p.indexOf('/');
+    if (i >= 0) {
+      msgId = sanitize(p.substr(i + 1));
+      p = p.substr(0, i);
+    }
+    const userId = sanitize(p);
 
     if (userId) {
-      return resolve(getTravelerMeta(db, userId));
+      return resolve(getTravelerMeta(db, userId, msgId));
     } else {
       return reject(404);
     }
