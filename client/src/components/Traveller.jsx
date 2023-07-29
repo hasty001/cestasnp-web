@@ -11,7 +11,7 @@ import PageWithLoader from './reusable/PageWithLoader';
 import TravellerItem from './reusable/TravellerItem';
 import TravellerMessage from './reusable/TravellerMessage';
 import { sortByDate } from '../helpers/helpers';
-import { A, navigate } from './reusable/Navigate';
+import { navigate } from './reusable/Navigate';
 import MapControl from './MapControl';
 
 const Traveller = (props) => {
@@ -22,6 +22,7 @@ const Traveller = (props) => {
   const [traveller, setTraveller] = useState();
   const [messagesData, setMessagesData] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [msgId, setMsgId] = useState(props.match.params.msg);
 
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [deleteCommentId, setDeleteCommentId] = useState(null);
@@ -75,12 +76,16 @@ const Traveller = (props) => {
   }, [props.match.params.traveller]);
 
   useEffect(() => {
-    if (window.location.hash.length > 1) {
-      var highlighted = document.getElementById(window.location.hash.slice(1));
+    setMsgId(props.match.params.msg);
+  }, [props.match.params.msg]);
+
+  useEffect(() => {
+    if (msgId) {
+      var highlighted = document.getElementById(msgId);
       if (highlighted)
         highlighted.scrollIntoView();
     }
-  }, [messages, window.location.hash]);
+  }, [messages, msgId]);
 
   const sortMessages = (msgs, order) => sortByDate(msgs, a => a.date || a.pub_date, order);
 
@@ -193,7 +198,7 @@ const Traveller = (props) => {
     });
 
     msgs.push(Object.assign({ isComment: true }, comment));
-    window.location.hash = "#" + comment._id;
+    setMsgId(comment._id);
 
     setMessagesData(msgs);
   }
@@ -216,6 +221,7 @@ const Traveller = (props) => {
 
         <div className="na-ceste-traveller-msgs">
           {messages.map((message, i) => <TravellerMessage key={i} inTraveller 
+            selectedMessageId={msgId}
             travellerUserId={traveller ? traveller.user_id : ''}
             travellerUrlName={traveller ? (traveller.url_name || traveller.user_id) : ''}
             message={message} travellerName={traveller ? traveller.meno : ''}
