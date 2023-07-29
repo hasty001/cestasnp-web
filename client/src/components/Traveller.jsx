@@ -214,7 +214,7 @@ const Traveller = (props) => {
       />
 
       <DivWithLoader className="traveller" loading={loading} error={error}>
-        <TravellerItem traveller={traveller || {}} now={Date.now()} userData={authData} />         
+        <TravellerItem traveller={traveller || {}} now={Date.now()} userData={authData} share/>         
 
         <div className="na-ceste-traveller-sort" data-nosnippet >
           Zoradiť: <a href="#" onClick={handleOrderClick}>{orderFromOld ? " od najnovšie" : " od najstaršie"} </a>           
