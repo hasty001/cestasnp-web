@@ -61,7 +61,6 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
             <CopyToClipboard text={fullUrl}>
               <a href='#' onClick={() => navigate(url)} className="traveller-comment-link" title={`kopírovať odkaz na ${findBuddiesId ? "odpoveď" : "komentár"}`}><i className="fas fa-link"/></a>
             </CopyToClipboard>
-            {!findBuddiesId && <a href={fbUrl} className="traveller-comment-link" target='_blank' title={`zdieľať ${findBuddiesId ? "odpoveď" : "komentár"}  na Facebooku`}><i className="fab fa-facebook-f"/></a>}
           </span>
           :
           <span className="traveller-message-actions">
@@ -70,7 +69,7 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
             <CopyToClipboard text={fullUrl}>
               <a href='#' onClick={() => navigate(url)} className="traveller-message-link" title="kopírovať odkaz na správu"><i className="fas fa-link"/></a>
             </CopyToClipboard>
-            {!findBuddiesId && <a href={fbUrl} className="traveller-comment-link" target='_blank' title="zdieľať správu na Facebooku"><i className="fab fa-facebook-f"/></a>}
+            {!findBuddiesId && <a href={fbUrl} className="traveller-message-link" target='_blank' title="zdieľať správu na Facebooku"><i className="fab fa-facebook-f"/></a>}
           </span>}
 
         <span className="traveller-date">              
