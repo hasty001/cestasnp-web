@@ -2351,7 +2351,8 @@ button#dropdown-basic-1 {
 .article-history,
 .article-my,
 .article-state-icon,
-.traveller-edit {
+.traveller-edit,
+.traveller-share {
   color: black;
   font-size: 16px;
   margin: 0 4px;

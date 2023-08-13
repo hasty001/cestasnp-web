@@ -2,11 +2,11 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { dateTimeToStr, htmlSimpleSanitize } from '../../helpers/helpers';
 import Image from './Image';
-import { A } from './Navigate';
+import { A, navigate } from './Navigate';
 import UserLabel from './UserLabel';
 
 const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inTraveller, travellerUserId,
-  travellerUrlName, findBuddies }) => {
+  travellerUrlName, findBuddiesId, selectedMessageId }) => {
 
   const error = <>{!!message.error && (<p className="errorMsg">{message.error}</p>)}</>;
   const success = <>{!!message.success && (<p className="successMsg">{message.success}</p>)}</>;
@@ -21,10 +21,16 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
       </div>);
   }
 
-  const Link = inTraveller ? `a` : A;
+  const Link = A;
+
+  const url = (findBuddiesId ? 
+    `/pred/hladampartakov/${findBuddiesId}/${message._id}`
+    : `/na/${travellerUrlName}/${message._id}`);
+  const fullUrl = `${window.location.host}${url}`;
+  const fbUrl = `https://facebook.com/sharer.php?u=${encodeURIComponent(fullUrl)}`;
 
   return (
-    <div className={`${className} ${window.location.hash === "#" + message._id ? "highlighted" : ''}`.trim()}>
+    <div className={`${className} ${selectedMessageId === message._id ? "highlighted" : ''}`.trim()}>
       <div id={message._id} className={`${className}-scrolllink`} />
       {error}
       {success}
@@ -33,7 +39,7 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
         {message.isComment && (!travellerUserId || message.uid != travellerUserId) ? 
         <UserLabel className="traveller-comment-name" uid={message.uid || message.sql_user_id} 
           name={message.name} />
-        : <Link className="traveller-message-name" href={inTraveller ? `#${message._id}` : `/na/${travellerUrlName}#${message._id}`}>
+        : <Link className="traveller-message-name" href={url}>
              {travellerName}                          
           </Link>}
 
@@ -51,18 +57,19 @@ const TravellerMessage = ({ message, travellerName, userData, deleteMessage, inT
               && (message.uid == userData.userDetails.uid 
                 || (message.travellerDetails && message.travellerDetails.id == userData.travellerDetails._id) ||
                    (message.findBuddiesId && message.findBuddiesId == userData.findBuddies._id))) && 
-              (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-comment-delete" title={`zmazať ${findBuddies ? "odpoveď" : "komentár"}`}><i className="fas fa-trash-alt"/></a>)}
-            <CopyToClipboard text={`${window.location.host}/na/${travellerUrlName}#${message._id}`}>
-              <a href={`#${message._id}`} className="traveller-comment-link" title={`kopírovať odkaz na ${findBuddies ? "odpoveď" : "komentár"}`}><i className="fas fa-link"/></a>
+              (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-comment-delete" title={`zmazať ${findBuddiesId ? "odpoveď" : "komentár"}`}><i className="fas fa-trash-alt"/></a>)}
+            <CopyToClipboard text={fullUrl}>
+              <a href='#' onClick={() => navigate(url)} className="traveller-comment-link" title={`kopírovať odkaz na ${findBuddiesId ? "odpoveď" : "komentár"}`}><i className="fas fa-link"/></a>
             </CopyToClipboard>
           </span>
           :
           <span className="traveller-message-actions">
             {(!!userData.isAuth && userData.userDetails.uid == message.user_id) && 
               (<a href="#" data-msgid={message._id} onClick={deleteMessage} className="traveller-message-delete" title="zmazať správu"><i className="fas fa-trash-alt"/></a>)}
-            <CopyToClipboard text={`${window.location.host}/na/${travellerUrlName}#${message._id}`}>
-              <Link href={inTraveller ? `#${message._id}` : "#"} className="traveller-message-link" title="kopírovať odkaz na správu"><i className="fas fa-link"/></Link>
+            <CopyToClipboard text={fullUrl}>
+              <a href='#' onClick={() => navigate(url)} className="traveller-message-link" title="kopírovať odkaz na správu"><i className="fas fa-link"/></a>
             </CopyToClipboard>
+            {!findBuddiesId && <a href={fbUrl} className="traveller-message-link" target='_blank' title="zdieľať správu na Facebooku"><i className="fab fa-facebook-f"/></a>}
           </span>}
 
         <span className="traveller-date">              

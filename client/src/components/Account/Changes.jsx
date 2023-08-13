@@ -64,7 +64,7 @@ const Changes = (props) => {
       case "traveler_details":
         return "cesta";
       case "traveler_messages":
-        return "zpráva";
+        return "správa";
       case "traveler_comments":
       case "article_comments":
         return "komentár";
@@ -101,10 +101,10 @@ const Changes = (props) => {
           <FormSelect value={[items, setItems]} 
             valueLabel="Typ:" valueName="items" itemClassName="form" 
             options={[{ value: "", label: "vše" }, 
-              { value: "pois,articles,details", label: "dôležité miesta, články a cesty" }, { value: "details,messages,comments", label: "cesty, zprávy a komentáre" },
+              { value: "pois,articles,details", label: "dôležité miesta, články a cesty" }, { value: "details,messages,comments", label: "cesty, správy a komentáre" },
               { value: "buddies,answers", label: "hľadanie parťakov a odpovede" },
               { value: "pois", label: "dôležité miesta" }, { value: "articles", label: "články" }, { value: "details", label: "cesty" },
-              { value: "messages", label: "zprávy" }, { value: "comments", label: "komentáre" }, 
+              { value: "messages", label: "správy" }, { value: "comments", label: "komentáre" }, 
               { value: "buddies", label: "hľadanie parťakov" },
               { value: "answers", label: "odpovede na hľadanie parťakov" },
             ]}/>

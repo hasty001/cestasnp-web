@@ -3,7 +3,11 @@ import { dateTimeToStr, dateToStr, htmlSimpleSanitize, parseDate } from '../../h
 import { A } from './Navigate';
 import * as Constants from '../Constants';
 
-const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
+const TravellerItem = ({ traveller, now, userData, findBuddies, share }) => {
+
+  const url = `/na/${traveller.url_name || traveller.user_id}`;
+  const fullUrl = `${window.location.host}${url}`;
+  const fbUrl = `https://facebook.com/sharer.php?u=${encodeURIComponent(fullUrl)}`;
   
   return (
     <div className="traveller-item" >
@@ -11,7 +15,7 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
         <A className="traveller-name" 
           href={findBuddies ? `/pred/hladampartakov/${traveller.user_id}` 
             : `/na/${traveller.url_name || traveller.user_id}${traveller.finishedTracking ? 
-            Constants.FromOldQuery : (traveller.lastMessage ? (`#${traveller.lastMessage._id}`) : "")}`}>
+            Constants.FromOldQuery : (traveller.lastMessage ? (`/${traveller.lastMessage._id}`) : "")}`}>
           {traveller.meno}                          
         </A>
 
@@ -21,9 +25,10 @@ const TravellerItem = ({ traveller, now, userData, findBuddies }) => {
             {traveller.email}                          
           </a></div>}
 
-        {!!userData && !!userData.isAuth && userData.userDetails.uid == traveller.user_id && (<span className="traveller-item-actions">
-            <A href={findBuddies ? "/ucet/hladampartakov" : "/ucet"} className="traveller-edit" title={findBuddies ? "upraviť môj inzerát" : "upraviť moju cestu"}><i className="fas fa-pencil-alt"/></A>
-        </span>)}
+        <span className="traveller-item-actions">
+          {!!userData && !!userData.isAuth && userData.userDetails.uid == traveller.user_id && (<A href={findBuddies ? "/ucet/hladampartakov" : "/ucet"} className="traveller-edit" title={findBuddies ? "upraviť môj inzerát" : "upraviť moju cestu"}><i className="fas fa-pencil-alt"/></A>)}
+          {!!share && <a href={fbUrl} className="traveller-share" target='_blank' title="zdieľať cestu na Facebooku"><i className="fab fa-facebook-f"/></a>}
+        </span>
 
         <span className="traveller-date">              
           {(!traveller.finishedTracking && !!traveller.lastMessage && (parseDate(traveller.start_date) <= now)) ? (

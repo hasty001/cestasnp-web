@@ -17,6 +17,7 @@ import DockPanel from './reusable/DockPanel';
 const FindBuddiesDetail = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [msgId, setMsgId] = useState(props.match.params.msg);
 
   const [messagesData, setMessagesData] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -70,12 +71,16 @@ const FindBuddiesDetail = (props) => {
   }, [props.match.params.traveller, authData]);
 
   useEffect(() => {
-    if (window.location.hash.length > 1) {
-      var highlighted = document.getElementById(window.location.hash.slice(1));
+    setMsgId(props.match.params.msg);
+  }, [props.match.params.msg]);
+
+  useEffect(() => {
+    if (msgId) {
+      var highlighted = document.getElementById(msgId);
       if (highlighted)
         highlighted.scrollIntoView();
     }
-  }, [messages, window.location.hash]);
+  }, [messages, msgId]);
 
   const sortMessages = (msgs, order) => sortByDate(msgs, a => a.date || a.pub_date, order);
 
@@ -170,9 +175,9 @@ const FindBuddiesDetail = (props) => {
     });
 
     msgs.push(Object.assign({ isComment: true }, comment));
-    window.location.hash = "#" + comment._id;
-
+    
     setMessagesData(msgs);
+    setMsgId(comment._id);
   }
 
   const isAuth = !!authData.authProviderMounted && !!authData.isAuth
@@ -194,7 +199,8 @@ const FindBuddiesDetail = (props) => {
 
             <div className="find-buddies-msgs">
               {messages.map((message, i) => <TravellerMessage key={i} inTraveller 
-                travellerUserId={traveller ? traveller.user_id : ''} findBuddies
+                selectedMessageId={msgId}
+                travellerUserId={traveller ? traveller.user_id : ''} findBuddiesId={travellerId}
                 message={message} travellerName={traveller ? traveller.meno : ''}
                 userData={authData} deleteMessage={handleDeleteCommentClick}/>)}
 
