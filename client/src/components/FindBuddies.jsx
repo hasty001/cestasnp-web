@@ -6,6 +6,7 @@ import PageWithLoader from './reusable/PageWithLoader';
 import TravellerItem from './reusable/TravellerItem';
 import { AuthContext } from './AuthContext';
 import { A, navigate } from './reusable/Navigate';
+import DockPanel from './reusable/DockPanel';
 
 const FindBuddies = (props) => {
   const [loading, setLoading] = useState(true);
@@ -39,13 +40,17 @@ const FindBuddies = (props) => {
         {!!authData.isAuth &&
         <div className="travellers">
           {travellers.length == 0 && !!authData.authProviderMounted &&
-            <div className="no-find-buddies">Momentálne parťákov nikto nehľadá. {` `}<A href="/ucet/hladampartakov">Pridaj svoj inzerát</A>.</div>}
+            <div className="no-find-buddies">Momentálne parťákov nikto nehľadá.</div>}
           {travellers.map((traveller, i) => <TravellerItem traveller={traveller} key={i} now={now} findBuddies/>)}
         </div>}
 
-        <button className="snpBtn add" onClick={() => navigate("/ucet/hladampartakov")}>
-          {!authData.isAuth || !authData.findBuddies || !authData.findBuddies.enabled ? "Pridaj svoj inzerát" : "Uprav svoj inzerát"}
-        </button>
+        <DockPanel className="find-buddies-buttons-panel">
+          <div className="find-buddies-buttons">
+            <button className="snpBtn" onClick={() => navigate("/ucet/hladampartakov")}>
+              {!authData.isAuth || !authData.findBuddies || !authData.findBuddies.enabled ? "Pridaj svoj inzerát" : "Uprav svoj inzerát"}
+            </button>
+          </div>
+        </DockPanel>
       </>
     </PageWithLoader>
   );
